@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="StopIndicatorEvent">
+    <aura:attribute name="buttonId" type="String" default=""/>
+</aura:event>

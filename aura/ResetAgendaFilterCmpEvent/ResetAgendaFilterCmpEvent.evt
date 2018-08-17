@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="ResetAgendaFilterCmpEvent">
+  <aura:attribute name="eventObj" type="Map" default="{}"/>
+  <aura:attribute name="fieldId" type="String"/>
+  <aura:attribute name="sobjId" type="String"/>
+</aura:event>

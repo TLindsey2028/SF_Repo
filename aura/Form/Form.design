@@ -1,0 +1,7 @@
+<design:component>
+	<design:attribute name="form" label="Form Id"/>
+	<design:attribute name="subjectLookupField" label="Subject Lookup Field"/>
+	<design:attribute name="subjectId" label="Subject Id"/>
+	<design:attribute name="formResponseId" label="Form Response Id"/>
+
+</design:component>

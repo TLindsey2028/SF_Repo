@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="ReloadSectionListing">
+	<aura:attribute name="sections" type="List" default="[]"/>
+	<aura:attribute name="eventQuantity" type="Integer" default="0"/>
+	<aura:attribute name="force" type="Boolean" default="false"/>
+</aura:event>

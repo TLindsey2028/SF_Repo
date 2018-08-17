@@ -1,0 +1,39 @@
+.THIS .fonteva-filter-input-drag-drop {
+    width: 240px!important;
+    margin-bottom: 10px;
+}
+.THIS .fonteva-filter-input-drag-drop--spacer {
+    display: block;
+    min-height: 36px;
+    height: 36px;
+}
+.THIS .fonteva-input-action-icon {
+    position: absolute;
+    left: 208px;
+    height: 36px;
+    width: 36px;
+    padding: 10px;
+    opacity: .5;
+    z-index: 2;
+    filter: grayscale(100%);
+}
+
+.THIS .slds-modal .fonteva-input-action-icon {
+    z-index: 100000!important;
+}
+
+.THIS .fonteva-input-action-icon.slds-has-items  {
+    cursor: pointer;
+}
+.THIS .fonteva-picklist__options--multi {
+  overflow-x: hidden!important;
+}
+
+.THIS .fonteva-filter-search-bar {
+    padding-right: 25px!important;
+}
+
+.THIS .slds-picklist__options {
+    position: relative;
+    z-index: 1;
+}

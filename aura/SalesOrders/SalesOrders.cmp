@@ -1,0 +1,329 @@
+<aura:component controller="OrderApi.SalesOrderPaymentController" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId" access="global" extends="Framework:BaseComponent">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <ltng:require scripts="{!$Resource.Framework__UrlUtil}" styles="{!$Resource.Framework__SLDS_BaseV2+'/css/styles.css'}"/>
+  <aura:attribute name="recordId" type="Id" />
+  <aura:attribute name="storeId" type="Id" access="global"/>
+  <aura:attribute name="environmentKey" type="String" access="global"/>
+  <aura:attribute name="salesOrderId" type="String" access="global"/>
+  <aura:attribute name="paymentPageLoaded" type="Boolean" default="false" access="global"/>
+  <aura:attribute name="retURL" type="String" default="" access="global"/>
+  <aura:attribute name="salesOrderObj" type="Object" default="{}"/>
+  <aura:attribute name="dateFormat" type="String" access="global"/>
+  <aura:attribute name="showHeaderButtons" type="Boolean" default="true" access="global"/>
+  <aura:attribute name="showOfflinePayment" type="Boolean" default="true" access="global"/>
+  <aura:attribute name="enableSavePayment" type="Boolean" default="true" access="global"/>
+  <aura:attribute name="isCommunityView" type="Boolean" default="false" access="global"/>
+  <aura:attribute name="successfulPaymentReturnUrl" type="String" access="global"/>
+  <aura:attribute name="gatewayToken" type="String" access="global"/>
+  <aura:attribute name="returnObj" type="Map" access="global"/>
+  <aura:attribute name="paymentSuccessReturnObj" type="Map" access="global"/>
+  <aura:attribute name="invalidSO" type="Boolean" default="false"/>
+  <aura:attribute name="invalidMessage" type="String" default=""/>
+  <aura:attribute name="customerObj" type="Map" default="{}" access="global"/>
+  <aura:attribute name="eCheckRedirectUrl" type="String" default="" access="global"/>
+  <aura:attribute name="currentTabOpen" type="String"  default="payNow"/>
+  <aura:attribute name="gatewayNotPresent" type="Boolean"  default="false"/>
+  <aura:attribute name="paymentGlobalId" type="String" />
+  <aura:attribute name="shippingGlobalId" type="String" />
+  <aura:attribute name="isTotalZero" type="Boolean"  default="false"/>
+  <aura:attribute name="batchGlobalId" type="String"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+  <aura:handler event="OrderApi:SalesOrderUpdateEvent" action="{!c.handleSalesOrderUpdate}"/>
+  <aura:handler event="OrderApi:WillNotShipEvent" action="{!c.handleWillNotShipEvent}"/>
+  <aura:handler event="Framework:ButtonToggleIndicatorEvent" action="{!c.handleButtonToggleIndicatorEvent}"/>
+  <aura:handler event="OrderApi:ProcessingChangesEvent" action="{!c.handleProcessingChangesEvent}"/>
+  <aura:handler event="OrderApi:PayNowTabChangeEvent" action="{!c.handlePayNowTabChangeEvent}"/>
+  <aura:registerEvent name="CreditCardContactUpdateEvent" type="OrderApi:CreditCardContactUpdateEvent"/>
+  <aura:registerEvent name="ComponentLoadedEvent" type="OrderApi:ComponentLoadedEvent"/>
+  <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+  <aura:dependency resource="OrderApi:SalesOrderSummary"/>
+    <style>
+      .dateBar select.picklist__label {
+          width: 3.5rem !important;
+      }
+      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+           .slds-ie-fix--width {
+              max-width: calc(100vw - 23px)!important;
+            }
+       }
+       @media (min-width: 48em) {
+            .slds-visible--small {
+                display: none!important;
+            }
+       }
+       .slds-visible--small {
+            display: block;
+        }
+      .slds-modal__content {
+        padding: 0!important;
+      }
+      .forceModal .slds-modal__container {
+        width: 99.5%!important;
+        max-width: 100%!important;
+      }
+      .forceChatterLightningComponent .bodyWrapper{height:100%;width:100%;padding:0;box-sizing:border-box}
+    </style>
+  <aura:if isTrue="{!and(v.storeId != '',v.storeId != null)}">
+    <style>
+      .slds .slds-tabs--default .slds-tabs__item {
+        overflow: unset;
+      }
+    </style>
+  </aura:if>
+  <div data-name="mainWrapperDiv" class="slds hidden slds-ie-fix--width slds-theme--shade" aura:id="mainWrapperDiv" style="min-height: 316px">
+      <div data-name="loading-span-stencil" class="slds-theme--shade" aura:id="loading-span-stencil">
+        <div class="slds-grid slds-col slds-col-rule--bottom slds-p-around--large slds-size--1-of-1">
+
+          <div class="slds-col slds-size--1-of-1">
+            <div class="slds-grid">
+            <div class="slds-m-bottom--medium loading-span slds-m-right--large" style="height : 36px; width: 181px;">
+              &nbsp;
+            </div>
+            <div class="slds-m-bottom--medium loading-span slds-m-right--small" style="height : 36px; width: 153px;">
+              &nbsp;
+            </div>
+            <div class="slds-m-bottom--medium loading-span" style="height : 36px; width: 153px;">
+              &nbsp;
+            </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="slds-grid">
+          <div class="slds-order--1 slds-medium-order--2 slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-around--medium">
+            <div class="slds-grid slds-wrap">
+              <div class="slds-col slds-size--1-of-1">
+                <div class="slds-size--1-of-1 slds-m-bottom--medium">
+                  <div class="slds-m-bottom--medium loading-span" style="height : 46px; width: 500px;">
+                    &nbsp;
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="slds-order--1 slds-medium-order--2 slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-around--medium">
+            <div class="slds-card">
+              <div class="slds-card__header slds-p-vertical--small slds-grid slds-p-left--large slds-m-bottom--none">
+                <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                  <div class="slds-m-bottom--medium loading-span" style="height : 23px; width: 400px;">
+                    &nbsp;
+                  </div>
+                </div>
+              </div>
+              <div class="slds-card__body slds-p-vertical--small slds-theme--default slds-scrollable--x">
+                <table class="slds-table slds-no-row-hover slds-table-input--margin__none">
+                <thead>
+                <tr class="slds-text-heading--label" >
+                  <th data-aura-rendered-by="129:90;a">
+                    <div class="slds-m-bottom--medium loading-span" style="height : 23px; width: 50px;">
+                      &nbsp;
+                    </div>
+                  </th>
+                  <th class="quantity-width__small" >
+                    <div class="slds-m-bottom--medium loading-span" style="height : 23px; width: 30px;">
+                      &nbsp;
+                    </div>
+                  </th>
+                  <th ></th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody data-aura-rendered-by="135:90;a">
+                </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div data-name="mainData" aura:id="mainData" class="stencil-hidden">
+    <div data-name="currencyField" class="hidden">
+      <Framework:CurrencyField isMultiCurrencyOrg="{!v.salesOrderObj.isMultiCurrency}" currencyISOCode="{!v.salesOrderObj.currencyISOCode}" aura:Id="currencyField"/>
+    </div>
+    <div class="slds-grid slds-wrap">
+      <div class="slds-col slds-size--1-of-1">
+        <div class="slds-page-header">
+            <div class="slds-media">
+                <div class="slds-media__body">
+                  <span data-name="Sales_Order_Payment_Title" class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+                          {!$Label.OrderApi.Sales_Order_Payment_Title}
+                  </span>
+                    <div class="slds-visible--small slds-size--1-of-1"></div>
+                    <aura:if isTrue="{!v.showHeaderButtons}">
+                      <Framework:Button qaData='{"type" : "button", "name": "exitBtn"}' label="{!$Label.OrderApi.Exit_Sales_Order}" onClickAction="{!c.exitPage}" aura:id="exitBtn"
+                                        type="neutral" enableProgressIndicator="false"/>
+                    </aura:if>
+                      <Framework:Button qaData='{"type" : "button", "name": "Previous_Sales_Order"}' label="{!$Label.OrderApi.Previous_Sales_Order}" onClickAction="{!c.goBack}" additionalClasses="slds-m-left--x-small"
+                                        type="neutral" enableProgressIndicator="false"/>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="{!v.invalidSO ? '' : 'hidden'}">
+        <div class="slds-grid slds-wrap slds-m-left--small">
+          <div class="slds-col slds-size--1-of-1">
+            <h1 data-name="invalidMessage" class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+              {!v.invalidMessage}
+            </h1>
+          </div>
+        </div>
+      </div>
+      <div class="{!!v.invalidSO ? 'slds-col slds-size--1-of-1 slds-theme--shade slds-ie-width--custom' : 'hidden'}">
+        <div class="slds-grid slds-wrap">
+          <div class="slds-order--2 slds-medium-order--1 slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-around--large">
+            <div class="slds-grid slds-wrap">
+              <aura:if isTrue="{!!v.isCommunityView}">
+                <div class="slds-col slds-size--1-of-1">
+                <div class="slds-size--1-of-1 slds-m-bottom--medium">
+                  <div data-name="Customer_Information_Sales_Order" class="slds-text-heading--small">
+                    <strong>{!$Label.OrderApi.Customer_Information_Sales_Order}</strong>
+                  </div>
+                </div>
+                <div data-name="customerLookupDiv" class="slds-size--1-of-1" aura:id="customerLookupDiv">
+                </div>
+              </div>
+              </aura:if>
+              <div data-name="taxShippingDiv" class="slds-col slds-size--1-of-1" aura:id="taxShippingDiv">
+              </div>
+              <div class="{!v.isTotalZero ? 'hidden' : 'slds-col slds-size--1-of-1 slds-border--bottom slds-m-bottom--medium'}">
+                <div class="slds-size--1-of-1 slds-m-vertical--medium">
+                  <div data-name="Payment_Information_Sales_Order" class="slds-text-heading--small">
+                    <strong>{!$Label.OrderApi.Payment_Information_Sales_Order}</strong>
+                  </div>
+                </div>
+                <aura:if isTrue="{!!v.isCommunityView}">
+                  <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                    <div class="slds-col slds-size--1-of-2 slds-col--padded hidden" aura:Id="businessGroupDiv">
+                      <Framework:InputFields qaData='{"type" : "input", "name": "businessGroupId"}' fieldType="Picklist" label="{!$Label.OrderApi.Business_group_Label}" aura:id="businessGroupId" fireChangeEvent="true"
+                                             group="salesOrderInfo" value="{!v.salesOrderObj}" />
+                    </div>
+                    <div class="slds-col slds-size--1-of-2 slds-col--padded hidden" aura:Id="depositAccountDiv">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "depositAccount"}' fieldType="Picklist" label="{!$Label.OrderApi.Deposit_Account_Label}" aura:id="depositAccount"
+                                                 group="salesOrderInfo" value="{!v.salesOrderObj}" />
+                    </div>
+                    <div data-name="batchDiv" class="slds-col slds-size--1-of-2 slds-col--padded" aura:Id="batchDiv">
+                    </div>
+                    <aura:if isTrue="{!v.salesOrderObj.businessGroup.storeOptions.length > 1}">
+                    <div class="slds-col slds-size--1-of-2 slds-col--padded" aura:id="storeDiv">
+                      <Framework:InputFields qaData='{"type" : "input", "name": "storeId"}' fieldType="Picklist" label="{!$Label.OrderApi.Store_Label}" aura:id="storeId" selectOptions="{!v.salesOrderObj.businessGroup.storeOptions}"
+                                             group="salesOrderInfo" value="{!v.salesOrderObj}"/>
+                    </div>
+                    </aura:if>
+                    <aura:set attribute="else">
+                      <div class="{!v.salesOrderObj.businessGroup.paymentGatewayOptions.length > 1 ? 'slds-col slds-size--1-of-2 slds-col--padded' : 'hidden'}">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "paymentGateway"}' fieldType="Picklist" label="{!$Label.OrderApi.Payment_Gateway_Label}" aura:id="paymentGateway"
+                                               group="salesOrderInfo" value="{!v.salesOrderObj}"/>
+                      </div>
+                      <div class="{!v.salesOrderObj.businessGroup.paymentGatewayOptions.length == 1 ? 'slds-col slds-size--1-of-2 slds-col--padded' : 'hidden'}">
+                      </div>
+                    </aura:set>
+                    <div class="{!v.gatewayNotPresent ? 'slds-col slds-size--1-of-2 slds-col--padded slds-align-middle' : 'hidden'}">
+                      <lightning:icon iconName="utility:warning" size="small" class="slds-m-right--small" variant="error"/>
+                      <span data-name="Payment_Gateway_Not_Found" class="slds-text-color—-error">
+                              {!$Label.OrderApi.Payment_Gateway_Not_Found}
+                      </span>
+                    </div>
+                    <div data-name="businessGroupEmptyDiv" class="slds-col slds-size--1-of-2 slds-col--padded" aura:Id="businessGroupEmptyDiv">
+                    </div>
+                  </div>
+                </aura:if>
+                <div class="slds-col slds-size--1-of-1">
+                  <div class="tab-content">
+                    <div class="slds-tabs--default fonteva-payment-section">
+                      <ul data-name="tabBar" class="{!or(v.gatewayNotPresent, v.salesOrderObj.requirePaymentMethod)? 'hidden' : 'slds-tabs--default__nav'}"
+                          role="tablist" aura:id="tabBar">
+
+                        <li data-name="payNowLabel" aura:id="payNowLabel" id="payNowLabel" class="slds-tabs__item slds-text-heading--label slds-active"
+                            title="{!$Label.OrderApi.Pay_Now_Invoice_Payment}" role="presentation">
+                          <a href="#" class="slds-tabs--default__link" data-tab="payNow" onclick="{!c.changeTab}">
+                                  {!$Label.OrderApi.Pay_Now_Invoice_Payment}
+                          </a>
+                        </li>
+                        <aura:if isTrue="{!v.showOfflinePayment}">
+                          <li data-name="offlineLabel" aura:id="offlineLabel" class="slds-tabs__item slds-text-heading--label"
+                              title="{!$Label.OrderApi.Offline_Invoice_Payment}" role="presentation">
+                            <a href="#"  class="slds-tabs--default__link" data-tab="offline" onclick="{!c.changeTab}">
+                                    {!$Label.OrderApi.Offline_Invoice_Payment}
+                            </a>
+                          </li>
+                        </aura:if>
+                          <li data-name="reserved1Label" aura:id="reserved1Label" id="reserved1Label"
+                              class="slds-hide slds-tabs__item slds-text-heading--label" title="reserved1" role="presentation">
+                              <a href="#" class="slds-tabs--default__link" data-tab="reserved1" onclick="{!c.changeTab}"
+                                 aura:id="reserved1LabelLink" id="reserved1LabelLink">
+                                  Reserved 1
+                              </a>
+                          </li>
+                          <li data-name="reserved2Label" aura:id="reserved2Label" id="reserved2Label"
+                              class="slds-hide slds-tabs__item slds-text-heading--label" title="reserved2" role="presentation">
+                              <a href="#" class="slds-tabs--default__link" data-tab="reserved2" onclick="{!c.changeTab}" aura:id="reserved2LabelLink" id="reserved2LabelLink">
+                                  Reserved 2
+                              </a>
+                          </li>
+                          <li data-name="reserved3Label" aura:id="reserved3Label" id="reserved3Label"
+                              class="slds-hide slds-tabs__item slds-text-heading--label" title="reserved3" role="presentation">
+                              <a href="#" class="slds-tabs--default__link" data-tab="reserved3" onclick="{!c.changeTab}"
+                                 aura:id="reserved3LabelLink" id="reserved3LabelLink">
+                                  Reserved 3
+                              </a>
+                          </li>
+                      </ul>
+                      <ul data-name="offline" class="{!and(v.gatewayNotPresent, !v.salesOrderObj.requirePaymentMethod)? 'slds-tabs--default__nav' : 'hidden'}"
+                          role="tablist">
+                        <aura:if isTrue="{!v.showOfflinePayment}">
+                          <li data-name="Offline_Invoice_Payment" class="slds-tabs__item slds-text-heading--label slds-active"
+                              title="{!$Label.OrderApi.Offline_Invoice_Payment}" role="presentation">
+                            <a href="#"  class="slds-tabs--default__link" data-tab="offline">
+                                    {!$Label.OrderApi.Offline_Invoice_Payment}
+                            </a>
+                          </li>
+                        </aura:if>
+                      </ul>
+                      <ul data-name="payNow" class="{!and(!v.gatewayNotPresent, v.salesOrderObj.requirePaymentMethod)? 'slds-tabs--default__nav' : 'hidden'}"
+                          role="tablist">
+                        <li data-name="Pay_Now_Invoice_Payment" class="slds-tabs__item slds-text-heading--label slds-active"
+                            title="{!$Label.OrderApi.Pay_Now_Invoice_Payment}" role="presentation">
+                          <a href="#" class="slds-tabs--default__link" data-tab="payNow">
+                                  {!$Label.OrderApi.Pay_Now_Invoice_Payment}
+                          </a>
+                        </li>
+                      </ul>
+                      <div data-name="payNow" aura:id="payNow" id="payNow" class="slds-tabs__content tab-pane slds-show" role="tabpanel">
+                      </div>
+                      <aura:if isTrue="{!v.showOfflinePayment}">
+                          <div data-name="offline" aura:id="offline" id="offline" class="slds-hide slds-tabs__content tab-pane" role="tabpanel">
+                            <OrderApi:OfflinePayment aura:id="offlinePaymentComp" dateFormat="{!v.dateFormat}" paymentSuccessReturnObj="{!v.paymentSuccessReturnObj}" recordId="{!v.recordId}" showBatch="false"/>
+                          </div>
+                      </aura:if>
+                        <div data-name="reserved1" aura:id="reserved1" id="reserved1" class="slds-hide slds-tabs__content tab-pane" role="tabpanel">
+                            <div data-name="reserved1content" class="tab-content fonteva-slds-payment-tabs" aura:id="reserved1content">
+                            </div>
+                        </div>
+                        <div data-name="reserved2" aura:id="reserved2" id="reserved2" class="slds-hide slds-tabs__content tab-pane" role="tabpanel">
+                            <div data-name="reserved2content" class="tab-content fonteva-slds-payment-tabs" aura:id="reserved2content">
+                            </div>
+                        </div>
+                        <div data-name="reserved3" aura:id="reserved3" id="reserved3" class="slds-hide slds-tabs__content tab-pane" role="tabpanel">
+                            <div data-name="reserved3content" class="tab-content fonteva-slds-payment-tabs" aura:id="reserved3content">
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="{!and(v.gatewayNotPresent, v.salesOrderObj.requirePaymentMethod)? 'hidden' : 'slds-col slds-size--1-of-1 slds-text-align--center'}">
+                <span data-name="processBtnDiv" aura:id="processBtnDiv">
+                  <Framework:Button qaData='{"type" : "button", "name": "processBtn"}' onClickAction="{!c.processPayment}" aura:id="processBtn" group="paymentButtons"/>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div data-name="summaryDiv" class="slds-order--1 slds-medium-order--2 slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-around--medium" aura:id="summaryDiv">
+          </div>
+        </div>
+      </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+    </div>
+  </div>
+</aura:component>

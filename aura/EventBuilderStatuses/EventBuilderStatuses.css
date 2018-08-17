@@ -1,0 +1,44 @@
+.THIS .slds-m--custom .slds-form-element.slds-m-bottom--small.display-element {
+    margin-bottom: 0;
+}
+
+.THIS .item--ghost {
+    opacity: 0.5;
+}
+
+.THIS .strong {
+    font-weight: 700;
+}
+
+.THIS .status-type {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+/* (Optional) Apply a "closed-hand" cursor during drag operation. */
+.THIS .status-type.sortable-chosen {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+.THIS .status-type.sortable-chosen.item--ghost {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+.THIS .fonteva-modal-medium__container {
+    max-width: 70rem!important;
+    width: 70%!important;
+}
+
+.THIS .fonteva-table--numbering {
+    width: 40px;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+    text-align: center;
+    padding-top: .5rem;
+}

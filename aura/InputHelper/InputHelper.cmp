@@ -1,0 +1,19 @@
+<aura:component >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="helpText" type="String" default="" description="Help Text"/>
+    <aura:attribute name="showHelp" type="Boolean" default="false" description="Show Help Text" access="private"/>
+    <style>
+        .tooltip-tether-arrows {
+            z-index: 100000;
+        }
+        .tooltip-open {
+            z-index: 100000;
+        }
+    </style>
+    <aura:if isTrue="{!v.showHelp}">
+        <ltng:require scripts="https://s3.amazonaws.com/package-assets/master/emerald/lib/tether-master/dist/js/tether.min.js,https://s3.amazonaws.com/package-assets/master/emerald/lib/tether-master/dist/js/drop.min.js,https://s3.amazonaws.com/package-assets/master/emerald/lib/tether-master/dist/js/tooltip.min.js" styles="https://s3.amazonaws.com/package-assets/master/emerald/lib/tether-master/dist/js/tooltip-theme-arrows.css" afterScriptsLoaded="{!c.doTetherInit}"/>
+        <span id="{!globalId+'_icon'}" class="{!globalId+'_icon icon_tooltip'}">
+            <img src="/resource/Framework__SLDS_Icons/icons/utility/info_60.png" class="tooltip-slds-icon"/>
+        </span>
+    </aura:if>
+</aura:component>

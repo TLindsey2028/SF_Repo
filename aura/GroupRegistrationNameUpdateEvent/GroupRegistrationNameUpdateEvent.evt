@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="GroupRegistrationNameUpdateEvent">
+    <aura:attribute name="uniqueIdentifier" type="String" required="true"/>
+    <aura:attribute name="customerName" type="String"/>
+</aura:event>

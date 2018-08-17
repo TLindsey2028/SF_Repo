@@ -1,0 +1,88 @@
+<aura:component description="RegistrationProcessFlow" implements="LTE:EventInterface">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="steps" type="List" default="[]"/>
+    <aura:attribute name="salesOrder" type="String" required="false"/>
+    <aura:attribute name="event" type="String" required="false"/>
+    <aura:attribute name="showPicklist" type="Boolean" default="false"/>
+    <aura:attribute name="currentStepName" type="String"/>
+    <aura:attribute name="purchaseComplete" type="Boolean" default="false"/>
+    <aura:attribute name="mobileOrderObj" type="Map" default="{}"/>
+    <aura:attribute name="initialPurchase" type="Boolean" access="global" default="true"/>
+    <aura:attribute name="timerLength" type="Integer" default="15"/>
+	  <aura:handler event="LTE:RegistrationProcessCompleteEvent" action="{!c.handleRegistrationProcessCompleteEvent}"/>
+    <aura:handler event="LTE:RegistrationProcessChangeEvent" action="{!c.handleRegistrationProcessChangeEvent}"/>
+    <aura:handler event="LTE:RegistrationProcessSetGlobalObjectsEvent" action="{!c.handleRegistrationProcessSetGlobalObjectsEvent}"/>
+    <aura:handler event="LTE:DisableProgressFlowBarEvent" action="{!c.handleDisableProgressFlowBarEvent}"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:method name="rebuildSteps" action="{!c.rebuildSteps}"/>
+	  <aura:registerEvent name="EventRegistrationFlowSummaryEvent" type="LTE:EventRegistrationFlowSummaryEvent"/>
+    <aura:registerEvent name="EventCancelRegistrationEvent" type="LTE:EventCancelRegistrationEvent"/>
+    <aura:registerEvent name="ChangeStepEvent" type="LTE:ChangeStepEvent"/>
+    <aura:handler event="LTE:UpdateShoppingCartItemCountEvent" action="{!c.handleUpdateShoppingCartItemCountEvent}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldChangeEvent}"/>
+    <aura:attribute name="itemCount" type="Integer" default="0"/>
+		<aura:attribute name="navItems" type="List" />
+
+    <div class="fonteva-navbar--container slds-p-vertical_x-small fonteva-slds--navbar fonteva-slds--navbar" aura:id="fontevaSLDSProgressBar">
+        <div class="slds-grid fonteva-navbar_mobile">
+            <aura:if isTrue="{!not(empty(v.eventObj.logoImage))}">
+                <div class="slds-col slds-grow-none slds-shrink-none fonteva-client_logo slds-p-left_large fonteva-navbar_title">
+                    <Framework:Img src="{!v.eventObj.logoImage}"/>
+                </div>
+            </aura:if>
+            <div class="slds-col slds-p-horizontal_large slds-grid slds-grid_vertical slds-grid_align-spread">
+                <div class="slds-text-heading_medium slds-font-weight--semi-bold slds-truncate fonteva-event_title">
+		                <aura:if isTrue="{!v.eventObj.enableEventDisplayNameAndDT == true}">
+                        {!v.eventObj.name}
+		                </aura:if>
+                </div>
+                <div class="slds-m-top_small slds-show_medium   " />
+                <div class="slds-grid slds-grid_align-spread">
+                    <div class="slds-grid fonteva-slds-process-bar--content slds-p-horizontal--medium slds-show_medium">
+                        <div class="slds-col">
+                            <div class="slds-grid slds-grid--align-spread slds-wrap slds-grid--vertical-align-center">
+                                <div class="slds-progress" aura:id="progressWrapper">
+                                    <ol class="slds-progress__list" aura:id="processSteps">
+                                    </ol>
+                                    <div class="slds-progress-bar hidden" aura:id="progressBar">
+                                        <span aura:id="progressBarWidth" class="slds-progress-bar__value" style="width:0%;">
+                                            <span class="slds-assistive-text">Progress: 0%</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <aura:if isTrue="{!not(v.purchaseComplete)}">
+                        <div class="{!v.showPicklist ? 'slds-align-middle slds-hide_medium' :'slds-hide'}">
+                            <Framework:InputFields group="mobilePicklist" labelStyleClasses="slds-hide" fieldType="picklist" styleClasses="fonteva-select_nav" value="{!v.mobileOrderObj}" aura:id="mobileSteps" fireChangeEvent="true"/>
+                        </div>
+                        <div class="{!not(v.showPicklist) ? 'slds-align-middle slds-hide_medium slds-grid fonteva-picklist_placeholder' :'slds-hide'}">
+                            <div class="slds-align-middle">{!v.currentStepName}</div>
+                        </div>
+                    </aura:if>
+                    <div class="slds-grid fonteva-timer">
+                        <div aura:id="timerCancel">
+                            <span aura:id="timerMd" class="slds-shrink-none slds-grid">
+
+                            </span>
+                        </div>
+                        <aura:if isTrue="{!not(v.purchaseComplete)}">
+                            <div class="slds-hide_small" onclick="{!c.openModal}">
+                                <div class="fonteva-shopping_amount">{!v.itemCount}</div>
+                            </div>
+                        </aura:if>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <Framework:MessagePrompt title="{!$Label.LTE.Cancel_Registration_Header}"
+                             message="{!'&lt;div>'+$Label.LTE.Cancel_Reg_First+'&lt;/div>'+$Label.LTE.Cancel_Reg_Second}"
+                             severity="warning"
+                             aura:id="cancelPrompt"
+                             cancelButtonLabel="{!$Label.LTE.Cancel_Reg_No}"
+                             submitButtonLabel="{!$Label.LTE.Cancel_Reg_Yes}"
+                             submitOnClickAction="{!c.fireCancelRegEvent}"/>
+</aura:component>

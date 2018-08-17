@@ -1,0 +1,5 @@
+<apex:page standardController="Contact">
+    <flow:interview name="Interaction_Report_Contact" finishLocation="{!$Page.InteractionSuccessPage}">
+        <apex:param name="varMainContactID" value="{!Contact.Id}"/>
+    </flow:interview> 
+</apex:page>

@@ -1,0 +1,6 @@
+<aura:component description="EventBuilderPageName">
+    <aura:attribute name="pageName" type="String" required="true"/>
+    <aura:attribute name="pageDisplayName" type="String" default=""/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    {!v.pageDisplayName}
+</aura:component>

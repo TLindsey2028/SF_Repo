@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="MyAttendeesLoadedEvent">
+	<aura:attribute name="attendees" type="LTE.AttendeeRecord[]"/>
+</aura:event>

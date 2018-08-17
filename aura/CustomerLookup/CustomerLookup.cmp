@@ -1,0 +1,44 @@
+<aura:component access="global" controller="OrderApi.CustomerLookupsController">
+    <aura:attribute name="value" type="Map" access="global" default="{}"/>
+    <aura:attribute name="valueObj" type="Map" default="{}"/>
+    <aura:attribute name="sldsIconResource" type="String" default="OrderApi__SLDS_Icons" access="global"/>
+    <aura:attribute name="customerObj" type="Map" default="{}" access="global"/>
+    <aura:attribute name="oldValue" type="String"/>
+    <aura:attribute name="oldConValue" type="String"/>
+    <aura:attribute name="contactCreatedUpdateAccount" type="Boolean" default="false"/>
+    <aura:attribute name="autoHideContact" type="Boolean" default="true" access="global"/>
+    <aura:attribute name="label" type="String" default="{!$Label.OrderApi.CustomerLookupLabel}" access="global"/>
+    <aura:attribute name="contactLabel" type="String" default="Contact" access="global"/>
+    <aura:attribute name="contactId" type="String" default="contactId" access="global"/>
+    <aura:attribute name="contactNubbinLocation" type="String" default="right" access="global"/>
+    <aura:attribute name="group" default="" description="Group name" type="String" access="global"/>
+    <aura:attribute name="isRequired" default="false" description="input value" type="Boolean" access="global"/>
+    <aura:attribute name="globalId" description="Global Value" type="String"/>
+    <aura:attribute name="globalConId" description="Global Value" type="String" access="global"/>
+    <aura:attribute name="validated" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="accountConField" type="String"/>
+    <aura:attribute name="conField" type="String"/>
+    <aura:attribute name="fireChangeEvent" default="false" description="input value" type="Boolean" access="global"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="OrderApi:ContactCreatedEvent" action="{!c.handleContactCreationEvent}"/>
+    <aura:handler event="OrderApi:DisableComponent" action="{!c.handleDisableComponentEvent}"/>
+    <aura:registerEvent name="InputFieldValueChangedEvent" type="Framework:InputFieldValueChangedEvent"/>
+    <aura:registerEvent name="CustomerLookupFilterUpdatedEvent" type="OrderApi:CustomerLookupFilterUpdatedEvent"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:method name="updateValue" action="{!c.updateValue}" access="global">
+        <aura:attribute name="value" type="String" default="" description="Value To Set" access="global"/>
+        <aura:attribute name="contact" type="String" default="" description="Value To Set" access="global"/>
+        <aura:attribute name="fireChangeEvent" type="Boolean" default="false" description="input value" access="global"/>
+    </aura:method>
+    <aura:method name="showContactField" action="{!c.showContactFields}" access="global"/>
+    <aura:method name="validate" action="{!c.validate}" access="global"/>
+    <div class="slds-grid slds-nowrap">
+        <div class="slds-shrink-none slds-grow-none slds-position--relative" aura:id="accountCon">
+            <div aura:id="ca"></div>
+        </div>
+        <div class="slds-shrink-none slds-grow-none slds-hide slds-p-left--small slds-position--relative" aura:id="contactDiv">
+            <div aura:id="contactOnly"></div>
+        </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

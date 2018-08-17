@@ -1,0 +1,121 @@
+<aura:component description="SalesOrderShipping" controller="OrderApi.SalesOrderPaymentController" access="global">
+  <aura:attribute name="salesOrder" type="Object" default="{}" access="global"/>
+  <aura:attribute name="showAddressInFrame" type="Map" default='{}'/>
+  <aura:attribute name="addressOtherAttributes" type="Map" default="{allowManualAddress : true}"/>
+  <aura:attribute name="shippingObj" type="Map" default="{}" access="global"/>
+  <aura:attribute name="validated" type="Boolean" default="false" access="global"/>
+  <aura:attribute name="showingTaxField" type="Boolean" default="false"/>
+  <aura:attribute name="willNotShip" type="Boolean" default="false"/>
+  <aura:attribute name="addressNotFoundText" type="String" default="{!$Label.OrderApi.Known_Address_None_Found}" access="global"/>
+  <aura:attribute name="linkTextShipping" type="String" default=""/>
+  <aura:attribute name="fieldTextShipping" type="String" default=""/>
+  <aura:attribute name="willNotShipMessage" type="String" default=""/>
+  <aura:attribute name="shipppingGlobalId" type="String" default=""/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+  <aura:handler event="OrderApi:SalesOrderUpdateEvent" action="{!c.handleSalesOrderUpdate}"/>
+  <aura:registerEvent name="WillNotShipEvent" type="OrderApi:WillNotShipEvent"/>
+  <aura:registerEvent name="SalesOrderUpdateEvent" type="OrderApi:SalesOrderUpdateEvent"/>
+  <aura:registerEvent name="ProcessingChangesEvent" type="OrderApi:ProcessingChangesEvent"/>
+  <aura:registerEvent name="ToggleCheckoutPanelsEvent" type="OrderApi:ToggleCheckoutPanelsEvent"/>
+  <aura:registerEvent name="ToggleKnownAddressSummaryEvent" type="OrderApi:ToggleKnownAddressSummaryEvent"/>
+  <aura:handler event="OrderApi:DisableComponent" action="{!c.handleDisableComponentEvent}"/>
+  <aura:method name="validate" action="{!c.validate}" access="global"/>
+  <aura:attribute name="isPortal" type="Boolean" default="false" access="global"/>
+  <aura:attribute name="showContinueButton" type="Boolean" default="false"/>
+  <aura:attribute name="isThemed" type="Boolean" default="false" />
+  <aura:attribute name="shippingRatesLoaded" type="Boolean" default="false"/>
+  <aura:attribute name="noAddressesFound" type="Boolean" default="false" access="global"/>
+  <aura:handler event="OrderApi:KnownAddressChangeEvent" action="{!c.handleKnownAddressChangeEvent}"/>
+  <aura:handler event="OrderApi:CreditCardContactUpdateEvent" action="{!c.handleCCContactUpdateEvent}"/>
+  <aura:dependency resource="OrderApi:SalesOrderShippingLine"/>
+  <aura:if isTrue="{!!v.isPortal}">
+    <div class="slds-col slds-grid">
+      <div class="slds-col slds-size--1-of-1 slds-m-bottom--medium">
+        <div data-name="fieldTextShipping" class="slds-text-heading_small"><strong>{!v.fieldTextShipping}</strong></div>
+      </div>
+    </div>
+  </aura:if>
+  <div data-name="mainKnownAddressDiv" aura:id="mainKnownAddressDiv">
+	  <OrderApi:KnownAddresses isShippingTaxAddress="true" addressNotFoundText="{!v.addressNotFoundText}" isPortal="{!v.isPortal}" isThemed="{!v.isThemed}" addressLoadedAction="{!c.addressFoundOrNot}" createModalAddressHeader="{!'New '+v.fieldTextShipping}" editModalAddressHeader="{!'Edit '+v.fieldTextShipping}" aura:id="knownAddresses" showNoAddressText="true" contactId="{!v.salesOrder.contactId}" value="{!v.salesOrder.addressObj}" uniqueId="salesOrderShipping" salesOrderId="{!v.salesOrder.salesOrderId}"/>
+  </div>
+  <div data-name="currencyField" class="hidden">
+    <Framework:CurrencyField isMultiCurrencyOrg="{!v.salesOrder.isMultiCurrency}" currencyISOCode="{!v.salesOrder.currencyISOCode}" aura:Id="currencyField" value="0"/>
+  </div>
+  <span data-name="mainDivWrapper" aura:id="mainDivWrapper">
+  <div class="{!and(!v.salesOrder.shippingRequired,v.salesOrder.taxRequired)? '' : 'hidden'}">
+    <aura:if isTrue="{!and(v.noAddressesFound,v.isPortal)}">
+      <div class="slds-grid slds-grid_vertical slds-text-align_center">
+        <aura:if isTrue="{!and(!v.salesOrder.shippingRequired,v.salesOrder.taxRequired)}">
+          <div>
+            <img src="{!$Resource.OrderApi__aui+'/img/icons/svg/accounting_bg.svg'}" class="slds-m-bottom_small no-address-icon slds-align--absolute-center"/>
+          </div>
+          <div data-name="Items_Need_To_Be_Taxed">
+            {!$Label.OrderApi.Items_Need_To_Be_Taxed}
+          </div>
+          <div data-name="Billing_Address_Missing" class="slds-m-bottom_small">
+            {!$Label.OrderApi.Billing_Address_Missing}
+          </div>
+        </aura:if>
+        <div>
+          <Framework:Button qaData='{"type" : "button", "name": "createAddressButton"}' aura:id="createAddressButton" label="Create Address" onClickAction="{!c.openAddressModal}" enableProgressIndicator="false" type="brand"/>
+        </div>
+      </div>
+    </aura:if>
+    <div class="{!and(v.isPortal,v.showContinueButton) ? 'slds-col slds-size--1-of-1 slds-p-bottom--medium slds-grid_vertical slds-text-align_center' : 'hidden'}">
+      <Framework:Button qaData='{"type" : "button", "name": "useShipping"}' aura:id="useShipping" type="brand" label="Continue" onClickAction="{!c.showSummary}" enableProgressIndicator="false"/>
+    </div>
+  </div>
+  <div class="{!and(v.salesOrder.shippingRequired,v.shippingObj.regions)? '' : 'hidden'}">
+    <aura:if isTrue="{!!v.isPortal}">
+      <div class="slds-size--1-of-1 slds-m-bottom--medium slds-m-top--large">
+        <div data-name="Shipping_Information_Sales_Order" class="slds-text-heading--small">
+          <strong>{!$Label.OrderApi.Shipping_Information_Sales_Order}</strong>
+        </div>
+      </div>
+    </aura:if>
+    <aura:if isTrue="{!and(v.noAddressesFound,v.isPortal)}">
+      <div class="slds-grid slds-grid_vertical slds-text-align_center">
+        <aura:if isTrue="{!v.salesOrder.shippingRequired}">
+          <div>
+            <img src="{!$Resource.OrderApi__aui+'/img/icons/svg/shipping/shipping-method.svg'}" class="slds-m-bottom_small no-address-icon slds-align--absolute-center"/>
+          </div>
+          <div data-name="Items_Need_To_Be_Shipped">
+            {!$Label.OrderApi.Items_Need_To_Be_Shipped}
+          </div>
+          <div data-name="Address_Missing" class="slds-m-bottom_small">
+            {!$Label.OrderApi.Address_Missing}
+          </div>
+        </aura:if>
+        <div>
+          <Framework:Button qaData='{"type" : "button", "name": "createAddressButton"}' aura:id="createAddressButton" label="Create Address" onClickAction="{!c.openAddressModal}" enableProgressIndicator="false" type="brand"/>
+        </div>
+      </div>
+    </aura:if>
+    <span data-name="willNotShipMessage" class="{!v.willNotShip ? 'slds-text-color—-error slds-align_absolute-center' : 'hidden'}">
+      <lightning:icon iconName="utility:warning" size="small" class="slds-m-right--small" variant="error"/>
+            {!v.willNotShipMessage}
+    </span>
+    <span class="{!v.willNotShip ? 'hidden' : ''}">
+      <div data-name="orderShippingDiv" aura:id="orderShippingDiv" class="{!v.salesOrder.businessGroup.enableShippingByOrder ? '' : 'hidden'}">
+      </div>
+      <div class="{!v.salesOrder.businessGroup.enableShippingByOrder ? 'hidden' : 'slds-col slds-size--1-of-1 slds-p-bottom--medium'}">
+        <table data-name="fonteva-shipping-table" class="slds-table slds-table--bordered slds-no-row-hover fonteva-shipping-table">
+          <thead>
+            <tr class="slds-text-heading--label fonteva-shipping-table">
+              <th data-name="Required_Shipping_Sales_Order" >{!$Label.OrderApi.Required_Shipping_Sales_Order}</th>
+              <th data-name="Shipping_Method_Sales_Order" >{!$Label.OrderApi.Shipping_Method_Sales_Order}</th>
+            </tr>
+          </thead>
+          <tbody data-name="orderShippingListDiv" aura:id="orderShippingListDiv" class="fonteva-shipping-table">
+          </tbody>
+        </table>
+      </div>
+       <div class="{!and(v.isPortal,v.showContinueButton)?'slds-col slds-size--1-of-1 slds-p-bottom--medium slds-grid_vertical slds-text-align_center' : 'hidden'}">
+          <Framework:Button qaData='{"type" : "button", "name": "useShipping"}' aura:id="useShipping" type="brand" label="Continue" onClickAction="{!c.showSummary}" enableProgressIndicator="false"/>
+       </div>
+    </span>
+  </div>
+  </span>
+  <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

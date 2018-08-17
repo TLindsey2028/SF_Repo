@@ -1,0 +1,9 @@
+<aura:component description="EventBuilderTabIcon">
+    <aura:attribute name="iconUrl" type="String" required="true"/>
+    <aura:attribute name="showImage" type="Boolean" default="false"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <span data-name="iconSpan" aura:id="iconSpan"/>
+    <aura:if isTrue="{!v.showImage}">
+        <img src="{!v.iconUrl}" onerror="console.log('sdf');" class="slds-icon slds-icon-text-default slds-icon--medium slds-m-bottom--x-small" />
+    </aura:if>
+</aura:component>

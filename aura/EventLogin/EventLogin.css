@@ -1,0 +1,49 @@
+@media only screen and (min-width: 48em) {
+    .THIS .loginDiv + .loginDiv {
+        border-left: 1px solid;
+    }
+}
+@media only screen and (max-width: 48em) {
+    .THIS .loginDiv + .loginDiv {
+        border-top: 1px solid;
+    }
+    .THIS .loginDiv {
+        padding-left: 0!important;
+        padding-right: 0!important;
+    }
+    .THIS .loginDiv:first-of-type {
+        padding-top: 0!important;
+    }
+}
+
+.THIS .slds-fonteva-login-component {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.THIS.fonteva-modal .slds-modal__header,
+.THIS.fonteva-modal .slds-modal__footer {
+    padding: 1.5rem;
+    border-width: 0px;
+    background-color: white;
+}
+
+.THIS.fonteva-modal .slds-modal__header {
+    padding-bottom: .5rem;
+    text-align: left;
+}
+
+.THIS.fonteva-modal .slds-modal__header h2 {
+    font-weight: 500;
+}
+
+.THIS.fonteva-modal .slds-modal__footer {
+    text-align: center;
+}
+
+.THIS.fonteva-modal .slds-modal__footer .slds-button--brand {
+    padding-left: 4em;
+    padding-right: 4em;
+    line-height: 2.75rem;
+    box-shadow: 0px 2px 0px #444!important;
+}

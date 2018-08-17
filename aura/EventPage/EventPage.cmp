@@ -1,0 +1,18 @@
+<aura:component description="LTE.EventPage" implements="LTE:EventInterface">
+    <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/lodash.min.js'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute name="pageObj" type="LTE.EventPage"/>
+    <aura:attribute name="componentsBuilt" type="Boolean" default="false"/>
+    <aura:attribute name="index" type="Integer"/>
+    <aura:handler event="LTE:BuildEventPageEvent" action="{!c.handleBuildEventPageEvent}"/>
+    <aura:registerEvent name="BuildEventPageEvent" type="LTE:BuildEventPageEvent"/>
+    <div class="slds slds-loading-layout" aura:id="mainLoader">
+        <div class="slds-grid slds-loading-layout">
+            <div class="slds-col slds-text-align--center slds-align-middle" >
+                <img src="{!$Resource.Framework__SLDS_BaseV2+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+                <span class="slds-text-heading--medium">{!$Label.LTE.Loading}</span>
+            </div>
+        </div>
+    </div>
+    <div aura:id="widgets" class="widgets-events slds-hide">
+    </div>
+</aura:component>

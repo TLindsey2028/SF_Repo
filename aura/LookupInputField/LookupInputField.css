@@ -1,0 +1,93 @@
+.THIS .selectize-control.loading {
+    text-align: left!important;
+}
+
+.THIS .selectize-control.single .selectize-input {
+    background: white!important;
+    background-color: white!important;
+    border-color: #d8dde6;
+    height: 36px!important;
+}
+
+.THIS .selectize-control.single .selectize-input.disabled {
+    background-color: #e0e5ee!important;
+    border-color: #a8b7c7!important;
+    cursor: not-allowed!important;
+    -webkit-user-select: none;
+    background-image: initial!important;
+    opacity: 1.0!important;
+}
+
+.THIS .selectize-control.single .selectize-input.disabled * {
+    background-color: #e0e5ee!important;
+    border-color: #a8b7c7!important;
+    cursor: not-allowed!important;
+    -webkit-user-select: none;
+    background-image: initial!important;
+    opacity: 1.0!important;
+}
+
+.THIS .disable-icon {
+    cursor: not-allowed!important;
+    display: none;
+}
+
+.THIS .selectize-input {
+    box-shadow: none!important;
+}
+
+.THIS .selectize-input.focus input {
+    padding-right: 25px!important;
+}
+
+.THIS .slds-input-action-icon {
+    position: absolute;
+    right: 0;
+    height: 36px;
+    width: 36px;
+    padding: 10px;
+    opacity: .5;
+    z-index: 2;
+    filter: grayscale(100%);
+}
+
+.THIS .slds-modal .slds-input-action-icon {
+    z-index: 100000!important;
+}
+
+.THIS .slds-input-action-icon.slds-has-items  {
+    cursor: pointer;
+}
+
+.THIS .selectize-control.single .selectize-input:after {
+    display: none;
+}
+.THIS .selectize-control.single .selectize-input.has-items:after {
+    display: none;
+}
+
+.THIS .single .selectize-input div {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+}
+
+.THIS .selectize-dropdown {
+    z-index: 100001;
+}
+
+.THIS .selectize-input input {
+    width: 100% !important;
+}
+
+.THIS .selectize-input.focus {
+    outline: 0!important;
+    border-color: #1589ee!important;
+    background-color: #fff!important;
+    box-shadow: 0 0 3px #0070D2!important;
+}
+
+
+.THIS .selectize-input.items.has-options.full.has-items > div:first-of-type{
+    text-overflow: ellipsis;
+}

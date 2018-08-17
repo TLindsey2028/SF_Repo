@@ -1,0 +1,19 @@
+<aura:component description="FormField">
+  <aura:attribute name="value" type="Map"/>
+  <aura:attribute name="fireChangeEvent" default="true" type="Boolean"/>
+  <aura:attribute name="secondaryGroup" type="String"/>
+  <aura:attribute name="isValidated" type="Boolean" default="false"/>
+  <aura:attribute name="dependencies" type="List" default="[]"/>
+  <aura:method name="validate" action="{!c.validate}"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdatedEvent}"/>
+  <aura:registerEvent name="InputFieldValueChangedEvent" type="Framework:InputFieldValueChangedEvent"/>
+  <div class="{!v.value.isHidden ? 'hidden' : 'slds-col slds-grid'}">
+    <div class="{!v.value.fieldSize+' slds-p-horizontal--small slds-m-bottom-x--small'}">
+      <Framework:InputFields aura:id="value" fieldType="{!v.value.fieldType}" label="{!v.value.name}"
+                             suppressValidationMessages="true" isRequired="{!v.value.isRequired}"
+                             helpText="{!v.value.helpText}" fireChangeEvent="{!v.fireChangeEvent}"
+                             group="{!v.value.fieldId}" secondaryGroup="{!v.secondaryGroup}" value="{!v.value}"
+                             selectOptions="{!v.value.selectOptions}" otherAttributes="{!v.value.otherAttributes}"/>
+    </div>
+  </div>
+</aura:component>

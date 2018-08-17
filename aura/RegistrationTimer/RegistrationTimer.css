@@ -1,0 +1,14 @@
+.THIS .fonteva-slds-process-bar-text svg {
+    width: 20px!important;
+    height: 20px!important;
+    margin-bottom: 1px;
+}
+
+.THIS .slds-backdrop.slds-backdrop--open,
+.THIS .slds-backdrop.slds-backdrop_open {
+    z-index: 9001;
+}
+
+.THIS.FrameworkMessagePrompt {
+    z-index: 9003
+}

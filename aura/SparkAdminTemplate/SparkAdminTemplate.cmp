@@ -1,0 +1,170 @@
+<aura:component controller="Framework.AdminTemplateController" implements="force:appHostable" extends="Framework:BaseComponent">
+    <ltng:require scripts="{!join(',', $Resource.Framework__SLDS_BaseV2+'/js/scripts.min.js', $Resource.Framework__UrlUtil)}" styles="{!$Resource.Framework__SLDS_BaseV2+'/css/styles.css'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:handler event="Framework:ShowComponentEvent" action="{!c.handleShowComponentEvent}"/>
+    <aura:handler event="Framework:AppUpdateActivatedDismissedEvent" action="{!c.handleAppUpdateActivationEvent}"/>
+    <aura:attribute name='labels' default='' type='Object' description="Inputvalue"/>
+    <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/helpers.js'}"/>
+    <aura:attribute name='showWarningSign' default='false' type='Boolean' description="Show App Update Warning Sign"/>
+    <aura:attribute name='apps' default='[]' type='List' description="List Of Apps"/>
+    <aura:attribute name='sysLogPrefix' default='' type='String' description="Prefix for system logs"/>
+    <aura:registerEvent name="ComponentLoadedEvent" type="Framework:ComponentLoadedEvent"/>
+    <aura:registerEvent name="AnalyticsEvent" type="Framework:AnalyticsEvent"/>
+    <aura:dependency resource="markup://Framework:RollupSummaries"/>
+    <aura:dependency resource="markup://Framework:RegisteredObjects"/>
+    <aura:dependency resource="markup://Framework:RoutingRules"/>
+    <style>
+        @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+             .slds-ie-fix--width {
+                max-width: calc(100vw - 17px)!important;
+             }
+             .slds-ie-fix--height {
+                max-width: calc(100vw - 17px)!important;
+                max-height: 25px!important;
+             }
+             .slds-ie-fix--width__icon {
+                 max-width: 51px!important;
+             }
+             .slds-scope--dashboard .slds-ie-fix--width__icon {
+                 max-width: 50px!important;
+                 max-height: 50px!important;
+                 width: 50px!important;
+                 height: 50px!important;
+             }
+             .slds-scope--dashboard .slds-ie-fix--width__icon img {
+                 max-width: 50px!important;
+                 max-height: 50px!important;
+                 width: 50px!important;
+                 height: 50px!important;
+             }
+         }
+    </style>
+    <div class="slds hidden slds-scope--dashboard" aura:id="mainWrapperDiv">
+      <div class="slds-grid slds-grid--align-center slds-wrap slds-theme--default">
+
+        <div class="slds-medium-size--1-of-4 slds-size--1-of-1 slds-medium-object-height--full slds-scrollable--y slds-border--right">
+
+          <ul class="slds-list--vertical slds-p-vertical--medium slds-sidebar-interaction slds-p-left--x-small">
+
+            <li class="slds-list__item" role="presentation">
+              <a href="{!$Page.admin}" data-id="admin_dashboard" aura:id="admin_dashboard" class="slds-grid component-link selected slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small" data-componentname="Framework:SparkAdminSidebar" onclick="{!c.showComponent}">
+                {!$Label.Framework.Dashboard}
+              </a>
+            </li>
+            <li class="slds-list__item" role="presentation">
+              <a href="javascript:void(0)" data-id="admin_config" aura:id="admin_config" class="slds-grid component-link slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small" data-componentname="Framework:SparkConfig" onclick="{!c.showComponent}">
+                {!$Label.Framework.Configuration}&nbsp;{!$Label.Framework.Summary}
+              </a>
+            </li>
+
+            <li class="slds-list__item" role="presentation">
+              <a href="{!$Page.admin_marketplace}" data-id="admin_marketplace" aura:id="admin_marketplace" class="slds-grid component-link slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small"  data-componentname="Framework:Marketplace" onclick="{!c.showComponent}">
+                {!$Label.Framework.Marketplace}
+              </a>
+            </li>
+
+            <li class="slds-list__item" role="presentation">
+              <a href="javascript:void(0)" aura:id="extend-state" class="collapsed slds-grid slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small" data-name="extend" data-id="extend-state" onclick="{!c.expandMenu}">
+                  <lightning:icon iconName="utility:chevrondown" class="icon-utility-chevrondown slds-align-middle" size="x-small" alternativeText="Down"/>
+                  <span class="slds-m-left--xx-small">
+                  {!$Label.Framework.Extend}&nbsp;
+                  </span>
+              </a>
+              <ul class="collapse" aura:id="extend">
+                <li class="slds-list__item">
+                  <a href="javascript:void(0)" data-id="admin_registered_objects" aura:id="admin_registered_objects" class="slds-grid component-link slds-size--1-of-1 slds-p-vertical--small slds-p-left--xx-large "  data-componentname="Framework:RegisteredObjects" onclick="{!c.showComponent}">
+                    {!$Label.Framework.Registered_Objects}
+                  </a>
+                </li>
+                <li class="slds-list__item">
+                  <a href="javascript:void(0)" data-id="admin_api_services" aura:id="admin_api_services" class="slds-grid component-link slds-size--1-of-1 slds-p-vertical--small slds-p-left--xx-large" data-componentname="Framework:ApiServices" onclick="{!c.showComponent}">
+                    {!$Label.Framework.Services}
+                  </a>
+                </li>
+                <li class="slds-list__item">
+                  <a href="javascript:void(0)" id="admin_rollups" data-id="admin_rollups" aura:id="admin_rollups" class="slds-grid component-link slds-size--1-of-1 slds-p-vertical--small slds-p-left--xx-large" onclick="{!c.showComponent}" data-componentname="Framework:RollupSummaries">
+                    {!$Label.Framework.Rollup_Summary_Fields}
+                  </a>
+                </li>
+                <li class="slds-list__item">
+                  <a href="javascript:void(0)" onclick="{!c.showComponent}" data-componentname="Framework:RoutingRules" data-id="admin_routing_rules" aura:id="admin_routing_rules" class="slds-grid component-link slds-size--1-of-1 slds-p-vertical--small slds-p-left--xx-large">
+                    {!$Label.Framework.Routing_Rules}
+                  </a>
+                </li>
+                <li class="slds-list__item disabled">
+                  <a href="{!$Page.admin_custom_scripts}" data-id="admin_custom_scripts" aura:id="admin_custom_scripts" class="slds-grid component-link slds-size--1-of-1 slds-p-vertical--small slds-p-left--xx-large">
+                    {!$Label.Framework.Custom_Scripts}
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="slds-list__item" role="presentation">
+              <a href="javascript:void(0)" aura:id="apps-state"  class="collapsed slds-grid slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small" data-name="apps" data-id="apps-state" onclick="{!c.expandMenu}">
+                <div class="slds-object--full__width">
+                     <lightning:icon iconName="utility:chevrondown" class="icon-utility-chevrondown slds-align-middle" size="x-small" alternativeText="Down"/>
+                    <span class="slds-m-left--xx-small">
+                        {!$Label.Framework.Apps}&nbsp;
+                    </span>
+                  <aura:if isTrue="{!v.showWarningSign}">
+                      <lightning:icon iconName="utility:warning" size="small" alternativeText="warning" class="slds-icon-text-warning" variant="warning"/>
+                  </aura:if>
+                </div>
+              </a><!-- /.slds-object-full__width -->
+              <ul class="collapse" aura:id="apps">
+                  <aura:iteration items="{!v.apps}" var="app" aura:id="applications">
+                    <li class="{!'slds-list__item admin-apps-'+app.Name}">
+                      <a href="javascript:void(0)" id="{!app.namespace}" aura:id="applicationLinks" class="slds-grid component-link slds-size--1-of-1 slds-p-vertical--small slds-p-left--xx-large" onclick="{!c.showComponent}" data-id="Framework:AdminApplications" data-componentname="Framework:AdminApplications" data-appname="{!app.name}" data-namespace="{!app.namespace}" data-appdescription="{!app.description}">
+                        {!app.name}
+                        <aura:if isTrue="{!app.numberOfUpdatesAvailable > 0}">
+                            <span class="slds-badge slds-badge--wide slds-align--absolute-center slds-ie-fix--height slds-theme--warning slds-m-left--small slds-text-body--label slds-text-color--white">
+                                <strong>{!app.numberOfUpdatesAvailable}</strong>
+                            </span>
+                       </aura:if>
+                      </a>
+                    </li>
+                  </aura:iteration>
+              </ul>
+            </li>
+
+            <li class="slds-list__item" role="presentation">
+              <a href="javascript:void(0)"  aura:id="tools-state" class="collapsed slds-grid slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small" data-name="tools" data-id="tools-state" onclick="{!c.expandMenu}">
+                  <lightning:icon iconName="utility:chevrondown" class="icon-utility-chevrondown slds-align-middle" size="x-small" alternativeText="Down"/>
+                  <span class="slds-m-left--xx-small">
+                    {!$Label.Framework.Tools}&nbsp;
+                  </span>
+              </a><!-- /.slds-object-full__width -->
+              <ul class="collapse" aura:id="tools">
+                <li class="slds-list__item">
+                  <a href="{!v.sysLogPrefix}" class="slds-grid slds-size--1-of-1 slds-p-vertical--small slds-p-left--xx-large">
+                    {!$Label.Framework.System_Logs}
+                  </a>
+                </li>
+                <li class="slds-list__item">
+                  <a href="javascript:void(0)" onclick="{!c.redirectToToolkit}" data-id="admin_mdapi_profiletools" aura:id="admin_mdapi_profiletools" class="slds-grid slds-size--1-of-1 slds-p-vertical--small slds-p-left--xx-large">
+                    {!$Label.Framework.Access_Manager}
+                  </a>
+                </li>
+                <li class="slds-list__item disabled">
+                  <a href="{!$Page.admin_analytics}" data-id="admin_analytics" aura:id="admin_analytics" class="slds-grid component-link slds-size--1-of-1 slds-p-vertical--small slds-p-left--xx-large">
+                    {!$Label.Framework.Application_Analytics}
+                  </a>
+                </li>
+                  <li class="slds-list__item" role="presentation">
+                      <a href="javascript:void(0)" onclick="{!c.showComponent}" data-componentname="Framework:LicenseUsage" data-id="admin_license_usage" aura:id="admin_license_usage" class="slds-grid component-link slds-size--1-of-1 slds-p-vertical--small slds-p-left--xx-large">License Usage</a>
+                  </li>
+              </ul>
+            </li>
+
+            <li class="slds-list__item" role="presentation">
+              <a href="javascript:void(0)" onclick="{!c.showComponent}" data-componentname="Framework:HelpResources" data-id="admin_help" aura:id="admin_help" class="slds-grid component-link slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small">
+                {!$Label.Framework.Help}&nbsp;{!$Label.Framework.Resources}
+              </a>
+            </li>
+          </ul>
+
+        </div><!-- /.slds-medium-1-of-4 -->
+
+        {!v.body}
+      </div><!-- /.slds-grid -->
+    </div><!-- /.slds -->
+</aura:component>

@@ -1,0 +1,35 @@
+<aura:component description="PlayGroundTemplate">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:attribute name="playGroundObj" type="Map" default="{}"/>
+  <aura:attribute name="playGroundObjString" type="String" default=""/>
+  <aura:attribute name="globalIdValue" type="String" default=""/>
+  <aura:attribute name="fieldTypeMap" type="Map" default="{}"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdate}"/>
+  <aura:dependency resource="markup://Framework:InputFields"/>
+  <div class="slds">
+    <div class="slds-grid slds-wrap slds-grid--pull-padded slds-grid--align-center slds-p-horizontal--small">
+      <div class="slds-col--padded slds-size--1-of-1 slds-medium-size--1-of-4 slds-large-size--1-of-4 slds-p-top--small slds-object-height--full slds-scrollable--y slds-border--right">
+        <div class="slds-grid slds-wrap slds-grid--pull-padded">
+          <div class="slds-col--padded slds-size--1-of-1 slds-p-top--small">
+            <Framework:InputFields value="{!v.playGroundObj}" fieldType="picklist" aura:id="fieldType" label="Select a field to display" fireChangeEvent="true"/>
+          </div>
+          <div class="slds-col--padded slds-size--1-of-1 slds-p-top--small">
+            <Framework:Button label="compile" onClickAction="{!c.compileInputFields}" aura:id="compileBtn"/>
+          </div>
+          <div class="slds-col--padded slds-size--1-of-1 slds-p-top--small">
+              <Framework:Button label="clear" enableProgressIndicator="false" onClickAction="{!c.clearInputFields}" aura:id="clearBtn"/>
+          </div>
+          <div class="slds-col--padded slds-size--1-of-1 slds-p-top--small">
+            <pre>{!v.playGroundObjString}</pre>
+          </div>
+        </div>
+      </div>
+      <div class="slds-col--padded slds-size--1-of-1 slds-medium-size--3-of-4 slds-large-size--3-of-4 slds-p-top--small slds-object-height--full slds-scrollable--y">
+        <div class="slds-form--compound" aura:id="inputFieldBody">
+          <span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</aura:component>

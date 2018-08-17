@@ -1,0 +1,5 @@
+<aura:documentation>
+	<aura:description>
+		This Grid displays expired data available for deletion and provides tools to choose and delete said data
+	</aura:description>
+</aura:documentation>

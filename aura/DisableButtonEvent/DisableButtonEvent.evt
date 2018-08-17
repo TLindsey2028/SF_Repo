@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="DisableButtonEvent">
+    <aura:attribute name="setDisable" type="Boolean" default="false"/>
+</aura:event>

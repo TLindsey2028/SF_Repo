@@ -1,0 +1,25 @@
+<aura:component controller="Framework.PulseCompRegistrationController">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:attribute name="availableComponents" type="List" default="[]" />
+	<aura:registerEvent name="ComponentLoadedEvent" type="Framework:ComponentLoadedEvent"/>
+	<div class="slds">
+		<div class="slds-col slds-size--1-of-1">
+			<div class="slds-page-header">
+				<div class="slds-text-heading--medium">
+                        <span class="slds-m-right--small">
+                            <img src="{!$Resource.Framework__SLDS_Icons+'/icons/utility/setup_120.png'}" width="25"/>
+                    	Fonteva Pulse
+                        </span>
+				</div>
+			</div>
+			<div class="slds-grid slds-grid--pull-padded">
+				<div class="slds-col--padded slds-size--1-of-1">
+					&nbsp;
+				</div>
+			</div>
+		</div>
+		<div aura:id="dynamicCmpDiv">
+		</div>
+		<Framework:Toast aura:id="toastMessages"/>
+	</div>
+</aura:component>

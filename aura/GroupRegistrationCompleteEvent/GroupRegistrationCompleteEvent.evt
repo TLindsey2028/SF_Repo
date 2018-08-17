@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="GroupRegistrationCompleteEvent">
+	<aura:attribute name="salesOrderLine" type="String" required="true"/>
+	<aura:attribute name="groupRegistrationAttendeeComplete" type="Boolean" required="true"/>
+</aura:event>

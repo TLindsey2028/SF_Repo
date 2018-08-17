@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="GroupRegistrationChangeAttendeeEvent">
+    <aura:attribute name="groupIdentifier" type="String" required="true"/>
+    <aura:attribute name="attendeeIndex" type="Decimal" required="true"/>
+</aura:event>

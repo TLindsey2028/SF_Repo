@@ -1,0 +1,12 @@
+<aura:component description="EventPrimaryVenue" access="global" extends="LTE:EventBase" implements="LTE:EventInterface">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:attribute name="primaryVenue" type="Map" default="{}" />
+  <div class="fonteva-event-component slds-p-horizontal--medium">
+    <div class="slds-grid slds-grid--vertical slds-p-vertical_medium">
+        <p class="slds-text-heading--medium slds-font-weight--semi-bold">
+          {!$Label.LTE.Primary_Venue}
+        </p>
+      <LTE:EventVenue venue="{!v.primaryVenue}" />
+    </div>
+  </div>
+</aura:component>

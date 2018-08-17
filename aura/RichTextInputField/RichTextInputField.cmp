@@ -1,0 +1,28 @@
+<aura:component>
+    <aura:attribute name="localId" type="String"/>
+    <aura:attribute name="quill" type="Object"/>
+    <aura:attribute name="required" type="Boolean" description="If the field is required" default="false"/>
+    <aura:attribute name="value" type="String" description="The value" default=""/>
+    <aura:attribute name="richText" default="" description="Rich Text Attribute" type="String"/>
+    <aura:attribute name="disabled" type="Boolean" description="Disable Input" default="false"/>
+    <aura:handler name="change" value="{!v.disabled}" action="{!c.activateDeactivateField}"/>
+    <aura:handler event="Framework:InputFieldClearErrorMessagesEvent" action="{!c.handleInputFieldClearErrorMessagesEvent}"/>
+    <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/quill.min.js'}" styles="{!$Resource.Framework__SLDS_BaseV2+'/css/quill.snow.css'}" afterScriptsLoaded="{!c.initEditor}"/>
+    <aura:method name="saveValue" action="{!c.saveValue}"/>
+    <aura:method name="setErrorMessages" action="{!c.setErrorMessages}"
+                 description="Error Message For Field">
+        <aura:attribute name="errorMessages" type="Array" default="[]" description="Error Message"/>
+    </aura:method>
+    <aura:method name="loadExistingValue" action="{!c.loadExistingValue}"
+                 description="Load Existing Value">
+    </aura:method>
+    <aura:method name="clearExistingValue" action="{!c.clearExistingValue}"
+                 description="Clear Existing Value">
+    </aura:method>
+    <div class="slds-form-element__control">
+        <div aura:id="quillJSEditor" id="quillJSEditor" class="quillEditor"></div>
+        <Framework:ValidationErrorMessages aura:id="errorInput"/>
+    </div>
+    <Framework:RichTextInputImageUpload aura:id="richTextImageUpload" localId="{!v.localId}" saveValue="{!c.saveValue}"/>
+    <Framework:RichTextInputSourceEditor aura:id="richTextSourceEditor" localId="{!v.localId}"/>
+</aura:component>

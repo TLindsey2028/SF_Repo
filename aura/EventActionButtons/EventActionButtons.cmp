@@ -1,0 +1,22 @@
+<aura:component description="EventActionButtons" access="global">
+    <aura:attribute name="nextAction" type="Aura.Action"/>
+    <aura:attribute name="disableNext" type="Boolean" default="false"/>
+    <aura:attribute name="previousAction" type="Aura.Action"/>
+    <aura:attribute name="cancelAction" type="Aura.Action"/>
+    <aura:attribute name="showPrevious" type="Boolean" default="false"/>
+    <aura:attribute name="showNext" type="Boolean" default="true"/>
+    <aura:attribute name="nextActionLabel" type="String" default="{!$Label.LTE.Event_Next_Button}"/>
+    <aura:method name="stopIndicator" action="{!c.stopIndicator}" description="Modal Modal" access="global">
+        <aura:attribute name="id" type="String" required="true"/>
+    </aura:method>
+    <aura:method name="disableNextButton" action="{!c.disableNextButton}"/>
+    <aura:method name="enableNextButton" action="{!c.enableNextButton}"/>
+    <aura:registerEvent name="EventCancelRegistrationEvent" type="LTE:EventCancelRegistrationEvent"/>
+    <lightning:button class="fonteva-button fonteva-button_cancel" label="{!$Label.LTE.Event_Cancel_Order}" onclick="{!v.cancelAction}" variant="inverse" />
+    <aura:if isTrue="{!v.showPrevious}">
+        <Framework:Button type="neutral" label="{!$Label.LTE.Event_Previous_Button}" additionalClasses=" slds-tab-animate--top slds-m-right--xx-small" onClickAction="{!v.previousAction}"/>
+    </aura:if>
+    <aura:if isTrue="{!v.showNext}">
+        <Framework:Button type="brand" label="{!v.nextActionLabel}" aura:id="nextStep" additionalClasses=" slds-tab-animate--top slds-m-right--xx-small" onClickAction="{!v.nextAction}" disable="{!v.disableNext}"/>
+    </aura:if>
+</aura:component>

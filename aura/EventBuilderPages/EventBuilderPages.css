@@ -1,0 +1,151 @@
+.THIS .slds-table .slds-truncate.slds-truncate--25 {
+    max-width: 25rem;
+}
+.THIS .componentAvailable {
+    cursor: -webkit-grab;
+}
+
+.THIS .slds-p-around--none {
+    padding-left: 0!important;
+    padding-right: 0!important;
+    padding-top: 0!important;
+    padding-bottom: 0!important;
+}
+
+.THIS .slds-component--list li {
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+}
+
+.THIS .slds-collapse--link.active .slds-icon__container {
+    transform: rotate(90deg);
+}
+
+.THIS .slds-dropdown-trigger_hover.active .slds-dropdown {
+    visibility: hidden!important;
+    pointer-events: none!important;
+}
+.THIS .slds-card.pageComponentDetail {
+    border : 1px solid #d8dde6!important;
+    background-color: #f4f6f9!important;
+}
+
+.THIS .slds-card.slds-card--dashed {
+    border-style: dashed;
+    border: 0.5px dashed;
+}
+
+.THIS .slds-card .slds-card__body {
+    min-height: 54px;
+    margin-bottom: 0!important;
+}
+
+.THIS .slds-button svg,
+.THIS .slds-button span {
+    pointer-events: none;
+}
+
+.THIS .strong {
+    font-weight: 700;
+}
+
+.THIS .add-new-page-btn:disabled {
+    cursor: not-allowed!important;
+}
+
+.THIS .action-cell {
+    overflow: visible !important;
+    width: 91px;
+}
+
+.THIS .pub-col {
+    width: 80px;
+}
+
+.THIS .editGrid .slds-form-element__control.slds-m-bottom--small {
+    margin-bottom: 1px;
+}
+
+.THIS .fonteva-button_pagination .slds-button.slds-button--icon-border {
+    height: 1.4rem;
+}
+
+.THIS .fonteva-button_pagination > div:first-of-type .slds-button.slds-button--icon-border {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+}
+
+.THIS .fonteva-button_pagination > div:last-of-type .slds-button.slds-button--icon-border {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.THIS .fonteva-button_pagination > div.disabled .slds-button.slds-button--icon-border {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.THIS .fonteva-button_pagination > div.disabled:hover {
+    cursor: not-allowed;
+}
+
+.THIS .action-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.THIS .access-divider {
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.THIS .deletePrompt .slds-button--brand,.THIS .deletePrompt .slds-button--brand.disabled {
+    background: red!important;
+    background-color: red!important;
+    border: 1px solid red!important;
+}
+
+.THIS .fonteva-ul_select-wrapper {
+    height: 100%; display: flex; flex-direction: column;
+}
+
+.THIS ul.fonteva-ul_select > li {
+    padding: .5em 1rem;
+    border-left: 1px solid rgb(217, 219, 221);
+    border-right: 1px solid rgb(217, 219, 221);
+    border-top: 1px solid rgb(217, 219, 221);
+}
+
+.THIS ul.fonteva-ul_select > li:first-of-type {
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+
+.THIS ul.fonteva-ul_select > li:last-of-type {
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+    border-bottom: 1px solid rgb(217, 219, 221);
+}
+
+.THIS ul.fonteva-ul_select > li:hover {
+    cursor: pointer;
+}
+
+.THIS ul.fonteva-ul_select > li.active {
+    background-color: #0070d2;
+    color: white;
+}
+
+.THIS .fonteva-height_100 {
+    height: 100%;
+}
+
+.THIS .fonteva-max-scrollable_y {
+    overflow-y: auto;
+    max-height: 100%;
+}
+
+.THIS .fonteva-flex_min {
+    flex: 0 0 auto;
+}

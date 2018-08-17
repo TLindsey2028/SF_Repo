@@ -1,0 +1,252 @@
+<aura:component description="EventBuilderNewEventModal" controller="EventApi.EventsBuilderController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="dateFormat" type="String" description="Date Format"/>
+    <aura:attribute name="eventCategoryId" type="String" description="Event Category Id"/>
+    <aura:attribute name="cloneCategoryId" type="String" description="Event Category Id"/>
+    <aura:attribute name="communityGroupId" type="String"/>
+    <aura:attribute name="sitePrefix" type="String"/>
+    <aura:attribute name="organizationId" type="String"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:attribute name="eventModalObj" type="Map" default="{}" description="Event Modal Object"/>
+    <aura:attribute name="eventObj" type="Map" default="{}" description="Event Modal Object"/>
+    <aura:attribute name="eventModalCloneOptions" type="Map" default="{}" description="Event Modal Object"/>
+    <aura:attribute name="autosaving" type="Boolean" default="false" description="Auto Saving"/>
+    <aura:attribute name="isConference" type="Boolean" default="false" description="Is Conference"/>
+    <aura:attribute name="isLightning" type="Boolean" default="false" description="Is Lightning"/>
+    <aura:attribute name="categoryList" type="List[]" default=""/>
+    <aura:attribute name="sites" type="Object[]" default="[]"/>
+    <aura:attribute name="cloneOptions" type="Map" default="{}"/>
+    <aura:attribute name="eventId" type="String" description="Event Id"/>
+    <aura:attribute name="showCloneOptions" type="Boolean" default="false"/>
+    <aura:attribute name="businessGroupId" type="String"/>
+	  <aura:attribute name="ticketTypeCloneMap" type="Map" default="{}" description="Mapping between original and cloned ticket types ids"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <style>
+    .slds-modal h2.monthYear {
+            position: absolute;
+            margin-top: -4px!important;
+            margin-left: 47px;
+        }
+    </style>
+    <div class="{!v.eventId.length > 0 ? 'slds-modal' : 'slds-modal slds-fade-in-open'}" data-name="modalEventSelector" aura:id="modalEventSelector">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium" id="modal-heading-label">
+                    <div data-name="scratchEventTitle" aura:id="scratchEventTitle" class="slds-hide">{!$Label.EventApi.Create_New_Event_Event_Builder}</div>
+                    <div data-name="cloneEventTitle" aura:id="cloneEventTitle">{!$Label.EventApi.Clone_Event_Event_Builder}</div>
+                </h2>
+            </div><!-- /.slds-modal__header -->
+            <div class="slds-modal__content slds-scrollable--y">
+                <div class="slds-grid slds-wrap">
+
+                    <!-- SELECTION -->
+                    <div class="{!v.showCloneOptions ? 'slds-hide' : 'slds-grid slds-wrap'}">
+                        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small" aura:id="radioButtons">
+
+                            <Framework:InputFields fieldType="radio"
+                            qaData='{"type" : "input", "name": "isClone"}'
+                                                   otherAttributes='{"name" : "eventCreation"}'
+                                                   value="{!v.eventModalObj}"
+                                                   styleClasses="slds-m--none"
+                                                   aura:id="isClone"
+                                                   fireChangeEvent="true"
+                                                   group="eventModal"
+                                                   label="{!$Label.EventApi.Clone_an_Existing_Event}"/>
+                            <Framework:InputFields fieldType="radio"
+                            qaData='{"type" : "input", "name": "isNew"}'
+                                                   otherAttributes='{"name" : "eventCreation"}'
+                                                   value="{!v.eventModalObj}"
+                                                   styleClasses="slds-m--none"
+                                                   aura:id="isNew"
+                                                   fireChangeEvent="true"
+                                                   group="eventModal"
+                                                   label="{!$Label.EventApi.Create_Event_From_Scratch}"/>
+                        </div>
+                        <!-- /SELECTION-->
+
+                        <!-- CLONE -->
+                        <div data-name="cloneEvent" class="slds-grid slds-wrap slds-hide" aura:id="cloneEvent">
+
+                            <div class="slds-col slds-size--3-of-5 slds-p-horizontal--small">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "eventObjCloneName"}' group="eventModal2" fieldType="string" isRequired="true" aura:id="eventObjCloneName" label="Event Name" value="{!v.eventModalObj}" maxlength="80" fireChangeEvent="true" />
+                            </div>
+
+                            <div class="slds-col slds-size--2-of-5 slds-p-horizontal--small">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "startDate"}' group="eventModal2" fieldType="date" isRequired="true" aura:id="startDate" label="{!$Label.EventApi.Duration_Start_Date}" value="{!v.eventModalObj}" fireChangeEvent="true" format="{!v.dateFormat}"/>
+                            </div>
+
+                            <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small">
+                                <label class="slds-section__title"> {!$Label.EventApi.Choose_The_Event_You_Want_To_Clone}</label>
+                            </div>
+
+                            <br/><br/>
+
+                            <div class="slds-col slds-size--1-of-2 slds-p-horizontal--small">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "cloneCategoryName"}' group="eventModal2" fieldType="picklist" isRequired="true" aura:id="cloneCategoryName" label="{!$Label.EventApi.Event_Category}" value="{!v.eventModalObj}" fireChangeEvent="true" helpText="{!$Label.EventApi.Event_Category_Buckets_Help_Text}"/>
+                            </div>
+
+                            <div class="slds-col slds-size--1-of-2 slds-p-horizontal--small">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "cloneEventName"}' group="eventModal2" fieldType="lookup" aura:id="cloneEventName" isRequired="true" fireChangeEvent="true" helpText="{!$Label.EventApi.Clone_Event_Help_Text}" label="{!$Label.EventApi.Event}" value="{!v.eventModalObj}" otherAttributes='{"type" : "EventApi__Event__c"}'/>
+                            </div>
+
+                        </div>
+                        <!-- / CLONE -->
+
+
+                        <!-- FROM SCRATCH -->
+                        <div class="slds-grid slds-wrap slds-hide" aura:id="scratchEvent">
+                            <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "eventObjName"}' group="eventModal3" fieldType="string" isRequired="true" aura:id="eventObjName" label="Event Name" value="{!v.eventModalObj}" maxlength="80" />
+                            </div>
+                            <div class="slds-col slds-size--1-of-2 slds-p-horizontal--small">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "registrationStyle"}' group="eventModal3" fieldType="picklist" isRequired="true" aura:id="registrationStyle" label="Registration Style" value="{!v.eventModalObj}" fireChangeEvent="true"/>
+                            </div>
+                            <div class="slds-col slds-size--1-of-2 slds-p-horizontal--small">
+                                <aura:if isTrue="{!v.eventCategoryId != null}">
+                                    <Framework:InputFields qaData='{"type" : "input", "name": "eventCategoryName"}' group="eventModal" fieldType="string" disabled="true" isRequired="true" aura:id="eventCategoryName" label="{!$Label.EventApi.Event_Category}" value="{!v.eventModalObj}" helpText="{!$Label.EventApi.Event_Category_Tie_To_Event_Help_Text}"/>
+                                    <aura:set attribute="else">
+                                        <Framework:InputFields qaData='{"type" : "input", "name": "eventCategoryId"}' group="eventModal" fieldType="picklist" isRequired="true" aura:id="eventCategoryId" label="{!$Label.EventApi.Event_Category}" value="{!v.eventModalObj}" fireChangeEvent="true" helpText="{!$Label.EventApi.Event_Category_Tie_To_Event_Help_Text}"/>
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                            <!--<div class="slds-col slds-size&#45;&#45;1-of-1 slds-p-horizontal&#45;&#45;small">-->
+                                <!--<EventApi:RepeatableEvent eventModalObj="{!v.eventModalObj}" dateFormat="{!v.dateFormat}" aura:id="repeatableEvents"/>-->
+                            <!--</div>-->
+                        </div>
+                        <!-- /FROM SCRATCH -->
+                    </div>
+
+                    <!-- CLONE OPTIONS -->
+
+                    <div class="{!v.showCloneOptions ? 'slds-grid slds-wrap' : 'slds-hide'}">
+                        <div data-name="cloneOptions" class="slds-grid slds-wrap" aura:id="cloneOptions">
+
+                            <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small">
+                                <label class="slds-section__title"> {!$Label.EventApi.Select_Sections_to_Clone}</label>
+                            </div>
+
+                            <br/><br/>
+
+                            <div data-name="ticketDiv" class="slds-col slds-size--1-of-1 slds-p-horizontal--small" aura:id="ticketDiv">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "ticketCheck"}' group="eventModal3" fieldType="boolean" label="{!$Label.EventApi.Ticket_Types}" aura:id="ticketCheck" value="{!v.eventModalCloneOptions}" fireChangeEvent="true"/>
+                                <div data-name="ticketCheckErrorSection" aura:id="ticketCheckErrorSection" class="slds-hide slds-theme--error slds-p-around--small" style="border-radius: 4px;margin-bottom: 15px;">
+                                    <h2>
+                                        {!$Label.EventApi.Some_Ticket_Types_Could_Not_Be_Cloned}:
+                                    </h2>
+
+                                    <ul>
+                                        <li>• {!$Label.EventApi.Item_And_Or_Item_Class_Might_Not_Be_Populated}</li>
+                                        <li>• {!$Label.EventApi.Date_And_Or_Time_Might_Not_Be_Populated}</li>
+                                        <li>• {!$Label.EventApi.Clone_Early_Bird_Date_Cannot_Be_Cloned}</li>
+                                    </ul>
+
+                                </div>
+
+                            </div>
+                            <div data-name="scheduleDiv" aura:id="scheduleDiv">
+	                            <div class="{!v.isLightning || v.isConference ? 'slds-col slds-size--1-of-1 slds-p-horizontal--small' : 'slds-hide'}">
+		                            <Framework:InputFields qaData='{"type" : "input", "name": "scheduleCheck"}' group="eventModal3" fieldType="boolean" label="{!$Label.EventApi.Schedule_Items}" aura:id="scheduleCheck" value="{!v.eventModalCloneOptions}"/>
+		                            <div data-name="scheduleCheckErrorSection" aura:id="scheduleCheckErrorSection" class="slds-hide slds-theme--error slds-p-around--small" style="border-radius: 4px;margin-bottom: 15px;">
+			                            <h2>
+                                        {!$Label.EventApi.Some_Schedule_Items_Could_Not_Be_Cloned}:
+			                            </h2>
+			                            <ul>
+				                            <li>• {!$Label.EventApi.Schedule_Items_Not_Enabled_On_Event}</li>
+				                            <li>• {!$Label.EventApi.Item_And_Or_Item_Class_Might_Not_Be_Populated}</li>
+				                            <li>• {!$Label.EventApi.Date_And_Or_Time_Might_Not_Be_Populated}</li>
+			                            </ul>
+		                            </div>
+	                            </div>
+                            </div>
+                            <div class="slds-col slds-size--1-of-2 slds-p-horizontal--small" aura:id="venueDiv">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "venueCheck"}' group="eventModal3" fieldType="boolean" label="{!$Label.EventApi.Venues}" aura:id="venueCheck" value="{!v.eventModalCloneOptions}"/>
+                            </div>
+
+                            <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small" aura:id="vendorDiv">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "vendorCheck"}' group="eventModal3" fieldType="boolean" label="{!$Label.EventApi.Vendors}" aura:id="vendorCheck" value="{!v.eventModalCloneOptions}"/>
+                            </div>
+
+                            <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small" aura:id="speakerDiv">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "speakerCheck"}' group="eventModal3" fieldType="boolean" label="{!$Label.EventApi.Speakers}" aura:id="speakerCheck" value="{!v.eventModalCloneOptions}"/>
+                            </div>
+
+                            <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small" aura:id="sponsorDiv">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "sponsorCheck"}' group="eventModal3" fieldType="boolean" label="{!$Label.EventApi.Sponsor_Packages}" aura:id="sponsorCheck" value="{!v.eventModalCloneOptions}"/>
+                            </div>
+
+                            <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small" aura:id="accessDiv">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "accessCheck"}' group="eventModal3" fieldType="boolean" label="{!$Label.EventApi.Access_Permissions}" aura:id="accessCheck" value="{!v.eventModalCloneOptions}"/>
+                            </div>
+
+                            <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small" aura:id="eventStatusDiv">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "eventStatusPageCheck"}' group="eventModal3" fieldType="boolean" label="{!$Label.EventApi.Event_Statuses}" aura:id="eventStatusPageCheck" value="{!v.eventModalCloneOptions}"/>
+                            </div>
+                            <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small" aura:id="eventSectionsCheckDiv">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "eventSectionsCheck"}' group="eventModal3" fieldType="boolean" label="{!$Label.EventApi.Event_Sections}" aura:id="eventSectionsCheck" value="{!v.eventModalCloneOptions}"/>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- CLONE OPTIONS -->
+
+                </div><!-- /.slds-col -->
+            </div><!-- /.slds-modal__content -->
+            <div class="slds-modal__footer slds-text-align--right">
+
+                <!-- BUTTONS-->
+                <span class="{!v.showCloneOptions ? 'slds-hide' : ''}">
+
+            <Framework:Button enableProgressIndicator="false"
+            qaData='{"type" : "button", "name": "cancelEvent"}'
+                              onClickAction="{!c.cancelEvent}"
+                              type="neutral"
+                              label="{!$Label.EventApi.Cancel}"/>
+          </span>
+                <span class="{!v.eventModalObj.isNew ? '' : 'slds-hide'}">
+            <Framework:Button onClickAction="{!c.saveCloseModal}"
+            qaData='{"type" : "button", "name": "saveContinueModal"}'
+                              type="brand"
+                              additionalClasses="slds-m-left--xx-small"
+                              label="{!$Label.EventApi.Save_Continue_Event_Builder}"
+                              aura:id="saveContinueModal"/>
+          </span>
+
+                <span class="{!v.eventModalObj.isClone ? '' : 'slds-hide'}">
+            <span class="{!v.showCloneOptions ? 'slds-hide' : ''}">
+              <Framework:Button onClickAction="{!c.goToClone}" type="brand"
+              qaData='{"type" : "button", "name": "cloneContinueModal"}'
+                                additionalClasses="slds-m-left--xx-small"
+                                label="{!$Label.EventApi.Clone}"
+                                aura:id="cloneContinueModal"/>
+            </span>
+            <span class="{!v.showCloneOptions ? '' : 'slds-hide'}">
+              <Framework:Button onClickAction="{!c.goBack}" type="neutral"
+              qaData='{"type" : "button", "name": "goBackContinueModal"}'
+                                additionalClasses="slds-m-left--xx-small"
+                                label="{!$Label.EventApi.Go_Back}"
+                                aura:id="goBackContinueModal"
+                                enableProgressIndicator="false"/>
+
+                <Framework:Button onClickAction="{!c.saveCloseModal}" type="brand"
+                qaData='{"type" : "button", "name": "finishCloneModal"}'
+                                  additionalClasses="slds-m-left--xx-small"
+                                  label="{!$Label.EventApi.Clone}"
+                                  aura:id="finishCloneModal"/>
+            </span>
+         </span>
+                <!-- BUTTONS-->
+
+            </div><!-- /.slds-modal__footer -->
+        </div><!-- /.modal-dialog .slds-modal__container -->
+    </div><!-- /.modal .slds-modal -->
+    <Framework:Toast aura:id="toastMessages"/>
+    <div class="slds-backdrop" data-name="modalBackdrop" aura:id="modalBackdrop"></div>
+    <div class="hidden" data-name="loadingBackdrop" aura:id="loadingBackdrop">
+        <div class="slds-grid slds-object-height--full" >
+            <div class="slds-col slds-text-align--center slds-align-middle" >
+                <img src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" data-name="spinner" alt="saving" width="50" height="50" />&nbsp;
+                <span class="slds-text-heading--medium">{!$Label.EventApi.Loading_Event_Builder}</span>
+            </div>
+        </div>
+    </div>
+</aura:component>

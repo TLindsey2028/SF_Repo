@@ -1,0 +1,3277 @@
+<?xml version="1.0" encoding="utf-8"?><CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <label><!-- Name Flow Search --></label>
+        <name>AQB_NameFlowSearch__c</name>
+    </fields>
+    <fields>
+        <help><!-- Link to the Name row that should be used as the Alternate Name, --></help>
+        <label><!-- Alternate Name Link --></label>
+        <name>AQB__ANLink__c</name>
+        <relationshipLabel><!-- Contacts (Alternate Name Link) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The Alternate Name for this Contact as defined in the linked Name record or based on the Alternate Name formula. --></help>
+        <label><!-- Alternate Name --></label>
+        <name>AQB__AName__c</name>
+    </fields>
+    <fields>
+        <help><!-- Accessibility preferences or restrictions for this Contact. --></help>
+        <label><!-- Accessibility Preferences --></label>
+        <name>AQB__AccessibilityPreferences__c</name>
+        <picklistValues>
+            <masterLabel>Close to the Door</masterLabel>
+            <translation><!-- Close to the Door --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Must have a Chair</masterLabel>
+            <translation><!-- Must have a Chair --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Stairs</masterLabel>
+            <translation><!-- No Stairs --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Wheelchair Access</masterLabel>
+            <translation><!-- Wheelchair Access --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- An institution-defined set of values, meant to describe the amount a prospect might be able to give. --></help>
+        <label><!-- Account Capacity --></label>
+        <name>AQB__AccountCapacity__c</name>
+    </fields>
+    <fields>
+        <help><!-- A description of the nature of the address information, such as residence, business, etc. --></help>
+        <label><!-- Account Mailing Address Type --></label>
+        <name>AQB__AccountMailingAddressType__c</name>
+    </fields>
+    <fields>
+        <help><!-- Default Street, Default City, Default State/Province, Default PostalCode, and Default Country (if not USA) formatted for use to display on the Contact screen and HTML emails. This field should not be used in mail merges. --></help>
+        <label><!-- Account Mailing Address --></label>
+        <name>AQB__AccountMailingAddress__c</name>
+    </fields>
+    <fields>
+        <label><!-- Account Mailing Address City --></label>
+        <name>AQB__AccountMailingCity__c</name>
+    </fields>
+    <fields>
+        <help><!-- If left blank or &quot;US&quot;, &quot;USA&quot; or &quot;United States&quot;is entered, US formatting rules are applied to postal code and state names.  If &quot;Canada&quot;, or &quot;CN&quot; is entered, then Canadian rules are applied.  Any other country name allows any data in those fields. --></help>
+        <label><!-- Account Mailing Address Country --></label>
+        <name>AQB__AccountMailingCountry__c</name>
+    </fields>
+    <fields>
+        <help><!-- Districts are defined by the institution as ways to establish groups of constituents, based on address information, such as the postal codes. --></help>
+        <label><!-- Deprecate Account Mailing Addr District --></label>
+        <name>AQB__AccountMailingDistrict__c</name>
+    </fields>
+    <fields>
+        <help><!-- Single field containing the City, State/Province, Postal Code, and Country of the Account Mailing Address. --></help>
+        <label><!-- Account Mailing Address Locality --></label>
+        <name>AQB__AccountMailingLocality__c</name>
+    </fields>
+    <fields>
+        <help><!-- This field may be used to attach any brief information regarding this Account Address. --></help>
+        <label><!-- Account Mailing Address Note --></label>
+        <name>AQB__AccountMailingNote__c</name>
+    </fields>
+    <fields>
+        <label><!-- Account Mailing Address Zip/Postal Code --></label>
+        <name>AQB__AccountMailingPostalCode__c</name>
+    </fields>
+    <fields>
+        <help><!-- Regions are defined by the institution as ways to establish groups of constituents, based on address information, such as the postal codes. --></help>
+        <label><!-- Deprecate Account Mailing Addr Region --></label>
+        <name>AQB__AccountMailingRegion__c</name>
+    </fields>
+    <fields>
+        <label><!-- Account Mailing Address State/Province --></label>
+        <name>AQB__AccountMailingState__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Status indicates the relative mailability of this  address. See the link &apos;Help for this Page&apos; under Affinaquest Links for a full explanation. --></help>
+        <label><!-- Account Mailing Address Status --></label>
+        <name>AQB__AccountMailingStatus__c</name>
+    </fields>
+    <fields>
+        <label><!-- Account Mailing Address Street --></label>
+        <name>AQB__AccountMailingStreet__c</name>
+    </fields>
+    <fields>
+        <help><!-- The time zone for this address. --></help>
+        <label><!-- DeprecateAccount Mailing Addr Time Zone --></label>
+        <name>AQB__AccountMailingTimeZone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Phone at account mailing address. --></help>
+        <label><!-- Account Phone --></label>
+        <name>AQB__AccountPhone__c</name>
+    </fields>
+    <fields>
+        <help><!-- An institution-defined set of values, meant to describe the preparedness of the prospect to give or the status of the prospect&apos;s cultivation. --></help>
+        <label><!-- Account Readiness --></label>
+        <name>AQB__AccountReadiness__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contains comma separated codes that specify the portion of the address that was changed or modified. --></help>
+        <label><!-- Address Change Flags --></label>
+        <name>AQB__AddressChangeFlags__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates if the Contact&apos;s Mailing Address is the Account Mailing Address, an Alternate Address, or the Business Address. --></help>
+        <label><!-- Address Preference --></label>
+        <name>AQB__AddressInUseText__c</name>
+    </fields>
+    <fields>
+        <help><!-- A read-only field used to indicate what type of address the contact current mailing address is associate  The valid values are &apos;Account Mailing&apos;, &apos;Business&apos; or &apos;Alternate&apos;. --></help>
+        <label><!-- Address Preference --></label>
+        <name>AQB__AddressInUseType__c</name>
+        <picklistValues>
+            <masterLabel>Account Mailing</masterLabel>
+            <translation><!-- Account Mailing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation><!-- Alternate --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Business</masterLabel>
+            <translation><!-- Business --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- This field indicates if the account address or a business address is in use by the Contact as the Contact&apos;s preferred address. --></help>
+        <label><!-- Deprecate Address In Use --></label>
+        <name>AQB__AddressInUse__c</name>
+    </fields>
+    <fields>
+        <help><!-- The computed age of this contact based upon the birth date. --></help>
+        <label><!-- Age --></label>
+        <name>AQB__Age__c</name>
+    </fields>
+    <fields>
+        <help><!-- An alert that should display whenever the Contact is displayed. --></help>
+        <label><!-- Alert --></label>
+        <name>AQB__Alert__c</name>
+    </fields>
+    <fields>
+        <help><!-- If checked, this contact will default to receiving a gift credit when a gift is processed for the account to which it is associated.  This is now set through a workflow associated with the primary and secondary gift credit recognition percentages. --></help>
+        <label><!-- Award Gift Credit --></label>
+        <name>AQB__AwardGiftCredit__c</name>
+    </fields>
+    <fields>
+        <label><!-- Business Address City --></label>
+        <name>AQB__BusinessAddressCity__c</name>
+    </fields>
+    <fields>
+        <label><!-- Business Address Country --></label>
+        <name>AQB__BusinessAddressCountry__c</name>
+    </fields>
+    <fields>
+        <help><!-- Districts are defined by the institution as ways to establish groups of constituents, based on address information, such as the postal codes. --></help>
+        <label><!-- Deprecate Business Address District --></label>
+        <name>AQB__BusinessAddressDistrict__c</name>
+    </fields>
+    <fields>
+        <label><!-- Business Address Locality --></label>
+        <name>AQB__BusinessAddressLocality__c</name>
+    </fields>
+    <fields>
+        <help><!-- Any free text information you wish to enter regarding this address that is not otherwise maintained. --></help>
+        <label><!-- Business Address Note --></label>
+        <name>AQB__BusinessAddressNote__c</name>
+    </fields>
+    <fields>
+        <label><!-- Business Address Postal Code --></label>
+        <name>AQB__BusinessAddressPostalCode__c</name>
+    </fields>
+    <fields>
+        <help><!-- Regions are defined by the institution as ways to establish groups of constituents, based on address information, such as the postal codes. --></help>
+        <label><!-- Deprecate Business Address Region --></label>
+        <name>AQB__BusinessAddressRegion__c</name>
+    </fields>
+    <fields>
+        <label><!-- Business Address State/Province --></label>
+        <name>AQB__BusinessAddressStatePro__c</name>
+    </fields>
+    <fields>
+        <help><!-- A description of the validity of this business address. A status of &apos;Returned by the Post Office&apos; might be used as an intermediate step before declaring an address to be &apos;Lost&apos;. --></help>
+        <label><!-- Business Address Status --></label>
+        <name>AQB__BusinessAddressStatus__c</name>
+    </fields>
+    <fields>
+        <label><!-- Business Address Street --></label>
+        <name>AQB__BusinessAddressStreet__c</name>
+    </fields>
+    <fields>
+        <help><!-- The time zone for this address. --></help>
+        <label><!-- Deprecate Business Address Time Zone --></label>
+        <name>AQB__BusinessAddressTimeZone__c</name>
+    </fields>
+    <fields>
+        <help><!-- A description of the nature of this business address. --></help>
+        <label><!-- Business Address Type --></label>
+        <name>AQB__BusinessAddressType__c</name>
+    </fields>
+    <fields>
+        <help><!-- The mailing address at the Contact&apos;s primary employment location. --></help>
+        <label><!-- Business Address --></label>
+        <name>AQB__BusinessAddress__c</name>
+    </fields>
+    <fields>
+        <help><!-- Email at contact&apos;s primary place of employment. --></help>
+        <label><!-- Business Email --></label>
+        <name>AQB__BusinessEmail__c</name>
+    </fields>
+    <fields>
+        <help><!-- The phone number at the Contact&apos;s primary business location. --></help>
+        <label><!-- Business Phone --></label>
+        <name>AQB__BusinessPhone__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the CAE Category of the individual Contact. --></help>
+        <label><!-- CAE Category --></label>
+        <name>AQB__CAECategory__c</name>
+        <picklistValues>
+            <masterLabel>Alumni</masterLabel>
+            <translation><!-- Alumni --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other Individual</masterLabel>
+            <translation><!-- Other Individual --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Parent</masterLabel>
+            <translation><!-- Parent --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Link to the Name row that should be used as the Community Name. --></help>
+        <label><!-- Community Name Link --></label>
+        <name>AQB__CNLink__c</name>
+        <relationshipLabel><!-- Contacts (Community Name Link) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The Community Name for this Contact as defined in the linked Name record or based on the Community Name formula. --></help>
+        <label><!-- Community Name --></label>
+        <name>AQB__CName__c</name>
+    </fields>
+    <fields>
+        <help><!-- An alphanumeric code assigned to a mail delivery or collection route within a zip code. --></help>
+        <label><!-- Carrier Route --></label>
+        <name>AQB__CarrierRoute__c</name>
+    </fields>
+    <fields>
+        <help><!-- The cause of the contact&apos;s death. --></help>
+        <label><!-- Cause of Death --></label>
+        <name>AQB__CauseDeath__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified city name for this contact address. --></help>
+        <label><!-- Certified City Name --></label>
+        <name>AQB__CertifiedCityName__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified city name for this contact address. --></help>
+        <label><!-- Certified State Abbreviation --></label>
+        <name>AQB__CertifiedStateAbbreviation__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified street name for the contact address. --></help>
+        <label><!-- Certified Street Name --></label>
+        <name>AQB__CertifiedStreetName__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified zip code of the contact address. --></help>
+        <label><!-- Certified Zip Code --></label>
+        <name>AQB__CertifiedZipCode__c</name>
+    </fields>
+    <fields>
+        <help><!-- The city where the death took place. --></help>
+        <label><!-- City of Death --></label>
+        <name>AQB__CityofDeath__c</name>
+    </fields>
+    <fields>
+        <help><!-- General Comments regarding this Contact. --></help>
+        <label><!-- Comments --></label>
+        <name>AQB__Comments__c</name>
+    </fields>
+    <fields>
+        <help><!-- This field indicates if this Contact wishes that its Gift Credits be anonymous. --></help>
+        <label><!-- Gift Recognition Credits are Anonymous --></label>
+        <name>AQB__ContactAnonymousOption__c</name>
+    </fields>
+    <fields>
+        <label><!-- Contact Count --></label>
+        <name>AQB__ContactCount__c</name>
+    </fields>
+    <fields>
+        <help><!-- An ID number used by a prior data system to identify this Contact. --></help>
+        <label><!-- Contact External ID --></label>
+        <name>AQB__ContactExternalID__c</name>
+    </fields>
+    <fields>
+        <help><!-- Used to ensure unique contact grouping. --></help>
+        <label><!-- Contact Grouping --></label>
+        <name>AQB__ContactGrouping__c</name>
+    </fields>
+    <fields>
+        <help><!-- First line of the Contact Mailing Street Address. --></help>
+        <label><!-- Mailing Addr Street Line One --></label>
+        <name>AQB__ContactMailingAddressStreetLineOne__c</name>
+    </fields>
+    <fields>
+        <help><!-- AQB__InternalContactMailingStreetTwo__c --></help>
+        <label><!-- Mailing Addr Street Line Three --></label>
+        <name>AQB__ContactMailingAddressStreetLineThre__c</name>
+    </fields>
+    <fields>
+        <help><!-- Second line of the Account Mailing Street Address. --></help>
+        <label><!-- Mailing Addr Street Line Two --></label>
+        <name>AQB__ContactMailingAddressStreetLineTwo__c</name>
+    </fields>
+    <fields>
+        <label><!-- Contact Source --></label>
+        <name>AQB__ContactSource__c</name>
+    </fields>
+    <fields>
+        <label><!-- Mailing Address --></label>
+        <name>AQB__Contact_Mailing_Address__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date that the death was corroborated. --></help>
+        <label><!-- Corroborated Death Date --></label>
+        <name>AQB__CorroboratedDeathDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The country id of this contact address. --></help>
+        <label><!-- Country ID --></label>
+        <name>AQB__CountryId__c</name>
+    </fields>
+    <fields>
+        <help><!-- The country where the death took place. --></help>
+        <label><!-- Country of Death --></label>
+        <name>AQB__CountryofDeath__c</name>
+    </fields>
+    <fields>
+        <help><!-- The id of the geographical region within which the address is located. --></help>
+        <label><!-- County Number --></label>
+        <name>AQB__CountyNumber__c</name>
+    </fields>
+    <fields>
+        <help><!-- The name of the geographical region within which the address is located. --></help>
+        <label><!-- County --></label>
+        <name>AQB__County__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date that the obituary was attached. --></help>
+        <label><!-- Date Obituary Attached --></label>
+        <name>AQB__DateObituaryAttached__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date that the notification of death was received. --></help>
+        <label><!-- Date of Death Notification --></label>
+        <name>AQB__DateofDeathNotification__c</name>
+    </fields>
+    <fields>
+        <help><!-- Precision of the Date of Death for this Contact. --></help>
+        <label><!-- Date of Death Precision --></label>
+        <name>AQB__DateofDeathPrecision__c</name>
+        <picklistValues>
+            <masterLabel>On</masterLabel>
+            <translation><!-- On --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>On or About</masterLabel>
+            <translation><!-- On or About --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Date of death of this Contact. --></help>
+        <label><!-- Date of Death --></label>
+        <name>AQB__DateofDeath__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date of the last gift credit of any kind for this contact. --></help>
+        <label><!-- Date of Last Gift Credit --></label>
+        <name>AQB__DateofLastGiftCredit__c</name>
+    </fields>
+    <fields>
+        <help><!-- The person who corroborated the notification of death. --></help>
+        <label><!-- Death Corroborated by --></label>
+        <name>AQB__DeathCorroboratedby__c</name>
+    </fields>
+    <fields>
+        <help><!-- Checked if this contact is deceased. --></help>
+        <label><!-- Deceased? --></label>
+        <name>AQB__Deceased__c</name>
+    </fields>
+    <fields>
+        <help><!-- The default Salutation to be used in an Address for this Contact. --></help>
+        <label><!-- Default Address Salutation --></label>
+        <name>AQB__DefaultAddressSal__c</name>
+    </fields>
+    <fields>
+        <help><!-- The default Salutation to be used in a Greeting for this Contact. --></help>
+        <label><!-- Default Greeting Salutation --></label>
+        <name>AQB__DefaultGreetingSal__c</name>
+    </fields>
+    <fields>
+        <help><!-- The year that this Degree was awarded. --></help>
+        <label><!-- Degree Year --></label>
+        <name>AQB__DegreeYear__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Degree associated with the Institution. --></help>
+        <label><!-- Degree --></label>
+        <name>AQB__Degree__c</name>
+    </fields>
+    <fields>
+        <help><!-- Single check digit provided by USPS. --></help>
+        <label><!-- Delivery Point Check Digit --></label>
+        <name>AQB__DeliveryPointCheckDigit__c</name>
+    </fields>
+    <fields>
+        <help><!-- Single character indicating delivery point validation status, (Y) Yes, (N) No --></help>
+        <label><!-- Delivery Point Validation Flag --></label>
+        <name>AQB__DeliveryPointValidationFlag__c</name>
+    </fields>
+    <fields>
+        <help><!-- Three digit code assigned by USPS that confirms the address can be delivered to (this code is a combination of Delivery Point Validation and Delivery Point Check Digit). --></help>
+        <label><!-- Delivery Point Validation --></label>
+        <name>AQB__DeliveryPointValidation__c</name>
+    </fields>
+    <fields>
+        <help><!-- Two digit validation code provided by USPS. --></help>
+        <label><!-- Delivery Point Code --></label>
+        <name>AQB__Delivery_Point__c</name>
+    </fields>
+    <fields>
+        <help><!-- Alternate District assigned to this Contact, if any. --></help>
+        <label><!-- District - Alternate --></label>
+        <name>AQB__DistrictAlternate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates that the user has overridden the district that is associated with the Mailing Address Postal Code. --></help>
+        <label><!-- District is Overridden --></label>
+        <name>AQB__DistrictIsOverridden__c</name>
+    </fields>
+    <fields>
+        <help><!-- The District to which this Contact would be assigned as indicated by the Postal Code Lookup. --></help>
+        <label><!-- District --></label>
+        <name>AQB__District__c</name>
+    </fields>
+    <fields>
+        <help><!-- If checked, this contact does not wish to receive communications of any sort. --></help>
+        <label><!-- Do Not Contact --></label>
+        <name>AQB__DoNotContact__c</name>
+    </fields>
+    <fields>
+        <help><!-- If checked, this Contact should not be solicited for gifts. --></help>
+        <label><!-- Do Not Solicit --></label>
+        <name>AQB__DoNotSolicit__c</name>
+    </fields>
+    <fields>
+        <help><!-- An internal field that maintains the link between this Contact and the primary Education data row. --></help>
+        <label><!-- Primary Degree Link --></label>
+        <name>AQB__EducationLink__c</name>
+        <relationshipLabel><!-- Contacts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Notes describing any special uses or restrictions when using this contact&apos;s email addresses.  A total of 200 characters can be entered. --></help>
+        <label><!-- Email Notes --></label>
+        <name>AQB__EmailNotes__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates the email to utilize for this contact. --></help>
+        <label><!-- Email Preference --></label>
+        <name>AQB__EmailPreference__c</name>
+        <picklistValues>
+            <masterLabel>Business Email</masterLabel>
+            <translation><!-- Business Email --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other Email</masterLabel>
+            <translation><!-- Other Email --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Personal Email</masterLabel>
+            <translation><!-- Personal Email --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>School Email</masterLabel>
+            <translation><!-- School Email --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The name of the Employer for the Contact&apos;s primary Employment. --></help>
+        <label><!-- Employer Name --></label>
+        <name>AQB__EmployerName__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Federal Information Processing Standard state code of this contact address. --></help>
+        <label><!-- FIPS State Code --></label>
+        <name>AQB__FIPSStateCode__c</name>
+    </fields>
+    <fields>
+        <help><!-- Link to the Name row that should be used as the Formal Name --></help>
+        <label><!-- Formal Name Link --></label>
+        <name>AQB__FNLink__c</name>
+        <relationshipLabel><!-- Contacts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The Formal Name for this Contact as defined in the linked Name record or based on the Formal Name formula. --></help>
+        <label><!-- Formal Name --></label>
+        <name>AQB__FName__c</name>
+    </fields>
+    <fields>
+        <help><!-- Mid level validation flag indicating detailed status, (E) Exact, (T) Tentative, (M) Multiple, (S) Secondary, (U) Unmatched, (F) ForeignThe address flag of the contact address. --></help>
+        <label><!-- Flag --></label>
+        <name>AQB__Flag__c</name>
+    </fields>
+    <fields>
+        <help><!-- Food preferences or restrictions for this Contact. --></help>
+        <label><!-- Food Preferences --></label>
+        <name>AQB__FoodPreferences__c</name>
+        <picklistValues>
+            <masterLabel>Gluten Free</masterLabel>
+            <translation><!-- Gluten Free --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Kosher</masterLabel>
+            <translation><!-- Kosher --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Nut Allergies</masterLabel>
+            <translation><!-- Nut Allergies --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vegan</masterLabel>
+            <translation><!-- Vegan --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vegetarian</masterLabel>
+            <translation><!-- Vegetarian --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Full Name --></label>
+        <name>AQB__Full_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Picklist of gender values. --></help>
+        <label><!-- Gender --></label>
+        <name>AQB__Gender__c</name>
+        <picklistValues>
+            <masterLabel>F</masterLabel>
+            <translation><!-- F --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>M</masterLabel>
+            <translation><!-- M --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Deprecated-Gift Credit Recognition Type --></label>
+        <name>AQB__GiftCreditRecognitionType__c</name>
+        <picklistValues>
+            <masterLabel>Hard Credit</masterLabel>
+            <translation><!-- Hard Credit --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>None</masterLabel>
+            <translation><!-- None --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Soft Credit</masterLabel>
+            <translation><!-- Soft Credit --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- This is the greeting salutation as it might be used in a letter or email such as &quot;Mr. Smith&quot; or &quot;Dr. Brown&quot;.  The system will automatically format a formal salutation unless you type one in.  This field can contain 40 characters. --></help>
+        <label><!-- Greeting --></label>
+        <name>AQB__Greeting__c</name>
+    </fields>
+    <fields>
+        <help><!-- Institution from which this Degree was awarded. --></help>
+        <label><!-- Institution --></label>
+        <name>AQB__Institution__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates that the user has overridden the Institutional Area 1 that is associated with the Mailing Address Postal Code. --></help>
+        <label><!-- Institutional Area 1 is Overridden --></label>
+        <name>AQB__InstitutionalArea1IsOverridden__c</name>
+    </fields>
+    <fields>
+        <help><!-- This Institutional Area 1 associated with this Contact. --></help>
+        <label><!-- Institutional Area 1 --></label>
+        <name>AQB__InstitutionalArea1__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates that the user has overridden the Institutional Area 2 that is associated with the Mailing Address Postal Code. --></help>
+        <label><!-- Institutional Area 2 is Overridden --></label>
+        <name>AQB__InstitutionalArea2IsOverridden__c</name>
+    </fields>
+    <fields>
+        <help><!-- This Institutional Area 2 associated with this Contact. --></help>
+        <label><!-- Institutional Area 2 --></label>
+        <name>AQB__InstitutionalArea2__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates that the user has overridden the Institutional Area 3 that is associated with the Mailing Address Postal Code. --></help>
+        <label><!-- Institutional Area 3 is Overridden --></label>
+        <name>AQB__InstitutionalArea3IsOverridden__c</name>
+    </fields>
+    <fields>
+        <help><!-- This Institutional Area 3 associated with this Contact. --></help>
+        <label><!-- Institutional Area 3 --></label>
+        <name>AQB__InstitutionalArea3__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates that the user has overridden the Institutional Area 4 that is associated with the Mailing Address Postal Code. --></help>
+        <label><!-- Institutional Area 4 is Overridden --></label>
+        <name>AQB__InstitutionalArea4IsOverridden__c</name>
+    </fields>
+    <fields>
+        <help><!-- This Institutional Area 4 associated with this Contact. --></help>
+        <label><!-- Institutional Area 4 --></label>
+        <name>AQB__InstitutionalArea4__c</name>
+    </fields>
+    <fields>
+        <help><!-- Holding field used to help calculate street lines. --></help>
+        <label><!-- Internal Contact Mailing Street One --></label>
+        <name>AQB__InternalContactMailingStreetOne__c</name>
+    </fields>
+    <fields>
+        <help><!-- Internal Account Mailing Address with first line stripped off. --></help>
+        <label><!-- Internal Contact Mailing Street Two --></label>
+        <name>AQB__InternalContactMailingStreetTwo__c</name>
+    </fields>
+    <fields>
+        <help><!-- Displays a broken link indicating a lack of involvement or one to three links indicating increasing involvement in volunteer activities, interests, or communication with the institution. --></help>
+        <label><!-- Engagement --></label>
+        <name>AQB__InvolvementRating__c</name>
+    </fields>
+    <fields>
+        <label><!-- Engagement Score --></label>
+        <name>AQB__InvolvementScore__c</name>
+    </fields>
+    <fields>
+        <help><!-- If checked, this Contact is the Primary Contact for the Account. --></help>
+        <label><!-- Is Primary Contact? --></label>
+        <name>AQB__IsPrimaryContact__c</name>
+    </fields>
+    <fields>
+        <label><!-- Languages --></label>
+        <name>AQB__Languages__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the amount of the largest gift credit for this contact of any type. --></help>
+        <label><!-- Largest Gift Credit --></label>
+        <name>AQB__LargestGiftCredit__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Activity Date --></label>
+        <name>AQB__LastActivityDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Specifies the north south position of a point on the Earth&apos;s surface. --></help>
+        <label><!-- Latitude --></label>
+        <name>AQB__Latitude__c</name>
+    </fields>
+    <fields>
+        <help><!-- The ID number used for this contact in a legacy system from which data was converted into Affinaquest. --></help>
+        <label><!-- Legacy Contact ID Number --></label>
+        <name>AQB__LegacyContactIDNumber__c</name>
+    </fields>
+    <fields>
+        <help><!-- Click this link to edit the Primary Address. --></help>
+        <label><!-- Alternate Address Link --></label>
+        <name>AQB__LinkedAddress__c</name>
+        <relationshipLabel><!-- Contacts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The location where the death took place. --></help>
+        <label><!-- Location of Death --></label>
+        <name>AQB__LocationofDeath__c</name>
+    </fields>
+    <fields>
+        <help><!-- Specifies the east west position of a point on the Earth&apos;s surface. --></help>
+        <label><!-- Longitude --></label>
+        <name>AQB__Longitude__c</name>
+    </fields>
+    <fields>
+        <help><!-- The maiden name of this contact. --></help>
+        <label><!-- Maiden Name --></label>
+        <name>AQB__MaidenName__c</name>
+    </fields>
+    <fields>
+        <help><!-- A description of the nature of this address, such as residence, business, vacation home, etc. --></help>
+        <label><!-- Mailing Address Type --></label>
+        <name>AQB__MailingAddressType__c</name>
+        <picklistValues>
+            <masterLabel>Business</masterLabel>
+            <translation><!-- Business --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation><!-- Home --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vacation</masterLabel>
+            <translation><!-- Vacation --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- An institution-defined way to segment contacts by a district code.  This is associated with the contact and not a specific address. --></help>
+        <label><!-- Mailing District --></label>
+        <name>AQB__MailingDistrict__c</name>
+        <picklistValues>
+            <masterLabel>Coastal</masterLabel>
+            <translation><!-- Coastal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mountain</masterLabel>
+            <translation><!-- Mountain --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Piedmont</masterLabel>
+            <translation><!-- Piedmont --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The specific mailings lists which this contact has been assigned. --></help>
+        <label><!-- Mailing Lists for this Contact --></label>
+        <name>AQB__MailingLists__c</name>
+        <picklistValues>
+            <masterLabel>Annual Fund Mailings</masterLabel>
+            <translation><!-- Annual Fund Mailings --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Event Invitations</masterLabel>
+            <translation><!-- Event Invitations --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Newsletters</masterLabel>
+            <translation><!-- Newsletters --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Mailing Address Locality --></label>
+        <name>AQB__MailingLocality__c</name>
+    </fields>
+    <fields>
+        <help><!-- Help on note --></help>
+        <label><!-- Mailing Address Note --></label>
+        <name>AQB__MailingNote__c</name>
+    </fields>
+    <fields>
+        <help><!-- An institution-defined way to segment contacts by a region code.  This is associated with the contact and not a specific address. --></help>
+        <label><!-- Mailing Region --></label>
+        <name>AQB__MailingRegion__c</name>
+        <picklistValues>
+            <masterLabel>East</masterLabel>
+            <translation><!-- East --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>North</masterLabel>
+            <translation><!-- North --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>South</masterLabel>
+            <translation><!-- South --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>West</masterLabel>
+            <translation><!-- West --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Help on status --></help>
+        <label><!-- Mailing Address Status --></label>
+        <name>AQB__MailingStatus__c</name>
+        <picklistValues>
+            <masterLabel>Good</masterLabel>
+            <translation><!-- Good --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lost</masterLabel>
+            <translation><!-- Lost --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Omit from Mailings</masterLabel>
+            <translation><!-- Omit from Mailings --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Returned by Post Office</masterLabel>
+            <translation><!-- Returned by Post Office --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unknown</masterLabel>
+            <translation><!-- Unknown --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Deprecated Contact Mailing Street Line 4 --></label>
+        <name>AQB__MailingStreetLineFour__c</name>
+    </fields>
+    <fields>
+        <label><!-- Deprecated Contact Mailing Street Line 1 --></label>
+        <name>AQB__MailingStreetLineOne__c</name>
+    </fields>
+    <fields>
+        <label><!-- Deprecated Contact Mailing Street Line 3 --></label>
+        <name>AQB__MailingStreetLineThree__c</name>
+    </fields>
+    <fields>
+        <label><!-- Deprecated Contact Mailing Street Line 2 --></label>
+        <name>AQB__MailingStreetLineTwo__c</name>
+    </fields>
+    <fields>
+        <help><!-- The time zone assigned to the is contact. --></help>
+        <label><!-- Time Zone --></label>
+        <name>AQB__MailingTimeZone__c</name>
+        <picklistValues>
+            <masterLabel>ACT Australia Central Time GMT+9:30</masterLabel>
+            <translation><!-- ACT Australia Central Time GMT+9:30 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AET Australia Eastern Time GMT+10:00</masterLabel>
+            <translation><!-- AET Australia Eastern Time GMT+10:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AGT Argentina Standard Time GMT-3:00</masterLabel>
+            <translation><!-- AGT Argentina Standard Time GMT-3:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ART (Arabic) Egypt Standard Time GMT+2:00</masterLabel>
+            <translation><!-- ART (Arabic) Egypt Standard Time GMT+2:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AST Alaska Standard Time GMT-9:00</masterLabel>
+            <translation><!-- AST Alaska Standard Time GMT-9:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BET Brazil Eastern Time GMT-3:00</masterLabel>
+            <translation><!-- BET Brazil Eastern Time GMT-3:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BST Bangladesh Standard Time GMT+6:00</masterLabel>
+            <translation><!-- BST Bangladesh Standard Time GMT+6:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CAT Central African Time GMT-1:00</masterLabel>
+            <translation><!-- CAT Central African Time GMT-1:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CNT Canada Newfoundland Time GMT-3:30</masterLabel>
+            <translation><!-- CNT Canada Newfoundland Time GMT-3:30 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CST Central Standard Time GMT-6:00</masterLabel>
+            <translation><!-- CST Central Standard Time GMT-6:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CTT China Taiwan Time GMT+8:00</masterLabel>
+            <translation><!-- CTT China Taiwan Time GMT+8:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>EAT Eastern African Time GMT+3:00</masterLabel>
+            <translation><!-- EAT Eastern African Time GMT+3:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ECT European Central Time GMT+1:00</masterLabel>
+            <translation><!-- ECT European Central Time GMT+1:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>EET Eastern European Time GMT+2:00</masterLabel>
+            <translation><!-- EET Eastern European Time GMT+2:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>EST Eastern Standard Time GMT-5:00</masterLabel>
+            <translation><!-- EST Eastern Standard Time GMT-5:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GMT Greenwich Mean Time GMT</masterLabel>
+            <translation><!-- GMT Greenwich Mean Time GMT --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HST Hawaii Standard Time GMT-10:00</masterLabel>
+            <translation><!-- HST Hawaii Standard Time GMT-10:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IET Indiana Eastern Standard Time GMT-5:00</masterLabel>
+            <translation><!-- IET Indiana Eastern Standard Time GMT-5:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IST India Standard Time GMT+5:30</masterLabel>
+            <translation><!-- IST India Standard Time GMT+5:30 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>JST Japan Standard Time GMT+9:00</masterLabel>
+            <translation><!-- JST Japan Standard Time GMT+9:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MET Middle East Time GMT+3:30</masterLabel>
+            <translation><!-- MET Middle East Time GMT+3:30 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MIT Midway Islands Time GMT-11:00</masterLabel>
+            <translation><!-- MIT Midway Islands Time GMT-11:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MST Mountain Standard Time GMT-7:00</masterLabel>
+            <translation><!-- MST Mountain Standard Time GMT-7:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NET Near East Time GMT+4:00</masterLabel>
+            <translation><!-- NET Near East Time GMT+4:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NST New Zealand Standard Time GMT+12:00</masterLabel>
+            <translation><!-- NST New Zealand Standard Time GMT+12:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PLT Pakistan Lahore Time GMT+5:00</masterLabel>
+            <translation><!-- PLT Pakistan Lahore Time GMT+5:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PNT Phoenix Standard Time GMT-7:00</masterLabel>
+            <translation><!-- PNT Phoenix Standard Time GMT-7:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PRT Puerto Rico and US Virgin Islands Time GMT-4:00</masterLabel>
+            <translation><!-- PRT Puerto Rico and US Virgin Islands Time GMT-4:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PST Pacific Standard Time GMT-8:00</masterLabel>
+            <translation><!-- PST Pacific Standard Time GMT-8:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SST Solomon Standard Time GMT+11:00</masterLabel>
+            <translation><!-- SST Solomon Standard Time GMT+11:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>UTC Universal Coordinated Time GMT</masterLabel>
+            <translation><!-- UTC Universal Coordinated Time GMT --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>VST Vietnam Standard Time GMT+7:00</masterLabel>
+            <translation><!-- VST Vietnam Standard Time GMT+7:00 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- A picklist describing the marital status of this contact. --></help>
+        <label><!-- Marital Status --></label>
+        <name>AQB__MaritalStatus__c</name>
+        <picklistValues>
+            <masterLabel>Deceased Life Partner</masterLabel>
+            <translation><!-- Deceased Life Partner --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Deceased Spouse</masterLabel>
+            <translation><!-- Deceased Spouse --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Divorced</masterLabel>
+            <translation><!-- Divorced --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Divorced Spouse</masterLabel>
+            <translation><!-- Divorced Spouse --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Life Partner</masterLabel>
+            <translation><!-- Life Partner --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Married</masterLabel>
+            <translation><!-- Married --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Separated</masterLabel>
+            <translation><!-- Separated --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Single</masterLabel>
+            <translation><!-- Single --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Surviving Life Partner</masterLabel>
+            <translation><!-- Surviving Life Partner --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Surviving Spouse</masterLabel>
+            <translation><!-- Surviving Spouse --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Mobile work phone number. --></help>
+        <label><!-- Mobile Work --></label>
+        <name>AQB__MobileWork__c</name>
+    </fields>
+    <fields>
+        <help><!-- Link to the most recent event attendance record. --></help>
+        <label><!-- Most Recent Event Attendance Link --></label>
+        <name>AQB__MostRecentEventAttendanceLink__c</name>
+        <relationshipLabel><!-- Contacts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The name of the most recently attended event. --></help>
+        <label><!-- Most Recent Event Attended --></label>
+        <name>AQB__MostRecentEventAttended__c</name>
+        <relationshipLabel><!-- Contacts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Date of Most Recent event attendance record. --></help>
+        <label><!-- Most Recent Event Attendance Date --></label>
+        <name>AQB__Most_Recent_Event_Attendance_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date of the event for which this contact most recently registered. --></help>
+        <label><!-- Most Recent Event Registration Date --></label>
+        <name>AQB__Most_Recent_Event_Registration_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- The most recent event for which this contact has registered. --></help>
+        <label><!-- Most Recent Event Registration Link --></label>
+        <name>AQB__Most_Recent_Event_Registration_Link__c</name>
+        <relationshipLabel><!-- Contacts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The name of the event for which this contact most recently registered. --></help>
+        <label><!-- Most Recent Event Registration --></label>
+        <name>AQB__Most_Recent_Event_Registration__c</name>
+        <relationshipLabel><!-- Contacts Registered --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Name --></label>
+        <name>AQB__Name__c</name>
+    </fields>
+    <fields>
+        <label><!-- Next Task Date --></label>
+        <name>AQB__NextActivityDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The flag indicates status of the next Task for the Contact.  White - no future Tasks.  Green - Activity due date is at least 14 days away.  Yellow - Task due date is within 14 days.  Red - Task is overdue. --></help>
+        <label><!-- Next Task --></label>
+        <name>AQB__NextActivity__c</name>
+    </fields>
+    <fields>
+        <help><!-- The nickname of this contact. --></help>
+        <label><!-- Nickname --></label>
+        <name>AQB__Nickname__c</name>
+    </fields>
+    <fields>
+        <help><!-- The individual who provided the notification of death. --></help>
+        <label><!-- Notified of Death by --></label>
+        <name>AQB__Notifiedby__c</name>
+    </fields>
+    <fields>
+        <help><!-- The number of events for which this contact has an event attendance record. --></help>
+        <label><!-- Number of Events Attended --></label>
+        <name>AQB__Number_of_Events_Attended__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates that a copy of the obituary has been attached to this Contact. --></help>
+        <label><!-- Obituary Attached --></label>
+        <name>AQB__ObituaryAttached__c</name>
+    </fields>
+    <fields>
+        <help><!-- Link to an on-line obituary. --></help>
+        <label><!-- Obituary Link --></label>
+        <name>AQB__ObituaryLink__c</name>
+    </fields>
+    <fields>
+        <label><!-- Oldest Pledge Payment Due --></label>
+        <name>AQB__OldestPledgePaymentDue__c</name>
+    </fields>
+    <fields>
+        <help><!-- Alternative email address for this contact. --></help>
+        <label><!-- Other Email --></label>
+        <name>AQB__OtherEmail__c</name>
+    </fields>
+    <fields>
+        <help><!-- The other event preferences or restrictions for this Contact. --></help>
+        <label><!-- Other Preferences --></label>
+        <name>AQB__OtherPreferences__c</name>
+    </fields>
+    <fields>
+        <help><!-- Link to the Name row that should be used as the Preferred Name --></help>
+        <label><!-- Preferred Name Link --></label>
+        <name>AQB__PNameLink__c</name>
+        <relationshipLabel><!-- Contacts (Preferred Name Link) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The Preferred Name for this Contact as defined in the linked Name record or based on the Preferred Name formula. --></help>
+        <label><!-- Preferred Name --></label>
+        <name>AQB__PName__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact&apos;s personal email address. --></help>
+        <label><!-- Personal Email --></label>
+        <name>AQB__PersonalEmail__c</name>
+    </fields>
+    <fields>
+        <help><!-- Notes describing any special uses or restrictions when using this contact&apos;s phone numbers.  A total of 200 characters can be entered. --></help>
+        <label><!-- Phone Notes --></label>
+        <name>AQB__PhoneNotes__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates the telephone number to utilize for this contact. --></help>
+        <label><!-- Phone Preference --></label>
+        <name>AQB__PhonePreference__c</name>
+        <picklistValues>
+            <masterLabel>Account Phone</masterLabel>
+            <translation><!-- Account Phone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Business Phone</masterLabel>
+            <translation><!-- Business Phone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation><!-- Mobile --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Enter the city and state where this contact was born. --></help>
+        <label><!-- Place of Birth --></label>
+        <name>AQB__PlaceofBirth__c</name>
+    </fields>
+    <fields>
+        <label><!-- Pledge Balance - Total --></label>
+        <name>AQB__PledgeBalanceTotal__c</name>
+    </fields>
+    <fields>
+        <help><!-- Displays a fist for no pledge balance, one thumb up for a pledge due in the future, one thumb down for a pledge less than 30 days overdue, two thumbs down for a pledge 30 to 60 days overdue, and three thumbs down for a pledge more than 60 days overdue. --></help>
+        <label><!-- Pledge Status --></label>
+        <name>AQB__PledgeStatus__c</name>
+    </fields>
+    <fields>
+        <help><!-- The year with which this Contact wishes to be associated for reunions and other identification. --></help>
+        <label><!-- Pref Year --></label>
+        <name>AQB__PreferredYear__c</name>
+    </fields>
+    <fields>
+        <help><!-- Presentation preferences or restrictions for this Contact. --></help>
+        <label><!-- Presentation Preferences --></label>
+        <name>AQB__Presentation_Preferences__c</name>
+        <picklistValues>
+            <masterLabel>Hearing Impaired</masterLabel>
+            <translation><!-- Hearing Impaired --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Needs Headphones</masterLabel>
+            <translation><!-- Needs Headphones --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Needs Signing</masterLabel>
+            <translation><!-- Needs Signing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sight Impaired</masterLabel>
+            <translation><!-- Sight Impaired --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- An internal field used to maintain the linkage between a Contact and the primary Employment data. --></help>
+        <label><!-- Primary Employment Link --></label>
+        <name>AQB__PrimaryEmploymentLink__c</name>
+        <relationshipLabel><!-- Contacts (Primary Employment Link) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Primary Employment Title --></label>
+        <name>AQB__PrimaryEmploymentTitle__c</name>
+    </fields>
+    <fields>
+        <help><!-- The default percentage used to credit a contact with a legal credit for based on the amount of a gift. --></help>
+        <label><!-- Legal Credit % --></label>
+        <name>AQB__PrimaryGiftRecognitionCredit_Percent__c</name>
+    </fields>
+    <fields>
+        <label><!-- RFM Calculation --></label>
+        <name>AQB__RFMCalculation__c</name>
+    </fields>
+    <fields>
+        <help><!-- A star is awarded for each of the following five conditions: having a giving record, having a pending opportunity, having a largest gift over a defined amount, having a total amount of giving over a defined amount, and having made a gift this year. --></help>
+        <label><!-- RFM --></label>
+        <name>AQB__RFM__c</name>
+    </fields>
+    <fields>
+        <help><!-- Alternate Region assigned to this Contact, if any. --></help>
+        <label><!-- Region - Alternate --></label>
+        <name>AQB__RegionAlternate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates that the user has overridden the region that is associated with the Mailing Address Postal Code. --></help>
+        <label><!-- Region is Overridden --></label>
+        <name>AQB__RegionIsOverridden__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Region to which this Contact would be assigned as indicated by the Postal Code Lookup. --></help>
+        <label><!-- Region --></label>
+        <name>AQB__Region__c</name>
+    </fields>
+    <fields>
+        <help><!-- Picklist of values describing the relationship of this contact to its account. --></help>
+        <label><!-- Account Relationship --></label>
+        <name>AQB__Relationship__c</name>
+        <picklistValues>
+            <masterLabel>Board Member</masterLabel>
+            <translation><!-- Board Member --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Daughter</masterLabel>
+            <translation><!-- Daughter --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Employee</masterLabel>
+            <translation><!-- Employee --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Grandson</masterLabel>
+            <translation><!-- Grandson --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Head of Household</masterLabel>
+            <translation><!-- Head of Household --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Husband</masterLabel>
+            <translation><!-- Husband --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Partner</masterLabel>
+            <translation><!-- Partner --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Primary Contact</masterLabel>
+            <translation><!-- Primary Contact --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Principal</masterLabel>
+            <translation><!-- Principal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Secondary Contact</masterLabel>
+            <translation><!-- Secondary Contact --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Son</masterLabel>
+            <translation><!-- Son --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Wife</masterLabel>
+            <translation><!-- Wife --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Indicates whether an address is residential (R) or business (B). --></help>
+        <label><!-- Residential Delivery Indicator --></label>
+        <name>AQB__ResidentialDeliveryIndicator__c</name>
+    </fields>
+    <fields>
+        <help><!-- The address in user type that the contact&apos;s mailing address will revert to once a seasonal address expires. --></help>
+        <label><!-- Revert Address In Use Type --></label>
+        <name>AQB__RevertAddressInUseType__c</name>
+        <picklistValues>
+            <masterLabel>Account Mailing</masterLabel>
+            <translation><!-- Account Mailing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation><!-- Alternate --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Business</masterLabel>
+            <translation><!-- Business --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Link to LL-Salutation object based on the Salutation. --></help>
+        <label><!-- Salutation Link --></label>
+        <name>AQB__SalutationLink__c</name>
+        <relationshipLabel><!-- Contacts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Email address assigned by the educational institution. --></help>
+        <label><!-- School Email --></label>
+        <name>AQB__SchoolEmail__c</name>
+    </fields>
+    <fields>
+        <help><!-- The School associated with this Degree. --></help>
+        <label><!-- School --></label>
+        <name>AQB__School__c</name>
+    </fields>
+    <fields>
+        <help><!-- The default percentage used to credit a contact with a  gift recognition credit ,based on the amount of a gift. --></help>
+        <label><!-- Gift Recognition Credit % --></label>
+        <name>AQB__SecondaryGiftRecognitionCreditPercent__c</name>
+    </fields>
+    <fields>
+        <help><!-- A multi-select picklist allowing for the assignment of multiple secondary categorization levels for this contact.  The primary category should be entered into the Type field. --></help>
+        <label><!-- Secondary Contact Types --></label>
+        <name>AQB__SecondaryType__c</name>
+        <picklistValues>
+            <masterLabel>Alumni</masterLabel>
+            <translation><!-- Alumni --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Athletics Prospect-non donor</masterLabel>
+            <translation><!-- Athletics Prospect-non donor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Board of Trustees Member</masterLabel>
+            <translation><!-- Board of Trustees Member --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Donor</masterLabel>
+            <translation><!-- Donor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Individual</masterLabel>
+            <translation><!-- Individual --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Parent/Guardian</masterLabel>
+            <translation><!-- Parent/Guardian --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Program Officer</masterLabel>
+            <translation><!-- Program Officer --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Student</masterLabel>
+            <translation><!-- Student --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>WMUAA Board Member</masterLabel>
+            <translation><!-- WMUAA Board Member --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>WMUF Board Member</masterLabel>
+            <translation><!-- WMUF Board Member --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Setup --></label>
+        <name>AQB__Setup__c</name>
+        <relationshipLabel><!-- Contacts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Checkbox to indicate if this contact should be flag as the default signatgor when a check donation is given. --></help>
+        <label><!-- Signator --></label>
+        <name>AQB__Signator__c</name>
+    </fields>
+    <fields>
+        <help><!-- The state id of this contact address. --></help>
+        <label><!-- State Id --></label>
+        <name>AQB__StateId__c</name>
+    </fields>
+    <fields>
+        <help><!-- The state or province where the death took place. --></help>
+        <label><!-- State/Province of Death --></label>
+        <name>AQB__StateProvinceofDeath__c</name>
+    </fields>
+    <fields>
+        <help><!-- A picklist for name suffix. --></help>
+        <label><!-- Suffix Picklist --></label>
+        <name>AQB__Suffix__c</name>
+        <picklistValues>
+            <masterLabel>I</masterLabel>
+            <translation><!-- I --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>II</masterLabel>
+            <translation><!-- II --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>III</masterLabel>
+            <translation><!-- III --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IV</masterLabel>
+            <translation><!-- IV --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>JD</masterLabel>
+            <translation><!-- JD --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Jr.</masterLabel>
+            <translation><!-- Jr. --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MD</masterLabel>
+            <translation><!-- MD --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PhD</masterLabel>
+            <translation><!-- PhD --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sr.</masterLabel>
+            <translation><!-- Sr. --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>V</masterLabel>
+            <translation><!-- V --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Total Account Open Opportunities --></label>
+        <name>AQB__TotalAccountOpenOpportunities__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Gift Credits --></label>
+        <name>AQB__TotalGiftCredits__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total number of events for which this contact has registered. --></help>
+        <label><!-- Total Number of Event Registrations --></label>
+        <name>AQB__Total_Number_of_Event_Registrations__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total amount of registration fees paid by this contact for all registrations. --></help>
+        <label><!-- Total of All Registration Fees --></label>
+        <name>AQB__Total_of_All_Registration_Fees__c</name>
+    </fields>
+    <fields>
+        <help><!-- A picklist of the highest level categorization of this contact. The category can be further described in the Secondary Type field. --></help>
+        <label><!-- Contact Type --></label>
+        <name>AQB__Type__c</name>
+        <picklistValues>
+            <masterLabel>Alumni</masterLabel>
+            <translation><!-- Alumni --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Athletics Prospect-non donor</masterLabel>
+            <translation><!-- Athletics Prospect-non donor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Board of Trustees Member</masterLabel>
+            <translation><!-- Board of Trustees Member --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Corporate Contact</masterLabel>
+            <translation><!-- Corporate Contact --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Current Student Athlete</masterLabel>
+            <translation><!-- Current Student Athlete --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Donor</masterLabel>
+            <translation><!-- Donor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Estate</masterLabel>
+            <translation><!-- Estate --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Individual</masterLabel>
+            <translation><!-- Individual --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Organization Contact</masterLabel>
+            <translation><!-- Organization Contact --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Parent/Guardian</masterLabel>
+            <translation><!-- Parent/Guardian --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Student</masterLabel>
+            <translation><!-- Student --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>WMUAA Board Member</masterLabel>
+            <translation><!-- WMUAA Board Member --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>WMUF Board Member</masterLabel>
+            <translation><!-- WMUF Board Member --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Use Account Address on Import --></label>
+        <name>AQB__UseAccountAddressOnImport__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date the address was validated. --></help>
+        <label><!-- Validated On --></label>
+        <name>AQB__ValidationDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The verification flag of the contact address. --></help>
+        <label><!-- Verification Flag --></label>
+        <name>AQB__VerificationFlag__c</name>
+    </fields>
+    <fields>
+        <help><!-- Linked Primary Employment&apos;s Department for this Contact. --></help>
+        <label><!-- Department --></label>
+        <name>Department__c</name>
+    </fields>
+    <fields>
+        <help><!-- Linked Primary Employment&apos;s Division for this Contact. --></help>
+        <label><!-- Division --></label>
+        <name>Division__c</name>
+    </fields>
+    <fields>
+        <help><!-- Linked Primary Employment&apos;s Employment Status for this Contact. --></help>
+        <label><!-- Employment Status --></label>
+        <name>Employment_Status__c</name>
+    </fields>
+    <fields>
+        <label><!-- Ethnicity --></label>
+        <name>Ethnicity__c</name>
+        <picklistValues>
+            <masterLabel>African American</masterLabel>
+            <translation><!-- African American --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>American Indian</masterLabel>
+            <translation><!-- American Indian --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Asian</masterLabel>
+            <translation><!-- Asian --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Foreign</masterLabel>
+            <translation><!-- Foreign --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Malaysian</masterLabel>
+            <translation><!-- Malaysian --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Spanish</masterLabel>
+            <translation><!-- Spanish --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>White or Other</masterLabel>
+            <translation><!-- White or Other --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Honors College information for this Contact. --></help>
+        <label><!-- Honors College --></label>
+        <name>Honors_College__c</name>
+        <picklistValues>
+            <masterLabel>Honors College Associate</masterLabel>
+            <translation><!-- Honors College Associate --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Honors College General Education</masterLabel>
+            <translation><!-- Honors College General Education --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Honors College Graduate</masterLabel>
+            <translation><!-- Honors College Graduate --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Legacy ID for this Contact. --></help>
+        <label><!-- Legacy ID --></label>
+        <name>Legacy_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- Linked Primary Education&apos;s Major for this Contact. --></help>
+        <label><!-- Major --></label>
+        <name>Major__c</name>
+    </fields>
+    <fields>
+        <label><!-- Millennium Id --></label>
+        <name>Millennium_Id__c</name>
+    </fields>
+    <fields>
+        <help><!-- Aggregates the Contact&apos;s active engagement scores from it&apos;s badge records for the current year. --></help>
+        <label><!-- Annual Engagement Score --></label>
+        <name>OrderApi__Annual_Engagement_Score__c</name>
+    </fields>
+    <fields>
+        <help><!-- Do Not Call the Contact&apos;s Assistant Phone. --></help>
+        <label><!-- Assistant Do Not Call --></label>
+        <name>OrderApi__Assistant_Do_Not_Call__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Contact&apos;s Assistant will not receive email communications. --></help>
+        <label><!-- Assistant Email Opt Out --></label>
+        <name>OrderApi__Assistant_Email_Opt_Out__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Contact&apos;s Assistant Email address. --></help>
+        <label><!-- Assistant Email --></label>
+        <name>OrderApi__Assistant_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- This field lists all the active badges in alphabetical order including all badges inherited from it&apos;s parent account or it&apos;s parent account through flowdown (when enabled) --></help>
+        <label><!-- Badges --></label>
+        <name>OrderApi__Badges__c</name>
+    </fields>
+    <fields>
+        <help><!-- Do Not Call the Contact&apos;s Home Phone. --></help>
+        <label><!-- Home Do Not Call --></label>
+        <name>OrderApi__Home_Do_Not_Call__c</name>
+    </fields>
+    <fields>
+        <label><!-- Is Primary Contact --></label>
+        <name>OrderApi__Is_Primary_Contact__c</name>
+    </fields>
+    <fields>
+        <help><!-- Aggregates the Contact&apos;s active engagement scores from it&apos;s badge records. --></help>
+        <label><!-- Lifetime Engagement Score --></label>
+        <name>OrderApi__Lifetime_Engagement_Score__c</name>
+    </fields>
+    <fields>
+        <help><!-- Do Not Call the Contact&apos;s Mobile Phone. --></help>
+        <label><!-- Mobile Do Not Call --></label>
+        <name>OrderApi__Mobile_Do_Not_Call__c</name>
+    </fields>
+    <fields>
+        <help><!-- Do Not Call the Contact&apos;s Other Phone. --></help>
+        <label><!-- Other Do Not Call --></label>
+        <name>OrderApi__Other_Do_Not_Call__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact will not receive communications to their Other Email. --></help>
+        <label><!-- Other Email Opt Out --></label>
+        <name>OrderApi__Other_Email_Opt_Out__c</name>
+    </fields>
+    <fields>
+        <help><!-- Other/Additional Email for the Contact. --></help>
+        <label><!-- Other Email --></label>
+        <name>OrderApi__Other_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- ** System Calculated ** The sum of the Credit Memo Balance Due field for all Credit Memos linked to this customer. --></help>
+        <label><!-- Outstanding Credits --></label>
+        <name>OrderApi__Outstanding_Credits__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact will not receive communications to their Personal Email. --></help>
+        <label><!-- Personal Email Opt Out --></label>
+        <name>OrderApi__Personal_Email_Opt_Out__c</name>
+    </fields>
+    <fields>
+        <help><!-- Personal/Home Email address for the Contact. --></help>
+        <label><!-- Personal Email --></label>
+        <name>OrderApi__Personal_Email__c</name>
+    </fields>
+    <fields>
+        <label><!-- Potential Duplicate Contacts --></label>
+        <name>OrderApi__Potential_Duplicate_Contacts__c</name>
+    </fields>
+    <fields>
+        <help><!-- **Defaults to Personal Email** Select the Preferred Email Type for the Contact. The value of the corresponding email field will update the standard Contact Email field. --></help>
+        <label><!-- Preferred Email Type --></label>
+        <name>OrderApi__Preferred_Email_Type__c</name>
+        <picklistValues>
+            <masterLabel>Assistant</masterLabel>
+            <translation><!-- Assistant --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Personal</masterLabel>
+            <translation><!-- Personal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation><!-- Work --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- **System Calculated** The Preferred Email for the Contact is calculated by mapping the Preferred Email Type to it&apos;s corresponding field&apos;s value. --></help>
+        <label><!-- Preferred Email --></label>
+        <name>OrderApi__Preferred_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- **Defaults to Personal Email** Select the Preferred Phone Type for the Contact. The value of the corresponding phone field will update the standard Contact Phone field. --></help>
+        <label><!-- Preferred Phone Type --></label>
+        <name>OrderApi__Preferred_Phone_Type__c</name>
+        <picklistValues>
+            <masterLabel>Assistant</masterLabel>
+            <translation><!-- Assistant --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation><!-- Home --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation><!-- Mobile --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation><!-- Work --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- **System Calculated** The Preferred Phone for the Contact is calculated by mapping the Preferred Phone Type to it&apos;s corresponding field&apos;s value. --></help>
+        <label><!-- Preferred Phone --></label>
+        <name>OrderApi__Preferred_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- ** SYSTEM ** JSON of price rules --></help>
+        <label><!-- SYSTEM --></label>
+        <name>OrderApi__Price_Rules_Usages__c</name>
+    </fields>
+    <fields>
+        <help><!-- **Defaults to private** This field sets the visibility settings when contact search is enabled.
+            Public: Any user in the system can search. Private: Searchable by authenticated users only. Unlisted: Can not be searched at all. --></help>
+        <label><!-- Privacy Settings --></label>
+        <name>OrderApi__Privacy_Settings__c</name>
+        <picklistValues>
+            <masterLabel>private</masterLabel>
+            <translation><!-- private --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>public</masterLabel>
+            <translation><!-- public --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>unlisted</masterLabel>
+            <translation><!-- unlisted --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- When checked, the system will overwrite the parent account&apos;s billing address with the value of the contact&apos;s mailing address. Default is unchecked. --></help>
+        <label><!-- Sync Address w/Account (Billing) --></label>
+        <name>OrderApi__Sync_Address_Billing__c</name>
+    </fields>
+    <fields>
+        <help><!-- When checked, the system will overwrite the parent account&apos;s shipping address with the value of the contact&apos;s mailing address. Default is unchecked. --></help>
+        <label><!-- Sync Address w/Account (Shipping) --></label>
+        <name>OrderApi__Sync_Address_Shipping__c</name>
+    </fields>
+    <fields>
+        <help><!-- When checked, the system will overwrite the parent account&apos;s phone with the value of the contact&apos;s preferred phone. Default is unchecked. --></help>
+        <label><!-- Sync Preferred Email w/Account --></label>
+        <name>OrderApi__Sync_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- When checked, the system will overwrite the parent account&apos;s phone with the value of the contact&apos;s preferred phone. Default is unchecked. --></help>
+        <label><!-- Sync Preferred Phone w/Account --></label>
+        <name>OrderApi__Sync_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Do Not Call the Contact&apos;s Work Phone. --></help>
+        <label><!-- Work Do Not Call --></label>
+        <name>OrderApi__Work_Do_Not_Call__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact will not receive communications to their Work Email. --></help>
+        <label><!-- Work Email Opt Out --></label>
+        <name>OrderApi__Work_Email_Opt_Out__c</name>
+    </fields>
+    <fields>
+        <help><!-- Work/Business Email for the Contact. --></help>
+        <label><!-- Work Email --></label>
+        <name>OrderApi__Work_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Work Phone for the Contact. --></help>
+        <label><!-- Work Phone --></label>
+        <name>OrderApi__Work_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- When checked, the Contact has accepted the Cookie Usage Prompt and will not be prompted again. --></help>
+        <label><!-- Cookie Usage Accepted --></label>
+        <name>PagesApi__Cookie_Usage_Accepted__c</name>
+    </fields>
+    <fields>
+        <help><!-- Select the Site you wish to use as the default Site for the Contact. --></help>
+        <label><!-- Site --></label>
+        <name>PagesApi__Site__c</name>
+        <relationshipLabel><!-- Contacts --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Mobile Opt Out --></label>
+        <name>et4ae5__HasOptedOutOfMobile__c</name>
+    </fields>
+    <fields>
+        <label><!-- Mobile Country Code --></label>
+        <name>et4ae5__Mobile_Country_Code__c</name>
+        <picklistValues>
+            <masterLabel>AC</masterLabel>
+            <translation>AC</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AD</masterLabel>
+            <translation>AD</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AE</masterLabel>
+            <translation>AE</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AF</masterLabel>
+            <translation>AF</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AG</masterLabel>
+            <translation>AG</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AI</masterLabel>
+            <translation>AI</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AL</masterLabel>
+            <translation>AL</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AM</masterLabel>
+            <translation>AM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AO</masterLabel>
+            <translation>AO</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AQ</masterLabel>
+            <translation>AQ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AR</masterLabel>
+            <translation>AR</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AS</masterLabel>
+            <translation>AS</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AT</masterLabel>
+            <translation>AT</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AU</masterLabel>
+            <translation>AU</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AW</masterLabel>
+            <translation>AW</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AX</masterLabel>
+            <translation>AX</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AZ</masterLabel>
+            <translation>AZ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BA</masterLabel>
+            <translation>BA</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BB</masterLabel>
+            <translation>BB</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BD</masterLabel>
+            <translation>BD</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BE</masterLabel>
+            <translation>BE</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BF</masterLabel>
+            <translation>BF</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BG</masterLabel>
+            <translation>BG</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BH</masterLabel>
+            <translation>BH</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BI</masterLabel>
+            <translation>BI</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BJ</masterLabel>
+            <translation>BJ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BL</masterLabel>
+            <translation>BL</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BM</masterLabel>
+            <translation>BM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BN</masterLabel>
+            <translation>BN</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BO</masterLabel>
+            <translation>BO</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BQ</masterLabel>
+            <translation>BQ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BR</masterLabel>
+            <translation>BR</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BS</masterLabel>
+            <translation>BS</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BT</masterLabel>
+            <translation>BT</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BV</masterLabel>
+            <translation>BV</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BW</masterLabel>
+            <translation>BW</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BY</masterLabel>
+            <translation>BY</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BZ</masterLabel>
+            <translation>BZ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CA</masterLabel>
+            <translation>CA</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CC</masterLabel>
+            <translation>CC</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CD</masterLabel>
+            <translation>CD</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CF</masterLabel>
+            <translation>CF</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CG</masterLabel>
+            <translation>CG</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CH</masterLabel>
+            <translation>CH</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CI</masterLabel>
+            <translation>CI</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CK</masterLabel>
+            <translation>CK</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CL</masterLabel>
+            <translation>CL</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CM</masterLabel>
+            <translation>CM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CN</masterLabel>
+            <translation>CN</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CO</masterLabel>
+            <translation>CO</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CR</masterLabel>
+            <translation>CR</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CU</masterLabel>
+            <translation>CU</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CV</masterLabel>
+            <translation>CV</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CW</masterLabel>
+            <translation>CW</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CX</masterLabel>
+            <translation>CX</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CY</masterLabel>
+            <translation>CY</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CZ</masterLabel>
+            <translation>CZ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>DE</masterLabel>
+            <translation>DE</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>DJ</masterLabel>
+            <translation>DJ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>DK</masterLabel>
+            <translation>DK</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>DM</masterLabel>
+            <translation>DM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>DO</masterLabel>
+            <translation>DO</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>DZ</masterLabel>
+            <translation>DZ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>EC</masterLabel>
+            <translation>EC</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>EE</masterLabel>
+            <translation>EE</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>EG</masterLabel>
+            <translation>EG</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ER</masterLabel>
+            <translation>ER</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ES</masterLabel>
+            <translation>ES</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ET</masterLabel>
+            <translation>ET</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FI</masterLabel>
+            <translation>FI</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FJ</masterLabel>
+            <translation>FJ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FK</masterLabel>
+            <translation>FK</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FM</masterLabel>
+            <translation>FM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FO</masterLabel>
+            <translation>FO</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>FR</masterLabel>
+            <translation>FR</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GA</masterLabel>
+            <translation>GA</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GB</masterLabel>
+            <translation>GB</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GD</masterLabel>
+            <translation>GD</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GE</masterLabel>
+            <translation>GE</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GF</masterLabel>
+            <translation>GF</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GG</masterLabel>
+            <translation>GG</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GH</masterLabel>
+            <translation>GH</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GI</masterLabel>
+            <translation>GI</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GL</masterLabel>
+            <translation>GL</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GM</masterLabel>
+            <translation>GM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GN</masterLabel>
+            <translation>GN</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GP</masterLabel>
+            <translation>GP</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GQ</masterLabel>
+            <translation>GQ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GR</masterLabel>
+            <translation>GR</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GS</masterLabel>
+            <translation>GS</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GT</masterLabel>
+            <translation>GT</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GU</masterLabel>
+            <translation>GU</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GW</masterLabel>
+            <translation>GW</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GY</masterLabel>
+            <translation>GY</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HK</masterLabel>
+            <translation>HK</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HM</masterLabel>
+            <translation>HM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HN</masterLabel>
+            <translation>HN</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HR</masterLabel>
+            <translation>HR</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HT</masterLabel>
+            <translation>HT</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HU</masterLabel>
+            <translation>HU</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ID</masterLabel>
+            <translation>Id.</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IE</masterLabel>
+            <translation>IE</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IL</masterLabel>
+            <translation>IL</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IM</masterLabel>
+            <translation>IM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IN</masterLabel>
+            <translation>IN</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IO</masterLabel>
+            <translation>IO</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IQ</masterLabel>
+            <translation>IQ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IR</masterLabel>
+            <translation>IR</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IS</masterLabel>
+            <translation>IS</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IT</masterLabel>
+            <translation>IT</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>JE</masterLabel>
+            <translation>JE</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>JM</masterLabel>
+            <translation>JM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>JO</masterLabel>
+            <translation>JO</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>JP</masterLabel>
+            <translation>JP</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>KE</masterLabel>
+            <translation>KE</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>KG</masterLabel>
+            <translation>KG</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>KH</masterLabel>
+            <translation>KH</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>KI</masterLabel>
+            <translation>KI</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>KM</masterLabel>
+            <translation>KM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>KN</masterLabel>
+            <translation>KN</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>KP</masterLabel>
+            <translation>KP</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>KR</masterLabel>
+            <translation>KR</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>KW</masterLabel>
+            <translation>KW</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>KY</masterLabel>
+            <translation>KY</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>KZ</masterLabel>
+            <translation>KZ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LA</masterLabel>
+            <translation>LA</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LB</masterLabel>
+            <translation>LB</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LC</masterLabel>
+            <translation>LC</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LI</masterLabel>
+            <translation>LI</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LK</masterLabel>
+            <translation>LK</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LR</masterLabel>
+            <translation>LR</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LS</masterLabel>
+            <translation>LS</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LT</masterLabel>
+            <translation>LT</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LU</masterLabel>
+            <translation>LU</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LV</masterLabel>
+            <translation>LV</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LY</masterLabel>
+            <translation>LY</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MA</masterLabel>
+            <translation>MA</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MC</masterLabel>
+            <translation>MC</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MD</masterLabel>
+            <translation>MD</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ME</masterLabel>
+            <translation>ME</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MF</masterLabel>
+            <translation>MF</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MG</masterLabel>
+            <translation>MG</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MH</masterLabel>
+            <translation>MH</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MK</masterLabel>
+            <translation>MK</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ML</masterLabel>
+            <translation>ML</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MM</masterLabel>
+            <translation>MM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MN</masterLabel>
+            <translation>MN</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MO</masterLabel>
+            <translation>MO</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MP</masterLabel>
+            <translation>MP</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MQ</masterLabel>
+            <translation>MQ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MR</masterLabel>
+            <translation>MR</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MS</masterLabel>
+            <translation>MS</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MT</masterLabel>
+            <translation>MT</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MU</masterLabel>
+            <translation>MU</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MV</masterLabel>
+            <translation>MV</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MW</masterLabel>
+            <translation>MW</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MX</masterLabel>
+            <translation>MX</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MY</masterLabel>
+            <translation>MY</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MZ</masterLabel>
+            <translation>MZ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NA</masterLabel>
+            <translation>NA</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NC</masterLabel>
+            <translation>NC</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NE</masterLabel>
+            <translation>NE</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NF</masterLabel>
+            <translation>NF</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NG</masterLabel>
+            <translation>NG</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NI</masterLabel>
+            <translation>NI</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NL</masterLabel>
+            <translation>NL</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NO</masterLabel>
+            <translation>NO</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NP</masterLabel>
+            <translation>NP</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NR</masterLabel>
+            <translation>NR</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NU</masterLabel>
+            <translation>NU</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NZ</masterLabel>
+            <translation>NZ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>OM</masterLabel>
+            <translation>OM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PA</masterLabel>
+            <translation>PA</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PE</masterLabel>
+            <translation>PE</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PF</masterLabel>
+            <translation>PF</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PG</masterLabel>
+            <translation>PG</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PH</masterLabel>
+            <translation>PH</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PK</masterLabel>
+            <translation>PK</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PL</masterLabel>
+            <translation>PL</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PM</masterLabel>
+            <translation>PM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PN</masterLabel>
+            <translation>PN</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PR</masterLabel>
+            <translation>PR</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PS</masterLabel>
+            <translation>PS</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PT</masterLabel>
+            <translation>PT</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PW</masterLabel>
+            <translation>PW</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PY</masterLabel>
+            <translation>PY</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>QA</masterLabel>
+            <translation>QA</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RE</masterLabel>
+            <translation>RE</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RO</masterLabel>
+            <translation>RO</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RS</masterLabel>
+            <translation>RS</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RU</masterLabel>
+            <translation>RU</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>RW</masterLabel>
+            <translation>RW</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SA</masterLabel>
+            <translation>SA</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SB</masterLabel>
+            <translation>SB</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SC</masterLabel>
+            <translation>SC</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SD</masterLabel>
+            <translation>SD</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SE</masterLabel>
+            <translation>SE</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SG</masterLabel>
+            <translation>SG</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SH</masterLabel>
+            <translation>SH</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SI</masterLabel>
+            <translation>SI</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SJ</masterLabel>
+            <translation>SJ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SK</masterLabel>
+            <translation>SK</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SL</masterLabel>
+            <translation>SL</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SM</masterLabel>
+            <translation>SM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SN</masterLabel>
+            <translation>SN</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SO</masterLabel>
+            <translation>SO</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SR</masterLabel>
+            <translation>SR</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SS</masterLabel>
+            <translation>SS</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ST</masterLabel>
+            <translation>ST</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SV</masterLabel>
+            <translation>SV</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SX</masterLabel>
+            <translation>SX</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SY</masterLabel>
+            <translation>SY</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SZ</masterLabel>
+            <translation>SZ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TA</masterLabel>
+            <translation>TA</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TC</masterLabel>
+            <translation>TC</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TD</masterLabel>
+            <translation>TD</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TG</masterLabel>
+            <translation>TG</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TH</masterLabel>
+            <translation>TH</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TJ</masterLabel>
+            <translation>TJ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TK</masterLabel>
+            <translation>TK</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TL</masterLabel>
+            <translation>TL</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TM</masterLabel>
+            <translation>TM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TN</masterLabel>
+            <translation>TN</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TO</masterLabel>
+            <translation>TO</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TR</masterLabel>
+            <translation>TR</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TT</masterLabel>
+            <translation>TT</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TV</masterLabel>
+            <translation>TV</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TW</masterLabel>
+            <translation>TW</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>TZ</masterLabel>
+            <translation>TZ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>UA</masterLabel>
+            <translation>UA</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>UG</masterLabel>
+            <translation>UG</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>US</masterLabel>
+            <translation>US</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>UY</masterLabel>
+            <translation>UY</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>UZ</masterLabel>
+            <translation>UZ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>VA</masterLabel>
+            <translation>VA</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>VC</masterLabel>
+            <translation>VC</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>VE</masterLabel>
+            <translation>VE</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>VG</masterLabel>
+            <translation>VG</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>VI</masterLabel>
+            <translation>VI</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>VN</masterLabel>
+            <translation>VN</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>VU</masterLabel>
+            <translation>VU</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>WF</masterLabel>
+            <translation>WF</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>WS</masterLabel>
+            <translation>WS</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>YE</masterLabel>
+            <translation>YE</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>YT</masterLabel>
+            <translation>YT</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ZA</masterLabel>
+            <translation>ZA</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ZM</masterLabel>
+            <translation>ZM</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ZW</masterLabel>
+            <translation>ZW</translation>
+        </picklistValues>
+    </fields>
+    <fieldSets>
+        <label><!-- Demo Field Set --></label>
+        <name>Demo_Field_Set</name>
+    </fieldSets>
+    <layouts>
+        <layout>2017-R1 Fonteva Contact Layout</layout>
+        <sections>
+            <label><!-- Account Sync --></label>
+            <section>Account Sync</section>
+        </sections>
+        <sections>
+            <label><!-- Address --></label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label><!-- Badges --></label>
+            <section>Badges</section>
+        </sections>
+        <sections>
+            <label><!-- Contact Settings --></label>
+            <section>Contact Settings</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Description --></label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label><!-- Email --></label>
+            <section>Email</section>
+        </sections>
+        <sections>
+            <label><!-- Engagement --></label>
+            <section>Engagement</section>
+        </sections>
+        <sections>
+            <label><!-- Phone --></label>
+            <section>Phone</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>2017-R1-LE Fonteva Contact Layout</layout>
+        <sections>
+            <label><!-- Account Sync --></label>
+            <section>Account Sync</section>
+        </sections>
+        <sections>
+            <label><!-- Address --></label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label><!-- Badges --></label>
+            <section>Badges</section>
+        </sections>
+        <sections>
+            <label><!-- Contact Settings --></label>
+            <section>Contact Settings</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Description --></label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label><!-- Email --></label>
+            <section>Email</section>
+        </sections>
+        <sections>
+            <label><!-- Engagement --></label>
+            <section>Engagement</section>
+        </sections>
+        <sections>
+            <label><!-- Phone --></label>
+            <section>Phone</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>AQ Contact Layout</layout>
+        <sections>
+            <label><!-- Additional Information --></label>
+            <section>Additional Information</section>
+        </sections>
+        <sections>
+            <label><!-- Communication Preferences --></label>
+            <section>Communication Preferences</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Employment Information --></label>
+            <section>Employment Information</section>
+        </sections>
+        <sections>
+            <label><!-- Event Attendance Summary --></label>
+            <section>Event Attendance Summary</section>
+        </sections>
+        <sections>
+            <label><!-- Gift Recognition Summary --></label>
+            <section>Gift Recognition Summary</section>
+        </sections>
+        <sections>
+            <label><!-- Giving Recognition Summary --></label>
+            <section>Giving Recognition Summary</section>
+        </sections>
+        <sections>
+            <label><!-- Name --></label>
+            <section>Name</section>
+        </sections>
+        <sections>
+            <label><!-- New Section --></label>
+            <section>New Section</section>
+        </sections>
+        <sections>
+            <label><!-- Personal --></label>
+            <section>Personal</section>
+        </sections>
+        <sections>
+            <label><!-- Phone and Email Preferences --></label>
+            <section>Phone and Email Preferences</section>
+        </sections>
+        <sections>
+            <label><!-- Primary Diploma/Degree --></label>
+            <section>Primary Diploma/Degree</section>
+        </sections>
+        <sections>
+            <label><!-- Research Data --></label>
+            <section>Research Data</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+        <sections>
+            <label><!-- Telephone and Email --></label>
+            <section>Telephone and Email</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>AQ Lightning Contact Layout v2</layout>
+        <sections>
+            <label><!-- Additional Information --></label>
+            <section>Additional Information</section>
+        </sections>
+        <sections>
+            <label><!-- Advancement Names --></label>
+            <section>Advancement Names</section>
+        </sections>
+        <sections>
+            <label><!-- Assigned Districts and Regions --></label>
+            <section>Assigned Districts and Regions</section>
+        </sections>
+        <sections>
+            <label><!-- Communication Preference --></label>
+            <section>Communication Preference</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Detail --></label>
+            <section>Detail</section>
+        </sections>
+        <sections>
+            <label><!-- Employment Information --></label>
+            <section>Employment Information</section>
+        </sections>
+        <sections>
+            <label><!-- Event Attendance Summary --></label>
+            <section>Event Attendance Summary</section>
+        </sections>
+        <sections>
+            <label><!-- Gift Recognition Summary --></label>
+            <section>Gift Recognition Summary</section>
+        </sections>
+        <sections>
+            <label><!-- Membership --></label>
+            <section>Membership</section>
+        </sections>
+        <sections>
+            <label><!-- NOT ORIGINALLY ON PAGE LAYOUT --></label>
+            <section>NOT ORIGINALLY ON PAGE LAYOUT</section>
+        </sections>
+        <sections>
+            <label><!-- New Section --></label>
+            <section>New Section</section>
+        </sections>
+        <sections>
+            <label><!-- Personal --></label>
+            <section>Personal</section>
+        </sections>
+        <sections>
+            <label><!-- Phone and Email Preferences --></label>
+            <section>Phone and Email Preferences</section>
+        </sections>
+        <sections>
+            <label><!-- Primary Diploma/Degree --></label>
+            <section>Primary Diploma/Degree</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+        <sections>
+            <label><!-- Telephone and Email --></label>
+            <section>Telephone and Email</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Contact Layout SUM15</layout>
+        <sections>
+            <label><!-- Account Sync --></label>
+            <section>Account Sync</section>
+        </sections>
+        <sections>
+            <label><!-- Address --></label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Description --></label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label><!-- Email --></label>
+            <section>Email</section>
+        </sections>
+        <sections>
+            <label><!-- Phone --></label>
+            <section>Phone</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Fonteva Contact Layout - Master</layout>
+        <sections>
+            <label><!-- Account Sync --></label>
+            <section>Account Sync</section>
+        </sections>
+        <sections>
+            <label><!-- Address --></label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Description --></label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label><!-- Email --></label>
+            <section>Email</section>
+        </sections>
+        <sections>
+            <label><!-- Phone --></label>
+            <section>Phone</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Fonteva Contact Layout 2016R3</layout>
+        <sections>
+            <label><!-- Account Sync --></label>
+            <section>Account Sync</section>
+        </sections>
+        <sections>
+            <label><!-- Address --></label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label><!-- Badges --></label>
+            <section>Badges</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Description --></label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label><!-- Email --></label>
+            <section>Email</section>
+        </sections>
+        <sections>
+            <label><!-- Engagement --></label>
+            <section>Engagement</section>
+        </sections>
+        <sections>
+            <label><!-- Phone --></label>
+            <section>Phone</section>
+        </sections>
+    </layouts>
+    <validationRules>
+        <errorMessage><!-- Canadian postal code must be in A9A 9A9 format. --></errorMessage>
+        <name>AQB__Canadian_Postal_Code_in_Mailing_Address</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- The data for Contact Mailing Street Line One is longer than the maximum allowed length of 50 characters. --></errorMessage>
+        <name>AQB__Contact_Mailing_Street_One</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- The data for Contact Mailing Street Line Three is longer than the maximum allowed length of 50 characters. --></errorMessage>
+        <name>AQB__Contact_Mailing_Street_Three</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- The data for Contact Mailing Street Line Two is longer than the maximum allowed length of 50 characters. --></errorMessage>
+        <name>AQB__Contact_Mailing_Street_Two</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- The data for the Greeting is longer than the maximum allowed length of 50 characters. --></errorMessage>
+        <name>AQB__Greeting</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You have selected &quot;Account Phone&quot; as the &quot;Phone Preference&quot;, but the &quot;Account Phone&quot; field is blank.  Please select a Phone Preference which contains a phone number. --></errorMessage>
+        <name>AQB__No_Account_Phone</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- If the &apos;Phone Preference&apos; is &apos;Account Phone&apos;, the Phone can only be changed by changing the &apos;Phone&apos; on the Account. --></errorMessage>
+        <name>AQB__No_Account_Phone_Change</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You have selected an &quot;Email Preference&quot; for which no data has been entered.   Please enter and save an email address of that type before choosing it as the &quot;Email Preference&quot;. --></errorMessage>
+        <name>AQB__No_Business_Email</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You have selected &apos;Business Phone&apos; as the &apos;Phone Preference&apos;, but the &apos;Business Phone&apos; field is blank.  Please enter and save a &apos;Business Phone&apos; on the &apos;Primary Employment&apos; before changing the &apos;Phone Preference&apos; or select a different &apos;Phone Preference&apos;. --></errorMessage>
+        <name>AQB__No_Business_Phone</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- If the &apos;Phone Preference&apos; is &apos;Business Phone&apos;, the Phone can only be changed by changing the &apos;Business Phone&apos; in the Primary Employment. --></errorMessage>
+        <name>AQB__No_Business_Phone_Change</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You have selected &quot;Mobile&quot; as the &quot;Phone Preference&quot;, but the &quot;Mobile&quot; phone field is blank.  Please enter and save a &quot;Mobile&quot; phone before changing the &quot;Phone Preference&quot; or select a different &quot;Phone Preference&quot;. --></errorMessage>
+        <name>AQB__No_Mobile_Phone</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You have selected an &quot;Email Preference&quot; for which no data has been entered.   Please enter and save an email address of that type before choosing it as the &quot;Email Preference&quot;. --></errorMessage>
+        <name>AQB__No_Other_Email</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You have selected an &quot;Email Preference&quot; for which no data has been entered.   Please enter and save an email address of that type before choosing it as the &quot;Email Preference&quot;. --></errorMessage>
+        <name>AQB__No_Personal_Email</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- You have selected an &quot;Email Preference&quot; for which no data has been entered.   Please enter and save an email address of that type before choosing it as the &quot;Email Preference&quot;. --></errorMessage>
+        <name>AQB__No_School_Email</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Legal Credit % Cannot Exceed 100 --></errorMessage>
+        <name>AQB__Primary_Credit_Percent_Too_Large</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Legal Credit % +  Gift Recognition Credit % Cannot Exceed 100  OBSOLETE** OBSOLETE** OBSOLETE** OBSOLETE** OBSOLETE** --></errorMessage>
+        <name>AQB__Recognition_Credit_Percent_Sum_Too_Large</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Legal Credt % Cannot Exceed Gift Recognition Credit %  OBSOLETE** OBSOLETE** OBSOLETE** OBSOLETE** OBSOLETE** --></errorMessage>
+        <name>AQB__Secondary_Credit_Less_Than_Primary_Credi</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Gift Recognition Credit % Cannot Exceed 100 --></errorMessage>
+        <name>AQB__Secondary_Credit_Percent_Too_Large</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- There are too many street lines in the Account Mailing Address.  Edit the Account Mailing Street Address so that there are only three lines. --></errorMessage>
+        <name>AQB__Too_Many_Contact_Mail_Add_Street_Lines</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Zip code must be in 99999 or 99999-9999 format. --></errorMessage>
+        <name>AQB__US_Postal_Code_in_Mailing_Address</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- A valid two-letter Canadian province code is required. --></errorMessage>
+        <name>AQB__Valid_Canada_Prov_in_Mail_Address_Abbrev</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Either a valid two-letter Canadian province code or the full name of a province is required. --></errorMessage>
+        <name>AQB__Valid_Canadian_Province_in_Mail_Address</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Either a valid two-letter state code or a complete state name is required. --></errorMessage>
+        <name>AQB__Valid_US_State_in_Mailing_Address</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- A valid two-letter state code is required. --></errorMessage>
+        <name>AQB__Valid_US_State_in_Mailing_Address_Abbrev</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Please enter at least 1 type of Communication: Home Address, Phone Number, or Email. --></errorMessage>
+        <name>Communication_Type</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Please enter a First and Last name to this Contact --></errorMessage>
+        <name>Name</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- Adjust_Gift_Recognition_Credits --></label>
+        <name>AQB__Adjust_Gift_Recognition_Credits</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Contact_Utilities --></label>
+        <name>AQB__Contact_Utilities</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- CopyAccountMailingAddresstoContactMailingAddress --></label>
+        <name>AQB__CopyAccountMailingAddresstoContactMailingAddress</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Create_Action_Plan --></label>
+        <name>AQB__Create_Action_Plan</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleMaps --></label>
+        <name>AQB__GoogleMaps</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleNews --></label>
+        <name>AQB__GoogleNews</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleSearch --></label>
+        <name>AQB__GoogleSearch</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- RelationshipTree --></label>
+        <name>AQB__RelationshipTree</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Select_Address --></label>
+        <name>AQB__Select_Address</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- searchLinkedin --></label>
+        <name>AQB__searchLinkedin</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleMaps --></label>
+        <name>GoogleMaps</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleSearch --></label>
+        <name>GoogleSearch</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- ExactTarget_Resubscribe --></label>
+        <name>et4ae5__ExactTarget_Resubscribe</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- ExactTarget_Unsubscribe --></label>
+        <name>et4ae5__ExactTarget_Unsubscribe</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_ExactTarget_Email --></label>
+        <name>et4ae5__Send_ExactTarget_Email</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_ExactTarget_SMS --></label>
+        <name>et4ae5__Send_ExactTarget_SMS</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- View_ExactTarget_Analytics --></label>
+        <name>et4ae5__View_ExactTarget_Analytics</name>
+    </webLinks>
+</CustomObjectTranslation>

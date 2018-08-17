@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="EventAgendaFilterEvent" access="global">
+  <aura:attribute name="eventAgendaCriteriaObj" type="Map" default="{}" access="global"/>
+  <aura:attribute name="fieldId" type="String" access="global"/>
+</aura:event>

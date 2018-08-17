@@ -1,0 +1,83 @@
+<aura:component description="MediaAssetUpload" controller="PagesApi.MediaAssetController" extends="Framework:BaseComponent">
+    <ltng:require scripts="{!join(',', $Resource.Framework__SLDS_BaseV2+'/js/clipboard.min.js', $Resource.Framework__UrlUtil)}"
+        styles="{!$Resource.Framework__SLDS_BaseV2+'/css/styles.css'}" afterScriptsLoaded="{!c.doInit}" />
+    <aura:attribute name="mediaAssetObj" type="Object" default="{}" />
+    <aura:attribute name="mediaAssetObjs" type="List" default="[]" />
+    <aura:attribute name="collectionName" type="String" default="" />
+    <aura:attribute name="bucket" type="String" />
+    <aura:attribute name="mediaAssetCollection" type="String" />
+    <aura:registerEvent name="ComponentLoadedEvent" type="PagesApi:ComponentLoadedEvent" />
+    <div id="mainWrapperDiv" class="slds hidden" aura:id="mainWrapperDiv">
+        <div class="slds-theme--shade">
+            <div class="slds-page-header">
+                <div class="slds-media">
+                    <div id="collectionName" class="slds-media__body">
+                        <span class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+                            {!$Label.PagesApi.Media_Asset_Upload_To}
+                            <span class="slds-text-weight--regular">&nbsp;{!v.collectionName}</span>
+                        </span>
+                        <Framework:Button qaData='{"type" : "button", "name": "exitBtn"}' label="{!$Label.PagesApi.Media_Asset_Exit}" onClickAction="{!c.exitToMediaCollection}"
+                            enableProgressIndicator="false" aura:id="exitBtn" type="neutral" />
+                    </div>
+                </div>
+            </div>
+            <div id="mediaAssetBody" class="slds-hide" aura:id="mediaAssetBody">
+                <div class="slds-grid slds-p-top--medium slds-p-left--medium">
+                    <div class="slds-size--1-of-2 slds-p-horizontal--small">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "path"}' group="mediaAsset" fieldType="fileupload" aura:id="path"
+                            label="{!$Label.PagesApi.Media_Asset_Path}" value="{!v.mediaAssetObj}" isRequired="true" otherAttributes='{"generatePrefix" : true}'
+                        />
+                    </div>
+                </div>
+                <div class="slds-grid slds-p-left--medium">
+                    <div class="slds-size--1-of-2 slds-p-horizontal--small">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "title"}' group="mediaAsset" fieldType="string" aura:id="title"
+                            label="{!$Label.PagesApi.Media_Asset_Title}" value="{!v.mediaAssetObj}" isRequired="true" />
+                    </div>
+                </div>
+                <div class="slds-grid slds-p-left--medium">
+                    <div class="slds-size--1-of-4 slds-p-horizontal--small">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "shortDescription"}' group="mediaAsset" fieldType="textarea" aura:id="shortDescription"
+                            label="{!$Label.PagesApi.Media_Asset_Short_Description}" value="{!v.mediaAssetObj}" maxlength="254" />
+                    </div>
+                </div>
+                <div class="slds-grid slds-p-left--medium slds-p-bottom--medium">
+                    <div class="slds-size--1-of-4 slds-p-horizontal--small">
+                        <Framework:Button qaData='{"type" : "button", "name": "saveButton"}' label="{!$Label.PagesApi.Upload}" aura:id="saveButton" type="brand"
+                            onClickAction="{!c.saveAsset}" />
+                    </div>
+                </div>
+                <div id="uploadedFileTable" class="slds-grid slds-p-left--medium slds-p-bottom--medium slds-hidden" aura:id="uploadedFileTable">
+                    <div class="slds-size--1-of-1 slds-p-horizontal--small">
+                        <div class="slds-col slds-size--1-of-1 slds-m-bottom--large">
+                            <table id="mediaAssetObjs" class="slds-table slds-table--bordered slds-theme--shade slds-no-row-hover">
+                                <thead>
+                                    <tr class="slds-text-heading--label">
+                                        <th>{!$Label.PagesApi.Media_Asset_Uploaded_File_Url}</th>
+                                        <th>{!$Label.PagesApi.Media_Asset_Action}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <aura:iteration items="{!v.mediaAssetObjs}" var="mediaAssetObj">
+                                        <tr>
+                                            <td>{!mediaAssetObj.url}</td>
+                                            <td>
+                                                <a class="copyUrl" data-clipboard-text="{!mediaAssetObj.url}">{!$Label.PagesApi.Media_Asset_Copy_Url}</a>
+                                            </td>
+                                        </tr>
+                                    </aura:iteration>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="mediaAssetBodyNoCollection" class="slds-hide" aura:id="mediaAssetBodyNoCollection">
+                <div class="slds-grid slds-p-top--medium slds-p-left--medium">
+                    <span class="slds-text-heading--small">{!$Label.PagesApi.No_Collection_Found}</span>
+                </div>
+            </div>
+        </div>
+        <Framework:Toast aura:id="toastMessages" />
+    </div>
+</aura:component>

@@ -1,0 +1,67 @@
+<aura:component description="MyAttendeeForm" access="global" extends="LTE:EventBase" implements="LTE:EventInterface">
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:attribute name="attendeeObj" type="Map" access="global" required="true"/>
+    <aura:attribute name="attendees" type="Object[]" access="global"/>
+    <aura:attribute name="loadingRows" type="List" default="[1]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <div class="slds-col">
+        <div class="slds-size--1-of-1">
+            <div class="slds-col slds-size--1-of-1 slds-event--panes slds-theme--default">
+                <div class="slds-event--pane animated slds-p-bottom--medium fadeIn" data-type="pane">
+                    <div data-name="loading-span-stencil" aura:id="loading-span-stencil">
+                        <aura:iteration items="{!v.loadingRows}" var="object">
+                            <div class="slds-col slds-p-vertical--large slds-theme--shade">
+                                <div class="slds-grid slds-col">
+                                    <div class="slds-size--1-of-12"></div>
+                                    <div class="slds-size--10-of-12 slds-grid slds-wrap">
+                                        <div class="slds-col slds-grid slds-wrap slds-size--1-of-1">
+                                            <div class="slds-text-heading--medium slds-col slds-size--1-of-1 slds-medium-size--1-of-2">
+                                                <div class="slds-text-body--regular loading-span slds-m-bottom--xx-small" style="width: 20vw;">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                            <div class="slds-size--1-of-1 slds-grid slds-wrap">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-size--1-of-12"></div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-p-vertical--large">
+                                <div class="slds-grid slds-col">
+                                    <div class="slds-size--1-of-12"></div>
+                                    <div class="slds-size--10-of-12 slds-grid slds-wrap">
+
+                                        <div class="slds-col slds-grid slds-wrap slds-size--1-of-1 slds-form--group">
+                                            <div class="slds-form--item slds-text-heading--medium slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-bottom--x-small slds-col--rule-bottom slds-col--rule-dark">
+                        <span class="slds-font-weight--bold slds-text-color--company-primary">
+                          <div class="slds-text-body--regular loading-span slds-m-bottom--xx-small" style="width: 40vw;">
+                          &nbsp;
+                        </div>
+                        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-size--1-of-12"></div>
+                                </div>
+                            </div>
+                        </aura:iteration>
+                    </div>
+                    <div data-name="mainData" aura:id="mainData" class="stencil-hidden">
+                        <LTE:EventRegistrationForm aura:id="eventRegistrationForm"
+                                                 formId="{!v.attendeeObj.formId}"
+                                                 formResponseId="{!v.attendeeObj.formResponseId}"/>
+                    </div>
+                    <div data-name="buttons" class="slds-grid slds-wrap slds-m-top--x-large slds-p-bottom--small stencil-hidden" aura:id="buttons">
+                        <div class="slds-size--1-of-12"></div>
+                        <div class="slds-size--10-of-12 slds-text-align--center slds-text-align--left__small">
+                            <Framework:Button qaData='{"type" : "button", "name": "Save_Attendee_Information_My_Reg"}' type="brand" label="{!$Label.LTE.Save_Attendee_Information_My_Reg}" additionalClasses=" slds-m-left--xx-small" onClickAction="{!c.closeForm}"/>
+                        </div>
+                        <div class="slds-size--1-of-12"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</aura:component>

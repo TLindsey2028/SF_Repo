@@ -1,0 +1,108 @@
+<aura:component controller="Framework.LogLookupController">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:registerEvent name="ComponentLoadedEvent" type="Framework:ComponentLoadedEvent"/>
+	<aura:attribute name="healthCheckObj" type="Map" default="{}"/>
+	<aura:attribute name="systemLogs" type="List" default="[]"/>
+
+	<div class="fonteva-pulse--wrapper">
+        <div class="slds-card slds-col slds-theme--default">
+            <div class="slds-card__body slds-p-horizontal--medium">
+                <div class="slds-grid slds-grid--vertical">
+					<div class="slds-grid slds-m-bottom--small">
+						<div class="slds-m-right--small">
+                            <a href="javascript:void(0)" class="slds-text-link--reset" onclick="{!c.collapseList}"
+                               id="logLookupDownBtn">
+                                <lightning:icon iconName="utility:down" size="x-small"/>
+                            </a>
+                            <a href="javascript:void(0)" class="slds-text-link--reset hide" onclick="{!c.collapseList}"
+                               id="logLookupRightBtn">
+                                <lightning:icon iconName="utility:right" size="x-small"/>
+                            </a>
+						</div>
+						<div class="slds-col">
+                            <div class="slds-text-heading--small">
+                                Log Lookup
+                                <div class="slds-col slds-size--2-of-2">
+                                    <div class="slds-text-body--small">
+                                        <div>
+                                            &nbsp;
+                                            <p></p>
+                                            Provides the mechanism to lookup the system logs for a given record id and a variance in seconds
+                                            between createdDate and LastModified Date.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+						</div>
+					</div>
+					<div class="slds-grid">
+						<div class="fonteva-object--custom"></div>
+                        <div id="logLookup" class="slds-grid slds-grid--vertical slds-col">
+							<div class="slds-grid slds-grid--vertical slds-size--1-of-1 slds-medium-size--1-of-3">
+								<div>
+									<Framework:InputFields fieldType="string" isRequired="true" label="Record Id" aura:id="recordId"
+												   value="{!v.healthCheckObj}" helpText="Salesforce Id for the record"/>
+								</div>
+								<div>
+									<Framework:InputFields fieldType="picklist" isRequired="true" label="Variance in secs" aura:id="varianceStr"
+												   value="{!v.healthCheckObj}"
+												   helpText="Variance in seconds between Created Date and Last Modified Date of the record"/>
+								</div>
+								<div>
+									<Framework:InputFields fieldType="datetime" label="Last Modified Date" aura:id="lastMDate"
+												   value="{!v.healthCheckObj}" helpText="Last Modified Date of the record"/>
+								</div>
+								<div>
+									<Framework:Button onClickAction="{!c.getLogInfo}" type="brand" label="Get Logs" aura:id="cmpSaveBtn"/>
+								</div>
+                            </div>
+							<aura:if isTrue="{!v.systemLogs.length >= 1}">
+								<div class="slds-m-top--small fonteva-object--scrollable-x">
+									<table class="slds-table slds-table--bordered">
+										<thead>
+										<tr class="slds-text-heading--label">
+											<th class="slds-is-sortable" scope="col">
+												<div class="slds-truncate">Name
+												</div>
+											</th>
+											<th class="slds-is-sortable" scope="col">
+												<div class="slds-truncate">Created Date
+												</div>
+											</th>
+											<th class="slds-is-sortable" scope="col">
+												<div class="slds-truncate"> Error Type
+												</div>
+											</th>
+											<th class="slds-is-sortable" scope="col">
+												<div class="slds-truncate"> Registered Object
+												</div>
+											</th>
+											<th class="slds-is-sortable" scope="col">
+												<div class="slds-truncate"> Registered App
+												</div>
+											</th>
+										</tr>
+										</thead>
+										<tbody>
+											<aura:iteration items="{!v.systemLogs}" var="log">
+													<tr class="slds-hint-parent">
+														<td class="slds-truncate" data-label="Name"><a target="_blank" href="{!'/'+ log.logid}">{!log.name}</a>
+														</td>
+														<td class="slds-truncate" data-label="CreatedDate">{!log.createdDate}</td>
+														<td class="slds-truncate slds-cell-wrap" data-label="Description">{!log.type}</td>
+														<td class="slds-truncate slds-cell-wrap" data-label="Registered App">{!log.registeredObject}</td>
+														<td class="slds-truncate slds-cell-wrap" data-label="Registered App">{!log.registeredApp}</td>
+													</tr>
+											</aura:iteration>
+										</tbody>
+									</table>
+								</div>
+                            </aura:if>
+                        </div>
+					</div>
+                </div>
+            </div>
+        </div>
+		<Framework:Toast aura:id="toastMessages"/>
+	</div>
+</aura:component>

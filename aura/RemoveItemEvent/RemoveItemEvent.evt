@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="RemoveItemEvent">
+    <aura:attribute name="groupName" type="String"/>
+	<aura:attribute name="removeCompleteStatusOnly" type="Boolean" default="false"/>
+</aura:event>

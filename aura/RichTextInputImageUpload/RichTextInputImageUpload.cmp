@@ -1,0 +1,63 @@
+<aura:component description="RichTextInputImageUpload">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="localId" type="String"/>
+    <aura:registerEvent name="RichTextInputFieldModalEvent" type="Framework:RichTextInputFieldModalEvent"/>
+    <aura:attribute name="settingsObj" type="Map" default="{}"/>
+    <aura:attribute name="quillSelection" type="Object"/>
+    <aura:attribute name="quillRange" type="Map" default="{}"/>
+    <aura:attribute name="saveValue" type="Aura.Action"/>
+    <aura:method name="openModal" action="{!c.openModal}">
+        <aura:attribute name="quillSelection" type="Object"/>
+        <aura:attribute name="quillRange" type="Map" default="{}"/>
+    </aura:method>
+    <div class="slds-modal" aura:id="imageUpload">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium" id="modal-heading-label">{!$Label.Framework.Rich_Text_Upload_Image_Header}</h2>
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+                    <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+                </button><!-- /.slds-button -->
+            </div><!-- /.slds-modal__header -->
+            <div class="slds-modal__content slds-scrollable--y">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size--1-of-1">
+                        <Framework:InputFields aura:id="imageUrl"
+                                               label="{!$Label.Framework.Rich_Text_Upload_Image}"
+                                               isRequired="true"
+                                               value="{!v.settingsObj}"
+                                               fieldType="fileupload"/>
+                    </div>
+                </div>
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size--1-of-1">
+                        <Framework:InputFields aura:id="altText"
+                                       label="Alternative Text"
+                                       value="{!v.settingsObj}"
+                                       fieldType="String"/>
+                    </div>
+                </div>
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size--1-of-8 slds-m-right--medium">
+                        <Framework:InputFields aura:id="width"
+                                               label="{!$Label.Framework.Rich_Text_Upload_Image_Width}"
+                                               value="{!v.settingsObj}"
+                                               fieldType="Integer"
+                                               otherAttributes='{min : 0 , max : 10000}' minValueValidationMessage="Width cannot be negative and must be equal to or greater than "/>
+                    </div>
+                    <div class="slds-size--1-of-8">
+                        <Framework:InputFields aura:id="height"
+                                               label="{!$Label.Framework.Rich_Text_Upload_Image_Height}"
+                                               value="{!v.settingsObj}"
+                                               fieldType="Integer"
+                                               otherAttributes='{min : 0 , max : 10000}' minValueValidationMessage="Height cannot be negative and must be equal to or greater than "/>
+                    </div>
+                </div>
+            </div><!-- /.slds-modal__content -->
+            <div class="slds-modal__footer slds-text-align--right">
+                <Framework:Button enableProgressIndicator="false" type="neutral" label="{!$Label.Framework.Cancel}" onClickAction="{!c.closeModal}"/>
+                <Framework:Button aura:id="saveObject" onClickAction="{!c.saveObject}" type="brand" additionalClasses="slds-m-left--xx-small" label="{!$Label.Framework.Save}"/>
+            </div><!-- /.slds-modal__footer -->
+        </div><!-- /.modal-dialog .slds-modal__container -->
+    </div><!-- /.modal .slds-modal -->
+    <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+</aura:component>

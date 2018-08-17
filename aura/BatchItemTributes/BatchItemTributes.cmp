@@ -1,0 +1,46 @@
+<aura:component controller="AQB.BatchItemsController">
+    
+    <aura:handler name="init" action="{!c.myAction}" value="{!this}" />
+    
+    <aura:attribute name="tributeId" type="Id" access="GLOBAL" />   
+    <aura:attribute name="notifications" type="AQB__BatchItemTributeNotification__c[]" access="GLOBAL" default="{ sobjectType: 'AQB__BatchItemTributeNotification__c'}" />
+    
+    <div style="padding-left: 25px;">
+        <table class="slds-table slds-table--bordered slds-table--striped" style="width:80%;">
+            <thead>
+                <tr class="slds-text-heading--label">
+                    <th scope="col"><span class="slds-truncate">Full Name</span></th>
+                    <th scope="col"><span class="slds-truncate">Greeting</span></th>
+                    <th scope="col"><span class="slds-truncate">Street</span></th> 
+                    <th scope="col"><span class="slds-truncate">Locality</span></th> 
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.notifications}" var="n">
+                    <tr>
+                        <td>
+                            <aura:if isTrue="{!n.AQB__Contact__c != null}">
+                                <a href="{!'/' + n.AQB__Contact__c}" target="_blank">{!n.AQB__FullName__c}</a>
+                                <aura:set attribute="else">
+                                    {!n.AQB__FullName__c}
+                                </aura:set>
+                            </aura:if>
+                        </td>
+                        <td>
+                            {!n.AQB__Greeting__c}
+                        </td>
+                        <td>
+                            {!n.AQB__AddressLine1__c}
+                            <aura:if isTrue="{!n.AQB__AddressLine2__c != null}"><br />{!n.AQB__AddressLine2__c}</aura:if>
+                            <aura:if isTrue="{!n.AQB__AddressLine3__c != null}"><br />{!n.AQB__AddressLine3__c}</aura:if>
+                        </td>
+                        <td>
+                            {!n.AQB__City__c}<aura:if isTrue="{!n.AQB__City__c != ''}">,</aura:if>&nbsp;{!n.AQB__StateProvince__c}&nbsp;&nbsp;{!n.AQB__ZipPostalCode__c}
+                        </td>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+    </div>
+    
+</aura:component>

@@ -1,0 +1,113 @@
+<aura:component description="Package" controller="OrderApi.PackageItemController" implements="lightning:actionOverride" extends="Framework:BaseComponent">
+  <aura:attribute name="parentItemId" type="String" default=""/>
+  <aura:attribute name="packageId" type="String" default=""/>
+  <aura:attribute name="packageObj" type="Map" default="{}"/>
+  <ltng:require scripts="{!join(',', $Resource.OrderApi__SLDS_Base+'/js/scripts.js', $Resource.Framework__UrlUtil)}" styles="{!$Resource.OrderApi__SLDS_Base+'/css/styles.css'}" afterScriptsLoaded="{!c.doInit}"/>
+  <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+  <aura:registerEvent name="ComponentLoadedEvent" type="OrderApi:ComponentLoadedEvent"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+  <aura:attribute name="pckgItemGlobalId" type="string" default=""/>
+  <aura:attribute name="pckgItemClassGlobalId" type="string" default=""/>
+  <style>
+      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+           .slds-ie-fix--width {
+              max-width: calc(100vw - 17px)!important;
+           }
+       }
+  </style>
+  <div class="slds hidden slds-ie-fix--width" aura:id="mainWrapperDiv">
+    <div class="slds-grid slds-grid--align-center slds-wrap">
+      <div class="slds-col slds-size--1-of-1">
+            <div class="slds-page-header">
+                <div class="slds-media">
+                    <div class="slds-media__body">
+                        <span class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+                          {!$Label.OrderApi.Package_Item_Heading} <span class="header-label">&nbsp;{!v.packageObj.parentItemName}</span>
+                        </span>
+                        <Framework:Button label="{!$Label.OrderApi.Cancel_Package_Item}" onClickAction="{!c.cancel}" type="neutral" enableProgressIndicator="false"/>
+                    </div>
+                    <Framework:Button label="{!$Label.OrderApi.Save_Package_Item_Button}" onClickAction="{!c.save}"
+                                      aura:id="saveButton"/>
+                </div>
+            </div>
+        </div>
+      <div class="slds-size--1-of-1 slds-grid slds-wrap">
+        <div class="slds-grid slds-wrap slds-size--1-of-1 slds-theme--shade slds-p-around--large">
+          <div class="slds-col slds-size--1-of-1">
+            <div class="slds-grid slds-grid--pull-padded">
+              <div class="slds-col slds-col--padded slds-size--1-of-2 slds-medium-size--1-of-4">
+                <Framework:InputFields fieldType="Picklist" label="{!$Label.OrderApi.Package_Item_Picklist}" aura:id="type"
+                                       group="package" value="{!v.packageObj}"
+                                       selectOptions="[{'label' : 'Single Item','value' : 'item'},{'label' : 'Group of Items','value' : 'itemClass'}]" fireChangeEvent="true"/>
+              </div>
+              <div class="slds-col slds-col--padded slds-size--1-of-2 slds-medium-size--1-of-4">
+                    <div aura:id="entityDiv"></div>
+              </div>
+            </div>
+          </div>
+          <div class="slds-col slds-size--1-of-1">
+            <div class="{!v.packageObj.type == 'item'? '' : 'hidden'}">
+              <Framework:InputFields fieldType="boolean" label="{!$Label.OrderApi.Required_Package_Item}" aura:id="isRequired"
+                                     group="package" value="{!v.packageObj}"/>
+              <div class="{!v.packageObj.isRequired ? 'slds-m-left--x-large' : 'hidden'}">
+                <Framework:InputFields fieldType="radio" label="{!$Label.OrderApi.NO_Charge_Package_Item}"
+                                       aura:id="hasNoAdditionalCharge" group="package" value="{!v.packageObj}"
+                                       otherAttributes='{"name" : "requiredPackage"}'/>
+                <Framework:InputFields fieldType="radio" label="{!$Label.OrderApi.Has_Charge_Package_Item}"
+                                       aura:id="hasAdditionalCharge" group="package" value="{!v.packageObj}"
+                                       otherAttributes='{"name" : "requiredPackage"}'/>
+              </div>
+            </div>
+            <span class="{!v.packageObj.type == 'itemClass'? '' : 'hidden'}">
+              <Framework:InputFields fieldType="boolean" label="{!$Label.OrderApi.Required_Package_Item_Class}"
+                                     aura:id="isRequired" group="package" value="{!v.packageObj}"/>
+            </span>
+          </div>
+          <div class="slds-col slds-size--1-of-1">
+            <div class="{!v.packageObj.type == 'item' ? 'slds-grid slds-grid--pull-padded' : 'hidden'}">
+              <div class="slds-col slds-col--padded slds-size--1-of-2 slds-medium-size--1-of-7">
+                <Framework:InputFields fieldType="integer" label="{!v.packageObj.isRequired ? $Label.OrderApi.Quantity_Package_Item : 'Minimum Quantity'}" format="0"
+                                       aura:id="minQuantity" group="package" value="{!v.packageObj}" isRequired="{!v.packageObj.isRequired}" otherAttributes='{"min" : 1}'/>
+              </div>
+              <div class="{!v.packageObj.isRequired ? 'hidden' : 'slds-col slds-col--padded slds-size--1-of-2 slds-medium-size--1-of-7'}">
+                <Framework:InputFields fieldType="integer" label="Maximum Quantity" format="0"
+                                       aura:id="maxQuantity" group="package" value="{!v.packageObj}" otherAttributes='{"min" : 1}'/>
+              </div>
+            </div>
+            <div class="{!v.packageObj.type == 'itemClass' ? 'slds-grid slds-grid--pull-padded' : 'hidden'}">
+              <div class="slds-col slds-col--padded slds-size--1-of-1 slds-medium-size--1-of-7">
+                <Framework:InputFields fieldType="integer" label="Maximum Quantity Per Item"
+                                       aura:id="maxQuantityPerItem" group="package" value="{!v.packageObj}"/>
+              </div>
+            </div>
+          </div>
+          <div class="{!and(v.packageObj.isRequired, v.packageObj.type == 'item') ? 'hidden' : 'slds-col slds-size--1-of-1'}">
+            <div class="slds-col slds-grid">
+              <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-3">
+                <Framework:InputFields fieldType="string" label="Display Label" aura:id="displayName"
+                                       group="package" value="{!v.packageObj}" isRequired="true"/>
+              </div>
+            </div>
+          </div>
+          <div class="{!and(v.packageObj.isRequired, v.packageObj.type == 'item') ? 'hidden' : 'slds-col slds-size--1-of-1'}">
+            <div class="slds-col slds-grid">
+              <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-5">
+                <Framework:InputFields fieldType="string" label="Add To Cart Button Label"
+                                       aura:id="buttonDisplayName" group="package" value="{!v.packageObj}"/>
+              </div>
+            </div>
+          </div>
+          <div class="{!and(v.packageObj.isRequired, v.packageObj.type == 'item') ? 'hidden' : 'slds-col slds-size--1-of-1'}">
+            <div class="slds-col slds-grid">
+              <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2">
+                <Framework:InputFields fieldType="textarea" label="Display Instructions"
+                                       aura:id="displayInstructions" group="package" value="{!v.packageObj}"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+  </div>
+</aura:component>

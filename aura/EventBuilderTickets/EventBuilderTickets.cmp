@@ -1,0 +1,757 @@
+<aura:component controller="EventApi.EventsBuilderController" implements="EventApi:EventBuilderTabInterface">
+  <aura:attribute name="ticketTypeObj" type='Object' default="{}"/>
+  <aura:attribute name="glAccountPrefs" type="Object" default="{}"/>
+  <aura:attribute name="isConference" type='Boolean' default="false"/>
+  <aura:attribute name="dateFormat" type="String" description="Date Format"/>
+  <aura:attribute name="modalState" type="String"/>
+  <aura:attribute name="deferRevenue" type="Boolean"/>
+  <aura:attribute name="ticketsWithBlocks" type="List[]" default="[]"/>
+  <aura:attribute name="ticketsWithoutBlocks" type="List[]" default="[]"/>
+  <aura:attribute name="ticketIdToDelete" type="String"/>
+  <aura:attribute name="validated" type="Boolean" default="false"/>
+  <aura:attribute name="organizationId" type="String" description="Organization Id"/>
+  <aura:attribute name="packageModalState" default="base" type="String" access="private"/>
+  <aura:attribute name="customFields" type="List" default="[]"/>
+  <aura:attribute name="customFieldsFound" type="Boolean" default="false"/>
+  <aura:attribute name="packageItemId" default="" type="String"/>
+  <aura:attribute name="eventCapacity" default="" type="Integer"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField" />
+  <aura:attribute name="packageItemName" default="" type="String"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}" />
+  <aura:handler event="Framework:UIApiResponseEvent" action="{!c.handleUIApiResponseEvent}"/>
+  <aura:handler event="Framework:RichTextInputFieldModalEvent" action="{!c.handleRichTextInputFieldModalEvent}"/>
+  <aura:registerEvent name="AddSelectorEvent" type="EventApi:AddSelectorEvent" />
+  <aura:handler event="Framework:FileUploadCropEvent" action="{!c.handleFileUploadCropEvent}"/>
+  <aura:registerEvent name="reloadEventCapacity" type="EventApi:reloadEventCapacity"/>
+  <aura:method name="validate" action="{!c.validate}" />
+  <style>
+    .colorpicker {
+      z-index: 99999;
+    }
+
+    .action-cell {
+      overflow: visible !important;
+    }
+  </style>
+  <Framework:UIApi uniqueId="tickets" aura:id="ticketsUIApi"/>
+  <!-- LOCAL ATTRIBUTES -->
+  <aura:attribute name="currentTabOpen" default="description" access="private" type="String" />
+  <div data-name="loader" class="" aura:id="loader">
+    <div class="slds-grid">
+      <div class="slds-col slds-text-align--center slds-align-middle">
+        <img data-name="Loading_Event_Builder" src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving"
+          width="50" height="50" />&nbsp;
+        <span class="slds-text-heading--medium">{!$Label.EventApi.Loading_Event_Builder}</span>
+      </div>
+    </div>
+  </div>
+  <div data-name="mainBody" class="hidden" aura:id="mainBody">
+  <div class="slds-col slds-size--1-of-1">
+    <div class="slds-grid slds-grid--align-spread slds-p-bottom--medium slds-m-bottom--medium">
+      <div class="slds-col slds-align-middle">
+          <div data-name="Ticket_Types_Event_Builder" class="slds-text-heading--small">{!$Label.EventApi.Ticket_Types_Event_Builder} ({!v.eventObj.ticketTypes.length})</div>
+      </div>
+      <div class="slds-float--right">
+          <Framework:Button qaData='{"type" : "button", "name": "manageInventoryBtn"}' aura:id="manageInventoryBtn" label="Manage Inventory"
+            type="brand" onClickAction="{!c.showInventoryModal}" />
+          <button data-name="addNewTicket" class="slds-button slds-button--brand" onclick="{!c.addNewTicket}">
+            <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}" containerClass="slds-icon__container"
+              svgClass="slds-icon slds-icon--x-small slds-button__icon--left" assistiveText="Save &amp; Close" /> {!$Label.EventApi.New_Ticket_Types_Event_Builder}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="slds-col slds-size--1-of-1 slds-m-bottom--large">
+      <table data-name="Tickets_Event_Builder" class="slds-table slds-table--bordered slds-theme--shade slds-no-row-hover">
+      <aura:if isTrue="{!v.eventObj.ticketTypes.length == 0}">
+        <tr>
+          <td class="slds-truncate">
+              {!$Label.EventApi.No_Tickets_Event_Builder}&nbsp;
+              <a href="javascript:void(0);" onclick="{!c.addNewTicket}">{!$Label.EventApi.Add_New_Tickets_Event_Builder}</a>
+          </td>
+        </tr>
+        <aura:set attribute="else">
+          <thead>
+            <tr class="slds-text-heading--label">
+              <th></th>
+              <th>{!$Label.EventApi.Name_Event_Builder}</th>
+              <th>{!$Label.EventApi.List_Price_Event_Builder}</th>
+              <th>{!$Label.EventApi.Active_Event_Builder}</th>
+              <th>{!$Label.EventApi.Published_Event_Builder}</th>
+              <th class="slds-truncate slds-text-align--right">{!$Label.EventApi.Actions_Event_Builder}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <aura:iteration items="{!v.eventObj.ticketTypes}" var="ticket">
+              <tr>
+                <td class="slds-truncate" data-label="">
+                    <span data-name="ticketImageUrl" class="{!ticket.ticketImageUrl != null ? '' : 'hidden'}">
+                    <Framework:Img src="{!ticket.ticketImageUrl}" width="35" />
+                  </span>
+                    <span data-name="ticketImageUrl" class="{!ticket.ticketImageUrl == null ? '' : 'hidden'}">
+                      <lightning:icon iconName="utility:image" class="slds-icon slds-icon--small slds-icon-text-shade__dark" />
+                  </span>
+                </td>
+                <td class="slds-truncate" data-label="Name">
+                    <span data-name="ticketName" class="{!ticket.isActive ? 'strong' : ''}">
+                          {!ticket.ticketName}
+                  </span>
+                </td>
+                <td class="slds-truncate" data-label="List Price">
+                    <span data-name="ticket-price" class="{!ticket.isActive ? 'strong' : ''}">
+                      <Framework:CurrencyField value="{!ticket.price}" currencyISOCode="{!ticket.currencyISOCode}" isMultiCurrencyOrg="{!ticket.isMultiCurrency}"
+                      />
+                  </span>
+                </td>
+                <td class="slds-truncate" data-label="Active">
+                    <span data-name="ticket-isActive" class="{!ticket.isActive ? '' : 'hidden'}">
+                      <lightning:icon iconName="utility:check" class="slds-icon slds-icon--x-small slds-icon-text-default" size="xx-small" />
+                  </span>
+                    <span data-name="ticket-isActive" class="{!!ticket.isActive ? 'hidden' : ''}">
+                    &nbsp;
+                  </span>
+                </td>
+                <td class="slds-truncate" data-label="{!$Label.EventApi.Published_Event_Builder}">
+                    <span data-name="ticket-isPublished" class="{!ticket.isPublished ? '' : 'hidden'}">
+                      <lightning:icon iconName="utility:check" class="slds-icon slds-icon--x-small slds-icon-text-default" size="xx-small" />
+                  </span>
+                    <span data-name="ticket-isPublished" class="{!ticket.isPublished ? 'hidden' : ''}">
+                    &nbsp;
+                  </span>
+                </td>
+                <td class="slds-truncate slds-text-align--right action-cell" data-label="Actions">
+                    <div data-name="More_Options" class="slds-m-left--small slds-dropdown-trigger">
+                      <lightning:buttonIcon iconName="utility:threedots" alternativeText="{!$Label.EventApi.More_Options}" iconClass="slds-button__icon"
+                      />
+                    <div class="slds-dropdown slds-dropdown--right">
+                      <ul class="dropdown__list" role="menu">
+                          <li data-name="removeItemLink" class="slds-dropdown__item" aura:id="removeItemLink">
+                          <a href="javascript:void(0);" onclick="{!c.editTicketType}" role="menuitem" data-index="{!index}" data-id="{!ticket.ticketTypeId}">
+                            {!$Label.EventApi.Edit_Ticket_Type}
+                          </a>
+                        </li>
+                          <li data-name="editPriceRules" class="slds-dropdown__item">
+                          <a href="javascript:void(0);" role="menuitem" onclick="{!c.editPriceRules}" data-prid="{!ticket.defaultPriceRuleId}" data-id="{!ticket.ticketTypeId}">
+                           {!$Label.EventApi.Edit_Price_Rules_Ticket_Type}
+                          </a>
+                        </li>
+                          <li data-name="manageBadgeTypes" class="slds-dropdown__item">
+                          <a href="javascript:void(0);" role="menuitem" onclick="{!c.manageBadgeTypes}" data-name="{!ticket.ticketName}" data-id="{!ticket.ticketTypeItemId}">
+                            Manage Badges
+                          </a>
+                        </li>
+                          <li data-name="removeItemLink" class="slds-dropdown__item" aura:id="removeItemLink">
+                          <a href="javascript:void(0);" onclick="{!c.deleteTicketTypePrompt}" role="menuitem" data-id="{!ticket.ticketTypeId}">
+                            {!$Label.EventApi.Delete_Ticket_Type}
+                          </a>
+                        </li>
+                        <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+                        <li class="slds-dropdown__item" aura:id="managePackageItems">
+                          <a href="javascript:void(0);" onclick="{!c.managePackageItems}" role="menuitem" data-id="{!ticket.ticketTypeItemId}" data-tt="{!ticket.ticketTypeId}">
+                            {!$Label.EventApi.Event_Builder_Manage_Package_Items}
+                          </a>
+                        </li>
+                        </aura:if>
+                      </ul>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </aura:iteration>
+            </tbody>
+        </aura:set>
+      </aura:if>
+    </table>
+  </div>
+
+  <div class="slds-col slds-size--2-of-3 slds-p-bottom--x-small slds-m-bottom--medium">
+    <div class="slds-grid slds-wrap slds-grid--pull-padded">
+      <div class="slds-size--1-of-2 slds-col--padded">
+          <Framework:InputFields qaData='{"type" : "input", "name": "ticketFilter"}' group="eventTickets" fieldType="picklist" label="{!$Label.EventApi.Tickets_Ticket_Display_Order}"
+            aura:id="ticketFilter" fireChangeEvent="true" value="{!v.eventObj}" selectOptions='[{"label" : "Price (low -> high)","value" : "price_asc"},{"label" : "Price (high -> low)","value" : "price_desc"},{"label" : "Name (A - Z)","value" : "name_asc"},{"label" : "Name (Z - A)","value" : "name_desc"}]'
+          />
+      </div>
+      <div class="slds-size--1-of-2 slds-col--padded">
+          <Framework:InputFields qaData='{"type" : "input", "name": "ticketSalesStartDate"}' group="eventTickets" fieldType="date"
+            isRequired="true" aura:id="ticketSalesStartDate" label="{!$Label.EventApi.Tickets_Ticket_Sales_Start_Date}" value="{!v.eventObj}"
+            format="{!v.dateFormat}" helpText="{!$Label.EventApi.Event_Builder_Tickets_Sales_Start_Date}" />
+      </div>
+    </div>
+
+  </div>
+
+  <div class="slds-col slds-size--1-of-1">
+      <Framework:InputFields qaData='{"type" : "input", "name": "registrationInstructions"}' group="eventTickets" fieldType="richText"
+        label="{!$Label.EventApi.Tickets_Registration_Instructions}" aura:id="registrationInstructions" value="{!v.eventObj}" helpText="{!$Label.EventApi.Event_Builder_Registration_Instructions}"
+      />
+  </div>
+
+    <aura:if isTrue="{!v.eventObj.style != 'Simple'}">
+      <aura:if isTrue="{!v.eventObj.style != 'Lightning Event'}">
+        <div class="slds-col slds-size--1-of-1">
+          <hr class="slds-m-vertical--small" />
+        </div>
+        <div class="slds-col slds-size--1-of-1">
+          <Framework:InputFields qaData='{"type" : "input", "name": "enableRegistrationGroups"}' group="eventtickets" fieldType="boolean"
+            label="{!$Label.EventApi.Tickets_Enable_Group_Reg}" aura:id="enableRegistrationGroups" value="{!v.eventObj}" fireChangeEvent="true"
+          />
+        </div>
+        <div class="slds-col slds-size--1-of-1">
+          <Framework:InputFields qaData='{"type" : "input", "name": "groupRegistrationInstructions"}' group="eventtickets" fieldType="richText"
+            label="{!$Label.EventApi.Tickets_Group_Reg_Instructions}" aura:id="groupRegistrationInstructions" value="{!v.eventObj}"
+            disabled="{!!v.eventObj.enableRegistrationGroups}" />
+        </div>
+      </aura:if>
+      <div class="slds-col slds-size--1-of-1">
+        <hr class="slds-m-vertical--medium" />
+      </div>
+      <div class="slds-col slds-size--1-of-1">
+        <Framework:InputFields qaData='{"type" : "input", "name": "guestRegistrantFieldSetCSV"}' group="eventtickets" fieldType="string"
+          label="{!$Label.EventApi.Tickets_Guest_Reg_Field_Set_CSV}" aura:id="guestRegistrantFieldSetCSV" value="{!v.eventObj}" helpText="Custom fieldset defined on the Assignment Object that is used to collect information during guest checkout. Use the API name of the fieldset and ensure that fields on the Assignment object mirror the fields on the Attendee object."
+        />
+      </div>
+    </aura:if>
+  <aura:if isTrue="{!v.eventObj.style == 'Conference'}">
+    <div class="slds-col slds-size--1-of-2">
+      <div class="slds-grid slds-wrap slds-grid--pull-padded">
+        <div class="slds-col slds-col--padded slds-size--1-of-2">
+            <Framework:InputFields qaData='{"type" : "input", "name": "eTicketLabelColor"}' group="eventtickets" fieldType="colorpickerfield"
+              label="{!$Label.EventApi.Tickets_eTicket_Label_Color}" aura:id="eTicketLabelColor" value="{!v.eventObj}" helpText="The color of the text for the mobile e-ticket. This color will be used for the headings in each section of the e-ticket. Required format is #000000."
+            />
+        </div>
+        <div class="slds-col slds-col--padded slds-size--1-of-2">
+            <Framework:InputFields qaData='{"type" : "input", "name": "eTicketValueColor"}' group="eventtickets" fieldType="colorpickerfield"
+              label="{!$Label.EventApi.Tickets_eTicket_Value_Color}" aura:id="eTicketValueColor" value="{!v.eventObj}" helpText="The color of the value fields for the mobile e-ticket. This color will be used for the values in each section of the e-ticket. Required format is #000000."
+            />
+        </div>
+      </div>
+    </div>
+  </aura:if>
+    <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+  <div class="slds-col slds-size--1-of-1">
+    <div class="slds-grid slds-grid--align-spread slds-m-vertical--medium">
+      <div class="slds-col slds-align-middle">
+            <div data-name="Event_Builder_Event_Pass_Settings" class="slds-text-heading--small">{!$Label.EventApi.Event_Builder_Event_Pass_Settings}</div>
+      </div>
+    </div>
+      <div class="slds-col slds-size--1-of-1 slds-m-top--medium">
+          <Framework:InputFields qaData='{"type" : "input", "name": "enableQRCode"}' group="eventtickets" fieldType="boolean" label="Enable QR Code for Event Pass"
+            aura:id="enableQRCode" value="{!v.eventObj}" helpText="Checking this field will show a QR code on the event pass."
+          />
+      </div>
+    <div class="slds-size--1-of-1">
+          <Framework:InputFields qaData='{"type" : "input", "name": "passImageUrl"}' group="eventTickets" fieldType="fileUpload" aura:id="passImageUrl"
+                                 otherAttributes='{maximumFileSize : 5242880,allowedMimeTypes:["image/png","image/jpeg","image/jpg","image/gif","image/bmp","image/tiff"],"showPreview" : true}'
+            label="{!$Label.EventApi.Event_Builder_Event_Pass_Image}" value="{!v.eventObj}" helpText="{!$Label.EventApi.Event_Builder_Event_Pass_Image_Help_Text}"/>
+    </div>
+  </div>
+    </aura:if>
+
+    <div data-name="ticketsModal" class="slds-modal" aura:id="ticketsModal">
+    <div class="slds-modal__container">
+      <div class="slds-modal__header">
+        <h2 class="slds-text-heading--medium" id="modal-heading-label">
+            {!v.modalState}
+        </h2>
+          <button data-name="closeModal" class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+            <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse" />
+          </button>
+          <!-- /.slds-button -->
+        </div>
+        <!-- /.slds-modal__header -->
+        <div class="tab-content tab-content__transparent">
+        <div class="slds-tabs--default">
+          <ul class="slds-tabs--default__nav" role="tablist">
+              <li data-name="descriptionLabel" aura:id="descriptionLabel" class="slds-tabs__item slds-text-heading--label slds-active"
+                title="{!$Label.EventApi.Description_Event_Builder}" role="presentation">
+              <a href="javascript:void(0);" data-tab="description" onclick="{!c.changeTab}">{!$Label.EventApi.Description_Event_Builder}</a>
+            </li>
+              <li data-name="ticketAttachFormLabel" aura:id="ticketAttachFormLabel" class="slds-tabs__item slds-text-heading--label" title="{!$Label.EventApi.Attach_Form_Event_Builder}"
+                role="presentation">
+              <a href="javascript:void(0);" data-tab="ticketAttachForm" onclick="{!c.changeTab}">{!$Label.EventApi.Attach_Form_Event_Builder}</a>
+            </li>
+              <li data-name="ticketAltPricingLabel" aura:id="ticketAltPricingLabel" class="slds-tabs__item slds-text-heading--label" title="{!$Label.EventApi.Alternate_Pricing_Event_Builder}"
+                role="presentation">
+              <a href="javascript:void(0);" data-tab="ticketAltPricing" onclick="{!c.changeTab}">{!$Label.EventApi.Alternate_Pricing_Event_Builder}</a>
+            </li>
+              <li data-name="ticketAccountingLabel" aura:id="ticketAccountingLabel" class="slds-tabs__item slds-text-heading--label" title="{!$Label.EventApi.Accounting_Event_Builder}"
+                role="presentation">
+              <a href="javascript:void(0);" data-tab="ticketAccounting" onclick="{!c.changeTab}">{!$Label.EventApi.Accounting_Event_Builder}</a>
+            </li>
+          </ul>
+        </div>
+
+        <div aura:id="description" id="ticketDescription" class="slds-tabs__content tab-pane active" role="tabpanel">
+          <div class="slds-modal__content slds-object-height--half slds-scrollable--y" id="ticketBody">
+            <div class="slds-grid slds-wrap slds-grid--pull-padded">
+              <div class="slds-size--2-of-3">
+                <div class="slds-grid slds-wrap">
+                  <div class="slds-size--1-of-3 slds-col--padded">
+                      <Framework:InputFields qaData='{"type" : "input", "name": "isPublished"}' group="ticketTypeBuilder" fieldType="boolean" aura:id="isPublished"
+                        label="{!$Label.EventApi.Is_Published_Event_Builder}" value="{!v.ticketTypeObj}" helpText="{!$Label.EventApi.Event_Builder_Tickets_Is_Published}"
+                      />
+                  </div>
+                  <div class="slds-size--1-of-3 slds-col--padded">
+                      <Framework:InputFields qaData='{"type" : "input", "name": "isActive"}' group="ticketTypeBuilder" fieldType="boolean" aura:id="isActive"
+                        label="{!$Label.EventApi.Is_Active_Event_Builder}" value="{!v.ticketTypeObj}" helpText="{!$Label.EventApi.Event_Builder_Tickets_Is_Active}"
+                      />
+                  </div>
+                </div>
+              </div>
+              <div class="slds-size-1-of-1 slds-col">
+                <div class="slds-grid slds-wrap">
+                  <div class="slds-col slds-size--3-of-4 slds-col--padded">
+                      <Framework:InputFields qaData='{"type" : "input", "name": "ticketName"}' group="ticketTypeBuilder" fieldType="string" aura:id="ticketName"
+                        label="{!$Label.EventApi.Ticket_Name_Event_Builder}" value="{!v.ticketTypeObj}" isRequired="true" maxlength="80"
+                      />
+                  </div>
+                  <div class="slds-size--1-of-4 slds-col--padded">
+                      <Framework:InputFields qaData='{"type" : "input", "name": "price"}' group="ticketTypeBuilder" fieldType="currency" aura:id="price"
+                        label="{!$Label.EventApi.Price_Event_Builder}" value="{!v.ticketTypeObj}" isRequired="true" fireChangeEvent="true"
+                        otherAttributes='{min : 0 , max : 1000000}' minValueValidationMessage="Price cannot be negative and must be equal to or greater than "
+                      />
+                  </div>
+                </div>
+              </div>
+              <div class="slds-size--1-of-1">
+                <div class="slds-grid slds-wrap">
+                  <!--<div class="slds-size&#45;&#45;1-of-4 slds-col&#45;&#45;padded">-->
+                    <!--<Framework:InputFields group="ticketTypeBuilder" fieldType="integer" aura:id="ticketQuantity" label="{!$Label.EventApi.Ticket_Quantity_Event_Builder}" value="{!v.ticketTypeObj}" otherAttributes='{min : 1 , max : 5000}' />-->
+                  <!--</div>-->
+                  <div class="slds-col slds-size--1-of-2 slds-p-top--x-small slds-col--padded">
+                      <Framework:InputFields qaData='{"type" : "input", "name": "enableWaitlisting"}' group="ticketTypeBuilder" fieldType="boolean"
+                        aura:id="enableWaitlisting" label="{!$Label.EventApi.Enable_Ticket_Waitlisting_Event_Builder}" value="{!v.ticketTypeObj}"
+                        helpText="{!$Label.EventApi.Event_Builder_Tickets_Enable_Waitlisting}" />
+                  </div>
+                    <div class="slds-col slds-size--1-of-2 slds-p-top--x-small slds-col--padded">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "showTicketsRemaining"}' group="ticketTypeBuilder" fieldType="boolean"
+                                               aura:id="showTicketsRemaining" label="{!$Label.EventApi.Show_Tickets_Remaining_Event_Builder}" value="{!v.ticketTypeObj}"
+                                               helpText="{!$Label.EventApi.Event_Builder_Tickets_Show_Tickets_Remaining}" />
+                    </div>
+                </div>
+              </div>
+                <div class="slds-size--1-of-1 slds-col--padded slds-has-divider--bottom-space quantity-div">
+                    <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size--1-of-1 slds-col--padded slds-grid slds-grid--pull-padded">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "restrictQuantity"}' group="ticketTypeBuilder" fieldType="boolean"
+                                           aura:id="restrictQuantity" label="{!$Label.EventApi.Restrict_Quantity_Event_Builder}" value="{!v.ticketTypeObj}"
+                                           fireChangeEvent="true" helpText="{!$Label.EventApi.Event_Builder_Tickets_Restrict_Quantity_Order}" />
+                    </div>
+                    <div class="slds-col slds-size--2-of-3 slds-col--padded slds-p-left--large slds-grid slds-grid--pull-padded">
+                        <div class="slds-col--padded">
+                            <Framework:InputFields qaData='{"type" : "input", "name": "minimumQuantity"}' group="ticketTypeBuilder" fieldType="integer"
+                                                   aura:id="minimumQuantity" label="{!$Label.EventApi.Minimum_Quantity_Event_Builder}" value="{!v.ticketTypeObj}"
+                                                   otherAttributes='{"disabled":"true","type" : "number","min" : 0,"max" : 50000}' />
+                        </div>
+                        <div class="slds-col--padded">
+                            <Framework:InputFields qaData='{"type" : "input", "name": "maximumQuantity"}' group="ticketTypeBuilder" fieldType="integer"
+                                                   aura:id="maximumQuantity" label="{!$Label.EventApi.Maximum_Quantity_Event_Builder}" value="{!v.ticketTypeObj}"
+                                                   otherAttributes='{"disabled":"true","type" : "number","min" : 0,"max" : 50000}' />
+                        </div>
+                    </div>
+                    </div>
+                </div>
+              <div class="slds-size--1-of-1 slds-col--padded">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "ticketDescription"}' group="ticketTypeBuilder" fieldType="textarea"
+                    aura:id="ticketDescription" label="{!$Label.EventApi.Description_Event_Builder}" value="{!v.ticketTypeObj}" helpText="{!$Label.EventApi.Event_Builder_Tickets_Description}"
+                  />
+              </div>
+              <div class="slds-size--1-of-1 slds-col--padded">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "ticketInformation"}' group="ticketTypeBuilder" fieldType="richtext"
+                    aura:id="ticketInformation" label="{!$Label.EventApi.Ticket_Information_Event_Builder}" value="{!v.ticketTypeObj}"
+                    helpText="{!$Label.EventApi.Event_Builder_Tickets_Ticket_Information}" />
+              </div>
+              <div class="slds-size--1-of-1 slds-col--padded">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "ticketImageUrl"}' group="ticketTypeBuilder" fieldType="fileUpload"
+                    aura:id="ticketImageUrl" label="{!$Label.EventApi.Ticket_Image_URL_Event_Builder}" value="{!v.ticketTypeObj}"
+                    helpText="{!$Label.EventApi.Event_Builder_Tickets_Image_URL}" />
+              </div>
+              <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+                <div class="slds-size--1-of-1 slds-col--padded slds-has-divider--top-space">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "isGroupTicketType"}' group="ticketTypeBuilder" fieldType="boolean"
+                      aura:id="isGroupTicketType" label="{!$Label.EventApi.Is_Group_Ticket_Type}" value="{!v.ticketTypeObj}" fireChangeEvent="true"
+                      helpText="{!$Label.EventApi.Event_Builder_Tickets_Is_Group_Ticket}" />
+                </div>
+                <div class="slds-size--1-of-1 slds-has-divider--bottom-space">
+                  <div class="slds-grid slds-wrap">
+                    <div class="slds-size--1-of-2 slds-col--padded">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "groupType"}' group="ticketTypeBuilder" fieldType="string" aura:id="groupType"
+                          label="{!$Label.EventApi.Group_Type}" value="{!v.ticketTypeObj}" disabled="{!!v.ticketTypeObj.isGroupTicketType}"
+                          isRequired="true" helpText="{!$Label.EventApi.Event_Builder_Tickets_Group_Type}" />
+                    </div>
+                    <div class="slds-col slds-size--1-of-5 slds-col--padded">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "numberOfAttendees"}' group="ticketTypeBuilder" fieldType="integer"
+                          aura:id="numberOfAttendees" disabled="{!!v.ticketTypeObj.isGroupTicketType}" label="{!$Label.EventApi.Attendees_Per_Group}"
+                          value="{!v.ticketTypeObj}" isRequired="true" otherAttributes='{min : 1 , max : 100}' helpText="{!$Label.EventApi.Event_Builder_Tickets_Attendees_Per_Group}"
+                        />
+                    </div>
+                  </div>
+                </div>
+                <div class="slds-size--1-of-1 slds-col--padded">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "enableRefundRequest"}' group="ticketTypeBuilder" fieldType="boolean"
+                      aura:id="enableRefundRequest" label="{!$Label.EventApi.Enable_Refund_Request}" value="{!v.ticketTypeObj}" fireChangeEvent="true"
+                      helpText="{!$Label.EventApi.Event_Builder_Tickets_Enable_Refund}" />
+                </div>
+                <div class="slds-size--1-of-1 slds-has-divider--bottom-space">
+                  <div class="slds-grid slds-wrap">
+                    <div class="slds-size--1-of-1 slds-col--padded">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "refundRequestPolicy"}' group="ticketTypeBuilder" fieldType="richtext"
+                          aura:id="refundRequestPolicy" label="{!$Label.EventApi.Refund_Request_Policy}" value="{!v.ticketTypeObj}"
+                          disabled="{!!v.ticketTypeObj.enableRefundRequest}" helpText="{!$Label.EventApi.Event_Builder_Tickets_Refund_Request_Policy}"
+                        />
+                    </div>
+                  </div>
+                </div>
+                <aura:set attribute="else">
+                    <div class="slds-size--1-of-1 slds-has-divider--bottom slds-m-bottom--small" />
+                  </aura:set>
+              </aura:if>
+                <aura:if isTrue="{!v.customFields.length > 0}">
+                    <div class="slds-size--1-of-1 slds-col--padded">
+                        <div class="slds-m-bottom--x-small">
+                            <strong>{!$Label.EventApi.Event_Builder_Custom_Fields}</strong>
+                        </div>
+                        <aura:iteration items="{!v.customFields}" var="customField">
+                            <div class="slds-size--1-of-1">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "customfield"}' aura:id="customField" group="ticketTypeBuilderCustomFields" value="{!v.ticketTypeObj.customFieldValues}" sObjectName="{!customField.objectName}" fieldName="{!customField.apiName}" secondaryId="{!customField.apiName}" useSecondaryId="true"/>
+                            </div>
+                        </aura:iteration>
+                    </div>
+                </aura:if>
+            </div>
+          </div>
+        </div>
+        <div aura:id="ticketAttachForm" id="ticketAttachForm" class="slds-tabs__content tab-pane" role="tabpanel">
+          <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+            <div class="slds-grid slds-wrap">
+              <aura:if isTrue="{!v.eventObj.style == 'Conference'}">
+                <div class="slds-size--1-of-1">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "formHeading"}' group="ticketTypeBuilder" fieldType="string" aura:id="formHeading"
+                      label="{!$Label.EventApi.Tickets_Form_Heading}" value="{!v.ticketTypeObj}" />
+                </div>
+              </aura:if>
+              <div class="slds-size--1-of-1">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "form"}' group="ticketTypeBuilder" fieldType="lookup" aura:id="form"
+                    label="{!$Label.EventApi.Tickets_Form}" value="{!v.ticketTypeObj}" otherAttributes='{"type" :"PagesApi__Form__c","pluralLabel":"Forms"}'
+                  />
+              </div>
+              <div class="slds-size--1-of-1">
+                  <button data-name="createForm" class="slds-button slds-button--brand" onclick="{!c.createForm}">
+                  {!$Label.EventApi.Create_New_Form_Event_Builder}
+                </button>
+                  <div data-name="Form_Open_Info_Event_Builder" class="slds-text-body--small slds-p-top--small">{!$Label.EventApi.Form_Open_Info_Event_Builder}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div aura:id="ticketAltPricing" id="ticketAltPricing" class="slds-tabs__content tab-pane" role="tabpanel">
+          <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+            <div class="slds-grid slds-wrap">
+              <div class="slds-size--1-of-1 slds-m-bottom--medium">
+                  <div data-name="List_Price_Event_Builder" class="slds-text-heading--medium">
+                  {!$Label.EventApi.List_Price_Event_Builder}&nbsp;
+                    <Framework:CurrencyField aura:id="listPriceOutput" value="{!v.ticketTypeObj.price}" currencyISOCode="{!v.eventObj.currencyISOCode}"
+                      isMultiCurrencyOrg="{!v.eventObj.isMultiCurrency}" />
+                </div>
+              </div>
+              <div class="slds-size--1-of-1 slds-m-bottom--medium">
+                <span class="boolean-margin">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "enableEarlyBirdPrice"}' group="ticketTypeBuilder" fieldType="boolean"
+                      aura:id="enableEarlyBirdPrice" label="{!$Label.EventApi.Enable_Early_Bird_Event_Builder}" value="{!v.ticketTypeObj}"
+                      fireChangeEvent="true" helpText="{!$Label.EventApi.Enable_Early_Bird_Price_Help_Text}" />
+                </span>
+                <div class="slds-col slds-size--2-of-3">
+                  <div class="slds-grid slds-wrap slds-p-left--small">
+                    <div class="slds-size--1-of-2 slds-col--padded">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "earlyBirdPrice"}' group="ticketTypeBuilder" fieldType="currency"
+                          aura:id="earlyBirdPrice" label="{!$Label.EventApi.Early_Bird_Event_Builder}" value="{!v.ticketTypeObj}"
+                          otherAttributes='{"disabled" : "true","min" : 0}' />
+                    </div>
+                    <div class="slds-size--1-of-2 slds-col--padded">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "earlyBirdEndDate"}' group="ticketTypeBuilder" fieldType="date"
+                          aura:id="earlyBirdEndDate" label="{!$Label.EventApi.Early_Bird_End_Event_Builder}" value="{!v.ticketTypeObj}"
+                          otherAttributes='{"disabled" : "true"}' format="{!v.dateFormat}" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="slds-size--1-of-1">
+                <span class="boolean-margin">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "enableOnSitePrice"}' group="ticketTypeBuilder" fieldType="boolean"
+                      aura:id="enableOnSitePrice" label="{!$Label.EventApi.Enable_On_Site_Price_Event_Builder}" value="{!v.ticketTypeObj}"
+                      fireChangeEvent="true" helpText="{!$Label.EventApi.Enable_On_Site_Price_Help_Text}" />
+                </span>
+                <div class="slds-col slds-size--1-of-2">
+                  <div class="slds-grid slds-wrap slds-p-left--small">
+                    <div class="slds-size--1-of-3 slds-col--padded">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "onSitePrice"}' group="ticketTypeBuilder" fieldType="currency"
+                          aura:id="onSitePrice" label="{!$Label.EventApi.On_Site_Price_Event_Builder}" value="{!v.ticketTypeObj}"
+                          otherAttributes='{"disabled" : "true","min" : 0}' />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div aura:id="ticketAccounting" id="ticketAccounting" class="slds-tabs__content tab-pane" role="tabpanel">
+          <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+            <div class="slds-grid slds-wrap">
+              <div class="slds-size--1-of-1">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "isTaxable"}' group="ticketTypeBuilder" fieldType="boolean" aura:id="isTaxable"
+                    label="{!$Label.EventApi.Is_Taxable_Event_Builder}" value="{!v.ticketTypeObj}" fireChangeEvent="true" />
+              </div>
+              <div class="slds-size--2-of-3 slds-p-left--large">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "taxClass"}' group="ticketTypeBuilder" fieldType="lookup" aura:id="taxClass"
+                    label="{!$Label.EventApi.Tax_Class_Event_Builder}" value="{!v.ticketTypeObj}" disabled="{!!v.ticketTypeObj.isTaxable}"
+                    otherAttributes='{"type" : "OrderApi__Item_Class__c", "pluralLabel" : "Tax Classes","filter" : "OrderApi__Is_Tax__c = true"}'
+                  />
+              </div>
+              <div class="slds-size--1-of-1">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "isContribution"}' group="ticketTypeBuilder" fieldType="boolean"
+                    aura:id="isContribution" label="{!$Label.EventApi.Is_Contribution_Event_Builder}" value="{!v.ticketTypeObj}" />
+              </div>
+              <div class="slds-size--1-of-1">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "isTaxDeductible"}' group="ticketTypeBuilder" fieldType="boolean"
+                    aura:id="isTaxDeductible" label="{!$Label.EventApi.Is_Tax_Deductible_Event_Builder}" value="{!v.ticketTypeObj}"
+                  />
+              </div>
+              <div class="slds-size--1-of-1">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "paymentPriority"}' group="ticketTypeBuilder" fieldType="integer"
+                    aura:id="paymentPriority" label="{!$Label.EventApi.Invoice_Line_Payment_Priority}" value="{!v.ticketTypeObj}"
+                    otherAttributes='{"type" : "number","min" : 1,"max" : 1000}' />
+              </div>
+              <div class="slds-size--1-of-1">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "arAccount"}' group="ticketTypeBuilder" fieldType="lookup" aura:id="arAccount"
+                    label="{!$Label.EventApi.AR_Account_Event_Builder}" value="{!v.ticketTypeObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c"}'
+                  />
+              </div>
+              <div class="slds-size--1-of-1">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "incomeAccount"}' group="ticketTypeBuilder" fieldType="lookup"
+                    aura:id="incomeAccount" label="{!$Label.EventApi.Income_Account_Event_Builder}" value="{!v.ticketTypeObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c"}'/>
+              </div>
+              <div class="slds-size--1-of-1">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "refundAccount"}' group="ticketTypeBuilder" fieldType="lookup"
+                    aura:id="refundAccount" label="{!$Label.EventApi.Refund_Account_Event_Builder}" value="{!v.ticketTypeObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c"}'
+                  />
+              </div>
+              <div class="slds-size--1-of-1">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "adjustmentAccount"}' group="ticketTypeBuilder" fieldType="lookup"
+                    aura:id="adjustmentAccount" label="{!$Label.EventApi.Adjustment_Account_Event_Builder}" value="{!v.ticketTypeObj}"
+                    otherAttributes='{"type" : "OrderApi__GL_Account__c"}' />
+              </div>
+              <div class="slds-size--1-of-1">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "deferRevenue"}' group="ticketTypeBuilder" fieldType="boolean"
+                    aura:id="deferRevenue" label="{!$Label.EventApi.Defer_Revenue_Event_Builder}" value="{!v.ticketTypeObj}" fireChangeEvent="true"
+                  />
+                <div class="slds-col slds-size--1-of-1 slds-p-left--large">
+                  <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                    <div class="slds-size--2-of-3 slds-p-left--small">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "deferredRevenueAccount"}' group="ticketTypeBuilder" fieldType="lookup"
+                          aura:id="deferredRevenueAccount" label="{!$Label.EventApi.Deferred_Revenue_Account_Event_Builder}" value="{!v.ticketTypeObj}"
+                          disabled="{!!v.deferRevenue}" otherAttributes='{"type" : "OrderApi__GL_Account__c"}' />
+                    </div>
+                  </div>
+                </div>
+                <div class="slds-col slds-size--1-of-4 slds-p-left--large">
+                  <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                    <div class="slds-size--1-of-4 slds-col--padded">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "termInMonths"}' group="ticketTypeBuilder" fieldType="integer"
+                          aura:id="termInMonths" label="{!$Label.EventApi.Term_In_Months_Event_Builder}" value="{!v.ticketTypeObj}"
+                          disabled="{!!v.deferRevenue}" otherAttributes='{"type" : "number","min" : 1,"max" : 12}' />
+                    </div>
+                  </div>
+                </div>
+                <div class="slds-col slds-size--3-of-4 slds-p-left--large">
+                  <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                    <div class="slds-size--1-of-2 slds-col--padded">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "revenueRecognitionRule"}' group="ticketTypeBuilder" fieldType="picklist"
+                          aura:id="revenueRecognitionRule" label="{!$Label.EventApi.Revenue_Recognition_Rule_Event_Builder}" value="{!v.ticketTypeObj}"
+                          disabled="{!!v.deferRevenue}" />
+                    </div>
+                    <div class="slds-size--1-of-2 slds-col--padded">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "revenueRecognitionDate"}' group="ticketTypeBuilder" fieldType="date"
+                          aura:id="revenueRecognitionDate" label="{!$Label.EventApi.Revenue_Recognition_Date_Event_Builder}" value="{!v.ticketTypeObj}"
+                          disabled="{!!v.deferRevenue}" format="{!v.dateFormat}" />
+                    </div>
+                  </div>
+                </div>
+                <div class="slds-col slds-size--3-of-4 slds-p-left--large">
+                  <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                    <div class="slds-size--1-of-2 slds-col--padded">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "revenueRecognitionTermRule"}' group="ticketTypeBuilder" fieldType="picklist"
+                          aura:id="revenueRecognitionTermRule" label="{!$Label.EventApi.Revenue_Recognition_Term_Rule_Event_Builder}"
+                          value="{!v.ticketTypeObj}" disabled="{!!v.deferRevenue}" />
+                    </div>
+                    <div class="slds-size--1-of-2 slds-col--padded">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "flexDayOfMonth"}' group="ticketTypeBuilder" fieldType="integer"
+                          aura:id="flexDayOfMonth" label="{!$Label.EventApi.Flex_Day_Of_Month_Event_Builder}" value="{!v.ticketTypeObj}"
+                          disabled="{!!v.deferRevenue}" otherAttributes='{"min" : 0,"max" : 31}' />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.tab-content -->
+      <div class="slds-modal__footer slds-text-align--right">
+        <Framework:Button enableProgressIndicator="false"
+                          onClickAction="{!c.closeModal}"
+                          type="neutral"
+                          label="{!$Label.EventApi.Cancel}" />
+        <Framework:Button aura:id="ticketTypeSaveModalButton"
+                          onClickAction="{!c.saveTicketTypeObj}"
+                          type="brand"
+                          additionalClasses="slds-m-left--xx-small"
+                          label="{!$Label.EventApi.Save_Continue_Event_Builder}" />
+      </div><!-- /.slds-modal__footer -->
+    </div><!-- /.modal-dialog .slds-modal__container -->
+  </div><!-- /.modal .slds-modal -->
+
+  <div class="{!v.packageModalState == 'base' ? 'slds-modal' : v.packageModalState == 'show' ? 'slds-modal slds-fade-in-open slds-modal_large' : 'slds-modal fonteva-modal_parent slds-fade-in-open'}"
+       aura:id="packageModal">
+    <div class="slds-modal__container track-modal">
+      <div class="slds-modal__header">
+        <h2 class="slds-text-heading--medium" id="modal-heading-label">
+          <aura:unescapedHtml value="{!format($Label.EventApi.Event_Builder_Manage_Package_Items_For, v.packageItemName)}"/>
+        </h2>
+        <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+          <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+        </button>
+      </div>
+
+      <EventApi:EventBuilderPackageEditor isTicket="true" aura:id="packageEditor" parentItemId="{!v.packageItemId}" packageItemName="{!v.packageItemName}"
+                                   owner="tickets" packageModalState="{!v.packageModalState}"/>
+        <!-- /.slds-modal__footer -->
+    </div>
+      <!-- /.modal-dialog .slds-modal__container -->
+  </div>
+    <!-- /.modal .slds-modal -->
+
+    <Framework:Toast aura:id="toastMessages" />
+    <Framework:MessagePrompt title="Delete Item" message="Delete this Item?" severity="clear" submitButtonLabel="{!$Label.EventApi.Delete_Ticket_Type_Event_Builder}"
+      submitOnClickAction="{!c.deleteTicketType}" cancelButtonLabel="{!$Label.EventApi.Cancel}" closeOnClickAction="{!c.closeModal}"
+      aura:id="deleteModal" />
+
+    <div data-name="modalBackdrop" class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+    <div data-name="manageInventoryModal" class="slds-modal" aura:id="manageInventoryModal">
+    <div class="slds-modal__container">
+      <div class="slds-modal__header">
+        <h2 class="slds-text-heading--medium" id="modal-heading-label1">
+          Manage Inventory
+        </h2>
+          <button data-name="closeModal" class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+            <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse" />
+          </button>
+          <!-- /.slds-button -->
+        </div>
+        <!-- /.slds-modal__header -->
+        <div class="tab-content slds-object-height--half slds-scrollable--y">
+        <div class="slds-grid slds-wrap slds-theme--shade slds-p-horizontal_large slds-p-vertical_x-small">
+          <div>
+            <div class="slds-box slds-theme_default fonteva-box_small">
+              <div class="slds-text-heading_small">
+                Event Capacity
+              </div>
+              <div class="slds-text-heading_medium">
+                <strong><aura:if isTrue="{!v.eventCapacity != null}">{!v.eventCapacity}<aura:set attribute="else">{!v.eventObj.ticketQuantity}</aura:set></aura:if></strong>
+              </div>
+            </div>
+          </div>
+          <div class="{!v.eventObj.style == 'Lightning Event' ? 'slds-col slds-grid_align-end slds-grid slds-align-bottom' : 'hidden'}">
+              <Framework:Button qaData='{"type" : "button", "name": "unGroupSelectedBtn"}' aura:id="unGroupSelectedBtn" label="Ungroup Selected"
+                type="brand" onClickAction="{!c.unGroupTicketBlock}" enableProgressIndicator="false" disable="true" />
+              <Framework:Button qaData='{"type" : "button", "name": "groupSelectedBtn"}' aura:id="groupSelectedBtn" label="Group Selected"
+                type="brand" onClickAction="{!c.groupSelectedIntoBlock}" enableProgressIndicator="false" additionalClasses="slds-m-left--x-small"
+                disable="true" />
+          </div>
+        </div>
+        <div class="slds-grid slds-wrap ">
+          <div class="slds-size--1-of-1">
+            <table class="slds-table slds-no-row-hover slds-table--bordered">
+            <thead class="slds-has-divider--bottom slds-has-divider--top">
+            <tr class="slds-text-heading--label">
+              <th class="slds-size--1-of-12"></th>
+              <th class="slds-size--1-of-2">NAME</th>
+              <th class="slds-size--1-of-5">AVAILABLE QUANTITY</th>
+            </tr>
+            </thead>
+                <tbody data-name="tableBody" aura:id="tableBody">
+              <aura:iteration items="{!v.ticketsWithBlocks}" var="ticketBlock">
+                <tr class="">
+                      <aura:if isTrue="{!!ticketBlock.isGroupTicket}">
+                        <td class="slds-size--1-of-12">
+                          <Framework:InputFields qaData='{"type" : "input", "name": "ticketSelected"}' aura:id="ticketSelected"
+                            group="ticketBlockGroup" fieldType="boolean" value="{!ticketBlock}" fireChangeEvent="true" labelStyleClasses="hidden"
+                          />
+                        </td>
+                      </aura:if>
+                      <td class="slds-size--1-of-2 slds-truncate">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "name"}' aura:id="name" fieldType="String"
+                          otherAttributes='{min : 1 , max : 80}' value="{!ticketBlock}" isRequired="true"
+                          label="Ticket Block Name" />
+                      </td>
+                      <td class="slds-size--1-of-5">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "blockQuantity"}' aura:id="blockQuantity"
+                          fieldType="integer" otherAttributes='{min : 1 , max : 5000}' value="{!ticketBlock}" isRequired="true"
+                          label="Quantity" fireChangeEvent="true"/>
+                      </td>
+                </tr>
+                <aura:iteration items="{!ticketBlock.tickets}" var="ticket">
+                  <tr class="fonteva-tr_nested-elements">
+                      <td class="slds-size--1-of-12" data-ticketid="{!ticket.id}" onclick="{!c.removeTicketFromBlock}">
+                        <lightning:buttonIcon iconName="utility:clear" variant="bare" />
+                      </td>
+                    <td class="slds-size--1-of-2 slds-truncate">{!ticket.name}</td>
+                    <td class="slds-size--1-of-5"></td>
+                  </tr>
+                </aura:iteration>
+                <tr class="fonteva-tr_nested-elements">
+                  <td class="slds-size--1-of-12"></td>
+                  <td class="slds-size--1-of-2 slds-truncate">
+                        <button onclick="{!c.addToSelectedTicketBlock}" aura:id="addSelectedTTTOBlock" class="slds-button slds-button--brand" data-id="{!ticketBlock.uniqueId}"
+                          disabled="true">+ Add Selected</button>
+                  </td>
+                  <td class="slds-size--1-of-5"></td>
+                </tr>
+              </aura:iteration>
+            </tbody>
+                <tbody data-name="tableBodyNoBlock" aura:id="tableBodyNoBlock">
+              <aura:iteration items="{!v.ticketsWithoutBlocks}" var="ticket">
+                <tr>
+                  <td class="slds-size--1-of-12}">
+                      <aura:if isTrue="{!and(v.eventObj.style == 'Lightning Event', !ticket.isGroupTicket)}">
+                          <Framework:InputFields qaData='{"type" : "input", "name": "ticketSelected"}' aura:id="ticketSelected" group="nonTicketBlockGroup"
+                            fieldType="boolean" value="{!ticket}" fireChangeEvent="true" labelStyleClasses="hidden" />
+                      </aura:if>
+                  </td>
+                  <td class="slds-size--1-of-2 slds-truncate slds-p-top--none">{!ticket.name}</td>
+                      <td class="slds-size--1-of-5">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "quantity"}' aura:id="quantity" fieldType="integer"
+                          otherAttributes='{min : 1 , max : 5000}' value="{!ticket}" labelStyleClasses="hidden" fireChangeEvent="true"/>
+                      </td>
+                </tr>
+              </aura:iteration>
+            </tbody>
+          </table>
+            </div>
+          </div>
+        </div>
+        <!-- /.tab-content -->
+      <div class="slds-modal__footer slds-text-align--right">
+          <Framework:Button qaData='{"type" : "button", "name": "closeModal"}' enableProgressIndicator="false" onClickAction="{!c.closeModal}"
+            type="neutral" label="{!$Label.EventApi.Cancel}" />
+          <Framework:Button qaData='{"type" : "button", "name": "saveTicketBlockBtn"}' aura:id="saveTicketBlockBtn" onClickAction="{!c.saveTicketBlocks}"
+            type="brand" additionalClasses="slds-m-left--xx-small" label="Save" />
+        </div>
+        <!-- /.slds-modal__footer -->
+      </div>
+      <!-- /.modal-dialog .slds-modal__container -->
+    </div>
+    <!-- /.modal .slds-modal -->
+  </div>
+  <EventApi:EventBuilderManageBadgeTypes aura:id="manageBadgeTypes" organizationId="{!v.organizationId}" uiApiUniqueId="ticketBadges"/>
+</aura:component>

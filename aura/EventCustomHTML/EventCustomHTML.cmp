@@ -1,0 +1,9 @@
+<aura:component description="EventCustomHTML" access="global" implements="LTE:EventInterface">
+    <aura:if isTrue="{!and(v.componentObj != null,v.componentObj.config != null,v.componentObj.config.html != null)}">
+        <div class="fonteva-event-component slds-p-around--medium">
+            <div class="slds-grid slds-grid--vertical">
+                <ui:outputRichText value="{!v.componentObj.config.html}" linkify="true" class="event-rich-text"/>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

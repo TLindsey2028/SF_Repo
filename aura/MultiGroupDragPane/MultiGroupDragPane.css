@@ -1,0 +1,18 @@
+.THIS.fonteva-picklist__group {
+  min-height: 5px;
+  padding: 1px;
+  margin: 1px;
+}
+
+.THIS.fonteva-picklist__group-highlighted {
+  border: 1px dashed #aaa;
+  padding: 0px;
+  min-height: 78px;
+}
+
+.THIS .fonteva-picklist__group_remaining {
+  float: right;
+  text-transform: initial;
+  font-size: xx-small;
+  padding-top: 3px;
+}

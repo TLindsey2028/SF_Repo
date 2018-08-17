@@ -1,0 +1,38 @@
+.THIS a.version-selector svg {
+    transform: rotate(180deg);
+    transition: transform .25s ease-in-out;
+}
+.THIS a.version-selector.collapsed svg {
+    transform: rotate(0deg);
+}
+.THIS .modal-open {
+    overflow: hidden;
+}
+
+.THIS #installable-application-paging a.slds-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.THIS #installable-application-paging a.slds-button svg.slds-icon--small{
+    width: 1rem;
+    height: 1rem;
+}
+
+.THIS .slds-list--vertical.slds-has-dividers > .slds-list__item:first-of-type {
+	border-top : 1px solid #d8dde6;
+}
+
+.THIS .slds-list--vertical.slds-has-dividers > .slds-list__item:hover {
+    background-color: transparent;
+    border-color: #d8dde6;
+    cursor: default;
+}
+
+.THIS .slds-list--vertical.slds-has-dividers > .slds-list__item:active {
+    background-color: transparent;
+    border-color: #d8dde6;
+    box-shadow: none;
+    cursor: default;
+}

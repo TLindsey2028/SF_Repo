@@ -1,0 +1,6 @@
+<aura:event type="APPLICATION" description="UpdateShoppingCartItemCountEvent">
+    <aura:attribute type="Integer" name="count"/>
+    <aura:attribute name="itemId" type="String"/>
+    <aura:attribute name="salesOrderLinesAddedInCart" type="List"/>
+    <aura:attribute name="waitlistEntriesAddedInCart" type="List"/>
+</aura:event>

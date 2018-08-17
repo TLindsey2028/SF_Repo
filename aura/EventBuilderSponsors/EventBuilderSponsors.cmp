@@ -1,0 +1,169 @@
+<aura:component controller="EventApi.EventsBuilderController" implements="EventApi:EventBuilderTabInterface">
+	<aura:registerEvent name="AddSelectorEvent" type="EventApi:AddSelectorEvent"/>
+	<aura:attribute name="sponsorIdToDelete" type="String"/>
+	<aura:attribute name="sponsorObj" type='Object' default="{}"/>
+	<aura:attribute name="additionalFields" type='Map[]' default="[]"/>
+	<aura:attribute name="additionalFieldsObject" type="Map" default="{}"/>
+	<aura:attribute name="organizationId" type="String" description="Organization Id"/>
+	<aura:attribute name="customFields" type="List" default="[]"/>
+	<aura:attribute name="customFieldsFound" type="Boolean" default="false"/>
+	<aura:handler event="Framework:UIApiResponseEvent" action="{!c.handleUIApiResponseEvent}"/>
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<Framework:UIApi uniqueId="sponsors" aura:id="fieldUIApi"/>
+	<div data-name="loader" class="" aura:id="loader">
+		<div class="slds-grid">
+			<div class="slds-col slds-text-align--center slds-align-middle">
+				<img src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+				<span data-name="Loading_Event_Builder" class="slds-text-heading--medium">{!$Label.EventApi.Loading_Event_Builder}</span>
+			</div>
+		</div>
+	</div>
+	<div data-name="mainBody" class="hidden" aura:id="mainBody">
+	<div class="slds-col slds-size--1-of-1">
+		<div class="slds-grid slds-grid--align-spread slds-p-bottom--medium slds-m-bottom--medium">
+			<div class="slds-col slds-align-middle">
+				<div data-name="Sponsors_Event_Builder" class="slds-text-heading--small">{!$Label.EventApi.Sponsors_Event_Builder}  ({!v.eventObj.sponsors.length})</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="slds-col slds-size--1-of-1 slds-m-bottom--large">
+		<table data-name="sponsers-details" class="slds-table slds-table--bordered slds-theme--shade slds-no-row-hover">
+	        <aura:if isTrue="{!v.eventObj.sponsors.length == 0}">
+	          <tbody>
+	          <tr>
+	              <td class="slds-truncate">
+	              {!$Label.EventApi.No_Sponsors_Event_Builder}
+	              </td>
+	          </tr>
+	          </tbody>
+	          <aura:set attribute="else">
+	              <thead>
+	                <tr class="slds-text-heading--label">
+	                    <th></th>
+	                    <th>{!$Label.EventApi.Name_Event_Builder}</th>
+	                    <th>{!$Label.EventApi.Sponsor_Packages_Event_Builder}</th>
+	                    <th>{!$Label.EventApi.Description_Label}</th>
+	                    <th class="slds-truncate slds-text-align--right">{!$Label.EventApi.Actions_Event_Builder}</th>
+	                </tr>
+	              </thead>
+	              <tbody>
+	              <aura:iteration items="{!v.eventObj.sponsors}" var="sponsor">
+	                  <tr>
+	                      <td class="slds-truncate" data-label="">
+							  <span data-name="sponsor-imageUrl" class="{!sponsor.imageUrl != null ? '' : 'hidden'}">
+								<Framework:Img src="{!sponsor.imageUrl}" width="35" />
+							  </span>
+							  <span data-name="sponsor-imageUrl-icon" class="{!sponsor.imageUrl == null ? '' : 'hidden'}">
+								<lightning:icon iconName="utility:image" class="slds-icon slds-icon--small slds-icon-text-shade__dark"/>
+							  </span>
+	                      </td>
+	                      <td class="slds-truncate" data-label="Name">{!sponsor.name}</td>
+	                      <td class="slds-truncate" data-label="Package">{!sponsor.sponsorPackageName}</td>
+	                      <td class="slds-truncate" data-label="Featured"><ui:outputRichText value="{!sponsor.description}" linkify="true"/></td>
+	                      <td class="slds-truncate slds-text-align--right" data-label="Actions">
+	                          <button data-name="editSponsor" class="slds-button slds-button--icon-border slds-action" data-id="{!sponsor.sponsorId}" onclick="{!c.editSponsor}">
+	                              <img class="slds-button__icon" src="{!$Resource.EventApi__SLDS_Icons+'/icons/utility/edit_60.png'}" width="16" height="34" data-id="{!sponsor.sponsorId}"/>
+	                          </button>
+	                          <button data-name="deleteSponsorPrompt" class="slds-button slds-button--icon-border slds-action" data-id="{!sponsor.sponsorId}" onclick="{!c.deleteSponsorPrompt}">
+	                              <img class="slds-button__icon" src="{!$Resource.EventApi__SLDS_Icons+'/icons/utility/delete_60.png'}" width="16" height="34" data-id="{!sponsor.sponsorId}"/>
+	                          </button>
+	                      </td>
+	                  </tr>
+	              </aura:iteration>
+	              </tbody>
+	          </aura:set>
+	      </aura:if>
+	    </table>
+	</div>
+
+	<div data-name="sponsorsModal" class="slds-modal" aura:id="sponsorsModal">
+		<div class="slds-modal__container">
+			<div class="slds-modal__header">
+				<h2 class="slds-text-heading--medium" id="modal-heading-label">
+						{!$Label.EventApi.Edit_Sponsor_Event_Builder}
+				</h2>
+				<button data-name="closeModal" class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+					<lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+				</button>
+			</div>
+
+			<div data-name="sponsorBody" class="slds-modal__content slds-object-height--half slds-scrollable--y" id="sponsorBody">
+				<div class="slds-grid slds-wrap slds-grid--pull-padded">
+					<div class="slds-size--3-of-4 slds-col--padded">
+						<Framework:InputFields qaData='{"type" : "input", "name": "name"}' group="sponsorEventBuilder" isRequired="true" fieldType="string" aura:id="name" label="{!$Label.EventApi.Sponsor_Name_Event_Builder}" value="{!v.sponsorObj}" maxlength="80" />
+					</div>
+					<div class="slds-size--1-of-4 slds-col--padded is-featured-checkbox">
+						<Framework:InputFields qaData='{"type" : "input", "name": "isFeatured"}' group="sponsorEventBuilder" fieldType="boolean" aura:id="isFeatured" label="Is Featured" value="{!v.sponsorObj}" />
+					</div>
+					<div class="slds-size--1-of-1 slds-col--padded">
+						<Framework:InputFields qaData='{"type" : "input", "name": "description"}' group="sponsorEventBuilderExcempt" fieldType="richtext" aura:id="description" label="{!$Label.EventApi.Description_Event_Builder}" value="{!v.sponsorObj}" maxlength="32767"/>
+					</div>
+					<div class="slds-size--1-of-1 slds-col--padded">
+						<Framework:InputFields qaData='{"type" : "input", "name": "imageUrl"}' group="sponsorEventBuilder" fieldType="fileUpload" aura:id="imageUrl" label="{!$Label.EventApi.Sponsor_Package_Image_URL}" value="{!v.sponsorObj}" otherAttributes='{maximumFileSize : 5242880,allowedMimeTypes:["image/png","image/jpeg","image/jpg","image/gif","image/bmp","image/tiff"]}'/>
+					</div>
+					<aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+						<div class="slds-size--1-of-1 slds-col--padded">
+							<Framework:InputFields qaData='{"type" : "input", "name": "sponsorHyperLink"}' group="sponsorEventBuilder" fieldType="url" aura:id="sponsorHyperLink" label="{!$Label.EventApi.Sponsor_HyperLink_Event_Builder}" value="{!v.sponsorObj}" helpText="{!$Label.EventApi.Sponsor_HyperLink_HelpText_Event_Builder}"/>
+						</div>
+					</aura:if>
+					<aura:if isTrue="{!v.additionalFields.length > 0}">
+						<div class="slds-size--1-of-1">
+							<hr/>
+						</div>
+					</aura:if>
+
+					<aura:iteration items="{!v.additionalFields}" var="field">
+						<div class="slds-size--1-of-1 slds-col--padded">
+							<Framework:InputFields qaData='{"type" : "input", "name": "additionalField"}' group="sponsorEventBuilderDynamic"
+							                       label="{!field.label}"
+							                       helpText="{!field.helpText}"
+							                       fieldType="{!field.fieldType}"
+							                       useSecondaryId="true"
+							                       secondaryId="{!field.id}"
+							                       aura:id="additionalField"
+							                       value="{!v.additionalFieldsObject}"
+							                       selectOptions="{!field.selectOptions}"/>
+						</div>
+					</aura:iteration>
+					<aura:if isTrue="{!v.customFields.length > 0}">
+						<div class="slds-size--1-of-1 slds-col--padded slds-has-divider--top slds-m-top--small">
+							<div class="slds-m-top--small">
+								<div class="slds-m-bottom--x-small">
+									<strong>{!$Label.EventApi.Event_Builder_Custom_Fields}</strong>
+								</div>
+								<aura:iteration items="{!v.customFields}" var="customField">
+									<div class="slds-size--1-of-1">
+										<Framework:InputFields qaData='{"type" : "input", "name": "customfield"}' aura:id="customField" group="sponsorBuilderCustomFields" value="{!v.sponsorObj.customFieldValues}" sObjectName="{!customField.objectName}" fieldName="{!customField.apiName}" secondaryId="{!customField.apiName}" useSecondaryId="true"/>
+									</div>
+								</aura:iteration>
+							</div>
+						</div>
+					</aura:if>
+				</div>
+			</div>
+
+			<div class="slds-modal__footer slds-text-align--right">
+				<button class="slds-button slds-button--neutral" onclick="{!c.closeModal}">{!$Label.EventApi.Cancel}</button>
+				<Framework:Button qaData='{"type" : "button", "name": "sponsorModalSaveButton"}' aura:id="sponsorModalSaveButton"
+				                  onClickAction="{!c.saveSponsor}"
+				                  type="brand"
+				                  additionalClasses="slds-m-left--xx-small"
+				                  label="{!$Label.EventApi.Save_Continue_Event_Builder}" />
+			</div>
+		</div>
+	</div>
+
+
+	<Framework:MessagePrompt title="Delete Sponsor"
+	                         message="Delete this Sponsor?"
+	                         severity="clear"
+	                         submitButtonLabel="{!$Label.EventApi.Delete_Ticket_Type_Event_Builder}"
+	                         submitOnClickAction="{!c.deleteSponsor}"
+	                         cancelButtonLabel="{!$Label.EventApi.Cancel}"
+	                         closeOnClickAction="{!c.closeModal}"
+	                         aura:id="deleteModal"/>
+
+	<div data-name="modalBackdrop" class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+	</div>
+</aura:component>

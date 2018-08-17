@@ -1,0 +1,40 @@
+<aura:component description="EventRegistrationSeatingWrapper" implements="LTE:EventInterface" access="global" controller="LTE.EventRegistrationSeatingController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="sections" type="LTE.Section[]"/>
+    <aura:attribute name="tickets" type="List"/>
+    <aura:attribute name="ticketMap" type="Map"/>
+    <aura:attribute name="disableNextButtonOnLoad" type="Boolean" default="true"/>
+    <aura:handler event="Framework:ShowComponentEvent" action="{!c.handleSwitchComponent}"/>
+    <aura:handler event="LTE:ShowSeatingTicketsEvent" action="{!c.handleShowSeatingTicketsEvent}"/>
+    <aura:registerEvent name="EventCancelRegistrationEvent" type="LTE:EventCancelRegistrationEvent"/>
+    <aura:registerEvent name="HashChangingEvent" type="LTE:HashChangingEvent"/>
+    <aura:dependency resource="EventRegistrationSeatingTickets"/>
+    <aura:dependency resource="EventRegistrationSeatingAssignment"/>
+    <aura:handler event="LTE:SalesOrderLineDeletedEvent" action="{!c.handleSalesOrderLineDeletedEvent}"/>
+
+    <div class="slds-size--1-of-1 slds-event--panes fonteva-event-component">
+        <div id="attendee" class="slds-event--pane slds-p-horizontal_large" data-type="pane">
+            <div class="slds-col slds-p-vertical_large slds-grid slds-grid_pull-padded-small">
+                <div class="slds-col slds-medium-size_2-of-3 slds-p-horizontal_small" aura:id="sectionBody" />
+                <div class="slds-col slds-medium-size_1-of-3 fonteva-medium-p-horizontal_small fonteva-event_summary">
+                    <LTE:EventRegistrationSummary aura:id="eventRegistrationSummary" so="{!v.salesOrderObj}" eventObj="{!v.eventObj}"
+                                                displayDiscount="false" displayTotal="false" siteObj="{!v.siteObj}" storeObj="{!v.storeObj}"/>
+                    <div class="slds-grid slds-grid_align-center">
+                        <LTE:EventActionButtons aura:id="actionButtons" cancelAction="{!c.openCancelModal}" nextAction="{!c.nextStep}" previousAction="{!c.previousStep}"
+                                              showPrevious="{!'v.initialPurchase'}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="fonteva-prompt_severity">
+        <Framework:MessagePrompt title="{!$Label.LTE.Cancel_Registration_Header}"
+                                 message="{!'&lt;div>'+$Label.LTE.Cancel_Reg_First+'&lt;/div>'+$Label.LTE.Cancel_Reg_Second}"
+                                 severity="error"
+                                 aura:id="cancelPrompt"
+                                 cancelButtonLabel="{!$Label.LTE.Cancel_Reg_No}"
+                                 submitButtonLabel="{!$Label.LTE.Cancel_Reg_Yes}"
+
+                                 submitOnClickAction="{!c.fireCancelRegEvent}"/>
+    </div>
+</aura:component>

@@ -1,0 +1,155 @@
+.THIS.fonteva-slds--navbar {
+    flex: 0 0 auto;
+}
+.THIS.fonteva-content-wrapper {
+    height: 100%;
+    overflow-y: auto;
+}
+.THIS .slds-nav--link {
+    font-size: 13px;
+}
+
+.THIS .fonteva-navbar--container > * {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.THIS .slds-nav--link .slds-dropdown-trigger .slds-button--icon svg{
+    fill: white!important;
+}
+
+.THIS .slds-dropdown-trigger.slds-is-open {
+    position: relative;
+}
+
+.THIS .slds-dropdown-trigger .slds-button.slds-button--icon {
+    color: white;
+}
+.THIS .fonteva-dropdown_icon-custom svg {
+    margin-left: .5rem;
+}
+
+.THIS .fonteva-width_full {
+    width: 100%;
+}
+
+.THIS .fonteva-overflow_hidden {
+    overflow: hidden;
+}
+
+.THIS .fonteva-navbar_nested a div {
+    font-size: 14px;
+}
+
+.THIS .fonteva-navbar_nested a:hover,
+.THIS .fonteva-navbar_nested a:focus,
+.THIS .fonteva-navbar_nested a:active,
+.THIS .fonteva-navbar_nested a:visited,
+.THIS .fonteva-navbar_mobile > div > div:first-of-type a:hover,
+.THIS .fonteva-navbar_mobile > div > div:first-of-type a:focus,
+.THIS .fonteva-navbar_mobile > div > div:first-of-type a:active,
+.THIS .fonteva-navbar_mobile > div > div:first-of-type a:visited {
+    text-decoration: none;
+}
+
+.THIS .fonteva-navbar_nested a {
+    opacity: .6;
+}
+
+.THIS .fonteva-navbar_nested a.active {
+    font-weight: 800;
+    opacity: 1;
+}
+
+.THIS .fonteva-navbar_nested .slds-dropdown__item .slds-truncate {
+    text-overflow: unset;
+    overflow: auto;
+    max-width: 100%;
+}
+
+.THIS .fonteva-navbar_nested > div > a:first-of-type {
+    padding-left: 0;
+}
+
+.THIS .fonteva-event_title {
+    font-size: 24px;
+}
+
+.THIS .fonteva-event_supernav-text {
+    max-width: 330px;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.THIS .slds-dropdown.fonteva-slds--navbar {
+    border: 0;
+    border-radius: 0;
+    margin-top: .5rem;
+}
+
+.THIS .slds-nav--burger:hover {
+    cursor: pointer;
+}
+.THIS .fonteva-navbar_mobile > div > div:first-of-type {
+    min-height: 42px
+}
+.THIS .fonteva-navbar_mobile > div > div:first-of-type .slds-dropdown-trigger,
+.THIS .fonteva-navbar_mobile > div > div:first-of-type .fonteva-event_supernav-text{
+    font-size: 12px;
+}
+.THIS .fonteva-navbar_mobile > div > div:last-of-type .slds-dropdown-trigger {
+    font-size: 14px;
+}
+
+.THIS .fonteva-navbar_nested a,
+.THIS .fonteva-navbar_mobile > div > div:last-of-type .slds-dropdown-trigger > span {
+    opacity: .6;
+}
+
+.THIS .fonteva-slds--navbar .slds-dropdown-trigger.slds-nav--link {
+    font-size: 14px;
+}
+
+.THIS .fonteva-slds--navbar .slds-button__icon.slds-button--icon--inverse  {
+    height: 20px;
+    width: 20px;
+}
+
+.THIS .fonteva-navbar_nested {
+    height: 40px;
+}
+
+.THIS .fonteva-navbar_mobile > div > div:first-of-type .slds-dropdown-trigger a:hover,
+.THIS .fonteva-navbar_mobile > div > div:first-of-type .slds-dropdown-trigger a:focus,
+.THIS .fonteva-navbar_mobile > div > div:first-of-type .slds-dropdown-trigger a:visited,
+.THIS .fonteva-navbar_mobile > div > div:first-of-type .slds-dropdown-trigger a:active {
+    background-color: #f8f8f8;
+}
+.THIS .fonteva-navbar--container slds-p-vertical_x-small fonteva-slds--navbar {
+    height: 100%;
+}
+@media (min-width: 48em) {
+    .THIS .fonteva-navbar--container slds-p-vertical_x-small fonteva-slds--navbar {
+        height: 106px;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+}
+.THIS .fonteva-slds--navbar.active .slds-col.slds-grid.slds-grid_vertical.slds-grid_align-space.fonteva-width_full.slds-p-horizontal_large {
+    padding-left: 14px;
+}
+
+.THIS .more-button {
+    padding-right:45px;
+}
+
+.THIS .fonteva-navbar_mobile > div > div:first-of-type .slds-button.atcb-link {
+    min-height: 0!important;
+    min-width: 0!important;
+}
+
+.THIS .fonteva-navbar_title {
+    font-size: 14px;
+}

@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="CreditCardTokenizeEvent">
+	<aura:attribute name="tokenizedCreditCardObj" type="Map" default="{}"/>
+</aura:event>

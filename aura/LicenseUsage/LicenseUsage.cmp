@@ -1,0 +1,150 @@
+<aura:component controller="Framework.AdminLicenseUsageController">
+
+    <aura:attribute name="preferences" type="Object" default="{}" description="Preferences"/>
+    <aura:attribute name="licenseUsages" type="List" default="[]" description="All Objects"/>
+    <aura:attribute name="licenseUsage" type="Object" default="{}" description="License Usage"/>
+    <aura:attribute name="licenseRows" type="Object[]" default="[{}]" />
+    <aura:attribute name="loading" type="Boolean" default="true" description=""/>
+    <aura:attribute name="loadingRows" type="List" default="[1,2,3,4,5]" description=""/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="Framework:LicenseRowActionEvent" action="{!c.handleRow}"/>
+
+    <div class="slds-medium-size--3-of-4 slds-size--1-of-1 slds-grid slds-wrap">
+        <div class="slds-col slds-size--1-of-1">
+            <div class="slds-page-header">
+                <div class="slds-media slds-media--center">
+                    <div class="slds-media__figure slds-ie-fix--width__icon">
+
+                    </div>
+                    <!-- /.slds-media__figure -->
+                    <div class="slds-media__body">
+                        <div class="slds-text-heading--medium">
+                                {!$Label.Framework.License_Usage}
+                        </div>
+                    </div>
+                    <!-- /.slds-media__body -->
+                    <button class="slds-button slds-button--neutral slds-m-left--xx-small new-routing-rule" onclick="{!c.showModal}" data-type="preferences">{!$Label.Framework.Preferences}</button>
+                </div>
+                <!-- /.slds-media -->
+            </div>
+            <!-- /.slds-page-header -->
+            <!-- <apex:insert name="main"/> -->
+            <div aura:id="mainBody" class="slds-object-height--full__nofooter slds-scrollable--y">
+                <div class="slds-size--1-of-1 slds-m-bottom--medium">
+                  <span class="slds-object--full__width">
+                      <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+                          <thead class="slds-col-rule--bottom">
+                          <tr class="slds-text-heading--label">
+                              <th scope="col">
+                                  <span class="slds-truncate slds-p-left--medium">Package Namespace</span>
+                              </th>
+                              <th scope="col">
+                                  <span class="slds-truncate">Profile Name</span>
+                              </th>
+                              <th scope="col">
+                                  <span class="slds-truncate">Permission Set Name</span>
+                              </th>
+                              <th scope="col">
+                                  <span class="slds-truncate">Salesforce License</span>
+                              </th>
+                              <th scope="col">
+                                  <span class="slds-truncate">User Count</span>
+                              </th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <aura:if isTrue="{!v.loading}">
+                              <aura:iteration items="{!v.loadingRows}" var="object">
+                                  <tr class="row-loading-span">
+                                      <td>
+                                          <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                                      </td>
+                                      <td>
+                                          <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                                      </td>
+                                      <td>
+                                          <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                                      </td>
+                                      <td>
+                                          <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                                      </td>
+                                      <td>
+                                          <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                                      </td>
+                                  </tr>
+                              </aura:iteration>
+                              <aura:set attribute="else">
+                                  <aura:iteration items="{!v.licenseUsages}" var="licenseUsage">
+                                      <tr class="slds-hint-parent">
+                                          <td data-label="package namespace" class="{!licenseUsage.WithinLimits ? 'slds-truncate' : 'slds-truncate slds-text-weight--bold slds-text-color--error'}">
+                                                  <span class="slds-p-left--medium">{!licenseUsage.PackageName}</span>
+                                          </td>
+                                          <td data-label="profile name" class="{!licenseUsage.WithinLimits ? 'slds-truncate' : 'slds-truncate slds-text-weight--bold slds-text-color--error'}">
+                                                  {!licenseUsage.ProfileName}
+                                          </td>
+                                          <td data-label="permission set name" class="{!licenseUsage.WithinLimits ? 'slds-truncate' : 'slds-truncate slds-text-weight--bold slds-text-color--error'}">
+                                                  {!licenseUsage.PermissionSet}
+                                          </td>
+                                          <td data-label="salesforce license" class="{!licenseUsage.WithinLimits ? 'slds-truncate' : 'slds-truncate slds-text-weight--bold slds-text-color--error'}">
+                                                  {!licenseUsage.UserLicense}
+                                          </td>
+                                          <td data-label="user count" class="{!licenseUsage.WithinLimits ? '' : 'slds-text-weight--bold slds-text-color--error'}">
+                                                  {!licenseUsage.UserCount} <aura:if isTrue="{!!licenseUsage.WithinLimits}"> &nbsp; (<em>Over by {!licenseUsage.ExtraCount}</em>)</aura:if>
+                                          </td>
+                                      </tr>
+                                  </aura:iteration>
+                              </aura:set>
+                          </aura:if>
+                          </tbody>
+                      </table><!-- /.slds-table -->
+                  </span><!-- /.slds-scrollable-x --></div>
+                </div>
+            </div>
+        </div>
+        <!-- /.slds-col -->
+    <div class="slds-modal" id="modalPreferences" aura:id="modalPreferences">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium" id="modal-heading-label">{!$Label.Framework.Preferences}</h2>
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+                    <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+                </button><!-- /.slds-button -->
+            </div><!-- /.slds-modal__header -->
+
+                <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+                    <div class="slds-col slds-size--1-of-1">
+                        <div class="slds-form">
+                            <div class="slds-size--1-of-1 slds-m-bottom--medium">
+                                <Framework:InputFields aura:id="selectedPackages" fieldType="multidragdrop" value="{!v.preferences}" otherAttributes='{"firstListName" : "Avaliable Packages", "secondListName" : "Selected Packages"}'/>
+                            </div>
+                            <div class="slds-size--1-of-1 slds-m-bottom--medium">
+                            </div>
+                            <div class="slds-grid slds-grid--pull-padded">
+                                <div class="slds-col--padded slds-size--4-of-12">
+                                    Package Name
+                                </div>
+                                <div class="slds-col--padded slds-size--5-of-12">
+                                    License Name
+                                </div>
+                                <div class="slds-col--padded slds-size--2-of-12">
+                                    Count
+                                </div>
+                                <div class="slds-col--padded slds-size--1-of-12 slds-grid">
+                                </div>
+                            </div>
+                            <div class="slds-size--1-of-1 slds-m-bottom--medium">
+                                <span aura:id="licensePlaceholder"></span>
+                            </div>
+                        </div><!-- /.slds-form -->
+                    </div><!-- /.slds-col -->
+                </div><!-- /.slds-modal__content -->
+                <div class="slds-modal__footer slds-text-align--right">
+                    <button class="slds-button slds-button--neutral" onclick="{!c.closeModal}">{!$Label.Framework.Cancel}</button>
+                    <button onclick="{!c.refreshUserCount}" class="slds-button slds-button--neutral slds-button--brand">{!$Label.Framework.Save}</button>
+                </div><!-- /.slds-modal__footer -->
+
+        </div><!-- /.modal-dialog .slds-modal__container -->
+    </div><!-- /.modal .slds-modal -->
+    <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}" />
+
+</aura:component>

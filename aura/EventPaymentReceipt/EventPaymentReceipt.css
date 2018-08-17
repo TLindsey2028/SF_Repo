@@ -1,0 +1,16 @@
+.THIS {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.THIS .fonteva-attendee-info > div {
+    margin-bottom: .25rem;
+}
+.THIS .fonteva-attendee-info > div:last-of-type {
+    margin-bottom: 0;
+}
+.THIS .fonteva-icon-size--xx-large .slds-icon--large.slds-icon {
+    width: 6rem;
+    height: 6rem;
+    padding: 0.5rem;
+}

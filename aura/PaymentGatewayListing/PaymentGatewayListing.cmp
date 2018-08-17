@@ -1,0 +1,92 @@
+<aura:component description="PackageItemsListing" implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="OrderApi.PaymentGatewayController">
+    <aura:attribute name="gateways" type="Object[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:dependency resource="OrderApi:PaymentGateways"/>
+    <article aria-describedby="header" class="slds-card test-Sales Order Lines forceBaseCard forceRelatedListCardDesktop" data-aura-class="forceBaseCard forceRelatedListCardDesktop">
+        <div class="slds-card__header slds-grid" >
+            <header class="slds-media slds-media--center slds-has-flexi-truncate" >
+                <div class="slds-media__figure" >
+                    <span class="assistiveText" ></span>
+                </div>
+                <div class="slds-media__body" >
+                    <h2  id="header"><a class="slds-card__header-link baseCard__header-title-container" href="javascript:void(0);"><span class="slds-text-heading--small slds-truncate slds-m-right--xx-small"  title="Sales Order Lines">Payment Gateways</span> <span class="slds-text-heading--small slds-shrink-none slds-m-right--xx-small"  title="{!'('+v.gateways.length+')'}">({!v.gateways.length})</span></a></h2>
+                </div>
+            </header>
+            <div class="slds-no-flex" >
+                <div class="actionsContainer" >
+                    <!-- workaround for W-2413659, remove once that bug is fixed -->
+                    <ul class="slds-button-group slds-m-left--xx-small small oneActionsRibbon forceActionsContainer" data-aura-class="oneActionsRibbon forceActionsContainer" >
+                        <li class="slds-button slds-button--neutral slds-truncate" >
+                            <a class="forceActionLink" data-aura-class="forceActionLink"  href="javascript:void(0);" title="New" onclick="{!c.newGateway}">
+                                <div class="slds-truncate"  title="New">
+                                    New
+                                </div></a>
+                        </li><!-- workaround for W-2413659, remove once that bug is fixed -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slds-card__body slds-card__body--inner" >
+            <div class="slds-grid--pull-padded" >
+                <div class="previewMode WIDE forceRelatedListPreview" data-aura-class="forceRelatedListPreview" >
+
+                    <div class="" >
+                        <div class="forceBaseListView forceRelatedListPreviewGrid" data-aura-class="forceBaseListView forceRelatedListPreviewGrid" >
+                            <div class="listViewContent" >
+
+                                <div class="scrollable uiScroller scroller-wrapper scroll-bidirectional native" data-aura-class="uiScroller"  style="">
+                                    <div class="scroller actionBarPlugin fixedHeaderPlugin" >
+                                        <table class="forceRecordLayout uiVirtualDataGrid--default uiVirtualDataGrid" data-aura-class="uiVirtualDataGrid--default uiVirtualDataGrid" >
+                                            <thead >
+                                            <tr >
+                                                <th class="initialSortAsc ascending"  scope="col" style="" title="Sales Order Line ID">PAYMENT GATEWAY NAME<span class="assistiveText" ></span></th>
+                                                <th class="initialSortAsc"  scope="col" style="" title="Item">GATEWAY TYPE<span class="assistiveText" ></span></th>
+                                                <th class="initialSortAsc"  scope="col" style="" title="Item Class">TOKEN<span class="assistiveText" ></span></th>
+                                                <th class="initialSortAsc"  scope="col" style="" title="Is Required">IS TEST<span class="assistiveText" ></span></th>
+                                                <th class="actionColumnHeader"  scope="col" style=""><span class="assistiveText" >Action</span></th>
+                                            </tr>
+                                            </thead>
+                                            <tfoot ></tfoot>
+                                            <tbody >
+
+                                            <aura:iteration items="{!v.gateways}" var="gateway">
+                                                <tr>
+                                                    <th scope="row">
+                                                        <div class="outputLookupContainer forceOutputLookupWithPreview" data-aura-class="forceOutputLookupWithPreview" >
+                                                            <span class="photoContainer forceSocialPhoto forceOutputLookup" data-aura-class="forceSocialPhoto forceOutputLookup" ></span><a class="textUnderline outputLookupLink slds-truncate forceOutputLookup" data-aura-class="forceOutputLookup"  data-recordid="{!gateway.id}" data-refid="recordId" data-special-link="true" href="javascript:void(0)" title="" onclick="{!c.editGateway}">{!gateway.name}</a>
+                                                        </div>
+                                                    </th>
+                                                    <td>
+                                                        {!gateway.gatewayType}
+                                                    </td>
+                                                    <td>
+                                                        {!gateway.token}
+                                                    </td>
+                                                    <td>
+                                                        <span class="uiImage uiOutputCheckbox" data-aura-class="uiImage uiOutputCheckbox"><img src="/auraFW/resources/aura/s.gif" class="{!gateway.isTest ? 'checked' : 'unchecked'}" alt="False"/></span>
+                                                    </td>
+                                                    <td>
+
+                                                    </td>
+                                                </tr>
+                                            </aura:iteration>
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="emptyContent hidden" >
+                                <div class="emptyContentInner" >
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

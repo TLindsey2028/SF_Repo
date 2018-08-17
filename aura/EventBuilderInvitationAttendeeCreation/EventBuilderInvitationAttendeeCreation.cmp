@@ -1,0 +1,162 @@
+<aura:component description="EventBuilderInvitationAttendeeCreation" controller="EventApi.EventsBuilderInvitationOnly">
+    <aura:attribute name="eventObj" type="Map" required="true"/>
+    <aura:attribute name="attendeeStatusList" type="List[]" required="true"/>
+    <aura:attribute name="attendees" type="EventApi.Attendee[]"/>
+    <aura:attribute name="attendeesToDisplay" type="Map" default="{}"/>
+    <aura:attribute name="attendeesInList" type="Integer" default="0"/>
+    <aura:attribute name="ticketTypes" type="List[]" default="[]"/>
+    <aura:attribute name="searchSelectObj" type="Map" default="{}"/>
+    <aura:attribute name="sites" type="List[]" default="true"/>
+    <aura:attribute name="searchValue" type="String"/>
+    <aura:attribute name="sendAll" type="Boolean" default="false"/>
+    <aura:attribute name="uniqueId" type="String" default="singleAttCreation"/>
+    <aura:attribute name="attendeesToEmail" type="Integer" default="0"/>
+    <aura:attribute name="siteObj" type="Map" default="{}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="InvitationOnlyCheckToggleEvent" type="EventApi:InvitationOnlyCheckToggleEvent"/>
+    <aura:registerEvent name="ToggleAttendeeFilter" type="EventApi:ToggleAttendeeFilter"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:registerEvent name="AddSelectorEvent" type="EventApi:AddSelectorEvent"/>
+    <aura:registerEvent name="EventBuilderInvitationAttendeeEvent" type="EventApi:EventBuilderInvitationAttendeeEvent"/>
+    <aura:handler event="EventApi:InvitationAttendeesAddedEvent" action="{!c.handleInvitationAttendeesAddedEvent}"/>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-size--1-of-3">
+            <div class="slds-form-element slds-lookup">
+                <label class="slds-form-element__label">Attendee Search</label>
+                <div class="slds-form-element__control">
+                    <div class="slds-input-has-icon slds-input-has-icon--right">
+                        <aura:if isTrue="{!or(v.searchValue == null,v.searchValue.length == 0)}">
+                            <lightning:icon iconName="utility:search" class="slds-input__icon slds-search--icon custom-search-icon" size="x-small"/>
+                            <aura:set attribute="else">
+                                <lightning:buttonIcon iconName="utility:clear" class="slds-input__icon custom-search-icon" variant="bare" alternativeText="Clear" onclick="{!c.clearSearch}"/>
+                            </aura:set>
+                        </aura:if>
+                        <ui:inputText value="{!v.searchValue}" aura:id="attendeeSearch" class="slds-lookup__search-input slds-input" placeholder="" updateOn="keyup" keyup="{!c.filterAttendees}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-size--1-of-4 slds-m-left--small">
+            <Framework:InputFields fieldType="picklist" label="{!$Label.EventApi.Event_Invitation_Only_Status_Filter}" aura:id="attendeeStatus" value="{!v.searchSelectObj}" fireChangeEvent="true" group="attendeeStatusFilter"/>
+        </div>
+    </div>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-size--1-of-3 slds-align-bottom">
+            <div class="slds-text-body--small">
+                Attendees in list <strong>{!v.attendeesInList}</strong>
+            </div>
+        </div>
+        <div class="slds-size--2-of-3 slds-text-align--right">
+            <Framework:Button type="brand" label="Delete" aura:id="delete" disable="true" onClickAction="{!c.showDeleteModal}"/>
+            <Framework:Button type="brand" label="Send" additionalClasses="slds-m-left--small" aura:id="send" disable="true" onClickAction="{!c.openEmailModal}"/>
+            <Framework:Button type="brand" label="Send All" additionalClasses="slds-m-left--small" aura:id="sendAll" disable="true" onClickAction="{!c.openEmailAllModal}"/>
+            <Framework:Button type="brand" label="+ New Attendee" additionalClasses="slds-m-left--small" aura:id="newAttendee" onClickAction="{!c.addAttendee}"/>
+        </div>
+    </div>
+    <div class="slds-grid slds-wrap slds-m-top--small slds-theme--default full-width-table">
+        <table class="slds-table slds-no-row-hover slds-theme--shade">
+            <thead class="slds-has-divider--bottom slds-has-divider--top">
+            <tr class="slds-text-heading--label remove-table-padding">
+                <th class="slds-size--1-of-11 remove-table-padding"></th>
+                <th class="slds-size--1-of-11 remove-table-padding"><Framework:InputFields group="singleAttendeeConfig" aura:id="selectAllBox" fieldType="boolean" label="" value="{!v.searchSelectObj}" labelStyleClasses="hidden" fireChangeEvent="true" styleClasses="checkbox-header-spacing"/></th>
+                <th class="slds-size--1-of-5 attendee-lookup remove-table-padding">Attendee</th>
+                <th class="slds-size--1-of-5 remove-table-padding">Email</th>
+                <th class="slds-size--1-of-5 remove-table-padding">Ticket Type</th>
+                <th class="slds-size--1-of-7 remove-table-padding">Invitation Status</th>
+                <th class="slds-size--1-of-8 remove-table-padding">Max Guest Allowed</th>
+                <th class="slds-size--1-of-7 remove-table-padding">Last Invitation Email Sent</th>
+            </tr>
+            </thead>
+            <tbody aura:id="tableBody">
+                <tr>
+                    <td colspan="8">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-text-align--center slds-align-middle">
+                                <img src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="loading" width="50" height="50" />
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+            <aura:if isTrue="{!v.attendeesInList == 0}">
+                <tbody>
+                    <tr>
+                        <th colspan="8" class="fonteva--no-records slds-text-align--center">{!$Label.EventApi.Event_Invitation_No_Records}</th>
+                    </tr>
+                </tbody>
+            </aura:if>
+        </table>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+    <Framework:MessagePrompt title="Delete Attendees"
+                             message=""
+                             severity="clear"
+                             submitButtonLabel="Delete"
+                             submitOnClickAction="{!c.deleteAttendees}"
+                             cancelButtonLabel="{!$Label.EventApi.Cancel}"
+                             closeOnClickAction="{!c.closeModal}"
+                             aura:id="deleteAttendees"/>
+    <Framework:MessagePrompt title="Cannot Delete Attendees"
+                             message=""
+                             severity="clear"
+                             showSubmitButton="false"
+                             cancelButtonLabel="{!$Label.EventApi.Cancel}"
+                             closeOnClickAction="{!c.closeModal}"
+                             aura:id="cannotDeleteAttendees"/>
+
+    <Framework:MessagePrompt title="Cannot Add Attendee"
+                             message="Please create at least one ticket type to add attendee."
+                             severity="error"
+                             showSubmitButton="false"
+                             cancelButtonLabel="Close"
+                             closeOnClickAction="{!c.closeModal}"
+                             aura:id="cannotAddAttendee"/>
+    <Framework:MessagePrompt title="Cannot Notify Attendee"
+                             message="No Site is associated with the Event Category. Please associate the Event Category with a Site before sending invitation."
+                             severity="error"
+                             showSubmitButton="false"
+                             cancelButtonLabel="Close"
+                             closeOnClickAction="{!c.closeModal}"
+                             aura:id="cannotSendEmailAttendee"/>
+    <div class="slds-modal" aura:id="sendEmailModal">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium" id="modal-heading-label">
+                    Send Email
+                </h2>
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeEmailModal}">
+                    <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+                </button><!-- /.slds-button -->
+            </div><!-- /.slds-modal__header -->
+            <div class="tab-content" >
+                <div class="slds-grid slds-wrap slds-p-around--medium">
+                    <div class="slds-col slds-size--1-of-1 slds-text-heading--small">
+                        Are you sure you want to send an email invitation to the <strong>{!v.attendeesToEmail}</strong> selected attendees?
+                    </div>
+                </div>
+                <div class="slds-grid slds-wrap slds-p-around--medium slds-text-heading--small">
+                    <div class="slds-col slds-size--1-of-1">
+                        Select which site to assign to your event.
+                    </div>
+                </div>
+                <div class="slds-grid slds-wrap slds-p-around--medium">
+                    <div class="slds-col slds-size--1-of-1">
+                        <Framework:InputFields fieldType="picklist" aura:id="site" label="Site" value="{!v.siteObj}"/>
+                    </div>
+                </div>
+            </div><!-- /.tab-content -->
+            <div class="slds-modal__footer slds-text-align--right">
+                <Framework:Button enableProgressIndicator="false"
+                                  onClickAction="{!c.closeEmailModal}"
+                                  type="neutral"
+                                  label="{!$Label.EventApi.Cancel}" />
+                <Framework:Button aura:id="sendEmailButtonPrompt"
+                                  onClickAction="{!c.sendEmail}"
+                                  type="brand"
+                                  additionalClasses="slds-m-left--xx-small"
+                                  label="Send" />
+            </div><!-- /.slds-modal__footer -->
+        </div><!-- /.modal-dialog .slds-modal__container -->
+    </div><!-- /.modal .slds-modal -->
+    <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeEmailModal}"></div>
+</aura:component>

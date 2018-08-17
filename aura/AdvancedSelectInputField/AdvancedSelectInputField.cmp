@@ -1,0 +1,49 @@
+<aura:component>
+    <aura:attribute name="value" type="String" description="The value" default=""/>
+    <aura:attribute name="allowCreate" type="Boolean" description="Allow creation of value" default="true"/>
+    <aura:attribute name="displayOptions" type="Map" description="Display Options" default="{}"/>
+    <aura:attribute name="otherMethods" type="Map" description="Other Methods" default='{}'/>
+    <aura:attribute name="selectInputClass" type="String"/>
+    <aura:attribute name="delimiter" type="String" default=","/>
+    <aura:attribute name="selectInputObject" type="Object"/>
+    <aura:attribute name="selectOptions" type="Array" default="[]" description="Select Options"/>
+    <aura:attribute name="field" type="String"/>
+    <aura:attribute name="objectName" type="String"/>
+    <aura:attribute name="required" type="Boolean" default="false"/>
+    <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/scripts.min.js'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute name="disabled" type="Boolean" description="Disable Input" default="false"/>
+    <aura:handler name="change" value="{!v.disabled}" action="{!c.activateDeactivateField}"/>
+    <aura:handler event="Framework:InputFieldClearErrorMessagesEvent" action="{!c.handleInputFieldClearErrorMessagesEvent}"/>
+  <style>
+        .selectize-dropdown-content {
+            background: white;
+            border: 0.25px;
+            border-color: lightgrey;
+            border-style: solid!important;
+        }
+    </style>
+    <aura:method name="setErrorMessages" action="{!c.setErrorMessages}"
+                 description="Error Message For Field">
+        <aura:attribute name="errorMessages" type="Array" default="[]" description="Error Message"/>
+    </aura:method>
+    <aura:method name="loadExistingValue" action="{!c.loadExistingValue}"
+                 description="Load Existing Value">
+    </aura:method>
+    <aura:method name="clearExistingValue" action="{!c.clearExistingValue}"
+                 description="Clear Existing Value">
+    </aura:method>
+    <aura:method name="setSelectOptions" action="{!c.setSelectOptions}"
+                 description="Set Select Options">
+        <aura:attribute name="selectOptions" type="Array" default="[]" description="Select Options"/>
+    </aura:method>
+    <aura:method name="reInitializeComponent" action="{!c.reInitialize}"
+                 description="reInitialize">
+    </aura:method>
+    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+        <span aura:id="lookupIcon" id="{!globalId+'_icon'}" onclick="{!c.removeValue}">
+            <img id="{!globalId+'_clear_icon'}" src="{!$Resource.Framework__SLDS_Icons+'/icons/utility/clear_60.png'}" class="slds-input-action-icon slds-hide slds-has-items" aura:id="removeIcon"/>
+        </span>
+        <select class="{!v.selectInputClass}"/>
+        <Framework:ValidationErrorMessages aura:id="errorInput"/>
+    </div>
+</aura:component>

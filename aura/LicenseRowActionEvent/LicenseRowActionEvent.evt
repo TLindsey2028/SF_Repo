@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="Event template" access="public">
+    <aura:attribute name="action" type="String" default="" access="public"/>
+    <aura:attribute name="group" type="String" default="" access="public"/>
+</aura:event>

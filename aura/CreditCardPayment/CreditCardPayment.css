@@ -1,0 +1,26 @@
+.THIS #spreedly-number-frame-1001{
+     height: auto!important;
+ }
+
+.THIS #spreedly-cvv-frame-1001{
+    height: auto!important;
+}
+
+.THIS .slds-input--cvv {
+    width: 5.5rem!important;
+}
+
+.THIS .cc-images {
+    height: 35px;
+    background-position: left;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.THIS.authorize-modal .slds-modal__container {
+    width: 50%!important;
+}
+
+.THIS .slds-icon-text-default {
+    fill: white!important;
+}

@@ -1,0 +1,114 @@
+<aura:component description="ManageAddress" controller="OrderApi.KnownAddressController" access="global">
+    <ltng:require styles="{!$Resource.Framework__SLDS_BaseV2+'/css/styles.css'}"/>
+    <ltng:require scripts="{!join(',', $Resource.PagesApi__FontevaHelper+'/FontevaHelper.js',$Resource.Framework__SLDS_BaseV2+'/js/iziToast.min.js', $Resource.Framework__UrlUtil,$Resource.Framework__SLDS_BaseV2+'/js/lodash.min.js')}" styles="{!$Resource.Framework__SLDS_BaseV2+'/css/iziToast.min.css'}" afterScriptsLoaded="{!c.doInit}"/>
+	<aura:attribute name="knownAddresses" type="OrderApi.KnownAddress[]"/>
+	<aura:attribute name="recordId" type="Id" access="global"/>
+	<aura:attribute name="isQuickAction" type="Boolean" default="false"/>
+    <aura:attribute name="addressToDelete" type="Map" default="{}"/>
+    <aura:attribute name="contactName" type="String" default=""/>
+	<aura:attribute name="contactId" type="String"/>
+    <aura:attribute name="hideHeader" type="Boolean" default="false" access="global"/>
+    <aura:registerEvent name="ComponentLoadedEvent" type="OrderApi:ComponentLoadedEvent"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+	<aura:attribute name="isThemed" type="Boolean" default="false" access="global"/>
+	<div class="{!v.isThemed ? 'slds fonteva-portal' : 'slds'}">
+		<div class="slds-grid slds-grid_vertical fonteva-layout_1 hidden" data-name="mainWrapperDiv" aura:id="mainWrapperDiv">
+            <aura:if isTrue="{!!v.hideHeader}">
+                <div class="slds-page-header slds-theme_shade">
+                    <div class="slds-media">
+                        <div class="slds-media__body">
+                            <div class="slds-grid">
+                                <span class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+                                    Manage Addresses for&nbsp;<strong>{!v.contactName}</strong>
+                                </span>
+                                <div>
+                                    <Framework:Button label="Exit" onClickAction="{!c.exitPage}"
+                                                      enableProgressIndicator="false" qaData='{"type" : "button", "name": "exitBtn"}' aura:id="exitBtn" type="neutral"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aura:if>
+			<div class="slds-theme_shade">
+				<div class="slds-grid slds-grid_vertical">
+					<div class="slds-p-top_medium  slds-grid slds-grid_align-end">
+            <div class="{!v.isThemed ? '' : 'slds-p-horizontal_large slds-m-bottom_medium'}">
+							<Framework:Button type="brand"
+											  qaData='{"type" : "button", "name": "new-address"}'
+											  label="New Address"
+											  onClickAction="{!c.openAddressModal}"
+											  enableProgressIndicator="false"
+											  svgPath="{!$Resource.OrderApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}"
+											  svgContainerClass="slds-float--left slds-m-right--small"
+											  svgClass="slds-button__icon"/>
+						</div>
+					</div>
+					<div class="slds-scrollable_x">
+						<table class="slds-table slds-table_bordered slds-no-row-hover slds-theme_default table table-default">
+							<thead>
+								<tr>
+									<th class="slds-cell-shrink">Default</th>
+									<th>Name</th>
+									<th>Street</th>
+									<th>City</th>
+									<th>State</th>
+									<th>Zip Code</th>
+									<th>Country</th>
+									<th class="slds-cell-shrink"></th>
+								</tr>
+							</thead>
+							<tbody data-name="knownAddress_list">
+								<aura:iteration items="{!v.knownAddresses}" var="knownAddress">
+									<tr data-name="ka_addresses">
+										<td class="slds-text-align_center">
+										  	<div>
+													<Framework:InputFields fieldType="radio" label="" labelStyleClasses="slds-hide" fireChangeEvent="true"
+													qaData='{"type" : "input", "name": "ka-isDefault-radio"}' aura:id="isDefault" group="addresses" secondaryGroup="{!knownAddress.id}" value="{!knownAddress}"
+																			 otherAttributes='{"name" : "knownAddress"}' />
+												</div>
+										</td>
+										<td data-name="ka-name" class="slds-cell-wrap slds-size_1-of-4">{!knownAddress.name}</td>
+										<td data-name="ka-street_name">{!knownAddress.address.street_name}</td>
+										<td data-name="ka-city">{!knownAddress.address.city}</td>
+										<td data-name="ka-province">{!knownAddress.address.province}</td>
+										<td data-name="ka-postal_code">{!knownAddress.address.postal_code}</td>
+										<td data-name="ka-country">{!knownAddress.address.country}</td>
+										<td data-name="edit_delete">
+											<lightning:buttonIcon iconName="utility:edit" alternativeText="Edit" onclick="{!c.editAddressModal}" value="{!knownAddress.id}"/>
+											<lightning:buttonIcon iconName="utility:delete" alternativeText="Delete" onclick="{!c.deleteAddressModal}" value="{!knownAddress.id}"/>
+										</td>
+									</tr>
+								</aura:iteration>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<OrderApi:KnownAddressesModal aura:id="addressModal" contactId="{!v.recordId}" saveAction="{!c.doInit}"/>
+				<Framework:MessagePrompt title="Delete Address"
+										 severity="error"
+                                         message=""
+										 submitButtonLabel="Delete"
+										 cancelButtonLabel="Cancel"
+										 submitOnClickAction="{!c.deleteAddress}"					
+										 aura:id="deleteAddressPrompt"/>
+                <Framework:MessagePrompt title="Cannot Delete Default Address"
+                                         severity="warning"
+                                         message="The default address cannot be deleted. Make another address default to delete this address."
+                                         showSubmitButton="false"
+										 cancelButtonLabel="Close"
+				                         aura:id="cannotDeleteDefaultAddress"/>
+			</div>
+		</div>
+        <div class="hidden" data-name="modalDetailsForDelete" aura:id="modalDetailsForDelete">
+            <div data-name="ka-deleting-address" class="slds-text-align--center">
+                <div class="slds-text-heading_small slds-font-weight--regular slds-p-bottom--medium">{!$Label.OrderApi.Known_Address_Delete_Confirmation}</div>
+                <div class="slds-font-weight--regular">{!v.addressToDelete.address.street_name}</div>
+                <div class="slds-font-weight--regular">{!v.addressToDelete.address.city}</div>
+                <div class="slds-font-weight--regular">{!v.addressToDelete.address.province}&nbsp;{!v.addressToDelete.address.postal_code}</div>
+                <div class="slds-font-weight--regular">{!v.addressToDelete.address.country}</div>
+            </div>
+        </div>
+	</div>
+	<Framework:Toast aura:id="toastMessages"/>
+</aura:component>

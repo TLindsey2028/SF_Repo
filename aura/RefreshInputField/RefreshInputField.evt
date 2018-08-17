@@ -1,0 +1,6 @@
+<aura:event type="APPLICATION" description="Event template" access="global">
+    <aura:attribute name="group" type="String" default="" access="global"/>
+    <aura:attribute name="data" type="Object" default="{}" access="global"/>
+    <aura:attribute name="type" type="String" default="" access="global"/>
+    <aura:attribute name="refresh" type="Boolean" default="" access="global"/>
+</aura:event>

@@ -1,0 +1,6 @@
+<aura:event type="APPLICATION" description="CreditCardContactUpdateEvent">
+  <aura:attribute name="customerId" type="String"/>
+  <aura:attribute name="contactName" type="String" required="true"/>
+  <aura:attribute name="contactPhone" type="String"/>
+  <aura:attribute name="contactEmail" type="String"/>
+</aura:event>

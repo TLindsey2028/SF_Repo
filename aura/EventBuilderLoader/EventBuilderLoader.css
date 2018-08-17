@@ -1,0 +1,12 @@
+.THIS .slds-object-height--full {
+  overflow: hidden;
+}
+
+.THIS .icon-status {
+  min-height: 67px!important;
+}
+
+.THIS .eventLoadComplete.opacity {
+  opacity: 0;
+  transition: opacity .25s linear;
+}

@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="ChangeStepEvent">
+  <aura:attribute name="stepId" type="Integer" required="true"/>
+  <aura:attribute name="fireShowComponentEvent" type="Boolean" default="true"/>
+  <aura:attribute name="initialPurchase" type="Boolean" default="true"/>
+</aura:event>

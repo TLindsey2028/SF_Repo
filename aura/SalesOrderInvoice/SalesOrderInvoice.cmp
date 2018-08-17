@@ -1,0 +1,162 @@
+<aura:component controller="OrderApi.SalesOrderPaymentController" access="global" extends="Framework:BaseComponent">
+  <aura:attribute name="salesOrderId" type="String" access="global"/>
+  <aura:attribute name="retURL" type="String" default="" access="global"/>
+  <aura:attribute name="returnObj" type="Map" access="global"/>
+  <aura:attribute name="salesOrderObj" type="Map" default="{}"/>
+  <aura:attribute name="invalidSO" type="Boolean" default="false"/>
+  <aura:attribute name="invalidMessage" type="String" default=""/>
+  <aura:attribute name="customerObj" type="Map" default="{}"/>
+  <aura:attribute name="customerLookupField" type="String"/>
+  <aura:attribute name="dateFormat" type="String" required="true" access="global"/>
+  <aura:attribute name="termsObj" type="Map" default="{}"/>
+  <aura:attribute name="dateObj" type="Map" default="{}"/>
+  <aura:attribute name="shippingGlobalId" type="String" />
+  <aura:attribute name="paymentTermsId" type="String" />
+  <aura:attribute name="dueDateId" type="String" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <ltng:require scripts="{!$Resource.Framework__UrlUtil}" styles="{!$Resource.Framework__SLDS_BaseV2+'/css/styles.css'}"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+  <aura:handler event="OrderApi:WillNotShipEvent" action="{!c.handleWillNotShipEvent}"/>
+  <aura:registerEvent name="ComponentLoadedEvent" type="OrderApi:ComponentLoadedEvent"/>
+  <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+  <aura:attribute name="hasShippingOrTax" type="Boolean" default="false"/>
+  <aura:handler event="OrderApi:ProcessingChangesEvent" action="{!c.handleProcessingChangesEvent}"/>
+  <div class="slds hidden slds-ie-fix--width slds-theme--shade" aura:id="mainWrapperDiv" style="min-height: 316px">
+  <div class="slds-theme--shade" aura:id="loading-span-stencil">
+    <div class="slds-grid slds-col slds-col-rule--bottom slds-p-around--large slds-size--1-of-1">
+
+      <div class="slds-col slds-size--1-of-1">
+        <div class="slds-grid">
+          <div class="slds-m-bottom--medium loading-span slds-m-right--large" style="height : 36px; width: 181px;">
+            &nbsp;
+          </div>
+          <div class="slds-m-bottom--medium loading-span slds-m-right--small" style="height : 36px; width: 153px;">
+            &nbsp;
+          </div>
+          <div class="slds-m-bottom--medium loading-span" style="height : 36px; width: 153px;">
+            &nbsp;
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="slds-grid">
+      <div class="slds-order--1 slds-medium-order--2 slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-around--medium">
+        <div class="slds-grid slds-wrap">
+          <div class="slds-col slds-size--1-of-1">
+            <div class="slds-size--1-of-1 slds-m-bottom--medium">
+              <div class="slds-m-bottom--medium loading-span" style="height : 46px; width: 500px;">
+                &nbsp;
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slds-order--1 slds-medium-order--2 slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-around--medium">
+        <div class="slds-card">
+          <div class="slds-card__header slds-p-vertical--small slds-grid slds-p-left--large slds-m-bottom--none">
+            <div class="slds-media slds-media--center slds-has-flexi-truncate">
+              <div class="slds-m-bottom--medium loading-span" style="height : 23px; width: 400px;">
+                &nbsp;
+              </div>
+            </div>
+          </div>
+          <div class="slds-card__body slds-p-vertical--small slds-theme--default slds-scrollable--x">
+            <table class="slds-table slds-no-row-hover slds-table-input--margin__none">
+              <thead>
+              <tr class="slds-text-heading--label" >
+                <th data-aura-rendered-by="129:90;a">
+                  <div class="slds-m-bottom--medium loading-span" style="height : 23px; width: 50px;">
+                    &nbsp;
+                  </div>
+                </th>
+                <th class="quantity-width__small" >
+                  <div class="slds-m-bottom--medium loading-span" style="height : 23px; width: 30px;">
+                    &nbsp;
+                  </div>
+                </th>
+                <th ></th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody data-aura-rendered-by="135:90;a">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div aura:id="mainData" class="stencil-hidden">
+    <div class="slds-grid slds-wrap">
+      <div class="slds-col slds-size--1-of-1">
+        <div class="slds-page-header">
+            <div class="slds-media">
+                <div class="slds-media__body">
+                    <span class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+                      {!$Label.OrderApi.Create_Invoice}
+                    </span>
+                    <Framework:Button label="{!$Label.OrderApi.Exit_Sales_Order}" onClickAction="{!c.exitPage}" aura:id="exitBtn" enableProgressIndicator="false"
+                                      type="neutral"/>
+                    <Framework:Button label="{!$Label.OrderApi.Previous_Sales_Order}" onClickAction="{!c.goBack}" additionalClasses="slds-m-left--x-small"
+                                      type="neutral" enableProgressIndicator="false"/>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="{!v.invalidSO ? '' : 'hidden'}">
+          <div class="slds-grid slds-wrap slds-m-left--small">
+              <div class="slds-col slds-size--1-of-1">
+                <h1 class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+                    {!v.invalidMessage}
+                </h1>
+              </div>
+          </div>
+      </div>
+      <div class="{!!v.invalidSO ? 'slds-col slds-size--1-of-1 slds-theme--shade slds-p-horizontal--large' : 'hidden'}">
+        <div class="slds-grid slds-wrap">
+          <div class="slds-size--1-of-2 slds-p-vertical--medium slds-p-right--medium">
+            <div class="slds-grid slds-wrap">
+              <div class="slds-col slds-size--1-of-1">
+                <div class="slds-size--1-of-1 slds-m-bottom--medium">
+                  <div class="{!v.hasShippingOrTax ? 'slds-text-heading--small' : 'hidden'}">
+                    <strong>{!$Label.OrderApi.Customer_Information_Sales_Order}</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="slds-col slds-size--1-of-1" aura:id="taxShippingDiv">
+              </div>
+              <div class="slds-col slds-size--1-of-1 slds-p-vertical--medium">
+                <div class="slds-size--1-of-1 slds-m-bottom--medium">
+                  <div class="slds-text-heading--small">
+                    <strong>{!$Label.OrderApi.Invoice_Terms}</strong>
+                  </div>
+                  <div class="slds-col slds-size--1-of-2">
+                    <div class="slds-col slds-size--1-of-1 hidden" aura:Id="businessGroupDiv">
+                      <Framework:InputFields fieldType="Picklist" label="{!$Label.OrderApi.Business_group_Label}" aura:id="businessGroupId"
+                                             group="salesOrderInfo" value="{!v.salesOrderObj}" />
+                    </div>
+                    <div class="slds-col" aura:id="paymentTermsDiv">
+                    </div>
+                    <div class="slds-col slds-size--1-of-2" aura:Id="invoiceDateDiv">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="slds-col slds-size--1-of-1 slds-text-align--center">
+                <Framework:Button label="{!$Label.OrderApi.Close_Invoice}" onClickAction="{!c.closeOrder}" type="brand"
+                                  aura:id="closeButton"/>
+                <Framework:Button label="{!$Label.OrderApi.Close_And_Post_Invoice}" onClickAction="{!c.postOrder}" type="brand"
+                                  aura:id="closePostButton" additionalClasses="slds-m-left--x-small"/>
+              </div>
+            </div>
+          </div>
+          <div class="slds-size--1-of-2 slds-p-vertical--medium  slds-p-left--medium" aura:id="summaryDiv">
+          </div>
+        </div>
+      </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+  </div>
+  </div>
+</aura:component>

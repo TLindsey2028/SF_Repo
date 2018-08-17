@@ -1,0 +1,135 @@
+<aura:component description="EventAgendaCriteria" implements="EventApi:EventBuilderTabInterface" access="global">
+
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:attribute name="secondaryGroup" type="String" default=""/>
+	<aura:attribute name="group" type="String" default="agendaCriteria"/>
+	<aura:attribute name="fieldOptionsObj" type="Map" default="{}" access="global"/>
+	<aura:attribute name="isPortal" type="Boolean" default="false" access="global"/>
+	<aura:attribute name="isCustomList" type="Boolean" default="false" access="global" />
+	<aura:attribute name="customList" type="List[]" default="[]" access="global"/>
+	<aura:attribute name="dateFormat" type="String" required="true" access="global"/>
+	<aura:attribute name="sessionSearchLabel" type="String" default="{!$Label.EventApi.Event_Builder_Agenda_Schedule_Item_Search}" access="global" description="session input field name"/>
+	<aura:attribute name="attendeesLabel" type="String" default="{!$Label.EventApi.Event_Builder_Agenda_Attendees}" access="global" description="attendees input field name"/>
+	<aura:attribute name="speakerLabel" type="String" default="{!$Label.EventApi.Event_Builder_Agenda_Speaker}" access="global" description="speakers input field name"/>
+	<aura:attribute name="trackLabel" type="Boolean" default="{!$Label.EventApi.Event_Builder_Agenda_Track}" access="global" description="tracks input field name"/>
+	<aura:attribute name="dayLabel" type="Boolean" default="{!$Label.EventApi.Event_Builder_Agenda_Day}" access="global" description="days input field name"/>
+	<aura:attribute name="sortByLabel" type="Boolean" default="{!$Label.EventApi.Event_Builder_Agenda_Sort_By}" access="global" description="sort by input field name"/>
+	<aura:attribute name="headingLabel" type="String" default="{!$Label.EventApi.Event_Builder_Agenda_Search_and_Filter_Schedule_Items}" access="global" description="label is used for main header"/>
+	<aura:attribute name="styleClasses" type="String" access="global" description="Addition CSS Classes"/>
+	<aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+	<aura:registerEvent name="EventAgendaFilterEvent" type="EventApi:EventAgendaFilterEvent"/>
+	<aura:method name="filterScheduleItems" action="{!c.filterScheduleItems}" access="global" description="This method filters and returns back the filtered schedule items.">
+		<aura:attribute name="eventAgendaCriteriaObj" type="Map" access="global" description="Filter Parameter"/>
+	</aura:method>
+
+	<!--Private Attributes-->
+	<aura:attribute name="booleanFilters" type="Boolean" default="false"/>
+	<aura:attribute name="filterTags" type="String[]" />
+	<aura:attribute name="selFilters" type="Map" default="{}"/>
+	<aura:attribute name="eventAgendaCriteriaObj" type="Map" default="{}"/>
+	<aura:method name="buildSpeakersFilter" action="{!c.doInit}"/>
+	<aura:handler event="EventApi:ResetAgendaFilterCmpEvent" action="{!c.handleResetAgendaFilterCmpEvent}"/>
+
+	<style>
+		{!v.styleClasses}
+	</style>
+
+	<aura:if isTrue="{!!v.isPortal}">
+		<style>
+			.slds-theme_shade {
+   	 			background-color: #E0E5EE!important;
+			}
+			.slds-button_brand.slds-badge {
+    			background-color: rgb(0, 112, 210);
+    			color: rgb(255, 255, 255);
+			}
+		</style>
+	</aura:if>
+
+	<div class="{!v.isPortal ? 'fonteva-portal' : 'slds-size_1-of-1'}">
+		<div class="slds-box slds-theme_shade fonteva-theme_shade slds-p-around_small">
+			<div class="slds-grid slds-grid_vertical">
+				<div class="slds-grid slds-grid_vertical slds-m-bottom_medium">
+					<div class="slds-m-bottom_small">
+						<div class="slds-text-heading_small">
+							<strong data-name="event_criteria_heading" >{!v.headingLabel}</strong>
+						</div>
+					</div>
+					<div class="slds-grid slds-col slds-grid_pull-padded-x-small">
+						<div class="slds-p-horizontal_x-small slds-size_1-of-1 slds-medium-size_1-of-2" aura:id="viewFilterAttendees">
+							<Framework:InputFields fieldType="picklist" aura:id="attendees" value="{!v.eventAgendaCriteriaObj}" label="{!v.attendeesLabel}" fireChangeEvent="true" group="{!v.group}" secondaryGroup="{!v.secondaryGroup}" qaData='{"type" : "picklist", "name": "attendees"}'/>
+						</div>
+						<div class="slds-p-horizontal_x-small slds-size_1-of-1 slds-medium-size_1-of-2">
+							<div class="slds-form-element slds-lookup">
+								<label class="slds-form-element__label">{!v.sessionSearchLabel}</label>
+								<div class="slds-form-element__control">
+									<div class="slds-input-has-icon slds-input-has-icon--right">
+										<aura:if isTrue="{!or(v.eventAgendaCriteriaObj.searchSession == null, v.eventAgendaCriteriaObj.searchSession.length == 0)}">
+											<lightning:icon iconName="utility:search" class="slds-input__icon slds-search--icon" size="x-small"/>
+											<aura:set attribute="else">
+												<lightning:buttonIcon iconName="utility:clear" class="slds-input__icon" variant="bare" alternativeText="Clear" onclick="{!c.clearSearch}"/>
+											</aura:set>
+										</aura:if>
+										<ui:inputText value="{!v.eventAgendaCriteriaObj.searchSession}" aura:id="searchSession" class="slds-lookup__search-input slds-input" placeholder="" updateOn="keyup" keyup="{!c.filterItems}"/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="slds-grid slds-grid_vertical slds-m-bottom_xx-small" aura:id="filterBy">
+					<div class="slds-m-bottom_small">
+						<div class="slds-text-heading_small">
+							<strong>{!$Label.EventApi.Event_Builder_Agenda_Filter_By}</strong>
+						</div>
+					</div>
+					<div class="slds-grid slds-col slds-wrap slds-grid_pull-padded-xx-small">
+						<div class="slds-p-horizontal_xx-small" aura:id="viewFilterSpeakers">
+							<Framework:InputFields group="{!v.group}" secondaryGroup="{!v.secondaryGroup}" fieldType="multipicklist" aura:id="speakers" label="{!v.speakerLabel}" value="{!v.eventAgendaCriteriaObj}" fireChangeEvent="true" qaData='{"type" : "multipicklist", "name": "speakers"}'/>
+						</div>
+						<div class="slds-p-horizontal_xx-small" aura:id="viewFilterTracks">
+							<Framework:InputFields group="{!v.group}" secondaryGroup="{!v.secondaryGroup}" fieldType="multipicklist" aura:id="tracks" label="{!v.trackLabel}" value="{!v.eventAgendaCriteriaObj}" fireChangeEvent="true" qaData='{"type" : "multipicklist", "name": "tracks"}'/>
+						</div>
+						<div class="slds-p-horizontal_xx-small" aura:id="viewFilterDays">
+							<Framework:InputFields group="{!v.group}" secondaryGroup="{!v.secondaryGroup}" fieldType="multipicklist" aura:id="days" label="{!v.dayLabel}" value="{!v.eventAgendaCriteriaObj}" fireChangeEvent="true" qaData='{"type" : "multipicklist", "name": "days"}'/>
+						</div>
+            <aura:if isTrue="{!!v.isPortal}">
+                <div class="slds-p-horizontal_xx-small" aura:id="viewFilterSortBy">
+                    <Framework:InputFields group="{!v.group}" secondaryGroup="{!v.secondaryGroup}" fieldType="picklist" aura:id="sortBy" label="{!v.sortByLabel}" value="{!v.eventAgendaCriteriaObj}" fireChangeEvent="true" qaData='{"type" : "picklist", "name": "sortBy"}'/>
+                </div>
+            </aura:if>
+					</div>
+				</div>
+				<aura:if isTrue="{!v.filterTags.length > 0}">
+					<div class="slds-grid slds-grid_pull-padded-xx-small slds-m-bottom_medium slds-wrap">
+						<div class="slds-p-horizontal_xx-small slds-col slds-grow-none">
+							<div class="slds-text-body_small slds-m-bottom_xx-small">
+								<strong>{!$Label.EventApi.Event_Builder_Agenda_Filters_Applied}:</strong>
+							</div>
+						</div>
+						<div class="slds-size_1-of-1 slds-hide_medium"></div>
+						<div class="slds-p-horizontal_xx-small slds-col">
+							<div class="slds-grid slds-grid_pull-padded-xxx-small slds-wrap">
+								<aura:iteration items="{!v.filterTags}" var="filter">
+									<div class="slds-p-horizontal_xxx-small slds-m-bottom_xx-small">
+										<div class="slds-button_brand slds-p-horizontal_small slds-badge" data-value="{!filter.value}" data-id="{!filter.id}" onclick="{!c.removeFilters}">
+											<span class="slds-p-horizontal_xx-small slds-align-middle">
+												{!filter.label}
+											</span>
+											<lightning:icon iconName="utility:clear" variant="inverse" size="xx-small" />
+										</div>
+									</div>
+								</aura:iteration>
+							</div>
+						</div>
+					</div>
+				</aura:if>
+				<div class="slds-grid slds-grid_vertical" aura:id="showExtraFilters">
+					<div class="slds-col">
+						<lightning:button variant="base" class="fonteva-button_bare" onclick="{!c.filterBoolean}" iconName="{!v.booleanFilters ? 'utility:down' : 'utility:up'}" iconPosition="right" label="{!v.booleanFilters ? $Label.EventApi.Event_Builder_Agenda_Show_Schedule_Item_Filters : $Label.EventApi.Event_Builder_Agenda_Hide_Schedule_Item_Filters}" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</aura:component>

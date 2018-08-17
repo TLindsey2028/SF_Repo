@@ -1,0 +1,29 @@
+.THIS .custom-search-icon{
+    margin-top: -12px!important;
+}
+
+.THIS .remove-table-padding {
+    padding-top: 0px!important;
+    padding-bottom: 0px!important;
+}
+
+.THIS .checkbox-header-spacing {
+    margin-top: 5px!important;
+    margin-bottom: 6px!important;
+}
+
+.THIS .attendees-text-count {
+    padding-top: 18px!important;
+    padding-left: 73px!important;
+}
+
+.THIS .slds-theme--custom {
+    background-color: #d8dde6!important;
+    margin-left: -16px;
+    margin-right: -16px;
+}
+
+.THIS .attendee-already-added {
+    background-color: #C23934!important;
+    color: white!important;
+}

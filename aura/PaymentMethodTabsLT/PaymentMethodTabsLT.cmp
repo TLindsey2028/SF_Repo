@@ -1,0 +1,13 @@
+<aura:component description="PaymentMethodTabsLT" access="global">
+    <aura:attribute name="paymentTypes" type="List" default="[]"/>
+    <aura:handler name="change" value="{!v.paymentTypes}" action="{!c.doInit}"/>
+    <aura:attribute name="salesOrderId" type="String"/>
+    <aura:method name="openTab" action="{!c.openTab}">
+        <aura:attribute name="customPaymentId" type="String" required="true"/>
+    </aura:method>
+    <aura:method name="closeAllTabs" action="{!c.closeAllTabs}"/>
+    <aura:iteration items="{!v.paymentTypes}" var="paymentType" indexVar="index">
+        <div class="slds-tabs__content tab-pane fonteva-slds-payment-tab--content slds-hide" role="tabpanel" aura:id="customPaymentTab" data-id="{!paymentType.customPaymentTypeObj.customPaymentId}">
+        </div>
+    </aura:iteration>
+</aura:component>

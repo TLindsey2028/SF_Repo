@@ -1,0 +1,112 @@
+<aura:component controller="Framework.AdminMDAPIProfileToolsController">
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <div class="slds-medium-size--3-of-4 slds-size--1-of-1 slds-grid slds-wrap">
+      <div class="slds-col slds-size--1-of-1">
+        <div class="slds-page-header">
+          <div class="slds-media slds-media--center">
+            <div id="accesManagerImg" class="slds-media__figure slds-ie-fix--width__icon">
+              <img src="//fonteva-cdn.s3.amazonaws.com/framework-admin/AccessManager/AccessManager.svg" style="height:50px;" alt="Placeholder" />
+            </div><!-- /.slds-media__figure -->
+            <div class="slds-media__body">
+              <nav role="navigation">
+                <p id="bread-crumb-label" class="slds-assistive-text">Dashboard:</p>
+                <ol id="sparkAdminList" class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                    <li class="slds-list__item slds-text-heading--label">
+                        <a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.showComponent}" data-name="Framework:SparkAdminSidebar">
+                          {!$Label.Framework.Dashboard}
+                        </a>
+                    </li>
+                </ol>
+              </nav>
+              <div id="accessMgrHdng" class="slds-text-heading--medium">
+                Access Manager
+              </div>
+            </div><!-- /.slds-media__body -->
+          </div><!-- /.slds-media -->
+        </div><!-- /.slds-page-header -->
+        <div id="mainBody" aura:id="mainBody" class="slds-object-height--full__nofooter">
+            <div class="slds-grid slds-wrap slds-p-around--small">
+
+            <div id="profiletools" class="form-horizontal">
+
+
+                <div id="pfo-list">
+
+                  <div class="slds-col--padded slds-size--1-of-1 slds-m-bottom--medium">
+                    <div class="slds-text-heading--small slds-m-bottom--small">Select the Profiles to Update</div>
+                    <div class="slds-text-body--regular">
+                      Only custom profiles and the default System Administrator profile can be updated through the Metadata API, all standard profiles are excluded intentionally from the list of profiles provided below.
+                    </div>
+                  </div><!-- /.slds-col -->
+
+                  <div class="slds-col--padded slds-size--1-of-1 slds-m-bottom--medium">
+                    <div class="slds-form">
+
+                      <aura:iteration items="{!v.profileOptions}" var="pfo">
+                        <div class="slds-form-element slds-m-bottom--medium">
+                          <label class="slds-checkbox">
+                            <ui:inputCheckbox class="m-r-10 profile-checkbox" change="{!c.setProfiles}"/>
+                            <span class="slds-checkbox--faux"></span>
+                            <span class="slds-form-element__label">{!pfo.label}</span>
+                          </label>
+                        </div><!-- /.slds-form-element -->
+                      </aura:iteration>
+
+                    </div><!-- /.slds-form -->
+                  </div><!-- .slds-col__padded -->
+
+              </div>
+
+
+                  <div id="pko-list">
+
+                    <div class="slds-col--padded slds-size--1-of-1 slds-m-bottom--medium slds-m-top--x-large">
+                      <div class="slds-text-heading--small slds-m-bottom--small">Update Access for Selected Packages Only</div>
+                      <div class="slds-text-body--regular">
+                        If one or more packages are selected form the list below, the selected profiles will NOT be updated to expose any Custom Fields, Apex Classes, or Visualforce Pages created custom in your environment.
+                      </div>
+                    </div><!-- /.slds-col -->
+
+                    <div class="slds-col--padded slds-size--1-of-1 slds-m-bottom--medium">
+                      <div class="slds-form">
+                        <div class="slds-form-element slds-m-bottom--medium">
+                          <label class="slds-checkbox">
+                            <input name="checkbox" type="checkbox" checked="checked"/>
+                            <span class="slds-checkbox--faux"></span>
+                            <span class="slds-form-element__label">
+                              Grant <strong><u>Full Access</u></strong> to all permissible components currently in your Salesforce org. This applies to all managed packages as well as unmanaged/custom code.
+                            </span>
+                          </label>
+                        </div><!-- /.slds-form-element -->
+
+                        <aura:iteration items="{!v.packageOptions}" var="pko">
+                          <div class="slds-form-element slds-m-bottom--medium">
+                            <label class="slds-checkbox">
+                              <ui:inputCheckbox  class="m-r-10 pko-option"/>
+                              <span class="slds-checkbox--faux"></span>
+                              <span class="slds-form-element__label">{!pko.label}</span>
+                            </label>
+                          </div><!-- /.slds-form-element -->
+                        </aura:iteration>
+
+                      </div><!-- /.slds-form -->
+                    </div><!-- .slds-col__padded -->
+
+                </div>
+
+                  <div class="slds-col--padded slds-size--1-of-1 slds-m-bottom--medium slds-m-top--x-large">
+                      <!-- <apex:actionFunction name="sfdcaction_updateProfilePermissions" status="mdapi_status" reRender="results,pfo-list,pko-list" action="{!updateProfilePermissions}"/>
+                      <apex:actionStatus id="mdapi_status" onstart="profiletools.onstart();" onstop="profiletools.onstop();"/> -->
+                      <button id="submit-button" class="slds-button slds-button--brand profiletools-submit">
+                        Grant Access to Selected Profiles
+                      </button>
+                  </div>
+            </div>
+
+
+              </div>
+        </div><!-- /aura#mainBody -->
+      </div><!-- /.slds-col -->
+    </div>
+</aura:component>

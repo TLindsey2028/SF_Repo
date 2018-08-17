@@ -1,0 +1,324 @@
+<aura:component controller="EventApi.EventsBuilderController" extends="EventApi:EventBuilderBase">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField" />
+    <aura:registerEvent name="SavingEvent" type="EventApi:SavingEvent" />
+    <!-- LOCAL ATTRIBUTES -->
+    <aura:attribute name="ticketSalesStartDate" type="String" default="" access="private" />
+    <aura:attribute name="eventBuilderSideTabs" type="List" default="[]"/>
+    <aura:attribute name="eventObj" type="Map" default="{}" description="Event Object" access="public" />
+    <aura:attribute name="eventId" type="String" description="Event Id" />
+    <aura:attribute name="organizationId" type="String" description="Organization Id" />
+    <aura:attribute name="sitePrefix" type="String" default="" />
+    <aura:attribute name="eventBuilderTabs" type="List"/>
+    <aura:attribute name="eventCategoryId" type="String" description="Event Category Id" />
+    <aura:attribute name="cloneCategoryId" type="String" description="Event Category Id" />
+    <aura:attribute name="communityGroupId" type="String" />
+    <aura:attribute name="dateFormat" type="String" description="Date Format" />
+    <aura:attribute name="eventModalObj" type="Map" default="{}" description="Event Modal Object" />
+    <aura:attribute name="eventModalCloneOptions" type="Map" default="{}" description="Event Modal Object" />
+    <aura:attribute name="autosaving" type="Boolean" default="false" description="Auto Saving" />
+    <aura:attribute name="isConference" type="Boolean" default="false" description="Is Conference" />
+    <aura:attribute name="isLightning" type="Boolean" default="false" description="Is Lightning" />
+    <aura:attribute name="hasSites" type="Boolean" default="false" description="Has Sites" />
+    <aura:attribute name="hasTickets" type="Boolean" default="false" description="Has Sites" />
+    <aura:attribute name="hasVenues" type="Boolean" default="false" description="Has Sites" />
+    <aura:attribute name="hasSpeakers" type="Boolean" default="false" description="Has Sites" />
+    <aura:attribute name="hasAgenda" type="Boolean" default="false" description="Has Sites" />
+    <aura:attribute name="hasSponsors" type="Boolean" default="false" description="Has Sites" />
+    <aura:attribute name="hasSingleVenue" type="Boolean" default="false" description="Has Single Venue" />
+    <aura:attribute name="renderOthers" type="Boolean" default="false" description="Render Other Sections" />
+    <aura:attribute name="showPreview" type="Boolean" default="false" description="Show Preview" />
+    <aura:attribute name="previewUrl" type="String" default="" description="Preview URL" />
+    <aura:attribute name="selectedSite" type="String" default="" description="Site selected for preview" />
+    <aura:attribute name="preFormatText" type="Boolean" default="true" description="Message prompt" />
+    <aura:attribute name="publishTicketTypes" type="Object[]" />
+    <aura:attribute name="enableAssignedSeating" type="Boolean" default="false" />
+    <aura:attribute name="invitationOnlyEvent" type="Boolean" default="false" />
+    <aura:attribute name="publishButtonLabel" type="String" default="" />
+    <aura:attribute name="categoryList" type="Object[]" default="" />
+    <aura:attribute name="sites" type="Object[]" default="[]" />
+    <aura:attribute name="cloneOptions" type="Map" default="{}" />
+    <aura:attribute name="showCloneOptions" type="Boolean" default="false" />
+	<aura:attribute name="currentTab" type="String" default="" access="private" />
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}" />
+    <aura:handler event="EventApi:CompleteLoaderEvent" action="{!c.handleCompleteLoaderEvent}" />
+    <aura:handler event="EventApi:AddSelectorEvent" action="{!c.addSelector}" />
+	  <aura:handler event="EventApi:EventBuilderSidebarEvent" action="{!c.sidebarEventHandler}" />
+    <aura:registerEvent name="ComponentLoadedEvent" type="EventApi:ComponentLoadedEvent" />
+    <aura:dependency resource="Framework:UIApi"/>
+    <aura:dependency resource="Framework:MessagePrompt"/>
+    <style>
+        @media screen and (-ms-high-contrast: active),
+        (-ms-high-contrast: none) {
+            .slds-ie-fix--width {
+                max-width: calc(98vw - 11px)!important;
+            }
+        }
+    </style>
+    <div class="slds">
+        <style>
+            .slds-modal h2.monthYear {
+                position: absolute;
+                margin-top: -4px!important;
+                margin-left: 47px;
+            }
+        </style>
+        <div data-name="loader" class="slds-builder--loader no-opacity" aura:id="loader">
+            <EventApi:EventBuilderLoader aura:id="loaderComp" />
+            <div data-name="currencycode_EUR" class="hidden">
+                <Framework:CurrencyField value="0" currencyISOCode="EUR" />
+            </div>
+        </div>
+        <div data-name="mainBuilderDiv" class="slds-grid slds-wrap slds-builder hidden slds-object-height--full" aura:id="mainBuilderDiv">
+            <div class="slds-col slds-size--1-of-1">
+                <div data-name="topNavDiv" class="slds-page-header slds-frame-position" aura:id="topNavDiv">
+                    <div class="slds-grid slds-grid--pull-padded">
+                        <div class="slds-col-padded slds-size--1-of-3">
+                            <div class="slds-grid">
+                                <h1 data-name="Event_Builder_Heading" class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+                                    {!$Label.EventApi.Event_Builder}
+                                </h1>
+                                <div class="{!v.hasSites ? 'slds-grid' : 'hidden'}">
+                                    <button data-name="refreshPreview" class="slds-button slds-button--neutral" onclick="{!c.refreshPreview}">
+                                        <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#refresh'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--x-small slds-icon-text-neutral slds-button__icon--left" assistiveText="Refresh" />
+                                        {!$Label.EventApi.Refresh_Event_Builder}
+                                    </button>
+                                    <div class="slds-button-group" role="group">
+                                        <span data-name="Preview_In_Event_Builder" class="slds-button slds-button--neutral slds-dropdown--trigger event-builder-action-button">
+                                            {!$Label.EventApi.Preview_In_Event_Builder}
+                                            <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#down'}" containerClass="slds-icon__container slds-m-left--small" svgClass="slds-icon slds-icon--xx-small slds-icon-text-neutral" assistiveText="{!$Label.EventApi.Save_Close_Event_Builder}" />
+                                                <div data-name="previewIn" class="slds-dropdown slds-dropdown--left slds-dropdown--menu slds-dropdown--menu__hidden site-list" aura:id="previewIn">
+                                                    <ul class="slds-dropdown__list" role="menu">
+                                                        <aura:iteration items="{!v.sites}" var="site">
+                                                        <li data-name="site_list" class="slds-dropdown__item site-list--container">
+                                                            <a href="javascript:void(0);" data-id="{!site.id}" onclick="{!c.previewOnSite}" class="site-name--link">
+                                                                <span class="{!v.selectedSite == site.id ? '' : 'slds-hidden'}">
+                                                                    <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#check'}"
+                                                                                   containerClass="{!site.id+'_check slds-icon__container site-checkbox-preview'}"
+                                                                                   svgClass="slds-icon--xx-small slds-icon-text-default slds-m-right--small preview-site-selected"
+                                                                                   assistiveText="{!$Label.EventApi.Save_Exit_Event_Builder}" aura:id="{!site.id}" />
+                                                                </span>
+                                                                <div class="slds-text-align--left site-name" data-id="{!site.id}">{!site.name}</div>
+                                                            </a>
+                                                        </li>
+                                                        </aura:iteration>
+                                                    </ul>
+                                                </div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <aura:if isTrue="{!v.eventObj.hasCustomStatusObjs}">
+                            <EventApi:EventStatusPicker eventObj="{!v.eventObj}" />
+                            <aura:set attribute="else">
+                            <div class="slds-align-middle slds-col-padded slds-size--1-of-3">
+                                <div class="slds-grid slds-grid--align-center">
+                                    <span>
+                                        <div data-name="Status_Label_Event_Builder" class="slds-button slds-button--brand slds-dropdown--trigger">
+                                            {!$Label.EventApi.Status_Label_Event_Builder}&nbsp;
+                                            <span data-name="Planned_Event_Status_Button" class="{!v.eventObj.status == 'Planned' ? '' : 'hidden'}">
+                                                {!$Label.EventApi.Planned_Event_Status_Button}
+                                            </span>
+                                            <span data-name="Published_Event_Status" class="{!v.eventObj.status == 'Active' ? '' : 'hidden'}">
+                                                    {!$Label.EventApi.Published_Event_Status}
+                                            </span>
+                                            <span data-name="status" class="{!v.eventObj.status == 'Closed' ? '' : 'hidden'}">
+                                                    {!v.eventObj.status}
+                                            </span> &nbsp;
+                                            <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#down'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--xx-small" assistiveText="Status" />
+                                            <div data-name="saveAndClose" class="slds-dropdown slds-dropdown slds-dropdown--right slds-dropdown--menu slds-dropdown--menu__hidden slds-size--1-of-1" aura:id="saveAndClose">
+                                                <ul class="slds-dropdown__list" role="menu">
+                                                    <span class="{!v.eventObj.status != 'Planned' ? '' : 'hidden'}">
+                                                        <li data-name="Planned_Event_Status_Button" class="slds-dropdown__item">
+                                                            <a href="javascript:void(0);" onclick="{!c.draftEventRegistration}">{!$Label.EventApi.Planned_Event_Status_Button}</a>
+                                                        </li>
+                                                    </span>
+                                                    <span class="{!and(v.eventObj.status != 'Active', v.showPreview) ? '' : 'hidden'}">
+                                                        <li data-name="Save_Publish_Event_Builder" class="slds-dropdown__item">
+                                                            <a href="javascript:void(0);" onclick="{!c.saveAndPublishEventModal}">{!$Label.EventApi.Save_Publish_Event_Builder}</a>
+                                                        </li>
+                                                    </span>
+                                                    <span class="{!v.eventObj.status == 'Active' ? '' : 'hidden'}">
+                                                        <li data-name="Closed_Event_Status_Button" class="slds-dropdown__item">
+                                                            <a href="javascript:void(0);" onclick="{!c.closeEventModal}">{!$Label.EventApi.Closed_Event_Status_Button}</a>
+                                                        </li>
+                                                    </span>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        </span>
+                                            </div>
+                                        </div>
+                            </aura:set>
+                        </aura:if>
+                        <div class="slds-align-bottom slds-col-padded slds-size--1-of-3">
+                            <div class="slds-grid slds-float--right">
+                                <div data-name="Event_Builder_Edit_In_Salesforce" class="slds-col slds-col--padded slds-align-middle">
+                                    <a onclick="{!c.editEventSF}">
+                                        {!$Label.EventApi.Event_Builder_Edit_In_Salesforce}
+                                    </a>
+                                </div>
+                                <div class="slds-col slds-shrink-none">
+                                    <span data-name="saving-span" aura:id="saving-span" class="slds-text-heading-small slds-m-right--small notSaving hidden">{!$Label.EventApi.Saving_Event_Builder}&nbsp;<img src="{!$Resource.Framework__SLDS_BaseV2+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" class="small-spinner" /></span>
+                                </div>
+                                <div class="slds-button-group" role="group">
+                                    <button class="slds-button slds-button--brand event-builder-action-button" onclick="{!c.saveEvent}" data-preview="false">{!$Label.EventApi.Save_Event_Builder}</button>
+                                    <span class="slds-button slds-button--brand slds-dropdown--trigger event-builder-action-button slds-p-horizontal--small">
+                                        <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#down'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--xx-small" assistiveText="Save &amp; Close" />
+                                        <div class="slds-dropdown slds-dropdown slds-dropdown--right slds-dropdown--menu slds-dropdown--menu__hidden" aura:id="saveAndClose">
+                                            <ul data-name="Save_Exit_Event_Builder" class="slds-dropdown__list" role="menu">
+                                                <li class="slds-dropdown__item">
+                                                    <a href="javascript:void(0);" onclick="{!c.saveAndCloseEvent}">{!$Label.EventApi.Save_Exit_Event_Builder}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-size--1-of-1 slds-grid slds-wrap">
+                <div data-name="side-nav-div" class="slds-builder__sidebar slds-object-height--full__nofooter slds-scrollable--y slds-border--right slds-frame-position" aura:id="side-nav-div">
+                    <aura:iteration items="{!v.eventBuilderSideTabs}" var="builderTab">
+                        <aura:if isTrue="{!not(builderTab.isHidden)}">
+                            <div data-name="builderSidebar" class="slds-builder__sidebar-nav slds-border--bottom" data-label="{!builderTab.label}" data-menu="{!builderTab.componentName}" onclick="{!c.sidebarNav}" aura:id="builderSidebar">
+                                <EventApi:EventBuilderTabIcon iconUrl="{!builderTab.iconUrl}"/>
+                                <span class="slds-text-heading--label">{!builderTab.label}</span>
+                            </div>
+                        </aura:if>
+                    </aura:iteration>
+                </div>
+                <div class="slds-builder__sidebar--settings slds-builder__sidebar--settings__small slds-theme--shade slds-fonteva-builder-tab" id="builderSettings" aura:id="builderMenu">
+                    <div class="slds-grid slds-wrap slds-p-vertical--medium slds-scrollable horizontal-scrollbar-spacing">
+                        <div class="slds-size--1-of-1 slds-text-align--right slds-p-horizontal--small">
+                            <a href="javascript:void(0);" onclick="{!c.sidebarClose}">
+                                <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#close'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon-text-default slds-icon--x-small" assistiveText="Close" />
+                            </a>
+                        </div>
+                        <div class="slds-size--1-of-1 slds-object-height--full__content">
+                            <div data-name="builderTab" class="slds-grid slds-wrap slds-p-horizontal--medium slds-p-vertical--small slds-m-bottom--x-small">
+                                <aura:iteration items="{!v.eventBuilderTabs}" var="builderTab">
+                                    <EventApi:EventBuilderTab componentName="{!builderTab.componentName}" aura:id="builderTabComponents"/>
+                                </aura:iteration>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-grid slds-preview slds-object-height--full__nofooter slds-scrollable_y">
+                    <aura:if isTrue="{!v.showPreview}">
+                        <iframe data-name="preview-frame" src="{!v.previewUrl}" class="{!v.eventObj.style != 'Lightning Event' ? 'preview-frame' : 'hidden'}" aura:id="preview-frame" />
+                        <span data-name="lightningPreview" aura:id="lightningPreview" style="width: 100%;" class="slds-hide" />
+                        <aura:set attribute="else">
+                            <div data-name="no-preview-frame" class="slds-size--1-of-1 slds-text-align--center slds-align-middle slds-hide" aura:id="no-preview-frame">
+                                <span class="slds-text-heading--large">
+                                    {!$Label.EventApi.Unable_To_Display_Header_Event_Builder}
+                                    <br />
+                                    {!$Label.EventApi.Unable_To_Display_Body_Event_Builder}
+                                </span>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                    <div data-name="builderBackdrop" class="slds-backdrop slds-backdrop--preview" aura:id="builderBackdrop" onclick="{!c.sidebarClose}"></div>
+                </div>
+            </div>
+        </div>
+
+        <Framework:MessagePrompt title="{!$Label.EventApi.Close_Event_registration_Title}" message="{!$Label.EventApi.Close_Event_registration_Message}" preFormatText="true" showCancelButton="true" submitButtonLabel="{!$Label.EventApi.Close_Event_registration_Title}" aura:id="closeEventPrompt" submitOnClickAction="{!c.closeEventRegistration}" />
+        <div data-name="modalPublishEvent" class="slds-modal" aura:id="modalPublishEvent">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading--medium" id="modal-heading-label">{!$Label.EventApi.Publish_Event_Event_Builder}</h2>
+                    <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+                        <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+                    </button>
+                    <!-- /.slds-button -->
+                </div>
+                <!-- /.slds-modal__header -->
+                <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-tabs--default">
+                            <div id="tab-default-1" class="slds-tabs--default__content slds-show" role="tabpanel" aria-labelledby="tab-default-1__item">
+                                <div class="slds-col slds-size--1-of-1">
+                                    <div data-name="Ticket_Types_To_Publish" class="slds-text-body--regular">
+                                        {!$Label.EventApi.Ticket_Types_To_Publish}
+                                    </div>
+                                    <div class="slds-col slds-size--1-of-1 slds-m-vertical--medium">
+                                        <table data-name="publishTicketTypes" class="slds-table slds-table--bordered slds-no-row-hover">
+                                            <tbody>
+                                            <aura:iteration items="{!v.publishTicketTypes}" var="tick">
+                                                <tr class="{!tick.isActive ? '' : 'hidden'}">
+                                                    <td class="slds-truncate" data-label="Ticket Name">
+                                                        <Framework:InputFields qaData='{"type" : "input", "name": "isPublished"}' group="ticketEnablement" fieldType="boolean" label="{!tick.ticketName}" aura:id="isPublished" value="{!tick}" styleClasses="m-0" labelStyleClasses="darkText" />
+                                                    </td>
+                                                </tr>
+                                            </aura:iteration>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab-default-2" class="slds-tabs--default__content slds-hide" role="tabpanel" aria-labelledby="tab-default-2__item">
+                                <div class="slds-col slds-size--1-of-1">
+                                    <div data-name="Publish_Event_Info_Event_Builder" class="slds-text-body--regular">
+                                        {!$Label.EventApi.Publish_Event_Info_Event_Builder}
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size--1-of-1 slds-m-vertical--medium">
+                                    <table data-name="sites" class="slds-table slds-table--bordered slds-no-row-hover">
+                                        <tbody>
+                                        <aura:iteration items="{!v.sites}" var="site">
+                                            <tr>
+                                                <td data-name="site" class="slds-truncate" data-label="Site">
+                                                    {!$Label.EventApi.Site_Event_Builder}
+                                                </td>
+                                                <td data-name="site_name" class="slds-truncate" data-label="Site Name">
+                                                    <strong>{!site.name}</strong>
+                                                </td>
+                                            </tr>
+                                        </aura:iteration>
+                                        <tr class="{!v.eventObj.communityGroupName != null ? '' : 'hidden'}">
+                                            <td data-name="Community_Group_Event_Builder" class="slds-truncate" data-label="Community Group">
+                                                {!$Label.EventApi.Community_Group_Event_Builder}
+                                            </td>
+                                            <td data-name="communityGroupName" class="slds-truncate" data-label="Community Group Name">
+                                                <strong>{!v.eventObj.communityGroupName}</strong>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="slds-col slds-size--1-of-1">
+                                    <div data-name="Ticket_Sales_Begins_Event_Builder" class="slds-text-body--regular">
+                                      {!$Label.EventApi.Ticket_Sales_Begins_Event_Builder}&nbsp;<strong>{!v.ticketSalesStartDate}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.slds-col -->
+                </div>
+                <!-- /.slds-modal__content -->
+                <div class="slds-modal__footer slds-text-align--right">
+                    <a class="slds-button slds-button--neutral" onclick="{!c.closeModal}">{!$Label.EventApi.Cancel}</a>
+                    <a onclick="{!c.saveAndPublishEvent}" data-group="" href="javascript:void(0);" class="slds-button slds-button--brand slds-m-left--xx-small">{!v.publishButtonLabel}</a>
+                </div>
+                <!-- /.slds-modal__footer -->
+            </div>
+            <!-- /.modal-dialog .slds-modal__container -->
+        </div>
+        <!-- /.modal .slds-modal -->
+        <div data-name="modalBackdrop" class="slds-backdrop" aura:id="modalBackdrop"></div>
+        <div data-name="loadingBackdrop" class="slds-backdrop slds-backdrop--shade" aura:id="loadingBackdrop">
+            <div class="slds-grid slds-object-height--full">
+                <div class="slds-col slds-text-align--center slds-align-middle">
+                    <img src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+                    <span data-name="Loading_Event_Builder" class="slds-text-heading--medium">{!$Label.EventApi.Loading_Event_Builder}</span>
+                </div>
+            </div>
+        </div>
+        <Framework:Toast aura:id="toastMessages" />
+    </div>
+</aura:component>

@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="RegistrationProcessSalesOrderUpdateEvent" access="public">
+    <aura:attribute name="so" type="Map" access="public"/>
+</aura:event>

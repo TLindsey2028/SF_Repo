@@ -1,0 +1,684 @@
+<aura:component description="PagesApi.Theme" controller="PagesApi.ThemeController" extends="Framework:BaseComponent" implements="lightning:actionOverride,force:hasRecordId">
+    <ltng:require scripts="{!join(',',$Resource.Framework__UrlUtil,$Resource.PagesApi__FontevaStyler,$Resource.PagesApi__ThemeGenerator)}" styles="{!join(',',$Resource.PagesApi__SLDS_Base+'/css/styles.css', $Resource.Framework__SLDS_BaseV2+'/css/styles.css')}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute name="themeObj" type="PagesApi.Theme" />
+    <aura:attribute name="themeId" type="String" />
+    <aura:attribute name="showLogoImage" type="Boolean" default="false" access="private" />
+    <aura:attribute name="showFaviconImage" type="Boolean" default="false" access="private" />
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}" />
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField" />
+    <aura:registerEvent name="ComponentLoadedEvent" type="PagesApi:ComponentLoadedEvent" />
+    <aura:attribute name="fireReturnEvent" type="Boolean" default="false" />
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent" />
+    <style>
+        @media screen and (-ms-high-contrast: active),
+        (-ms-high-contrast: none) {
+            .slds-ie-fix--width {
+                max-width: calc(100vw - 17px);
+            }
+            .slds-ie-fix--width__icon {
+                max-width: 51px;
+            }
+        }
+    </style>
+    <div class="slds hidden slds-ie-fix--width" aura:id="mainWrapperDiv">
+        <div class="slds-grid slds-grid--align-center slds-wrap">
+            <div class="slds-size--1-of-1 slds-grid slds-wrap">
+                <div class="slds-col slds-size--1-of-1">
+                    <div class="slds-page-header">
+                        <div class="slds-media slds-media--center">
+                            <div class="slds-media__figure slds-ie-fix--width__icon">
+                                <img alt="Placeholder" src="//s3.amazonaws.com/fonteva-cdn/pagesapi/theme/Theme.svg" style="height:50px;" />
+                            </div>
+                            <div class="slds-media__body">
+                                <span data-qa-data='{"name" : "labelTheme"}' class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+                                    {!$Label.PagesApi.Theme}
+                                </span>
+                                <Framework:Button enableProgressIndicator="false" onClickAction="{!c.cancelThemeObj}" type="neutral" label="{!$Label.PagesApi.Cancel_Theme_Builder}"
+                                    qaData='{"type" : "button", "name": "cancelThemeObj"}' aura:id="cancelThemeObj" />
+                            </div>
+                            <div>
+                                <div class="slds-button-group" role="group">
+                                    <Framework:Button onClickAction="{!c.saveThemeObj}" type="brand" additionalClasses="slds-side-save-button" label="{!$Label.PagesApi.Save_Theme_Builder}"
+                                        qaData='{"type" : "button", "name": "saveThemeTopObj"}' aura:id="saveThemeTopObj" />
+                                    <span class="slds-button slds-button--brand slds-dropdown--trigger event-builder-action-button slds-p-horizontal--small">
+                                        <lightning:icon iconName="utility:down" size="xx-small" class="white-dropdown-icon" alternativeText="{!$Label.PagesApi.Save_Exit_Theme_Builder}"
+                                        />
+                                        <div class="slds-dropdown slds-dropdown slds-dropdown--right slds-dropdown--menu slds-dropdown--menu__hidden" data-qa-data='{"name" : "saveAndClose"}'
+                                            aura:id="saveAndClose">
+                                            <ul class="slds-dropdown__list" role="menu">
+                                                <li class="slds-dropdown__item">
+                                                    <Framework:Button onClickAction="{!c.saveThemeObjExit}" type="brand" progressIndicatorLocation="zoom-in" additionalClasses="slds-save-exit-button"
+                                                        label="{!$Label.PagesApi.Save_Exit_Theme_Builder}" qaData='{"type" : "button", "name": "saveThemeObj"}'
+                                                        aura:id="saveThemeObj" />
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-wrap slds-size--1-of-1">
+
+
+                    <div class="slds-col slds-medium-size--1-of-4 slds-size--1-of-1 slds-theme--default slds-medium-object-height--full__footer slds-scrollable--y">
+                        <ul class="slds-list--vertical slds-p-vertical--medium slds-sidebar-interaction__tabs">
+                            <li class="slds-list__item active" aura:id="templateNameColorSideLink">
+                                <a data-qa-data='{"name" : "templateNameColor"}' aria-controls="templateNameColor" class="slds-truncate slds-grid slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small"
+                                    onclick="{!c.changeTab}" data-tabid="templateNameColor">Name &amp; Color Scheme</a>
+                            </li>
+                            <li class="slds-list__item" aura:id="templateLogoSideLink">
+                                <a data-qa-data='{"name" : "templateLogo"}' aria-controls="templateLogo" class="slds-truncate slds-grid slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small"
+                                    onclick="{!c.changeTab}" data-tabid="templateLogo">{!$Label.PagesApi.Logo}</a>
+                            </li>
+                            <li class="slds-list__item" aura:id="templateCustomCSSSideLink">
+                                <a data-qa-data='{"name" : "templateCustomCSS"}' aria-controls="templateCustomCSS" class="slds-truncate slds-grid slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small "
+                                    onclick="{!c.changeTab}" data-tabid="templateCustomCSS">{!$Label.PagesApi.Custom_CSS}</a>
+                            </li>
+                            <li class="slds-list__item" aura:id="templateHeaderSideLink">
+                                <a data-qa-data='{"name" : "templateHeader"}' aria-controls="templateHeader" class="slds-truncate slds-grid slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small "
+                                    onclick="{!c.changeTab}" data-tabid="templateHeader">{!$Label.PagesApi.Header}</a>
+                            </li>
+                            <li class="slds-list__item" aura:id="templateFooterSideLink">
+                                <a data-qa-data='{"name" : "templateFooter"}' aria-controls="templateFooter" class="slds-truncate slds-grid slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small "
+                                    onclick="{!c.changeTab}" data-tabid="templateFooter">{!$Label.PagesApi.Footer}</a>
+                            </li>
+                            <li class="slds-list__item" aura:id="templateHTMLHeadSideLink">
+                                <a data-qa-data='{"name" : "templateHTMLHead"}' aria-controls="templateHTMLHead" class="slds-truncate slds-grid slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small "
+                                    onclick="{!c.changeTab}" data-tabid="templateHTMLHead">{!$Label.PagesApi.HTML_Head}</a>
+                            </li>
+                            <li class="slds-list__item" aura:id="templateSupernavSideLink">
+                                <a data-qa-data='{"name" : "templateSupernav"}' aria-controls="templateSupernav" class="slds-truncate slds-grid slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small "
+                                    onclick="{!c.changeTab}" data-tabid="templateSupernav">{!$Label.PagesApi.Supernav}</a>
+                            </li>
+                            <li class="slds-list__item" aura:id="templateAdvancedSettingsSideLink">
+                                <a data-qa-data='{"name" : "templateAdvancedSettings"}' aria-controls="templateAdvancedSettings" class="slds-truncate slds-grid slds-size--1-of-1 slds-p-horizontal--large slds-p-vertical--small"
+                                    onclick="{!c.changeTab}" data-tabid="templateAdvancedSettings">{!$Label.PagesApi.Advanced_Settings}</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="slds-col slds-medium-size--3-of-4 slds-size--1-of-1 slds-theme--shade slds-medium-object-height--full__footer slds-scrollable--y">
+                        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-p-vertical--medium" aura:id="templateNameColor">
+                            <div class="slds-grid slds-m-bottom--medium">
+
+                                <div class="slds-col slds-size--1-of-3 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="string" qaData='{"type" : "input", "name": "themeName"}' aura:id="name" isRequired="true"
+                                        label="{!$Label.PagesApi.Theme_Name}" group="themeObj" value="{!v.themeObj}" maxlength="79"
+                                    />
+                                </div>
+                                <!-- /.slds-col -->
+
+                                <div class="slds-col slds-size--2-of-3 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="string" aura:id="description" qaData='{"type" : "input", "name": "themeDescription"}' label="{!$Label.PagesApi.Description}"
+                                        group="themeObj" value="{!v.themeObj}" />
+                                </div>
+                                <!-- /.slds-col -->
+
+                            </div>
+                            <!-- /.slds-grid -->
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom--medium">
+                                    <span data-qa-data='{"name" : "colorScheme"}' class="slds-section-title">{!$Label.PagesApi.Color_Scheme}</span>
+                                </div>
+                                <!-- /.slds-size-1-of-1 -->
+                            </div>
+                            <!-- /.slds-col -->
+                            <div class="slds-grid slds-m-bottom--large">
+
+                                <!-- BRAND PRIMARY -->
+
+                                <div class="slds-col slds-size--1-of-5 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="colorpickerfield" qaData='{"type" : "input", "name": "brandPrimary"}' aura:id="brandPrimary"
+                                        label="{!$Label.PagesApi.Brand_Primary}" group="themeObj" value="{!v.themeObj}" fireChangeEvent="true"
+                                    />
+                                </div>
+                                <!-- /.slds-col -->
+
+                                <!-- /BRAND PRIMARY -->
+
+                                <!-- BRAND SECONDARY -->
+
+                                <div class="slds-col slds-size--1-of-5 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="colorpickerfield" qaData='{"type" : "input", "name": "brandSecondary"}' aura:id="brandSecondary"
+                                        label="{!$Label.PagesApi.Brand_Secondary}" group="themeObj" value="{!v.themeObj}" fireChangeEvent="true"
+                                    />
+                                </div>
+                                <!-- /.slds-col -->
+
+                                <!-- /BRAND SECONDARY -->
+
+                                <!-- BODY TEXT -->
+
+                                <div class="slds-col slds-size--1-of-5 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="colorpickerfield" qaData='{"type" : "input", "name": "textColor"}' aura:id="textColor"
+                                        label="{!$Label.PagesApi.Text}" group="themeObj" value="{!v.themeObj}" fireChangeEvent="true"
+                                    />
+                                </div>
+                                <!-- /.slds-col -->
+
+                                <!-- /BODY TEXT -->
+
+                                <!-- BODY LINK -->
+
+                                <div class="slds-col slds-size--1-of-5 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="colorpickerfield" qaData='{"type" : "input", "name": "linkColor"}' aura:id="linkColor"
+                                        label="{!$Label.PagesApi.Link}" group="themeObj" value="{!v.themeObj}" fireChangeEvent="true"
+                                    />
+                                </div>
+                                <!-- /.slds-col -->
+
+                                <!-- /BODY LINK -->
+
+                                <!-- /BODY BACKGROUND -->
+
+                                <div class="slds-col slds-size--1-of-5 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="colorpickerfield" qaData='{"type" : "input", "name": "bodyBackgroundColor"}' aura:id="bodyBackgroundColor"
+                                        label="{!$Label.PagesApi.Body_Background_Color}" group="themeObj" value="{!v.themeObj}" fireChangeEvent="true"
+                                    />
+                                </div>
+                                <!-- /.slds-col -->
+
+                            </div>
+                            <!-- /.slds-grid -->
+
+                            <!-- /BODY BACKGROUND -->
+
+                            <!-- NAVBAR BACKGROUND -->
+
+                            <div class="slds-grid slds-m-bottom--large">
+
+                                <div class="slds-col slds-size--1-of-5 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="colorpickerfield" qaData='{"type" : "input", "name": "navbarBackgroundColor"}' aura:id="navbarBackgroundColor"
+                                        label="{!$Label.PagesApi.Navbar_Background_Color}" group="themeObj" value="{!v.themeObj}" fireChangeEvent="true"
+                                    />
+                                </div>
+                                <!-- /.slds-col -->
+
+                                <!-- /NAVBAR BACKGROUND -->
+
+                                <!-- NAVBAR LINK -->
+
+                                <div class="slds-col slds-size--1-of-5 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="colorpickerfield" qaData='{"type" : "input", "name": "navbarLinkColor"}' aura:id="navbarLinkColor"
+                                        label="{!$Label.PagesApi.Navbar_Link}" group="themeObj" value="{!v.themeObj}" fireChangeEvent="true"
+                                    />
+                                </div>
+                                <!-- /.slds-col -->
+
+                                <!-- /NAVBAR LINK -->
+
+                                <!-- SUPERNAV TEXT -->
+
+                                <div class="slds-col slds-size--1-of-5 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="colorpickerfield" qaData='{"type" : "input", "name": "supernavTextColor"}' aura:id="supernavTextColor"
+                                        label="{!$Label.PagesApi.Supernav_Text}" group="themeObj" value="{!v.themeObj}" fireChangeEvent="true"
+                                    />
+                                </div>
+                                <!-- /.slds-col -->
+
+                                <!-- /SUPERNAV TEXT -->
+
+                                <!-- SUPERNAV LINK -->
+
+                                <div class="slds-col slds-size--1-of-5 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="colorpickerfield" qaData='{"type" : "input", "name": "supernavLinkColor"}' aura:id="supernavLinkColor"
+                                        label="{!$Label.PagesApi.Supernav_Link}" group="themeObj" value="{!v.themeObj}" fireChangeEvent="true"
+                                    />
+                                </div>
+                                <!-- /.slds-col -->
+
+                                <!-- /SUPERNAV LINK -->
+
+                                <!-- SUPERNAV BACKGROUND -->
+
+                                <div class="slds-col slds-size--1-of-5 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="colorpickerfield" qaData='{"type" : "input", "name": "supernavBackgroundColor"}' aura:id="supernavBackgroundColor"
+                                        label="{!$Label.PagesApi.Supernav_Background}" group="themeObj" value="{!v.themeObj}" fireChangeEvent="true"
+                                    />
+                                </div>
+                                <!-- /.slds-col -->
+
+                                <!-- /SUPERNAV BACKGROUND -->
+
+                            </div>
+                            <!-- /.slds-grid -->
+                            <!-- ========================== PREVIEW ========================== -->
+
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom--medium">
+                                    <span data-qa-data='{"name" : "preview"}' class="slds-section-title">{!$Label.PagesApi.Preview}</span>
+                                </div>
+                                <!-- /.slds-col .slds-size-1-of-1 -->
+                            </div>
+                            <!-- /.slds-col -->
+
+                            <div class="slds-col slds-grid slds-p-around--small">
+                                <div class="slds-col slds-size--1-of-1 slds-box slds-m-bottom--medium slds-theme--default">
+
+                                    <!-- SUPERNAV -->
+
+                                    <div class="slds-grid slds-wrap slds-object--full__width">
+                                        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--large supernav-preview themeSupernavBackground" style="background-color: #999999"
+                                            aura:id="themeSupernavBackgroundPreview">
+
+                                            <div class="theme-preview-grid supernav-container supernav-text-container">
+                                                <div class="supernav-text themeSupernavText" style="background-color: white;" data-qa-data='{"name" : "themeSupernavTextPreview"}'
+                                                    aura:id="themeSupernavTextPreview">
+                                                </div>
+                                                <!-- /.supernav-text -->
+                                            </div>
+                                            <!-- /.supernav-container -->
+
+                                            <div class="supernav-description-wrapper">
+                                                <div class="theme-preview-grid supernav-link-container">
+                                                    <div class="supernav-link themeSupernavLink" style="background-color: white" data-qa-data='{"name" : "themeSupernavLinkPreview"}'
+                                                        aura:id="themeSupernavLinkPreview">
+                                                    </div>
+                                                    <!-- /.supernav-link -->
+                                                </div>
+                                                <!-- /.supernav-link-container -->
+                                                <div class="theme-preview-grid supernav-menu-container">
+                                                    <div class="supernav-link themeSupernavLink" style="background-color: white;" data-qa-data='{"name" : "themeSupernavLinkPreview"}'
+                                                        aura:id="themeSupernavLinkPreview">
+                                                    </div>
+                                                    <!-- /.supernav-link -->
+                                                </div>
+                                                <!-- /.supernav-menu-container -->
+                                            </div>
+                                            <!-- /.supernav-description-wrapper -->
+
+                                        </div>
+                                        <!-- /.slds-col -->
+                                    </div>
+                                    <!-- /.slds-grid -->
+
+                                    <!-- /SUPERNAV -->
+
+                                    <!-- NAVBAR -->
+
+                                    <div class="slds-grid slds-wrap slds-object--full__width">
+                                        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--large navbar-preview themeNavbarBackground" style="background-color: black"
+                                            aura:id="themeNavbarBackgroundPreview">
+
+                                            <div class="slds-col theme-preview-grid navbar-logo-container">
+                                                <div class="navbar-logo" style="background-color: white">
+                                                </div>
+                                                <!-- /.navbar-logo -->
+                                            </div>
+                                            <!-- /.navbar-logo-container -->
+
+                                            <div class="navbar-link-wrapper">
+                                                <div class="theme-preview-grid navbar-link-container">
+                                                    <div class="theme-preview-grid navbar-link themeNavbarLink" style="background-color: white" aura:id="themeNavbarLinkPreview">
+                                                    </div>
+                                                    <!-- /.navbar-link -->
+                                                </div>
+                                                <!-- /.navbar-link-container -->
+
+                                                <div class="theme-preview-grid navbar-link-container">
+                                                    <div class="theme-preview-grid navbar-link themeNavbarLink" style="background-color: white" aura:id="themeNavbarLinkPreview">
+                                                    </div>
+                                                    <!-- /.navbar-link -->
+                                                </div>
+                                                <!-- /.navbar-link-container -->
+
+                                                <div class="theme-preview-grid navbar-link-container">
+                                                    <div class="theme-preview-grid navbar-link themeNavbarLink" style="background-color: white" aura:id="themeNavbarLinkPreview">
+                                                    </div>
+                                                    <!-- /.navbar-link -->
+                                                </div>
+                                                <!-- /.navbar-link-container -->
+                                            </div>
+                                            <!-- /.navbar-link-wrapper -->
+
+                                        </div>
+                                        <!-- /.themeNavbarBackground -->
+                                    </div>
+                                    <!-- /.slds-grid -->
+
+                                    <!-- /NAVBAR -->
+
+                                    <!-- COVER -->
+
+                                    <div class="slds-grid slds-wrap slds-object--full__width">
+                                        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--large cover-preview">
+                                            <div class="slds-col slds-grid slds-wrap cover-description-container">
+                                                <div data-qa-data='{"name" : "cover-description"}' class="cover-description slds-size--1-of-4" style="background-color: #444444;">
+
+                                                </div>
+                                                <!-- /.cover-description -->
+                                            </div>
+                                            <!-- /.cover-description-container -->
+                                        </div>
+                                        <!-- /.cover-preview -->
+                                    </div>
+                                    <!-- /.slds-grid -->
+
+                                    <!-- /COVER -->
+
+                                    <!-- CONTENT -->
+
+                                    <div class="slds-grid slds-wrap slds-object--full__width">
+                                        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--large content-preview themeBodyBackground" style="background-color:#eaeaea"
+                                            aura:id="themeBodyBackgroundPreview">
+                                            <div class="slds-col slds-grid slds-wrap content-container">
+                                                <div class="content-sidebar-wrapper slds-size--1-of-4">
+                                                    <div class="content-sidebar" style="background-color: white;">
+                                                        <div class="slds-size--1-of-1 content-link-wrapper active themeBrandPrimary" data-qa-data='{"name" : "themeBrandPrimaryPreview"}'
+                                                            aura:id="themeBrandPrimaryPreview">
+                                                            <div class="content-link slds-size--1-of-1 themeBodyLink" style="background-color: black">
+                                                            </div>
+                                                            <!-- /.themeBodyLink.active -->
+                                                        </div>
+                                                        <!-- /.themeBrandPrimary -->
+
+                                                        <div class="slds-size--1-of-1 content-link-wrapper">
+                                                            <div class="content-link slds-size--2-of-3 themeBodyLink" style="background-color: black" data-qa-data='{"name" : "themeBodyLinkPreview"}'
+                                                                aura:id="themeBodyLinkPreview">
+                                                            </div>
+                                                            <!-- /.themeBodyLink -->
+                                                        </div>
+                                                        <!-- /.content-link-wrapper -->
+
+                                                        <div class="slds-size--1-of-1 content-link-wrapper">
+                                                            <div class="content-link slds-size--4-of-5 themeBodyLink" style="background-color: black" data-qa-data='{"name" : "themeBodyLinkPreview"}'
+                                                                aura:id="themeBodyLinkPreview">
+                                                            </div>
+                                                            <!-- /.themeBodyLink -->
+                                                        </div>
+                                                        <!-- /.content-link-wrapper -->
+                                                    </div>
+                                                    <!-- /.content-sidebar -->
+
+                                                </div>
+                                                <!-- /.content-sidebar-wrapper -->
+
+                                                <div class="content-body-wrapper slds-size--3-of-4">
+                                                    <div class="content-body" style="background-color: white;">
+                                                        <div class="content-header-wrapper slds-size--2-of-8 themeBrandSecondary" style="background-color: #444444" data-qa-data='{"name" : "themeBodyLinkPreview"}'
+                                                            aura:id="themeBrandSecondaryPreview">
+                                                            <div class="content-header">
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.content-header-wrapper -->
+                                                        <div class="content-text-wrapper" style="background-color: transparent">
+                                                            <div class="content-text slds-size--11-of-12 themeBodyText" style="background-color: black" aura:id="themeBodyTextPreview">
+                                                            </div>
+                                                            <div class="content-text slds-size--10-of-12 themeBodyText" style="background-color: black" aura:id="themeBodyTextPreview">
+                                                            </div>
+                                                            <div class="content-text slds-size--1-of-1 themeBodyText" style="background-color: black" aura:id="themeBodyTextPreview">
+                                                            </div>
+                                                            <div class="content-text slds-size--11-of-12 themeBodyText" style="background-color: black" aura:id="themeBodyTextPreview">
+                                                            </div>
+                                                            <div class="content-text slds-size--10-of-12 themeBodyText" style="background-color: black" aura:id="themeBodyTextPreview">
+                                                            </div>
+                                                            <div class="content-text slds-size--1-of-1 themeBodyText" style="background-color: black" aura:id="themeBodyTextPreview">
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.content-text-wrapper -->
+                                                    </div>
+                                                    <!-- /.content-body -->
+                                                </div>
+                                                <!-- /.content-sidebar-wrapper -->
+
+                                            </div>
+                                            <!-- /.content-container -->
+                                        </div>
+                                        <!-- /.themeBodyBackground -->
+                                    </div>
+                                    <!-- /.slds-grid -->
+
+                                    <!-- /CONTENT -->
+
+                                </div>
+                                <!-- /.slds-col -->
+                            </div>
+                            <!-- /.slds-grid -->
+
+                            <!-- ========================== PREVIEW ========================== -->
+
+                        </div>
+                        <!-- LOGO -->
+
+                        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-p-vertical--medium hidden" aura:id="templateLogo">
+
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom--medium">
+                                    <span class="slds-section-title">{!$Label.PagesApi.Logo}</span>
+                                </div>
+                                <!-- /.slds-size-1-of-1 -->
+                            </div>
+                            <!-- /.slds-grid -->
+
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--2-of-3 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="fileupload" qaData='{"type" : "input", "name": "logoImage"}' aura:id="logoImage" label="{!$Label.PagesApi.Logo_URL}"
+                                        group="themeObj" value="{!v.themeObj}" fireChangeEvent="true" otherAttributes='{"usePublicBucket" : true,"generatePrefix" : true,maximumFileSize : 5242880,allowedMimeTypes:["image/png","image/jpeg","image/jpg","image/gif","image/bmp","image/tiff","image/x-icon","image/vnd.microsoft.icon"]}'
+                                    />
+                                </div>
+                                <!-- /.slds-size-2-of-3 -->
+                                <div class="slds-col slds-size--1-of-3 slds-p-horizontal--small slds-align-middle slds-text-align--center">
+                                    <Framework:Img src="{!v.themeObj.logoImage}" class="{!v.showLogoImage ? 'logoImage' : 'hidden'}" style="max-height: 50px;" />
+                                </div>
+                                <!-- /.slds-size-1-of-3 -->
+                            </div>
+                            <!-- /.slds-grid -->
+
+                            <div class="slds-col slds-grid slds-m-top--medium">
+                                <div class="slds-col slds-size--2-of-3 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="fileupload" qaData='{"type" : "input", "name": "faviconImage"}' aura:id="faviconImage"
+                                        label="{!$Label.PagesApi.Favicon_URL}" group="themeObj" value="{!v.themeObj}" fireChangeEvent="true"
+                                        otherAttributes='{"usePublicBucket" : true,"generatePrefix" : true,maximumFileSize : 5242880,allowedMimeTypes:["image/png","image/jpeg","image/jpg","image/gif","image/bmp","image/tiff","image/x-icon","image/vnd.microsoft.icon"]}'
+                                    />
+                                </div>
+                                <!-- /.slds-size-2-of-3 -->
+                                <div class="slds-col slds-size--1-of-3 slds-p-horizontal--small slds-align-middle slds-text-align--center">
+                                    <Framework:Img src="{!v.themeObj.faviconImage}" class="{!v.showFaviconImage ? 'logoImage' : 'hidden'}" style="max-height: 50px;" />
+                                </div>
+                                <!-- /.slds-size-1-of-3 -->
+                            </div>
+                            <!-- /.slds-grid -->
+
+                            <div class="slds-col slds-grid slds-m-top--medium">
+                                <div class="slds-col slds-size--2-of-3 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="url" qaData='{"type" : "input", "name": "logoDestinationUrl"}' aura:id="logoDestinationUrl"
+                                        label="{!$Label.PagesApi.Logo_Destination_URL}" group="themeObj" value="{!v.themeObj}" />
+                                </div>
+                                <!-- /.slds-size-2-of-3 -->
+                            </div>
+                            <!-- /.slds-grid -->
+
+                            <div class="slds-col slds-grid slds-m-top--medium">
+                                <div class="slds-col slds-size--2-of-3 slds-p-horizontal--small">
+                                    <Framework:InputFields fieldType="string" qaData='{"type" : "input", "name": "logoText"}' aura:id="logoText" label="{!$Label.PagesApi.Logo_Text}"
+                                        group="themeObj" value="{!v.themeObj}" />
+                                </div>
+                                <!-- /.slds-size-2-of-3 -->
+                            </div>
+                            <!-- /.slds-grid -->
+
+                        </div>
+                        <!-- /.tab-pane -->
+
+                        <!-- /LOGO -->
+                        <!-- CUSTOM CSS -->
+
+                        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-p-vertical--medium hidden" aura:id="templateCustomCSS">
+
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom--medium">
+                                    <span class="slds-section-title">{!$Label.PagesApi.Custom_CSS}</span>
+                                </div>
+                                <!-- /.slds-size-1-of-1 -->
+                            </div>
+                            <!-- /.slds-col -->
+                            <Framework:InputFields fieldType="codeeditorfield" qaData='{"type" : "input", "name": "customCSS"}' aura:id="customCSS" label=""
+                                group="themeObj" value="{!v.themeObj}" />
+
+                        </div>
+                        <!-- /.tab-pane -->
+
+                        <!-- /CUSTOM CSS -->
+
+                        <!-- HEADER -->
+
+                        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-p-vertical--medium hidden" aura:id="templateHeader">
+
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom--medium">
+                                    <span class="slds-section-title">{!$Label.PagesApi.Header}</span>
+                                </div>
+                                <!-- /.slds-size-1-of-1 -->
+                            </div>
+                            <!-- /.slds-col -->
+                            <Framework:InputFields fieldType="codeeditorfield" qaData='{"type" : "input", "name": "header"}' aura:id="header" label=""
+                                group="themeObj" value="{!v.themeObj}" />
+
+                        </div>
+                        <!-- /.tab-pane -->
+
+                        <!-- /HEADER -->
+                        <!-- FOOTER -->
+
+                        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-p-vertical--medium hidden" aura:id="templateFooter">
+
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom--medium">
+                                    <span class="slds-section-title">{!$Label.PagesApi.Footer}</span>
+                                </div>
+                                <!-- /.slds-size-1-of-1 -->
+                            </div>
+                            <!-- /.slds-col -->
+                            <Framework:InputFields fieldType="codeeditorfield" qaData='{"type" : "input", "name": "footer"}' aura:id="footer" label=""
+                                group="themeObj" value="{!v.themeObj}" />
+
+                        </div>
+                        <!-- /.tab-pane -->
+
+                        <!-- /FOOTER -->
+                        <!-- HTML HEAD -->
+
+                        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-p-vertical--medium hidden" aura:id="templateHTMLHead">
+
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom--medium">
+                                    <span class="slds-section-title">HTML Head</span>
+                                </div>
+                                <!-- /.slds-size-1-of-1 -->
+                            </div>
+                            <!-- /.slds-col -->
+                            <Framework:InputFields fieldType="codeeditorfield" qaData='{"type" : "input", "name": "htmlHead"}' aura:id="htmlHead" label=""
+                                group="themeObj" value="{!v.themeObj}" />
+
+                        </div>
+                        <!-- /.tab-pane -->
+
+                        <!-- /HTML HEAD -->
+                        <!-- SUPERNAV -->
+
+                        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-p-vertical--medium hidden" aura:id="templateSupernav">
+
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom--medium">
+                                    <span class="slds-section-title">{!$Label.PagesApi.Supernav_HTML_Position_1}</span>
+                                    <a data-target="#modalSupernavKey" data-toggle="modal" href="#">
+                                        <lightning:icon iconName="utility:info" size="x-small" class="slds-icon--x-small" alternativeText="Modal" />
+                                    </a>
+                                </div>
+                                <!-- /.slds-size-1-of-1 -->
+                            </div>
+                            <!-- /.slds-col.grid -->
+
+                            <Framework:InputFields fieldType="codeeditorfield" qaData='{"type" : "input", "name": "supernavHTMLPosition1"}' aura:id="supernavHTMLPosition1"
+                                label="" group="themeObj" value="{!v.themeObj}" />
+
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom--medium">
+                                    <span class="slds-section-title">{!$Label.PagesApi.Supernav_HTML_Position_2}</span>
+                                    <a data-target="#modalSupernavKey" data-toggle="modal" href="#">
+                                        <lightning:icon iconName="utility:info" size="x-small" class="slds-icon--x-small" alternativeText="Modal" />
+                                    </a>
+                                </div>
+                                <!-- /.slds-size-1-of-1 -->
+                            </div>
+                            <!-- /.slds-col.grid -->
+
+                            <Framework:InputFields fieldType="codeeditorfield" qaData='{"type" : "input", "name": "supernavHTMLPosition2"}' aura:id="supernavHTMLPosition2"
+                                label="" group="themeObj" value="{!v.themeObj}" />
+
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom--medium">
+                                    <span class="slds-section-title">{!$Label.PagesApi.Supernav_HTML_Position_3}</span>
+                                    <a data-target="#modalSupernavKey" data-toggle="modal" href="#">
+                                        <lightning:icon iconName="utility:info" size="x-small" class="slds-icon--x-small" alternativeText="Modal" />
+                                    </a>
+                                </div>
+                                <!-- /.slds-size-1-of-1 -->
+                            </div>
+                            <!-- /.slds-col.grid -->
+
+                            <Framework:InputFields fieldType="codeeditorfield" qaData='{"type" : "input", "name": "supernavHTMLPosition3"}' aura:id="supernavHTMLPosition3"
+                                label="" group="themeObj" value="{!v.themeObj}" />
+
+                        </div>
+                        <!-- /.tab-pane -->
+
+                        <!-- /SUPERNAV -->
+
+                        <!-- ADVANCED SETTINGS -->
+
+                        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-p-vertical--medium hidden" aura:id="templateAdvancedSettings">
+
+                            <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom--medium">
+                                <span class="slds-section-title">{!$Label.PagesApi.Advanced_Settings}</span>
+                            </div>
+                            <!-- /.slds-col -->
+
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom--medium">
+                                    <Framework:InputFields fieldType="url" qaData='{"type" : "input", "name": "customStyleSheetUrl"}' aura:id="customStyleSheetUrl"
+                                        label="{!$Label.PagesApi.Custom_Stylesheet_URL}" group="themeObj" value="{!v.themeObj}" />
+                                </div>
+                                <!-- /.slds-col -->
+                            </div>
+                            <!-- /.slds-grid -->
+
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom--medium">
+                                    <Framework:InputFields fieldType="url" qaData='{"type" : "input", "name": "customPrintStyleSheetUrl"}' aura:id="customPrintStyleSheetUrl"
+                                        label="{!$Label.PagesApi.Custom_Print_Stylesheet_URL}" group="themeObj" value="{!v.themeObj}"
+                                    />
+                                </div>
+                                <!-- /.slds-col -->
+                            </div>
+                            <!-- /.slds-grid -->
+
+                        </div>
+                        <!-- /.tab-pane -->
+
+                        <!-- /ADVANCED SETTINGS -->
+                    </div>
+
+                    <div class="modal fade slds-modal slds-modal--large slds-fade-in-open" id="modalSupernavKey">
+                        <div class="modal-dialog slds-modal__container">
+                            <div class="modal-content">
+                                <div class="slds-modal__header slds-text-align--center">
+                                    <h2 class="slds-text-heading--medium" id="api-resource-header"></h2>
+                                    <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal">
+                                        <lightning:icon iconName="action:close" size="large" class="slds-button--icon-inverse" alternativeText="{!$Label.PagesApi.Close}"
+                                        />
+                                    </button>
+                                    <img src="{!$Resource.Framework__SLDS_BaseV2 + '/img/help/supernav-key.jpg'}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <Framework:Toast aura:id="toastMessages" />
+    </div>
+</aura:component>

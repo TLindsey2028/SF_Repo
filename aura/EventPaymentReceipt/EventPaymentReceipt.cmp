@@ -1,0 +1,46 @@
+<aura:component description="EventPaymentReceipt" access="global" implements="LTE:EventInterface" controller="LTE.ReceiptsController">
+    <aura:registerEvent name="RegistrationProcessCompleteEvent" type="LTE:RegistrationProcessCompleteEvent"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="type" type="String"/>
+    <aura:attribute name="name" type="String"/>
+    <aura:attribute name="receiptUrl" type="String"/>
+    <aura:attribute name="tempReceiptUrl" type="String"/>
+    <aura:attribute name="buttonDownloadLabel" type="String" default="{!$Label.LTE.Payment_Download_Receipt}"/>
+    <div id="summary" aura:id="summaryPane" class="slds-event--pane slds-p-bottom--medium animated fadeIn slds-p-vertical--large slds-hide" data-type="pane">
+        <div class="slds-grid slds-wrap slds-grid--pull-padded slds-p-horizontal--medium">
+            <div class="slds-grid slds-grid--vertical-align-center slds-grid--align-center slds-size--1-of-1 slds-object-height--min-half fonteva-receipt">
+                <div class="slds-grid slds-grid--vertical slds-text-align--center">
+                    <div class="slds-m-bottom--small">
+                        <lightning:icon size="large" iconName="action:approval" alternativeText="Success" class="fonteva-icon-size--xx-large" />
+                    </div>
+                    <div class="slds-text-heading--medium slds-font-weight--semi-bold">
+                        <aura:if isTrue="{!v.type == 'Receipt'}">
+                            {!$Label.LTE.Successful_Payment}
+                        </aura:if>
+                        <aura:if isTrue="{!v.type == 'Invoice'}">
+                            {!$Label.LTE.Successful_Invoice}
+                        </aura:if>
+                        <aura:if isTrue="{!v.type == 'Sales Order'}">
+                            {!$Label.LTE.Successful_Processing_Payment}
+                        </aura:if>
+                    </div>
+                    <div class="slds-text-body--regular slds-m-bottom--small slds-m-bottom--large">
+                        {!v.type}: #{!v.name}
+                   </div>
+                    <div class="slds-m-bottom--large">
+                        <aura:if isTrue="{!or(v.type == 'Receipt',v.type == 'Invoice')}">
+                            <lightning:button variant="neutral" label="{!v.buttonDownloadLabel}" class="slds-m-right--small"  onclick="{!c.downloadReceipt}"/>
+                        </aura:if>
+                        <lightning:button variant="brand" label="{!$Label.LTE.Payment_Continue_To_Event}" onclick="{!c.continueToEvent}"/>
+                    </div>
+                    <aura:if isTrue="{!and(v.usr.isAuthenticated,not(v.usr.isContactAuthenticated))}">
+                        <div>
+                            <a class="" href="" onclick="{!c.logout}" aura:id="logoutLink" data-name="logout">{!$Label.LTE.Logout_Label}</a>
+                        </div>
+                    </aura:if>
+                    <iFrame src="{!v.receiptUrl}" frameborder="0" width="0%" height="0px" scrolling="no" class="hidden"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

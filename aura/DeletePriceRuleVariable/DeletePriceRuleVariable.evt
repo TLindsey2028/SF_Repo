@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="DeletePriceRuleVariable">
+	<aura:attribute name="group" type="String" required="true"/>
+</aura:event>

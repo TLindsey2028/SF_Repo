@@ -1,0 +1,46 @@
+<aura:component description="PaymentMethodDetail">
+  <aura:attribute name="paymentMethod" type="Map" default="{}"/>
+  <tr>
+    <td>{!v.paymentMethod.lastFour}</td>
+    <td>
+      <span class="{!v.paymentMethod.isExpired ? 'slds-text-color--error' : 'hidden'}">
+        Inactive
+      </span>
+      <span class="{!v.paymentMethod.isExpired ? 'hidden' : ''}">
+            {!v.paymentMethod.expiration}
+      </span>
+    </td>
+    <td>{!v.paymentMethod.fullName}</td>
+    <td>
+      <span class="{!empty(v.paymentMethod.address.street_number) ? 'hidden' : ''}">
+        {!v.paymentMethod.address.street_number}&nbsp;
+      </span>
+      <span class="{!empty(v.paymentMethod.address.street_name) ? 'hidden' : ''}">
+        {!v.paymentMethod.address.street_name},&nbsp;
+      </span>
+      <span class="{!empty(v.paymentMethod.address.city) ? 'hidden' : ''}">
+        {!v.paymentMethod.address.city},&nbsp;
+      </span>
+      <span class="{!empty(v.paymentMethod.address.province) ? 'hidden' : ''}">
+        {!v.paymentMethod.address.province}&nbsp;
+      </span>
+      <span class="{!empty(v.paymentMethod.address.postal_code) ? 'hidden' : ''}">
+        {!v.paymentMethod.address.postal_code},&nbsp;
+      </span>
+            {!v.paymentMethod.address.country}
+    </td>
+    <td class="slds-clearfix">
+      <div class="slds-button-group slds-float--right">
+        <span class="{!v.paymentMethod.isExpired ? 'hidden' : ''}">
+          <Framework:Button label="" onClickAction="{!c.editPayMethod}" enableProgressIndicator="false"
+                            type="neutral"
+                            svgPath="{!$Resource.OrderApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#edit'}"
+                            svgClass="slds-button__icon"/>
+        </span>
+        <Framework:Button onClickAction="{!c.delPayMethod}" enableProgressIndicator="false" type="neutral"
+                          svgPath="{!$Resource.OrderApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#delete'}"
+                          svgClass="slds-button__icon"/>
+      </div>
+    </td>
+  </tr>
+</aura:component>

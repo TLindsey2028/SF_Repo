@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="FileUploadCropEvent" access="global">
+    <aura:attribute name="action" type="String" required="true" access="global"/>
+		<aura:attribute name="fieldId" type="String" required="true" access="global"/>
+</aura:event>

@@ -1,0 +1,31 @@
+<aura:component description="GroupRegistrationAttendee" controller="ROEApi.TicketTypeDetailsController">
+    <aura:attribute name="salesOrderLineItem" type="Map" required="true"/>
+    <aura:attribute name="event" type="String" required="true"/>
+    <aura:attribute name="uniqueIdentifier" type="String" required="true"/>
+    <aura:attribute name="formComplete" type="Boolean" default="true"/>
+    <aura:attribute name="scheduleItemsComplete" type="Boolean" default="true"/>
+    <aura:attribute name="dataindex" type="String" default=""/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="ROEApi:GroupRegistrationAttendeeEvent" action="{!c.handleAttendeeEvent}"/>
+    <aura:handler event="ROEApi:FormSubmittedEvent" action="{!c.handleFormSubmitEvent}"/>
+    <aura:handler event="ROEApi:ScheduleItemsCompletenessUpdateEvent" action="{!c.handleSCCompletenessEvent}"/>
+    <aura:registerEvent name="GroupRegistrationCompleteEvent" type="ROEApi:GroupRegistrationCompleteEvent"/>
+    <div class="slds-grid">
+        <div class="slds-col slds-object--custom-left"></div>
+        <div class="slds-col slds-size--1-of-1">
+            <div class="slds-group--slider__card" id="{!v.uniqueIdentifier}" data-index="{!v.dataindex}" aura:id="carouselCard">
+                <div class="slds-box slds-p-around--medium slds-theme--default">
+                    <div class="slds-grid slds-wrap slds-col--padded slds-hide" aura:id="form">
+                    </div>
+                    <div class="slds-grid slds-wrap slds-hide" aura:id="scheduleItems">
+                    </div>
+                    <div class="slds-grid slds-wrap slds-col--padded slds-hide" aura:id="noSettings">
+                        <div class="slds-col slds-text-align--center">{!$Label.ROEApi.Group_Reg_No_Additional_Settings}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-col slds-object--custom-right"></div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

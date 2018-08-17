@@ -1,0 +1,7 @@
+<design:component>
+    <!--<design:attribute name="event" label="Event Id"/>-->
+	<!--<design:attribute name="salesOrder" label="Sales Order Id"/>-->
+	<!--<design:attribute name="parentSalesOrderLine" label="Parent Sales Order Line Id"/>-->
+    <!--<design:attribute name="loadStylesDirectly" label="Load Styles In Component" default="true"/>-->
+	<!--<design:attribute name="currencyISOCode" label="Currency ISO Code" default="USD"/>-->
+</design:component>

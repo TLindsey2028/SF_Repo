@@ -1,0 +1,327 @@
+<aura:component description="EventRegistrationSummaryDetail" controller="LTE.EventRegistrationController" implements="LTE:EventInterface" extends="LTE:EventBase">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="so" type="LTE.SalesOrder"/>
+    <aura:attribute name="eventObj" type="Map"/>
+    <aura:attribute name="attendeeObj" type="Map"/>
+    <aura:attribute name="storeObj" type="Map"/>
+    <aura:attribute name="siteObj" type="Map"/>
+    <aura:attribute name="usr" type="Map"/>
+    <aura:attribute name="tickets" type="LTE.Ticket[]"/>
+    <aura:attribute name="subPlans" type="List"/>
+    <aura:attribute name="sessionItemsWithForm" type="List"/>
+    <aura:attribute name="displayTotal" type="Boolean" default="true"/>
+    <aura:attribute name="currentContact" type="String"/>
+    <aura:attribute name="readOnly" type="Boolean" default="true" access="global"/>
+    <aura:attribute name="initialPurchase" type="Boolean" default="true"/>
+    <aura:attribute name="showPurchase" type="Boolean" default="true"/>
+    <aura:attribute name="anyTTLineRemovable" type="Boolean" default="false"/>
+    <aura:attribute name="processingChangesCmp" type="Aura.Component"/>
+    <aura:registerEvent type="LTE:SessionSelectEvent" name="SessionSelectEvent"/>
+    <aura:registerEvent name="SalesOrderLineDeletedEvent" type="LTE:SalesOrderLineDeletedEvent"/>
+    <aura:registerEvent name="RegistrationProcessSalesOrderUpdateEvent" type="LTE:RegistrationProcessSalesOrderUpdateEvent"/>
+    <aura:registerEvent name="RequiredPackageItemClassEvent" type="LTE:RequiredPackageItemClassEvent"/>
+    <aura:registerEvent name="RegistrationProcessSetGlobalObjectsEvent" type="LTE:RegistrationProcessSetGlobalObjectsEvent"/>
+    <aura:handler event="LTE:EventSummaryUpdateEvent" action="{!c.handleEventSummaryUpdateEvent}"/>
+    <aura:handler event="OrderApi:KnownAddressChangeEvent" action="{!c.handleKnownAddressesChangeEvent}"/>
+    <aura:attribute name="regFlowCmpGlobalId" type="String"/>
+    <aura:attribute name="regSummaryNested" type="Boolean"/>
+    <aura:registerEvent name="RegistrationProcessChangeEvent" type="LTE:RegistrationProcessChangeEvent"/>
+    <aura:registerEvent name="ToggleOrderSummaryCloseButtonEvent" type="LTE:ToggleOrderSummaryCloseButtonEvent"/>
+    <aura:registerEvent name="ResetTicketQuantityPicklistEvent" type="LTE:ResetTicketQuantityPicklistEvent"/>
+
+    <div class="slds-grid slds-grid--vertical fonteva-attendee-info">
+        <aura:if isTrue="{!v.so.assignments.length > 0}">
+            <aura:iteration items="{!v.so.assignments}" var="assignment">
+                <div>
+                    <div class="slds-grid slds-grid--vertical">
+
+                        <div class="slds-m-bottom--xx-small">
+                            <span class="slds-m-right--medium slds-align-bottom fonteva-slds-text"><strong>{!assignment.contactName}</strong></span>
+                        </div>
+
+                        <div class="slds-grid slds-grid--vertical slds-text-body--small fonteva-summary--items">
+                            <aura:iteration items="{!assignment.lines}" var="line">
+                                <div class="fonteva-summary--item">
+                                    <div class="slds-grid slds-grid--align-spread">
+                                        <div>
+                                            <strong>
+                                                {!line.displayName}
+                                            </strong>
+                                            <aura:if isTrue="{!and(line.isTicket, and(not(v.eventObj.isInvitationOnly), or(line.hasForm, line.assignments.length > 0)))}">
+                                                <a href="javascript:void(0);" class="slds-m-left--small" onclick="{!c.editAssignment}" data-id="{!line.id}" data-contactid="{!line.contactId}">
+                                                    <span class="slds-truncate">{!$Label.LTE.Edit_Order_Summary}</span>
+                                                </a>
+                                            </aura:if>
+                                            <aura:if isTrue="{!and(!line.isTicket, and(or(and(!empty(line.scheduleItemId), line.hasForm), and(!line.isRequiredPackageItem, !empty(line.packageId))),!v.eventObj.isInvitationOnly))}">
+                                                <a href="javascript:void(0);" class="slds-m-left--small" onclick="{!c.editItem}" data-id="{!line.id}" data-itemid="{!line.itemId}" data-packageId="{!line.packageId}">
+                                                    <span class="slds-truncate">{!$Label.LTE.Edit_Order_Summary}</span>
+                                                </a>
+                                            </aura:if>
+                                        </div>
+                                        <div class="slds-grid">
+                                            <strong>
+                                                <Framework:CurrencyField value="{!line.price}"
+                                                                         isMultiCurrencyOrg="{!line.isMultiCurrencyOrg}"
+                                                                         currencyISOCode="{!line.currencyISOCode}"/>
+                                            </strong>
+                                            <div>
+                                                <aura:if isTrue="{!and(line.isTicketSOLRemovable, not(v.eventObj.isInvitationOnly))}">
+                                                    <button class="slds-button slds-button--icon slds-p-left--small fonteva-button_clear slds-align-top" onclick="{!c.showTicketModal}" data-id="{!line.id}">
+                                                        <lightning:icon iconName="utility:clear" size="x-small"/>
+                                                    </button>
+                                                    <aura:set attribute="else">
+                                                        <div class="{!v.anyTTLineRemovable ? 'fonteva-placeholder_custom' : ''}"/>
+                                                    </aura:set>
+                                                </aura:if>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <aura:iteration items="{!line.childLines}" var="childLine">
+                                        <aura:if isTrue="{!and(!childLine.isTax,!childLine.isShipping)}">
+                                            <div class="fonteva-summary_item-package">
+                                                <div class="slds-grid slds-grid--align-spread">
+                                                    <div>
+                                                        {!childLine.displayName}
+                                                        <aura:if isTrue="{!and(or(and(!empty(childLine.scheduleItemId), childLine.hasForm), and(!childLine.isRequiredPackageItem, !empty(childLine.packageId))),!v.eventObj.isInvitationOnly)}">
+                                                            <a href="javascript:void(0);" class="slds-m-left--small" onclick="{!c.editItem}" data-id="{!childLine.id}" data-itemid="{!childLine.itemId}" data-packageId="{!childLine.packageId}"
+                                                               data-parentSOL="{!line.id}">
+                                                                <span class="slds-truncate">{!$Label.LTE.Edit_Order_Summary}</span>
+                                                            </a>
+                                                        </aura:if>
+                                                    </div>
+                                                    <div class="slds-grid">
+                                                        <strong>
+                                                            <Framework:CurrencyField value="{!childLine.price}"
+                                                                                     isMultiCurrencyOrg="{!childLine.isMultiCurrencyOrg}"
+                                                                                     currencyISOCode="{!childLine.currencyISOCode}"/>
+                                                        </strong>
+                                                        <aura:if isTrue="{!and(!childLine.isRequiredPackageItem,!v.eventObj.isInvitationOnly)}">
+                                                            <button class="slds-button slds-button--icon slds-p-left--small fonteva-button_clear slds-align-top" onclick="{!c.showItemModal}" data-id="{!childLine.id}">
+                                                                <lightning:icon iconName="utility:clear" size="x-small"/>
+                                                            </button>
+                                                            <aura:set attribute="else">
+                                                                <div class="{!or(line.isTicketSOLRemovable, v.anyTTLineRemovable) ? 'fonteva-placeholder_custom' : ''}"/>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </div>
+                                                </div>
+                                                <aura:iteration items="{!childLine.childLines}" var="subChildLine">
+                                                    <aura:if isTrue="{!and(!subChildLine.isTax,!subChildLine.isShipping)}">
+                                                        <div class="fonteva-summary_item-package">
+                                                            <div class="slds-grid slds-grid--align-spread">
+                                                                <div class="slds-text-body--medium">
+                                                                    {!subChildLine.displayName}
+                                                                    <aura:if isTrue="{!and(or(and(!empty(subChildLine.scheduleItemId), subChildLine.hasForm), and(!subChildLine.isRequiredPackageItem, !empty(subChildLine.packageId))),!v.eventObj.isInvitationOnly)}">
+                                                                        <a href="javascript:void(0);" class="slds-m-left--small" onclick="{!c.editItem}" data-id="{!subChildLine.id}" data-itemid="{!subChildLine.itemId}" data-packageId="{!subChildLine.packageId}">
+                                                                            <span class="slds-truncate">{!$Label.LTE.Edit_Order_Summary}</span>
+                                                                        </a>
+                                                                    </aura:if>
+                                                                </div>
+                                                                <div class="slds-grid">
+                                                                    <strong>
+                                                                        <Framework:CurrencyField value="{!subChildLine.price}"
+                                                                                                 isMultiCurrencyOrg="{!subChildLine.isMultiCurrencyOrg}"
+                                                                                                 currencyISOCode="{!subChildLine.currencyISOCode}"/>
+                                                                    </strong>
+                                                                    <aura:if isTrue="{!and(!subChildLine.isRequiredPackageItem,!v.eventObj.isInvitationOnly)}">
+                                                                        <button class="slds-button slds-button--icon slds-p-left--small fonteva-button_clear slds-align-top" onclick="{!c.showItemModal}" data-id="{!subChildLine.id}">
+                                                                            <lightning:icon iconName="utility:clear" size="x-small"/>
+                                                                        </button>
+                                                                        <aura:set attribute="else">
+                                                                            <div class="{!or(line.isTicketSOLRemovable, v.anyTTLineRemovable) ? 'fonteva-placeholder_custom' : ''}"/>
+                                                                        </aura:set>
+                                                                    </aura:if>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </aura:if>
+                                                </aura:iteration>
+                                            </div>
+                                        </aura:if>
+                                    </aura:iteration>
+                                    <aura:if isTrue="{!v.initialPurchase}">
+                                        <aura:iteration items="{!line.waitlistEntries}" var="wait">
+                                            <div class="slds-grid slds-grid--align-spread fonteva-summary_item-package">
+                                                <div>
+                                                    {!wait.displayName}
+                                                </div>
+                                                <div>
+                                                    <strong>{!$Label.LTE.Event_Attendee_Waitlist}</strong>
+                                                    <button class="slds-button slds-button--icon slds-p-left--small fonteva-button_clear slds-align-top" onclick="{!c.showWaitlistModal}" data-id="{!wait.id}">
+                                                        <lightning:icon iconName="utility:clear" size="x-small"/>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </aura:iteration>
+                                    </aura:if>
+                                </div>
+                            </aura:iteration>
+                            <aura:if isTrue="{!!v.initialPurchase}">
+                                <aura:iteration items="{!assignment.waitlistEntries}" var="wait">
+                                    <div class="slds-grid slds-grid--align-spread fonteva-summary--item">
+                                        <div class="slds-p-right_x-small">
+                                            {!wait.displayName}
+                                        </div>
+                                        <div>
+                                            <strong>{!$Label.LTE.Event_Attendee_Waitlist}</strong>
+                                            <button class="slds-button slds-button--icon slds-p-left--small fonteva-button_clear slds-align-top" onclick="{!c.showWaitlistModal}" data-id="{!wait.id}">
+                                                <lightning:icon iconName="utility:clear" size="x-small"/>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </aura:iteration>
+                                <aura:set attribute="else">
+                                    <aura:iteration items="{!assignment.waitlistEntries}" var="wait">
+                                        <aura:if isTrue="{!or(!empty(wait.ticketType), and(!empty(wait.scheduleItem), empty(assignment.lines)))}">
+                                            <div class="slds-grid slds-grid--align-spread fonteva-summary--item">
+                                                <div class="slds-p-right_x-small">
+                                                    {!wait.displayName}
+                                                </div>
+                                                <div>
+                                                    <strong>{!$Label.LTE.Event_Attendee_Waitlist}</strong>
+                                                    <button class="slds-button slds-button--icon slds-p-left--small fonteva-button_clear slds-align-top" onclick="{!c.showWaitlistModal}" data-id="{!wait.id}">
+                                                        <lightning:icon iconName="utility:clear" size="x-small"/>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </div>
+                </div>
+            </aura:iteration>
+            <aura:if isTrue="{!and(!v.displayTotal, v.so.assignments.length > 0)}">
+                <hr class="slds-m-bottom_large slds-m-top_small"/>
+                <div class="slds-size_1-of-1">
+                    <div class="slds-grid slds-grid--vertical">
+                        <div class="slds-grid slds-grid--align-spread slds-m-bottom--xx-small">
+                            <div class="slds-font-weight--bold">
+                                <strong>{!$Label.LTE.Subtotal}:</strong>
+                            </div>
+                            <div class="slds-font-weight--bold">
+                                <strong>
+                                    <Framework:CurrencyField value="{!v.so.subtotal}"
+                                                             isMultiCurrencyOrg="{!v.so.isMultiCurrencyOrg}"
+                                                             currencyISOCode="{!v.so.currencyISOCode}" aura:id="subtotal"/>
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!and(v.displayTotal, v.so.assignments.length > 0)}">
+                <hr class="slds-m-bottom_large slds-m-top_small"/>
+                <div class="slds-grid slds-grid_align-end">
+                    <div class="slds-size_1-of-1">
+                        <div>
+                            <div class="slds-grid slds-grid--vertical slds-m-bottom--small">
+                                <div class="slds-grid slds-grid--align-spread slds-m-bottom--xx-small">
+                                    <div class="slds-font-weight--bold">
+                                        {!$Label.LTE.Subtotal}:
+                                    </div>
+                                    <div class="slds-font-weight--bold">
+                                        <strong>
+                                            <Framework:CurrencyField value="{!v.so.subtotal}"
+                                                                     isMultiCurrencyOrg="{!v.so.isMultiCurrencyOrg}"
+                                                                     currencyISOCode="{!v.so.currencyISOCode}"/>
+                                        </strong>
+                                    </div>
+                                </div>
+                                <aura:if isTrue="{!v.so.discount > 0}">
+                                    <div class="slds-grid slds-grid--align-spread slds-m-bottom--xx-small">
+                                        <div>
+                                            {!$Label.LTE.Discount_Code_Sales_Order}:
+                                        </div>
+                                        <div>
+                                            <strong>
+                                                -<Framework:CurrencyField value="{!v.so.discount}"
+                                                                          isMultiCurrencyOrg="{!v.so.isMultiCurrencyOrg}"
+                                                                          currencyISOCode="{!v.so.currencyISOCode}"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </aura:if>
+                                <aura:iteration var="tax" items="{!v.so.taxLines}">
+                                    <div class="slds-grid slds-grid--align-spread slds-m-bottom--xx-small">
+                                        <div class="slds-font-weight--bold">
+                                            {!tax.displayName}:
+                                        </div>
+                                        <div>
+                                            <strong>
+                                                <Framework:CurrencyField value="{!tax.total}"
+                                                                         isMultiCurrencyOrg="{!tax.isMultiCurrencyOrg}"
+                                                                         currencyISOCode="{!tax.currencyISOCode}"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </aura:iteration>
+                                <aura:iteration var="shipping" items="{!v.so.shippingLines}">
+                                    <div class="slds-grid slds-grid--align-spread slds-m-bottom--xx-small">
+                                        <div class="slds-font-weight--bold">
+                                            {!shipping.displayName}:
+                                        </div>
+                                        <div>
+                                            <strong>
+                                                <Framework:CurrencyField value="{!shipping.total}"
+                                                                         isMultiCurrencyOrg="{!shipping.isMultiCurrencyOrg}"
+                                                                         currencyISOCode="{!shipping.currencyISOCode}"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </aura:iteration>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="slds-grid slds-grid--align-spread slds-m-bottom--xx-small">
+                                <div>
+                                    <span class="slds-text-heading--small slds-font-weight--bold">{!$Label.LTE.Total_Price}</span>
+                                </div>
+                                <div>
+                                  <span class="slds-text-heading--small slds-font-weight--bold">
+                                          <Framework:CurrencyField value="{!v.so.total}"
+                                                                   isMultiCurrencyOrg="{!v.so.isMultiCurrencyOrg}"
+                                                                   currencyISOCode="{!v.so.currencyISOCode}"/>
+                                  </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aura:if>
+            <aura:set attribute="else">
+                <div class="slds-text-align_center fonteva-slds-text">You currently have no items in your order.</div>
+            </aura:set>
+        </aura:if>
+    </div>
+    <div aura:id="registrationFlowPlaceHolder"/>
+    <div aura:id="recommendedItemPlaceHolder"/>
+    <div aura:id="sessionItemPlaceHolder"/>
+    <div class="fonteva-prompt_severity">
+        <Framework:MessagePrompt title="Delete Ticket"
+                                 message="Are you"
+                                 severity="error"
+                                 aura:id="ticketPrompt"
+                                 cancelButtonLabel="No"
+                                 submitButtonLabel="Yes"
+                                 closeOnClickAction="{!c.closeModal}"
+                                 submitOnClickAction="{!c.removeTicketLine}"/>
+        <Framework:MessagePrompt title="Delete Item"
+                                 message="Are you"
+                                 severity="error"
+                                 aura:id="itemPrompt"
+                                 cancelButtonLabel="No"
+                                 submitButtonLabel="Yes"
+                                 closeOnClickAction="{!c.closeModal}"
+                                 submitOnClickAction="{!c.removeItemLine}"/>
+        <Framework:MessagePrompt title="Delete Item"
+                                 message="Are you"
+                                 severity="error"
+                                 aura:id="waitlistPrompt"
+                                 cancelButtonLabel="No"
+                                 submitButtonLabel="Yes"
+                                 closeOnClickAction="{!c.closeModal}"
+                                 submitOnClickAction="{!c.removeWaitlistEntry}"/>
+    </div>
+</aura:component>

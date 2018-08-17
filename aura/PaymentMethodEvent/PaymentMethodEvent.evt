@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="PaymentMethodEvent">
+  <aura:attribute name="type" type="String"/>
+  <aura:attribute name="paymentMethod" type="Object"/>
+  <aura:attribute name="deletePaymentStr" type="String"/>
+</aura:event>

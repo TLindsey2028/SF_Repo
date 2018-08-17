@@ -1,0 +1,7 @@
+<aura:event type="APPLICATION" description="CreateEditSectionEvent">
+	<aura:attribute name="section" type="Map" default="{}"/>
+	<aura:attribute name="identifier" type="String"/>
+	<aura:attribute name="timeout" type="String"/>
+	<aura:attribute name="eventQuantity" type="Integer" required="true"/>
+	<aura:attribute name="sectionTotal" type="Integer" required="true"/>
+</aura:event>

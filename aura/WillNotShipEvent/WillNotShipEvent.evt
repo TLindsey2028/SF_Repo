@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="WillNotShipEvent">
+  <aura:attribute name="willNotShip" type="Boolean" default="false"/>
+</aura:event>

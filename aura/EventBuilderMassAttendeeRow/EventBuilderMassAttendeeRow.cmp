@@ -1,0 +1,17 @@
+<aura:component description="EventBuilderMassAttendeeRow">
+    <aura:attribute name="attendee" type="Map" default="{}"/>
+    <aura:attribute name="index" type="Integer" default="1"/>
+    <aura:attribute name="uniqueId" type="String" required="true"/>
+    <aura:handler event="EventApi:InvitationOnlyCheckToggleEvent" action="{!c.handleInvitationOnlyCheckToggleEvent}"/>
+    <tr class="remove-table-padding">
+        <td class="remove-table-padding slds-size--1-of-11">{!v.index}</td>
+        <td class="remove-table-padding slds-size--1-of-11"><Framework:InputFields group="{!v.attendee.uniqueId}" secondaryGroup="{!v.uniqueId}" aura:id="selectedAttendee" fieldType="boolean" label="" value="{!v.attendee}" labelStyleClasses="hidden" fireChangeEvent="true" disabled="{!v.attendee.id != null}"/></td>
+        <td class="remove-table-padding slds-size--1-of-3">{!v.attendee.fullName}
+            <aura:if isTrue="{!v.attendee.id != null}">
+                <lightning:badge label="ALREADY IN ATTENDEE LIST" class="slds-m-left--small attendee-already-added"/>
+            </aura:if>
+        </td>
+        <td class="remove-table-padding slds-size--1-of-3">{!v.attendee.email}</td>
+        <td class="remove-table-padding slds-size--1-of-3">{!v.attendee.accountOwner}</td>
+    </tr>
+</aura:component>

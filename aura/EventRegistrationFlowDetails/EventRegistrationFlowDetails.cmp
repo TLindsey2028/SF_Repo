@@ -1,0 +1,251 @@
+<aura:component description="EventRegistrationFlowDetails" access="global" extends="LTE:EventBase" implements="LTE:EventInterface" controller="LTE.EventRegistrationController">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:attribute name="attendeeObj" type="Map" access="global"/>
+	<aura:attribute name="ticketTitle" type="String" default="Ticket Title" />
+	<aura:attribute name="ticketDescription" type="String" default="Ticket Description" />
+	<aura:registerEvent name="EventRegistrationFlowDetailsEvent" type="LTE:EventRegistrationFlowDetailsEvent"/>
+	<aura:registerEvent name="ResetTicketQuantityPicklistEvent" type="LTE:ResetTicketQuantityPicklistEvent"/>
+	<aura:handler event="LTE:EventRegistrationAttendeeUpdateEvent" action="{!c.handleEventRegistrationAttendeeUpdateEvent}"/>
+	<aura:registerEvent name="EventSummaryUpdateEvent" type="LTE:EventSummaryUpdateEvent"/>
+	<aura:registerEvent type="LTE:UpdateShoppingCartItemCountEvent" name="UpdateShoppingCartItemCountEvent"/>
+	<aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+	<aura:registerEvent name="UpdateButtonEvent" type="LTE:UpdateButtonEvent"/>
+	<aura:attribute name="ticket" type="Map"/>
+	<aura:attribute name="tickets" type="List"/>
+	<aura:attribute name="isModal" type="Boolean" default="false"/>
+	<aura:attribute name="ticketQuantity" type="Integer"/>
+	<aura:attribute name="isTicketRemaining" type="Boolean" default="true"/>
+	<aura:attribute name="salesOrderObj" type="Map"/>
+	<aura:attribute name="usr" type="Map"/>
+	<aura:attribute name="eventObj" type="Map"/>
+	<aura:attribute name="linesByTicket" type="List"/>
+	<aura:attribute name="siteObj" type="Map"/>
+	<aura:attribute name="storeObj" type="Map"/>
+	<aura:attribute name="currentAttendeeIndex" type="Integer"/>
+	<aura:attribute name="currentAssignment" type="String"/>
+	<aura:attribute name="isCurrentAssignmentAlreadyInCart" type="Boolean"/>
+	<aura:attribute name="formCmpGlobalId" type="String"/>
+	<aura:attribute name="orderLines" type="Map[]" default="[]" />
+	<aura:attribute name="removeInProgress" type="Boolean" default="false"/>
+	<aura:attribute name="onCheckoutPage" type="Boolean" default="false"/>
+	<aura:attribute name="newAttendeeLabel" type="String" default="Attendee"/>
+	<aura:attribute name="isFinalStep" type="Boolean" default="false"/>
+	<aura:attribute name="continueAttendeeSetupButtonLabel" type="String" default="{!$Label.LTE.Add_To_Order}"/>
+	<aura:handler event="LTE:DisableButtonEvent" action="{!c.handleDisableButtonEvent}"/>
+	<aura:handler event="LTE:TransitionAttendeeModal" action="{!c.handleTransitionAttendeeModal}"/>
+
+	<div class="fonteva-modal_container slds-modal" aura:id="modalContainer" id="initTest">
+		<div class="slds-modal__header slds-modal__header_empty">
+			<lightning:buttonIcon iconName="utility:close" alternativeText='{!$Label.LTE.Login_Component_Cancel}' variant="bare-inverse" class="slds-modal__close" size="large" onclick="{!c.shwoCancelModal}"/>
+		</div>
+		<div class="fonteva-modal_body">
+			<div class="slds-grid slds-grid_vertical slds-p-horizontal_large slds-p-top_large">
+				<div class="slds-text-heading_medium slds-m-bottom_small">
+					<strong>
+                        {!v.ticket.name}
+					</strong>
+				</div>
+				<div class="slds-text-body_regular slds-m-bottom_small">
+					<ui:outputTextArea value="{!v.ticket.description}" linkify="true"/>
+				</div>
+				<div class="{!v.ticket.showTicketsRemaining ? 'slds-m-bottom_small' : 'hidden'}">
+					<a class="slds-type-focus" href="javascript:void(0);">
+								<span>
+                                            <aura:if isTrue="{!v.ticket.ticketsRemaining - v.ticketQuantity > 1}">
+                                                {!v.ticket.ticketsRemaining - v.ticketQuantity}&nbsp;{!$Label.LTE.Event_Tickets_Remaining}
+												<aura:set attribute="else">
+													<aura:if isTrue="{!v.ticket.ticketsRemaining - v.ticketQuantity > 0}">
+														{!v.ticket.ticketsRemaining - v.ticketQuantity}&nbsp;{!$Label.LTE.Event_Ticket_Remaining}
+														<aura:set attribute="else">
+															0&nbsp;{!$Label.LTE.Event_Ticket_Remaining}
+														</aura:set>
+													</aura:if>
+												</aura:set>
+                                            </aura:if>
+								</span>
+					</a>
+				</div>
+				<aura:if isTrue="{! !v.onCheckoutPage}">
+					<div class="slds-m-bottom_small" aura:id="addTicketdiv">
+						<Framework:Button qaData='{"type" : "button", "name": "addAttendee"}'
+										  onClickAction="{!c.addNewAttendee}"
+										  aura:id="addAttendeeBtn"
+										  label="{!v.ticket.isGroupTicket ? $Label.LTE.Add_Group_Ticket_New_Attendees : $Label.LTE.Add_Ticket_New_Attendee}"
+										  svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}"
+										  svgContainerClass="slds-icon__container slds-float_left"
+										  svgClass="slds-icon slds-icon--x-small slds-button__icon--left"
+										  svgAssistiveText="Add Attendee" />
+					</div>
+				</aura:if>
+				<aura:iteration items="{!v.linesByTicket}" var="ticket">
+					<aura:if isTrue="{!ticket.isGroupTicket}">
+						<aura:iteration items="{!ticket.lines}" var="line" indexVar="j">
+							<div class="slds-m-bottom_small">
+								<div class="slds-grid slds-grid_vertical">
+									<div class="slds-m-bottom_small">
+										<div class="slds-grid">
+											<div class="slds-col">
+												<strong>Ticket {!j+1}</strong>
+											</div>
+											<div class="slds-p-horizontal_xxx-small">
+												<strong><Framework:CurrencyField value="{!line.price}" isMultiCurrencyOrg="{!line.isMultiCurrencyOrg}" currencyISOCode="{!line.currencyISOCode}"/></strong>
+											</div>
+											<div class="slds-p-horizontal_small">
+												<aura:if isTrue="{!and(!v.removeInProgress, and(!ticket.minTicketsReached, !v.onCheckoutPage))}">
+													<div class="fonteva-box_action" onclick="{!c.removeAttendee}" data-id="{!line.id}" aura:id="removeAttendee" data-index="{!j}">
+														<lightning:buttonIcon iconName="utility:clear" variant="bare" class="fonteva-button_icon-bare slds-align-top" alternativeText="clear" />
+													</div>
+												</aura:if>
+											</div>
+										</div>
+									</div>
+									<div class="fonteva-box_custom slds-m-bottom_large">
+										<aura:iteration items="{!line.assignments}" var="assignment" indexVar="i">
+											<div class="{!v.currentAssignment == assignment.id ? 'slds-box active' : assignment.assignmentComplete ? 'slds-box complete': 'slds-box'}" aura:id="attendeeIndex" data-id="{!assignment.id}" data-index="{!i}" onclick="{!c.changeAttendee}">
+												<div>
+													<aura:if isTrue="{!assignment.contactId == null}">
+														<ui:outputText value="{!v.newAttendeeLabel}" aura:id="newAttendeeLabel"/>
+														&nbsp;{!i+1}
+														<aura:set attribute="else">
+                                                            {!assignment.contactName}
+														</aura:set>
+													</aura:if>
+												</div>
+											</div>
+										</aura:iteration>
+									</div>
+								</div>
+							</div>
+						</aura:iteration>
+						<aura:if isTrue="{!!empty(ticket.waitlist)}">
+							<div class="slds-m-bottom_small">
+								<div class="slds-grid slds-grid_vertical">
+									<aura:iteration items="{!ticket.waitlist}" var="line" indexVar="i">
+										<div class="slds-m-bottom_small">
+											<div class="slds-grid">
+												<div class="slds-col">
+													<strong>Ticket {!ticket.lines.length + i + 1}</strong>
+												</div>
+												<div class="slds-p-horizontal_xxx-small">
+													<strong>{!$Label.LTE.Event_Attendee_Waitlist}</strong>
+												</div>
+												<div class="slds-p-horizontal_small">
+													<aura:if isTrue="{!and(!v.removeInProgress, !v.onCheckoutPage)}">
+														<div class="fonteva-box_action" onclick="{!c.removeAttendee}" data-id="{!line.id}" aura:id="removeAttendee" data-index="{!i}">
+															<lightning:buttonIcon iconName="utility:clear" variant="bare" class="fonteva-button_icon-bare slds-align-top" alternativeText="clear" />
+														</div>
+													</aura:if>
+												</div>
+											</div>
+										</div>
+										<div class="fonteva-box_custom slds-m-bottom_large">
+											<div class="{!v.currentAssignment == line.id ? 'slds-box active' : line.assignmentComplete ? 'slds-box complete': 'slds-box'}" aura:id="attendeeIndex" data-id="{!line.id}" data-index="{!i}" onclick="{!c.changeAttendee}">
+												<div>
+													<aura:if isTrue="{!line.contactId == null}">
+														<ui:outputText value="{!v.newAttendeeLabel}" aura:id="newAttendeeLabel"/>
+														&nbsp;{!i}
+														<aura:set attribute="else">
+                                                            {!line.contactName}
+														</aura:set>
+													</aura:if>
+												</div>
+											</div>
+										</div>
+									</aura:iteration>
+								</div>
+							</div>
+						</aura:if>
+						<aura:set attribute="else">
+							<aura:if isTrue="{!or(!empty(ticket.waitlist), !empty(ticket.lines))}">
+								<div class="fonteva-box_custom slds-m-bottom_large">
+									<aura:iteration items="{!ticket.lines}" var="line" indexVar="i">
+										<div class="{!v.currentAssignment == line.id ? 'slds-box active' : line.assignmentComplete ? 'slds-box complete': 'slds-box'}" aura:id="attendeeIndex" data-id="{!line.id}" data-index="{!i}" onclick="{!c.changeAttendee}">
+											<div class="fonteva-box_status fonteva-box_complete slds-font-weight--bold">
+												<Framework:CurrencyField value="{!line.price}" isMultiCurrencyOrg="{!line.isMultiCurrencyOrg}" currencyISOCode="{!line.currencyISOCode}"/>
+											</div>
+											<div>
+												<aura:if isTrue="{!line.contactId == null}">
+													<ui:outputText value="{!v.newAttendeeLabel}" aura:id="newAttendeeLabel"/>
+													&nbsp;{!i+1}
+													<aura:set attribute="else">
+														<aura:if isTrue="{!v.eventObj.createContactForAttendees}">
+                                                            {!line.contactName}
+															<aura:set attribute="else">
+                                                                {!line.assignments[0].firstName}&nbsp;{!line.assignments[0].lastName}
+															</aura:set>
+														</aura:if>
+
+													</aura:set>
+												</aura:if>
+											</div>
+											<aura:if isTrue="{!and(!v.removeInProgress, and(!ticket.minTicketsReached, !v.onCheckoutPage))}">
+												<div class="fonteva-box_action" onclick="{!c.removeAttendee}" data-id="{!line.id}" aura:id="removeAttendee" data-index="{!i}">
+													<lightning:button iconName="utility:clear" variant="base" class="fonteva-button_clear"/>
+												</div>
+											</aura:if>
+										</div>
+									</aura:iteration>
+									<aura:if isTrue="{!!empty(ticket.waitlist)}">
+										<aura:iteration items="{!ticket.waitlist}" var="line" indexVar="i">
+											<div class="{!v.currentAssignment == line.id ? 'slds-box active' : line.assignmentComplete ? 'slds-box complete': 'slds-box'}" aura:id="attendeeIndex" data-id="{!line.id}" data-index="{!i}" onclick="{!c.changeAttendee}">
+												<div class="fonteva-box_status">
+													<strong>{!$Label.LTE.Event_Attendee_Waitlist}</strong>
+												</div>
+												<div>
+													<aura:if isTrue="{!line.contactId == null}">
+														<ui:outputText value="{!v.newAttendeeLabel}" aura:id="newAttendeeLabel"/>
+														&nbsp;{!i+1}
+														<aura:set attribute="else">
+                                                            {!line.contactName}
+														</aura:set>
+													</aura:if>
+												</div>
+												<aura:if isTrue="{!and(!v.removeInProgress, !v.onCheckoutPage)}">
+													<div class="fonteva-box_action" onclick="{!c.removeAttendee}" data-id="{!line.id}" aura:id="removeAttendee" data-index="{!i}">
+														<lightning:button iconName="utility:clear" variant="base" class="fonteva-button_clear"/>
+													</div>
+												</aura:if>
+											</div>
+										</aura:iteration>
+									</aura:if>
+								</div>
+							</aura:if>
+						</aura:set>
+					</aura:if>
+				</aura:iteration>
+			</div>
+			<div class="fonteva-theme_shade">
+				<div class="slds-grid slds-grid_vertical slds-p-horizontal_large slds-p-top_large" aura:id="attendeeFields"/>
+				<aura:if isTrue="{!or(v.onCheckoutPage, v.isCurrentAssignmentAlreadyInCart)}">
+					<div class="slds-form-element__control lookup-attendee slds-p-horizontal_large">
+						<abbr class="slds-required" title="required">*</abbr>
+                        {!$Label.LTE.Attendee_Selector_Message}
+					</div>
+				</aura:if>
+				<div data-name="eventRegistrationForm" aura:id="registrationForm" class="fonteva-form_wrapper slds-p-horizontal_large fonteva-theme_shade"></div>
+			</div>
+		</div>
+		<div class="slds-p-around_medium fonteva-modal_footer">
+			<div class="slds-text-align_center">
+				<Framework:Button label="{!$Label.LTE.Cancel_Attendee_Information_My_Reg}" onClickAction="{!c.shwoCancelModal}" type="neutral" aura:id="cancelAttendeeSetup"/>
+				<aura:if isTrue="{!v.isFinalStep}">
+					<Framework:Button label="{!v.continueAttendeeSetupButtonLabel}" type="success" onClickAction="{!c.continueAttendeeSetup}" aura:id="continueAttendeeSetup"/>
+					<aura:set attribute="else">
+						<Framework:Button label="{!$Label.LTE.Event_Next_Button}" onClickAction="{!c.continueAttendeeSetup}" type="brand" aura:id="continueAttendeeSetup"/>
+					</aura:set>
+				</aura:if>
+			</div>
+		</div>
+	</div>
+	<div class="slds-backdrop" aura:id="modalBackdrop" />
+	<div class="fonteva-prompt_severity">
+		<Framework:MessagePrompt
+							   title="{!$Label.LTE.Attention}"
+								 message="{!'&lt;div>'+$Label.LTE.Cancel_Add_Tickets_Message_First+'&lt;/div>'+$Label.LTE.Cancel_Add_Tickets_Message_Second}"
+								 severity="error"
+								 aura:id="cancelAddTickets"
+								 cancelButtonLabel="{!$Label.LTE.Cancel_Reg_No}"
+								 submitButtonLabel="{!$Label.LTE.Cancel_Reg_Yes}"
+								 submitOnClickAction="{!c.closeModal}"/>
+	</div>
+</aura:component>

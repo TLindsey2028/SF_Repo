@@ -1,0 +1,129 @@
+<aura:component description="PayNow" controller="OrderApi.CreditCardPaymentsController" access="global">
+  <aura:attribute name="paymentObj" type="Map" default="{}" access="global"/>
+  <aura:attribute name="recordId" type="String" access="global"/>
+  <aura:attribute name="storeId" type="String" default="" access="global"/>
+  <aura:attribute name="renderAsTabs" type="Boolean" default="false" access="global"/>
+  <aura:attribute name="currentCustomPaymentId" type="String"  default="" access="private"/>
+  <aura:attribute name="iFrameStyles" type="String" default="" access="global"/>
+  <aura:attribute name="textColor" type="String" access="global" description="Use this attribute to set the text color adapting the event's theme"/>
+  <aura:attribute name="currentTabOpen" type="String"  default="ccPaymentComp"/>
+  <aura:attribute name="currentLabelOpen" type="String"  default="ccPaymentCompLabel"/>
+  <aura:attribute name="payMethodsTypesObj" type="Map" default="{}"/>
+  <aura:attribute name="enableSavePayment" type="Boolean" default="true" access="global"/>
+  <aura:attribute name="paymentSuccessReturnObj" type="Map" access="global"/>
+  <aura:attribute name="environmentKey" type="String" required="true" access="global"/>
+  <aura:attribute name="showOfflinePayment" type="Boolean" default="false" access="global"/>
+  <aura:attribute name="showProformaPayment" type="Boolean" default="false"/>
+  <aura:attribute name="showSavedMethodsComp" type="Boolean" default="false"/>
+  <aura:attribute name="showCreditCard" type="Boolean" default="false"/>
+  <aura:attribute name="showEcheck" type="Boolean" default="false"/>
+  <aura:attribute name="isSalesOrder" type="Boolean" default="true" access="global"/>
+  <aura:attribute name="isFrontEnd" type="Boolean" default="true" access="global"/>
+  <aura:attribute name="payOptions" type="List" default="[]"/>
+  <aura:attribute name="paymentTypes" type="List" default="[]"/>
+  <aura:attribute name="showSavedMethods" type="Boolean" default="false"/>
+  <aura:attribute name="successRedirectUrl" type="String" access="global"/>
+  <aura:attribute name="eCheckRedirectUrl" type="String" default="" access="global"/>
+  <aura:attribute name="offsiteRedirectUrl" type="String" default="" access="global"/>
+  <aura:attribute name="postbackRedirectUrl" type="String" default="" access="global"/>
+  <aura:attribute name="requireSavePaymentMethod" type="Boolean" default="false" access="global"/>
+  <aura:attribute name="paymentMethodTabIds" type="List" default="[]"/>
+  <aura:attribute name="cmpIdToPaymentIdMap" type="Object" default="{}"/>
+  <aura:attribute name="pathPrefix" type="String" access="global" default=""/>
+  <aura:attribute name="labelCmpIdToPaymentIdMap" type="Object" default="{}"/>
+  <aura:attribute name="suppressOffsiteButtons" type="Boolean" default="false" access="global"/>
+  <aura:attribute name="overridePaymentMethod" type="String" default="" access="global"/>
+  <aura:method name="processTokenPayment" action="{!c.processTokenPayment}" access="global"/>
+  <aura:method name="validateTokenPayment" action="{!c.validateTokenPayment}" access="global"/>
+  <aura:registerEvent name="ButtonToggleIndicatorEvent" type="Framework:ButtonToggleIndicatorEvent"/>
+  <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+  <aura:registerEvent name="PayNowTabChangeEvent" type="OrderApi:PayNowTabChangeEvent"/>
+  <aura:registerEvent name="CreditCardValidateEvent" type="OrderApi:CreditCardValidateEvent"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+  <aura:handler event="OrderApi:SubmitOffsitePaymentEvent" action="{!c.handleOffsitePaymentEvent}"/>
+  <aura:handler event="OrderApi:PaymentMethodChangeEvent" action="{!c.handlePaymentMethodChangeEvent}"/>
+  <aura:handler event="OrderApi:CreditCardTokenizeEvent" action="{!c.handleCCTokenizeEvent}"/>
+  <aura:handler event="OrderApi:TogglePayNowOptions" action="{!c.handleTogglePayNowOptions}"/>
+  <ltng:require scripts="{!join(',',$Resource.Framework__SLDS_BaseV2+'/js/lodash.min.js',$Resource.Framework__ActionUtils,$Resource.Framework__UrlUtil)}" afterScriptsLoaded="{!c.doInit}"/>
+
+  <aura:method name="updatePaymentGateway" action="{!c.updateGateway}">
+    <aura:attribute name="paymentGatewayId" type="String"/>
+  </aura:method>
+  <aura:method name="setStoreId" action="{!c.setStoreId}">
+    <aura:attribute name="storeId" type="String"/>
+  </aura:method>
+
+  <aura:method name="updateEpayment" action="{!c.updateEpayment}">
+  </aura:method>
+  <aura:if isTrue="{!v.renderAsTabs}">
+    <div class="tab-content fonteva-slds-payment-tabs">
+      <div data-name="payTypesTabBody" class="slds-tabs--default fonteva-slds-payment-tabs-default" aura:id="payTypesTabBody">
+        <div data-name="payTypesPicklist" class="slds-grid slds-col slds-hide_medium" aura:id="payTypesPicklist">
+          <div class="slds-col slds-size-1-of--1">
+            <Framework:InputFields qaData='{"type" : "input", "name": "payMethodsTypes"}' fieldType="picklist" aura:id="payMethodsTypesPicklist" label="Select a Payment Type" fireChangeEvent="true" group="paymentTypePicker" value="{!v.payMethodsTypesObj}"/>
+          </div>
+        </div>
+        <ul data-name="payTypesTablist" class="slds-tabs--default__nav fonteva-slds-payment-nav slds-show_medium" role="tablist" aura:ifd="payTypesTablist">
+          <OrderApi:PaymentMethodTabHeader aura:id="paymentMethodTabHeaders"/>
+        </ul>
+        <aura:if isTrue="{!v.showSavedMethodsComp}">
+        <div data-name="savedMethods" aura:id="savedMethods" id="savedMethods" class="slds-tabs__content tab-pane slds-hide fonteva-slds-payment-tab--content" role="tabpanel">
+          <OrderApi:SavedPaymentMethods contact="{!v.paymentObj.customerId}" aura:id="savedPaymentMethodsComp" isFrontEnd="{!v.isFrontEnd}"/>
+        </div>
+        </aura:if>
+        <aura:if isTrue="{!v.showCreditCard}">
+        <div data-name="ccPaymentComp" aura:id="ccPaymentComp" id="ccPaymentComp" class="slds-tabs__content tab-pane slds-hide fonteva-slds-payment-tab--content" role="tabpanel">
+          <OrderApi:CreditCardPayment environmentKey="{!v.environmentKey}" aura:id="creditCardComp"
+                               displaySavePaymentMethod="{!v.enableSavePayment}"
+                               iFrameStyles="{!v.iFrameStyles}"
+                               pathPrefix="{!v.pathPrefix}"
+                               isFrontEnd="{!v.isFrontEnd}"
+                               contact="{!v.paymentObj.customerId}" contactName="{!v.paymentObj.contactName}"
+                               addressObj="{!v.paymentObj.addressObj}" forceSavePayment="{!v.requireSavePaymentMethod}" salesOrderId="{!v.paymentObj.salesOrderId}" textColor="{!v.textColor}"/>
+        </div>
+        </aura:if>
+        <aura:if isTrue="{!v.showEcheck}">
+        <div data-name="eCheckMethod" aura:id="eCheckMethod" id="eCheckMethod" class="slds-tabs__content tab-pane slds-hide fonteva-slds-payment-tab--content" role="tabpanel">
+          <OrderApi:ECheckPayment successRedirectUrl="{!v.successRedirectUrl}" recordId="{!v.recordId}" pathPrefix="{!v.pathPrefix}" paymentSuccessReturnObj="{!v.paymentSuccessReturnObj}" displaySavePaymentMethod="{!v.enableSavePayment}" redirectUrl="{!v.eCheckRedirectUrl}" aura:id="eCheckComp" environmentKey="{!v.environmentKey}" forceSavePayment="{!v.requireSavePaymentMethod}" isSalesOrder="{!v.isSalesOrder}"/>
+        </div>
+        </aura:if>
+        <aura:if isTrue="{!v.showOfflinePayment}">
+          <div data-name="invoiceMe" aura:id="invoiceMe" id="invoiceMe" class="slds-tabs__content tab-pane slds-hide fonteva-slds-payment-tab--content" role="tabpanel">
+            <OrderApi:InvoiceMe successRedirectUrl="{!v.successRedirectUrl}" aura:id="invoiceMeComp" paymentSuccessReturnObj="{!v.paymentSuccessReturnObj}" salesOrder="{!v.recordId}"/>
+          </div>
+        </aura:if>
+        <aura:if isTrue="{!v.showProformaPayment}">
+          <div data-name="proformaInvoice" aura:id="proformaInvoice" id="proformaInvoice" class="slds-tabs__content tab-pane slds-hide fonteva-slds-payment-tab--content" role="tabpanel">
+            <OrderApi:ProformaInvoicePayment successRedirectUrl="{!v.successRedirectUrl}" aura:id="proformaInvoiceComp" paymentSuccessReturnObj="{!v.paymentSuccessReturnObj}" salesOrder="{!v.recordId}"/>
+          </div>
+        </aura:if>
+        <OrderApi:PaymentMethodTabsLT aura:id="paymentMethodTabs"/>
+      </div>
+    </div>
+    <aura:set attribute="else">
+    <div data-name="payTypesPicklist" class="slds-col slds-grid" aura:id="payTypesPicklist">
+      <div class="slds-size--1-of-2 slds-m-bottom-x--small">
+        <Framework:InputFields qaData='{"type" : "button", "name": "payMethodsTypes"}' label="Payment Method" fieldType="picklist" fireChangeEvent="true" aura:id="payMethodsTypes" value="{!v.payMethodsTypesObj}"/>
+      </div>
+    </div>
+    <div data-name="nonTabMethods" class="slds-col slds-size--1-of-1" aura:id="nonTabMethods">
+      <span data-name="ccPaymentComp" aura:id="ccPaymentComp" class="">
+        <OrderApi:CreditCardPayment environmentKey="{!v.environmentKey}" aura:id="creditCardComp"
+                             displaySavePaymentMethod="{!v.enableSavePayment}"
+                             iFrameStyles="{!v.iFrameStyles}"
+                             pathPrefix="{!v.pathPrefix}"
+                             isFrontEnd="{!v.isFrontEnd}"
+                             contact="{!v.paymentObj.customerId}" contactName="{!v.paymentObj.contactName}"
+                             addressObj="{!v.paymentObj.addressObj}" forceSavePayment="{!v.requireSavePaymentMethod}" textColor="{!v.textColor}"/>
+      </span>
+      <span data-name="savedMethods" aura:id="savedMethods" class="hidden">
+        <OrderApi:SavedPaymentMethods contact="{!v.paymentObj.customerId}" aura:id="savedPaymentMethodsComp" isFrontEnd="{!v.isFrontEnd}"/>
+      </span>
+      <span data-name="eCheckMethod" aura:id="eCheckMethod" class="hidden">
+        <OrderApi:ECheckPayment successRedirectUrl="{!v.successRedirectUrl}" recordId="{!v.recordId}" pathPrefix="{!v.pathPrefix}" paymentSuccessReturnObj="{!v.paymentSuccessReturnObj}" displaySavePaymentMethod="{!v.enableSavePayment}" redirectUrl="{!v.eCheckRedirectUrl}" aura:id="eCheckComp" environmentKey="{!v.environmentKey}" forceSavePayment="{!v.requireSavePaymentMethod}" isSalesOrder="{!v.isSalesOrder}"/>
+      </span>
+    </div>
+    </aura:set>
+  </aura:if>
+  <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

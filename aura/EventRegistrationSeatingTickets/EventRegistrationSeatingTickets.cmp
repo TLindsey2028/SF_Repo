@@ -1,0 +1,24 @@
+<aura:component description="EventRegistrationSeatingTickets" implements="LTE:EventInterface" access="global" controller="LTE.EventRegistrationSeatingController">
+    <aura:attribute name="sections" type="LTE.Section[]"/>
+    <aura:attribute name="tickets" type="List"/>
+    <aura:attribute name="ticketMap" type="Map"/>
+    <aura:attribute name="hideButtonsMethod" type="Aura.Action"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:handler event="LTE:ViewSectionEvent" action="{!c.handleViewSectionEvent}"/>
+    <div class="slds-size--1-of-1 slds-event--panes slds-theme--default fonteva-event-component" id="seatingContainer">
+        <div class="slds-size--1-of-1">
+            <div class="slds-p-top--small">
+                <div class="slds-text-title--caps">{!$Label.LTE.Select_Ticket_To_Assign_Seats}</div>
+            </div>
+        </div>
+        <div class="slds-size--1-of-1">
+            <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                <aura:iteration items="{!v.tickets}" var="ticket">
+                    <aura:if isTrue="{!ticket.isAssignedSeating}">
+                        <LTE:EventRegistrationSeatingTicket ticket="{!ticket}"/>
+                    </aura:if>
+                </aura:iteration>
+            </div>
+        </div>
+    </div>
+</aura:component>

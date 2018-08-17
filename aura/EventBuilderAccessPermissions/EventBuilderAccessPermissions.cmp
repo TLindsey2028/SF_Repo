@@ -1,0 +1,204 @@
+<aura:component controller="EventApi.EventsBuilderController" implements="EventApi:EventBuilderTabInterface">
+  <aura:attribute name="permissions" default="[]" type="List" />
+  <aura:attribute name="tickets" type="List"/>
+  <aura:attribute name="isSaving" type="Boolean" default="false"/>
+  <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/Sortable.min.js'}" afterScriptsLoaded="{!c.doInit}"/>
+  <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+  <aura:handler event="EventApi:SavingEvent" action="{!c.handleSavingEvent}"/>
+  <aura:registerEvent name="AddSelectorEvent" type="EventApi:AddSelectorEvent"/>
+  <!-- LOCAL ATTRIBUTES -->
+  <aura:attribute name="permissionObj" type="Object" default="{}"/>
+  <aura:attribute name="badgesObj" type="Object" default="{}"/>
+  <aura:attribute name="accessId" type="String"/>
+  <aura:attribute name="accessType" type="String"/>
+  <aura:attribute name="eventBadges" type="List"/>
+  <aura:attribute name="accessPermissionItem" type="Object" default="{}"/>
+  <aura:attribute name="availableBadges" type="List"/>
+  <aura:attribute name="loadTicketTypesPermissions" type="Boolean" default="false"/>
+  <aura:method name="loadTicketTypesAndScheduleItems" action="{!c.loadTicketTypesAndScheduleItems}"></aura:method>
+  <aura:attribute name="currentTabOpen" default="event" type="String"/>
+  <aura:attribute name="agendaCriteriaCmpGlobalId" type="String" />
+  <aura:attribute name="eventAgendaCriteriaObj" type="Map" default="{}"/>
+  <aura:attribute name="scheduleItemsFiltered" type="List[]" default="[]"/>
+  <aura:attribute name="dateFormat" type="String"/>
+  <aura:handler event="EventApi:EventAgendaFilterEvent" action="{!c.handleAgendaFilterEvent}"/>
+  <div class="" aura:id="loader">
+    <div class="slds-grid">
+      <div class="slds-col slds-text-align--center slds-align-middle">
+        <img src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+        <span class="slds-text-heading--medium">{!$Label.EventApi.Loading_Event_Builder}</span>
+      </div>
+    </div>
+  </div>
+  <div class="hidden" aura:id="mainBody">
+    <div class="tab-content tab--transparent">
+      <div class="slds-tabs--default">
+        <ul class="slds-tabs--default__nav" role="tablist">
+          <li aura:id="eventLabel" class="slds-tabs__item slds-text-heading--label slds-active" title="{!$Label.EventApi.Passbook_Event_Name_Field}" role="presentation">
+            <a href="javascript:void(0);" data-tab="event" onclick="{!c.changeTab}">{!$Label.EventApi.Passbook_Event_Name_Field}</a>
+          </li>
+          <li aura:id="ticketTypesLabel" class="slds-tabs__item slds-text-heading--label" title="{!$Label.EventApi.Ticket_Types_Event_Builder}" role="presentation">
+            <a href="javascript:void(0);" data-tab="ticketTypes" onclick="{!c.changeTab}">{!$Label.EventApi.Ticket_Types_Event_Builder}</a>
+          </li>
+          <aura:if isTrue="{!v.eventObj.style != 'Simple'}">
+            <li aura:id="scheduleItemsLabel" class="slds-tabs__item slds-text-heading--label" title="{!$Label.EventApi.Schedule_Items_Plural_Event_Builder}" role="presentation">
+              <a href="javascript:void(0);"  data-tab="scheduleItems" onclick="{!c.changeTab}">{!$Label.EventApi.Schedule_Items_Plural_Event_Builder}</a>
+            </li>
+          </aura:if>
+        </ul>
+      </div>
+    </div>
+
+    <div aura:id="event" class="slds-tabs--default__content slds-show" role="tabpanel">
+      {!$Label.EventApi.Restrict_Event_Access}
+    </div>
+    <div aura:id="ticketTypes" class="slds-tabs--default__content slds-hide" role="tabpanel">
+      {!$Label.EventApi.Restrict_TicketType_Access}
+    </div>
+    <aura:if isTrue="{!v.eventObj.style != 'Simple'}">
+      <div aura:id="scheduleItems" class="slds-tabs--default__content slds-hide" role="tabpanel">
+          {!$Label.EventApi.Restrict_ScheduleItem_Access}
+        <div class="slds-col slds-size--1-of-1 slds-p-top--medium">
+          <div class="slds-grid slds-wrap">
+            <div class="slds-size_1-of-1" aura:id="eventAgendaCriteriaPlaceholder"/>
+          </div>
+        </div>
+        <div class="slds-col slds-size--1-of-1 slds-p-top--medium">
+          <div class="slds-grid slds-wrap">
+            <div data-name="Schedule-Items" class="slds-col slds-size--3-of-4 slds-m-top--medium">
+              Schedule Items ({!v.scheduleItemsFiltered.length})
+            </div>
+          </div>
+        </div>
+      </div>
+    </aura:if>
+
+  <div class="slds-col slds-size--1-of-1 slds-m-bottom--large">
+    <table class="slds-table slds-table--bordered slds-theme--shade slds-no-row-hover">
+      <thead>
+        <tr class="slds-text-heading--label slds-media--center">
+          <th>{!$Label.EventApi.Restrict_Event_Builder}</th>
+          <th>{!$Label.EventApi.Access_To_This_Item_Event_Builder}</th>
+          <th>{!$Label.EventApi.To_These_Badge_Types_Event_Builder}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+          <aura:if isTrue="{!v.currentTabOpen == 'event'}">
+            <tr class="slds-align-top">
+              <td class="slds-truncate" data-label="Restrict">
+                <Framework:InputFields aura:id="eventAccessPermission" fieldType="boolean" label="" value="{!v.eventObj}" fireChangeEvent="true"/>
+              </td>
+              <td class="slds-cell-wrap" data-label="Access to this Item">{!$Label.EventApi.Event_Access_Permission_Builder}&nbsp;{!v.eventObj.name}</td>
+              <td class="slds-badge--types slds-grid slds-wrap slds-grid--align-around slds-size--1-of-1" data-label="To These Badge Types">
+                <aura:iteration items="{!v.eventObj.badges}" var="badge">
+                  <span class="{!v.eventObj.eventAccessPermission ? 'slds-badge' : 'slds-badge slds-badge--disabled'}">{!badge.label != null ? badge.label : badge.badgeTypeName}</span>
+                </aura:iteration>
+                <span class="{!v.eventObj.eventAccessPermission ? '' : 'hidden'}">
+                <button class="{!!v.eventObj.hasBadges ? 'slds-button slds-button--brand' : 'slds-button slds-button--brand hidden'}" onclick="{!c.selectBadges}" data-id="{!v.eventObj.eventId}" data-type="event" data-name="{!v.eventObj.name}">
+                  {!$Label.EventApi.Access_Permissions_Select_Badge_Types}
+                </button>
+              </span>
+              </td>
+              <td class="slds-truncate slds-text-align--right" data-label="">
+                <span class="{!v.eventObj.eventAccessPermission ? '' : 'hidden'}">
+                  <a href="javascript:void(0);" class="{!v.eventObj.hasBadges ? 'slds-button slds-button--icon-border slds-action' : 'hidden'}" data-id="{!v.eventObj.eventId}" data-type="event" data-name="{!v.eventObj.name}" onclick="{!c.editPermissions}">
+                    <img class="slds-button__icon" src="{!$Resource.EventApi__SLDS_Icons + '/icons/utility/edit_60.png'}" width="16" height="34" data-id="{!v.eventObj.eventId}" data-type="event" data-name="{!v.eventObj.name}"/>
+                  </a>
+                </span>
+              </td>
+            </tr>
+          </aura:if>
+          <aura:if isTrue="{!v.currentTabOpen == 'ticketTypes'}">
+            <aura:if isTrue="{!v.loadTicketTypesPermissions}">
+              <aura:iteration items="{!v.eventObj.ticketTypes}" var="ticket">
+                <tr>
+                  <td>
+                    <Framework:InputFields group="ticketAccessPermissionGroup" secondaryId="{!ticket.ticketTypeId}" useSecondaryId="true" aura:id="ttAccessPermission" fieldType="boolean" label="" value="{!v.permissionObj}" fireChangeEvent="true"/>
+                  </td>
+                  <td class="slds-truncate" data-label="Access to this Item">{!$Label.EventApi.Ticket_Type_Access_Permission_Builder}&nbsp;{!ticket.ticketName}</td>
+                  <td class="slds-badge--types slds-grid slds-wrap slds-grid--align-around slds-size--1-of-1" data-label="To These Badge Types">
+                    <aura:iteration items="{!ticket.badges}" var="badge">
+                      <span class="{!ticket.enableAccessPermission ? 'slds-badge' : 'slds-badge slds-badge--disabled'}">{!badge.label != null ? badge.label : badge.badgeTypeName}</span>
+                    </aura:iteration>
+                    <span class="{!ticket.enableAccessPermission ? '' : 'hidden'}">
+                          <button class="{!!ticket.hasBadges ? 'slds-button slds-button--brand' : 'slds-button slds-button--brand hidden'}" onclick="{!c.selectBadges}" data-id="{!ticket.ticketTypeId}" data-type="ticketType" data-name="{!ticket.ticketName}">
+                            {!$Label.EventApi.Access_Permissions_Select_Badge_Types}
+                          </button>
+                        </span>
+                  </td>
+                  <td class="slds-truncate slds-text-align--right slds-truncate--expanded" data-label="">
+                        <span class="{!ticket.enableAccessPermission ? '' : 'hidden'}">
+                          <a href="javascript:void(0);" class="{!ticket.hasBadges ? 'slds-button slds-button--icon-border slds-action' : 'hidden'}" data-id="{!ticket.ticketTypeId}" data-type="ticketType" data-name="{!ticket.ticketName}" onclick="{!c.editPermissions}">
+                            <img class="slds-button__icon" src="{!$Resource.EventApi__SLDS_Icons+'/icons/utility/edit_60.png'}" width="16" height="34" data-id="{!ticket.ticketTypeId}" data-type="ticketType" data-name="{!ticket.ticketName}"/>
+                          </a>
+                        </span>
+                  </td>
+                </tr>
+              </aura:iteration>
+            </aura:if>
+          </aura:if>
+          <aura:if isTrue="{!and(v.currentTabOpen == 'scheduleItems', v.eventObj.style != 'Simple')}">
+            <aura:iteration items="{!v.scheduleItemsFiltered}" var="scheduleItem">
+              <tr>
+                <td>
+                  <Framework:InputFields group="scheduleItemAccessPermissionGroup" secondaryId="{!scheduleItem.scheduleItemId}" useSecondaryId="true" aura:id="siAccessPermission" fieldType="boolean" label="" value="{!v.permissionObj}" fireChangeEvent="true"/>
+                </td>
+                <td class="slds-truncate" data-label="Access to this Item">{!$Label.EventApi.Schedule_Item_Access_Permission_Builder}&nbsp;{!scheduleItem.scheduleItemName}</td>
+                <td class="slds-badge--types slds-grid slds-wrap slds-grid--align-around slds-size--1-of-1" data-label="To These Badge Types">
+                  <aura:iteration items="{!scheduleItem.badges}" var="badge">
+                    <span class="{!scheduleItem.enableAccessPermission ? 'slds-badge' : 'slds-badge slds-badge--disabled'}">{!badge.label != null ? badge.label : badge.badgeTypeName}</span>
+                  </aura:iteration>
+                  <span class="{!scheduleItem.enableAccessPermission ? '' : 'hidden'}">
+                    <button class="{!!scheduleItem.hasBadges ? 'slds-button slds-button--brand' : 'slds-button slds-button--brand hidden'}" onclick="{!c.selectBadges}" data-id="{!scheduleItem.scheduleItemId}" data-type="scheduleItem" data-name="{!scheduleItem.scheduleItemName}">
+                      {!$Label.EventApi.Access_Permissions_Select_Badge_Types}
+                    </button>
+                  </span>
+                </td>
+                <td class="slds-truncate slds-text-align--right slds-truncate--expanded" data-label="">
+                        <span class="{!scheduleItem.enableAccessPermission ? '' : 'hidden'}">
+                          <a href="javascript:void(0);" class="{!scheduleItem.hasBadges ? 'slds-button slds-button--icon-border slds-action' : 'hidden'}" data-id="{!scheduleItem.scheduleItemId}" data-type="scheduleItem" data-name="{!scheduleItem.scheduleItemName}" onclick="{!c.editPermissions}">
+                            <img class="slds-button__icon" src="{!$Resource.EventApi__SLDS_Icons+'/icons/utility/edit_60.png'}" width="16" height="34" data-id="{!scheduleItem.scheduleItemId}" data-type="scheduleItem" data-name="{!scheduleItem.scheduleItemName}"/>
+                          </a>
+                        </span>
+                </td>
+              </tr>
+            </aura:iteration>
+          </aura:if>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="slds-modal" aura:id="accessPermissionsModal">
+    <div class="slds-modal__container">
+      <div class="slds-modal__header">
+        <h2 class="slds-text-heading--medium" id="modal-heading-label">{!$Label.EventApi.Access_Permissions_Event_Builder}: {!v.accessPermissionItem}</h2>
+        <button class="slds-button slds-button--icon-inverse slds-modal__close"  onclick="{!c.closeModal}">
+          <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+        </button><!-- /.slds-button -->
+      </div><!-- /.slds-modal__header -->
+
+      <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+        <div class="slds-col slds-size--1-of-1" aura:id="accessDragDropDiv">
+        </div>
+      </div>
+
+      <div class="slds-modal__footer slds-text-align--right">
+        <Framework:Button enableProgressIndicator="false"
+                          onClickAction="{!c.closeModal}"
+                          type="neutral"
+                          label="{!$Label.EventApi.Cancel}"/>
+        <Framework:Button enableProgressIndicator="true"
+                          onClickAction="{!c.addNewAccessPermission}"
+                          type="brand"
+                          additionalClasses="slds-m-left--xx-small"
+                          label="{!$Label.EventApi.Save_Event_Builder}"
+                          aura:id="accessPermissionSaveModalButton"/>
+      </div><!-- /.slds-modal__footer -->
+    </div><!-- /.modal-dialog .slds-modal__container -->
+  </div><!-- /.modal .slds-modal -->
+
+  <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+  </div>
+</aura:component>

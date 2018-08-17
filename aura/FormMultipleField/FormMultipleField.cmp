@@ -1,0 +1,25 @@
+<aura:component description="FormMultipleField">
+  <aura:attribute name="value" type="Map"/>
+  <aura:attribute name="fieldObj" type="Map"/>
+  <aura:attribute name="isValidated" type="Boolean" default="false"/>
+  <aura:attribute name="secondaryGroup" type="String"/>
+  <aura:attribute name="dependencies" type="List" default="[]"/>
+  <aura:method name="resetValue" action="{!c.resetValue}"/>
+  <aura:method name="validate" action="{!c.validate}"/>
+  <aura:method name="setValue" action="{!c.setValue}">
+    <aura:attribute name="value" type="Object"/>
+  </aura:method>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdatedEvent}"/>
+  <aura:registerEvent name="InputFieldValueChangedEvent" type="Framework:InputFieldValueChangedEvent"/>
+  <span class="{!v.fieldObj.isHidden ? 'hidden' : 'slds-size--1-of-1'}">
+    <div class="{!v.fieldObj.fieldSize+' slds-p-horizontal--medium '}">
+      <Framework:InputFields aura:id="value" secondaryId="{!v.fieldObj.fieldId}" useSecondaryId="true"
+                             fieldType="{!v.fieldObj.fieldType}" label="{!v.fieldObj.name}"
+                             isRequired="{!v.fieldObj.isRequired}" helpText="{!v.fieldObj.helpText}"
+                             group="{!v.fieldObj.fieldId}" value="{!v.value}"
+                             selectOptions="{!v.fieldObj.selectOptions}"
+                             otherAttributes="{!v.fieldObj.otherAttributes}" fireChangeEvent="true"
+                             secondaryGroup="{!v.secondaryGroup}"/>
+    </div>
+  </span>
+</aura:component>

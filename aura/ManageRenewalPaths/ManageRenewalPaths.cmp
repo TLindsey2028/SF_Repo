@@ -1,0 +1,111 @@
+<aura:component description="ManageRenewalPaths" controller="OrderApi.ItemRenewalPathsController" extends="Framework:BaseComponent">
+    <ltng:require scripts="{!join(',', $Resource.Framework__SLDS_BaseV2+'/js/lodash.min.js', $Resource.Framework__UrlUtil)}" styles="{!$Resource.OrderApi__SLDS_Base+'/css/styles.css'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute name="renewalPathObj" type="Object" default="{}" description="Renewal Path Modal Object"/>
+    <aura:attribute name="accountFields" type="List" default="[]"/>
+    <aura:attribute name="contactFields" type="List" default="[]"/>
+    <aura:attribute name="renewalPathGlobalId" type="string" default=""/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:handler event="OrderApi:DeletePriceRuleVariable" action="{!c.deletePriceRuleVariableRow}"/>
+    <aura:attribute name="retUrl" type="String"/>
+    <aura:attribute name="itemId" type="String"/>
+    <aura:registerEvent name="ComponentLoadedEvent" type="OrderApi:ComponentLoadedEvent"/>
+    <style>
+        @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+            .slds-ie-fix--width {
+                max-width: calc(100vw - 43px)!important;
+            }
+        }
+    </style>
+    <div class="slds hidden slds-ie-fix--width" aura:id="mainWrapperDiv">
+        <div class="slds-grid slds-grid--align-center slds-wrap slds-hide" aura:id="wrapper">
+            <div class="slds-size--1-of-1 slds-grid slds-wrap">
+                <div class="slds-col slds-size--1-of-1">
+                    <div class="slds-page-header">
+                        <div class="slds-media slds-media--center">
+                            <div class="slds-media__body">
+                                <span class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+                                    {!$Label.OrderApi.Renewal_Path_For}&nbsp;<span class="slds-text-weight--regular">{!v.renewalPathObj.itemName}</span>
+                                </span>
+                                <Framework:Button onClickAction="{!c.cancel}"
+                                                  type="neutral"
+                                                  enableProgressIndicator="false"
+                                                  label="{!$Label.OrderApi.Cancel_Plan}"
+                                                  aura:id="cancelPlan"/>
+                            </div>
+                            <div>
+                                <Framework:Button onClickAction="{!c.save}"
+                                                  type="brand"
+                                                  label="{!$Label.OrderApi.Save_Plan}"
+                                                  aura:id="savePlan"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-grid slds-wrap slds-theme--shade">
+                    <div class="slds-grid slds-wrap slds-p-horizontal--large slds-p-vertical--medium">
+                        <div class="slds-col slds-size--1-of-1">
+                            <h3><b>{!$Label.OrderApi.Renew_Into}</b></h3>
+                            <Framework:InputFields styleClasses="slds-picklist__label" group="renewPathModal" fieldType="picklist"
+                                                   aura:id="itemClasses" label="{!$Label.OrderApi.Item_Class}" value="{!v.renewalPathObj}"/>
+                            <div class="slds-col slds-size--1-of-1">
+                                <div class="slds-col slds-size--1-of-1 drag-drop" aura:id="dragDropItemsDiv">
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size--1-of-1">
+                                <Framework:InputFields styleClasses="slds-picklist__label" group="renewPathModal" fieldType="picklist" helpText="When the subscription plan is configured to auto-generate renewal sales orders using the Invoice Days to Lapse, that sales order will use the default subscription."
+                                                           aura:id="defaultItem" label="{!$Label.OrderApi.Select_Default}" value="{!v.renewalPathObj}"/>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size--1-of-1 slds-m-bottom--small">
+                            <div class="slds-text-heading--small"><b>{!$Label.OrderApi.Renewal_Rule}</b></div>
+                        </div>
+                        <div class="slds-col slds-size--1-of-1">{!$Label.OrderApi.Renewal_Path_Trigger_Instruction}</div>
+                        <div class="slds-col slds-grid slds-size--1-of-1">
+                            <Framework:InputFields fieldType="radio" label="{!$Label.OrderApi.Current_Subs_Term_Completed}" aura:id="term" fireChangeEvent="true" styleClasses="" otherAttributes='{"name" : "pathGroup"}' value="{!v.renewalPathObj}" group="renewPathModal"/>
+                        </div>
+                        <div class="slds-col slds-grid slds-size--1-of-1 slds-p-left--large">
+                            <Framework:InputFields styleClasses="" group="renewPathModal" fieldType="integer"
+                                               aura:id="completedTerms" label="{!$Label.OrderApi.Completed_Terms}"
+                                               value="{!v.renewalPathObj}" />
+                        </div>
+                        <div class="slds-col slds-grid slds-size--1-of-1">
+                            <Framework:InputFields fieldType="radio" label="{!$Label.OrderApi.Following_Are_True}" aura:id="accountOrContact" styleClasses="" otherAttributes='{"name" : "pathGroup"}' value="{!v.renewalPathObj}" group="renewPathModal"/>
+                        </div>
+                        <div class="slds-p-left--large slds-wrap slds-grid--pull-padded slds-grid slds-size--2-of-3 slds-hide" aura:id="variableHeadings">
+                            <div class="slds-col slds-size--1-of-4 slds-p-horizontal--small">
+                                <label class="slds-form-element__label helper-margin-right">{!$Label.OrderApi.Price_Rule_Object}</label>
+                            </div>
+                            <div class="slds-col slds-size--1-of-4 slds-p-left--small">
+                                <label class="slds-form-element__label helper-margin-right">{!$Label.OrderApi.Price_Rule_Field}</label>
+                            </div>
+                            <div class="slds-col slds-size--1-of-4 slds-p-left--xx-small">
+                                <label class="slds-form-element__label helper-margin-right">{!$Label.OrderApi.Price_Rule_Operator}</label>
+                            </div>
+                            <div class="slds-col slds-size--1-of-4 slds-p-left--xxxx-small">
+                                <label class="slds-form-element__label helper-margin-right">{!$Label.OrderApi.Price_Rule_Value}</label>
+                            </div>
+                        </div>
+                        <div class="slds-row slds-grid slds-size--2-of-3 slds-p-left--large slds-wrap slds-grid--pull-padded" aura:id="renewalVariables"/>
+                        <div class="slds-col slds-size--1-of-1 slds-m-bottom--medium">
+                            <div class="slds-col slds-p-left--large">
+                                <Framework:Button onClickAction="{!c.createNewVariable}"
+                                                  type="brand"
+                                                  enableProgressIndicator="false"
+                                                  additionalClasses=""
+                                                  label="{!$Label.OrderApi.Create_New_Variable}"
+                                                  svgPath="{!$Resource.OrderApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#add'}"
+                                                  svgContainerClass="slds-float--left slds-m-right--small"
+                                                  svgClass="slds-button__icon"
+                                                  disable="{!v.renewalPathObj.term}"
+                                                  svgAssistiveText="Label.OrderApi.Add_Another_Attendee_Group_Reg"
+                                                  aura:id="newVariableButton"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <Framework:MessagePrompt title="Item Renewal Path" showCancelButton="false" severity="error slds-theme--alert-texture" message="{!$Label.OrderApi.Item_Renewal_Path_Validation}" submitButtonLabel="{!$Label.OrderApi.Item_Renewal_Path_Validation_Close_Button}" submitOnClickAction="{!c.cancel}" aura:id="itemRenewalValidationMessage"/>
+        <Framework:Toast aura:id="toastMessages"/>
+    </div>
+</aura:component>

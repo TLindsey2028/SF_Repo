@@ -1,0 +1,53 @@
+<aura:component controller="Framework.ApiGroupingController">
+    <aura:attribute name="grouping" type="Map" default="{}" description="Api Grouping"/>
+    <aura:attribute name="modalHeader" type="String" default=""/>
+    <aura:attribute name="dispatchObj" type="Map" default="{}"/>
+	<aura:attribute name="modalMode" type="String" default=""/>
+    <aura:attribute name="apiServiceKey" type="String" default="" description="Key for the Api Service to load"/>
+    <aura:attribute name="apiResourceOptions" type="List" default="[]"/>
+    <aura:attribute name="sObjectNameOptions" type="List" default="[]"/>
+	<aura:registerEvent name="InputFieldValidationEvent" type="Framework:InputFieldValidationEvent"/>
+    <aura:registerEvent name="RefreshComponentEvent" type="Framework:RefreshComponentEvent"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <div class="modal fade slds-modal slds-fade-in-open" id="modalNewApiGrouping">
+        <div class="modal-dialog slds-modal__container">
+            <div class="modal-content service-connection-modal-content">
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading--medium">{!v.modalHeader}</h2>
+                    <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal">
+                        <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+                    </button>
+                </div>
+                <div class=" service-connection-body">
+                    <form id="credential-api-service-connection-form" onsubmit="{!c.saveApiGrouping}">
+                        <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+                            <div class="slds-col slds-p-vertical--medium slds-size--1-of-1">
+                                <aura:if isTrue="{!v.modalMode=='New'}">
+                                    <Framework:InputFields group="dispatchObj" fieldType="string" aura:id="configId" label="{!$Label.Framework.Name}" isRequired="true" value='{!v.dispatchObj}'/>
+                                    <aura:set attribute="else">
+                                        <label class=" slds-form-element__label helper-margin-right"><abbr class="slds-required" title="required">*</abbr>Name</label>
+                                        <br/>
+                                        <ui:outputText value="{!v.dispatchObj.configId}"/>
+                                    </aura:set>
+                                </aura:if>
+                                <Framework:InputFields group="apiGrouping" fieldType="picklist" aura:id="apiResource" label="{!$Label.Framework.API_Resource}" isRequired="true" value="{!v.grouping}" selectOptions="{!v.apiResourceOptions}"/>
+                                <Framework:InputFields group="apiGrouping" fieldType="picklist" aura:id="apiObject" label="{!$Label.Framework.API_Object}" isRequired="true" value="{!v.grouping}" selectOptions="{!v.sObjectNameOptions}"/>
+                                <Framework:InputFields group="apiGrouping" fieldType="string" aura:id="targetrelatedLookupField" label="{!$Label.Framework.Target_Related_Lookup_Field}" isRequired="true" value="{!v.grouping}"/>
+                            </div>
+                        </div>
+                        <div class="slds-modal__footer slds-text-align--right">
+                            <a class="slds-button slds-button--neutral" data-dismiss="modal">{!$Label.Framework.Cancel}</a>
+                            <Framework:Button aura:id="saveButton"
+                                      enableProgressIndicator="false"
+                                      type="submit"
+                                      label="{!$Label.Framework.Save}"
+                                      additionalClasses="slds-button slds-button--brand next-uri-tab slds-m-left--xx-small"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+	<Framework:Toast aura:id="toastMessages"/>
+</aura:component>

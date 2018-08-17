@@ -1,0 +1,84 @@
+<aura:component description="ScheduleItemRow" controller="ROEApi.ScheduleItemsController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="item" type="Map" required="true"/>
+    <aura:attribute name="formText" type="String" default="None"/>
+    <aura:attribute name="itemIndex" type="String" required="true"/>
+    <aura:attribute name="uniqueIdentifier" type="String" required="true"/>
+    <aura:attribute name="currencyISOCode" type="String" required="true"/>
+    <aura:attribute name="isMultiCurrencyOrg" type="Boolean" default="false"/>
+    <aura:attribute name="removeItem" type="Aura.Action" required="true"/>
+    <aura:attribute name="showForm" type="Aura.Action" default=""/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:registerEvent name="ScheduleItemTotalUpdateEvent" type="ROEApi:ScheduleItemTotalUpdateEvent"/>
+    <aura:registerEvent name="ScheduleItemPriceHeadingEvent" type="ROEApi:ScheduleItemPriceHeadingEvent"/>
+    <aura:registerEvent name="ItemCardCompleteEvent" type="ROEApi:ItemCardCompleteEvent"/>
+    <tr>
+        <td class="slds-cell-wrap slds-size--1-of-5">
+            <strong>{!v.item.name}</strong>
+        </td>
+        <td class="slds-size--1-of-5">
+            {!v.item.startDate}
+        </td>
+        <td class="slds-size--1-of-5">
+            <div>
+                <strong>{!v.item.priceRuleObj.name} - <Framework:CurrencyField value="{!v.item.priceRuleObj.price}" currencyISOCode="{!v.currencyISOCode}" isMultiCurrencyOrg="{!v.isMultiCurrencyOrg}"/></strong>
+            </div>
+            <div>
+                <Framework:InputFields fieldType="boolean"
+                                       aura:id="priceOverride"
+                                       value="{!v.item}"
+                                       label="{!$Label.ROEApi.Override_Price}"
+                                       styleClasses="slds-input--custom-field"
+                                       fireChangeEvent="true"
+                                       group="{!v.item.salesOrderLineId}"/>
+            </div>
+        </td>
+        <td class="slds-size--1-of-5">
+            <span class="slds-hidden" aura:id="price">
+                <Framework:InputFields fieldType="currency"
+                                       aura:id="overriddenPrice"
+                                       labelStyleClasses="slds-hide"
+                                       value="{!v.item}"
+                                       label="{!$Label.ROEApi.Schedule_Item_New_Price}"
+                                       otherAttributes='{"min" : 0,"max": 9999999}'
+                                       format="0.00"
+                                       isRequired="true"
+                                       fireChangeEvent="true"
+                                       group="{!v.item.salesOrderLineId}"
+                                       minValueValidationMessage="{!$Label.ROEApi.Min_Price_Validation_Message}" maxValueValidationMessage="{!$Label.ROEApi.Max_Price_Validation_Message}"/>
+            </span>
+        </td>
+        <td class="slds-size--1-of-5">
+            <span>{!v.formText}</span>
+        </td>
+        <td class="slds-cell-shrink">
+            <div class="slds-dropdown-trigger">
+                <Framework:Button enableProgressIndicator="false"
+                                  onClickAction=""
+                                  type="neutral"
+                                  additionalClasses="slds-button--icon-border slds-p-around--none"
+                                  label=""
+                                  svgPath="{!$Resource.ROEApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#threedots'}"
+                                  svgContainerClass=""
+                                  svgClass="slds-button__icon"
+                                  svgAssistiveText="Label.ROEApi.More_Options" />
+                <div class="slds-dropdown slds-dropdown--right">
+                    <ul class="dropdown__list" role="menu">
+                        <li class="slds-dropdown__item">
+                            <a href="javascript:void(0);" role="menuitem" data-scheduleitem="{!v.item.scheduleItemId}" onclick="{!c.showScheduleItem}">
+                                {!$Label.ROEApi.View_Item_in_Salesforce}
+                            </a>
+                        </li>
+                        <li class="slds-dropdown__item" aura:id="removeItemLink">
+                            <a href="javascript:void(0);" onclick="{!v.removeItem}" role="menuitem" data-index="{!v.itemIndex}" data-salesorderline="{!v.item.salesOrderLineId}">
+                                {!$Label.ROEApi.Remove_from_Order}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </td>
+    </tr>
+
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

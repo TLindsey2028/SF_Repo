@@ -1,0 +1,295 @@
+<aura:component description="EventBuilderPackageEditor" controller="EventApi.EventsBuilderController">
+    <aura:handler name="change" value="{!v.parentItemId}" action="{!c.itemIdChange}"/>
+    <aura:attribute name="packageItems" type="List" default="[]" access="public"/>
+    <aura:attribute name="owner" access="public" required="true" type="string" description="A unique name to d"/>
+    <aura:attribute name="packageObj" type="Map" default="{}" access="private"/>
+    <aura:attribute name="packageItemName" type="String"/>
+    <aura:attribute name="parentItemId" type="Id" required="true" access="public"/>
+    <aura:attribute name="isTicket" type="Boolean" default="false"/>
+    <aura:attribute name="secondaryId" type="String"/>
+    <aura:attribute name="packageModalState" type="String" required="true" access="public"/>
+    <aura:attribute name="pckgItemGlobalId" type="string" default=""/>
+    <aura:attribute name="pckgItemClassGlobalId" type="string" default=""/>
+    <aura:attribute name="eventKey" type="String" default=""/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+
+    <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size--1-of-1 pad padTop">
+                <div class="slds-grid slds-grid--align-spread slds-m-bottom--medium">
+                    <div class="slds-col slds-align-middle">
+                        <div class="slds-text-body--regular">
+                            {!$Label.EventApi.Agenda_Package_Info_Event_Builder}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="addPackageRow" class="slds-grid slds-m-bottom--medium slds-size--1-of-1 pad">
+                    <span class="slds-align-bottom" aura:id="packageItemSpan">
+                        <div class="slds-text-heading_small strong">{!$Label.EventApi.Package_Items_Event_Builder}</div>
+                    </span>
+                <div class="slds-align-bottom slds-col--bump-left">
+                    <button class="slds-button slds-button--brand add-new-page-btn"
+                            qaData='{type:"button", name:"addPackageItem"}'
+                            onclick="{!c.addItem}"
+                            aura:id="addNewPageBtn">
+                        <Framework:FONSVG
+                                svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}"
+                                containerClass="slds-icon__container"
+                                svgClass="slds-icon slds-icon--x-small slds-button__icon--left"
+                                assistiveText="New Package Item"/>
+                        {!$Label.EventApi.New_Package_Item_Event_Builder}
+                    </button>
+                </div>
+            </div>
+            <div class="slds-col slds-size--1-of-1">
+                <table id="itemTable" class="slds-table slds-table--bordered slds-no-row-hover" role="grid">
+                    <thead>
+                    <tr id="itemGridHeader" class="slds-text-title--caps">
+                        <th scope="col">
+                            <div class="slds-truncate" title="Name">{!$Label.EventApi.Item_Event_Builder}</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Class">{!$Label.EventApi.Item_Class_Event_Builder}</div>
+                        </th>
+                        <th class="requiredCol" scope="col">
+                            <div class="slds-text-align--center slds-truncate" title="Required">{!$Label.EventApi.Required_Event_Builder}</div>
+                        </th>
+                        <th scope="col" class="slds-text-align_right actionCol">
+                            <div class="slds-truncate" title="Actions">{!$Label.EventApi.Actions_Event_Builder}</div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="">
+                    <aura:iteration items="{!v.packageItems}" var="packageItem">
+                        <tr class="page-step-type"
+                            data-id="{!packageItem.packageItemId}" data-name="{!packageItem.itemName}">
+
+                            <td data-label="Name">
+                                <div class="slds-truncate" title="Name">{!packageItem.type == 'itemClass' ? '' : packageItem.packagedItemName}</div>
+                            </td>
+                            <td data-label="Class">
+                                <div class="slds-truncate" title="Class">{!packageItem.type == 'itemClass' ? packageItem.packagedItemName : ''}</div>
+                            </td>
+                            <td class="slds-text-align--center requiredCol" data-label="Required">
+                            <span class="{!packageItem.isRequired ? '' : 'hidden'}">
+                                  <Framework:FONSVG
+                                          svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#check'}"
+                                          containerClass="slds-icon__container"
+                                          svgClass="slds-icon slds-icon--x-small slds-icon-text-default"
+                                          assistiveText="Active"/>
+                            </span>
+                                <span class="{!packageItem.isRequired ? 'hidden' : ''}">
+                              &nbsp;
+                            </span>
+                            </td>
+                            <td data-label="Actions" class="slds-text-align_right actionCol">
+                                <button class="slds-button slds-button--icon-border"
+                                        role="button"
+                                        data-id="{!packageItem.packageItemId}"
+                                        qaData='{type:"button", name:"editPackageItem"}'
+                                        onclick="{!c.editItem}">
+                                    <Framework:FONSVG
+                                            svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#edit'}"
+                                            svgClass="slds-button__icon"
+                                            assistiveText="Edit"/>
+                                </button>
+                                <button class="slds-button slds-button--icon-border"
+                                        role="button"
+                                        data-id="{!packageItem.packageItemId}"
+                                        qaData='{type:"button", name:"deletePackageItem"}'
+                                        onclick="{!c.deleteItem}">
+                                    <Framework:FONSVG
+                                            svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#delete'}"
+                                            svgClass="slds-button__icon"
+                                            assistiveText="Delete"/>
+                                </button>
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                    </tbody>
+                </table>
+                <aura:if isTrue="{!empty(v.packageItems)}">
+                    <div id="noPackageItems" class="slds-size--1-of-1 slds-text-align--center slds-align-content-center">
+                        <div class="strong">{!$Label.EventApi.No_Package_Items_Event_Builder}</div>
+                    </div>
+                </aura:if>
+            </div>
+        </div>
+
+        <div class="slds-modal" aura:id="deleteModal" id="deleteModal">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading--medium"
+                        id="modal-heading-label">{! $Label.EventApi.Delete_Package_Item_Event_Builder} for <strong>{!v.packageItemName}</strong></h2>
+                    <button class="slds-button slds-button--icon-inverse slds-modal__close"
+                            onclick="{!c.closeModal}">
+                        <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+                    </button>
+                </div>
+
+                <div class="slds-modal__content">
+                    <div class="slds-grid slds-grid--align-center slds-wrap">
+                        <div class="slds-size--1-of-1 slds-grid slds-wrap">
+                            <div class="slds-grid slds-wrap slds-size--1-of-1 slds-p-around--large">
+                                <div class="slds-col slds-size--1-of-1 slds-text-align_center" style="font-size: 11.5pt;">
+                                    {!format($Label.EventApi.Delete_Package_Item_Confirmation_Event_Builder, v.packageObj.packagedItemName)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-modal__footer slds-text-align--right">
+                    <Framework:Button enableProgressIndicator="false"
+                                      onClickAction="{!c.closeModal}"
+                                      qaData='{type:"button", name:"cancelDeletePackageItem"}'
+                                      type="neutral"
+                                      label="{!$Label.EventApi.Cancel}"/>
+                    <Framework:Button enableProgressIndicator="true"
+                                      onClickAction="{!c.doDelete}"
+                                      type="destructive"
+                                      additionalClasses="slds-m-left--xx-small"
+                                      label="{!$Label.EventApi.Delete_Event_Builder}"
+                                      qaData='{type:"button", name:"confirmDeletePackageItem"}'
+                                      aura:id="doDelete"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-modal" aura:id="newPackageModal" id="newPackageModal">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading--medium" id="modal-heading-label">{! empty(v.packageObj.packageItemId) ? $Label.EventApi.New_Package_Item_Event_Builder : $Label.EventApi.Edit_Package_Item_Event_Builder} for <strong>{!v.packageItemName}</strong></h2>
+                    <button class="slds-button slds-button--icon-inverse slds-modal__close"
+                            onclick="{!c.closeModal}">
+                        <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+                    </button>
+                </div>
+
+                <div class="slds-modal__content">
+                    <div class="slds-grid slds-grid--align-center slds-wrap">
+                        <div class="slds-size--1-of-1 slds-grid slds-wrap">
+                            <div class="slds-grid slds-wrap slds-size--1-of-1 slds-theme--shade slds-p-around--large" style="background-color: white">
+                                <div class="slds-col slds-size--1-of-1 slds-gutters">
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-col--padded slds-size--1-of-1 slds-medium-size--1-of-2">
+                                            <Framework:InputFields fieldType="Picklist"
+                                                                   label="{!$Label.EventApi.Single_Group_Event_Builder}"
+                                                                   aura:id="type"
+                                                                   group="{!v.owner+'Package'}"
+                                                                   value="{!v.packageObj}"
+                                                                   qaData='{type:"input", name:"packageItemType"}'
+                                                                   selectOptions="[{'label' : 'Single Item','value' : 'item'},{'label' : 'Group of Items','value' : 'itemClass'}]"
+                                                                   fireChangeEvent="true"/>
+                                        </div>
+                                        <div class="slds-col slds-col--padded slds-size--1-of-1 slds-medium-size--1-of-2">
+                                            <div aura:id="entityDiv"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size--1-of-1">
+                                    <div class="{!v.packageObj.type == 'item'? '' : 'hidden'}">
+                                        <Framework:InputFields fieldType="boolean"
+                                                               label="{!$Label.EventApi.Required_Package_Item_Event_Builder}"
+                                                               aura:id="isRequired"
+                                                               qaData='{type:"input", name:"packageItemRequired"}'
+                                                               group="{!v.owner+'Package'}"
+                                                               value="{!v.packageObj}"/>
+                                        <div class="{!v.packageObj.isRequired ? 'slds-m-left--x-large' : 'hidden'}">
+                                            <Framework:InputFields fieldType="radio"
+                                                                   label="{!$Label.EventApi.No_Charge_Package_Item_Event_Builder}"
+                                                                   aura:id="hasNoAdditionalCharge"
+                                                                   group="{!v.owner+'Package'}"
+                                                                   value="{!v.packageObj}"
+                                                                   qaData='{type:"input", name:"packageItemNoCharge"}'
+                                                                   otherAttributes='{"name" : "requiredPackage"}'/>
+                                            <Framework:InputFields fieldType="radio"
+                                                                   label="{!$Label.EventApi.Has_Charge_Package_Item_Event_Builder}"
+                                                                   aura:id="hasAdditionalCharge"
+                                                                   group="{!v.owner+'Package'}"
+                                                                   value="{!v.packageObj}"
+                                                                   qaData='{type:"input", name:"packageItemHasCharge"}'
+                                                                   otherAttributes='{"name" : "requiredPackage"}'/>
+                                        </div>
+                                    </div>
+                                    <span class="{!v.packageObj.type == 'itemClass' ? '' : 'hidden'}">
+                                      <Framework:InputFields fieldType="boolean"
+                                                             label="{!$Label.EventApi.Required_Package_Item_Class_Event_Builder}"
+                                                             aura:id="isRequired"
+                                                             group="{!v.owner+'Package'}"
+                                                             qaData='{type:"input", name:"packageItemRequiredClass"}'
+                                                             value="{!v.packageObj}"/>
+                                </span>
+                                </div>
+                                <div class="slds-col slds-grid slds-gutters slds-size--1-of-1">
+                                    <div class="{!v.packageObj.type == 'item' ? 'hidden' : 'slds-col slds-size--1-of-2 slds-medium-size--1-of-2'}">
+                                        <Framework:InputFields fieldType="string"
+                                                               label="Display Label"
+                                                               aura:id="displayName"
+                                                               group="{!v.owner+'Package'}"
+                                                               value="{!v.packageObj}"
+                                                               qaData='{type:"input", name:"packageItemDisplay"}'
+                                                               isRequired="true"/>
+                                    </div>
+                                    <aura:if isTrue="{!v.packageObj.type == 'item'}">
+                                        <div class="slds-col slds-size--1-of-4 slds-medium-size--1-of-4">
+                                            <Framework:InputFields fieldType="integer"
+                                                                   label="{!v.packageObj.isRequired ? $Label.EventApi.Quantity_Event_Builder : $Label.EventApi.Minimum_Quantity_Event_Builder}"
+                                                                   format="0"
+                                                                   aura:id="minQuantity"
+                                                                   group="{!v.owner+'Package'}"
+                                                                   value="{!v.packageObj}"
+                                                                   isRequired="{!v.packageObj.isRequired}"
+                                                                   qaData='{type:"input", name:"packageItemMinQuantity"}'
+                                                                   otherAttributes='{"min" : 1}'/>
+                                        </div>
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.packageObj.type == 'item'}">
+                                        <div class="{!v.packageObj.isRequired ? 'hidden' : 'slds-col slds-size--1-of-4 slds-medium-size--1-of-4'}">
+                                            <Framework:InputFields fieldType="integer"
+                                                                   label="{!$Label.EventApi.Maximum_Quantity_Event_Builder}"
+                                                                   format="0"
+                                                                   aura:id="maxQuantity"
+                                                                   group="{!v.owner+'Package'}"
+                                                                   value="{!v.packageObj}"
+                                                                   qaData='{type:"input", name:"packageItemMaxQuantity"}'
+                                                                   otherAttributes='{"min" : 1}'/>
+                                        </div>
+                                    </aura:if>
+                                    <div class="{!v.packageObj.type == 'itemClass' ? 'slds-col slds-size--1-of-3 slds-medium-size--1-of-3 bottomElement' : 'hidden'}">
+                                        <div class="">
+                                            <Framework:InputFields fieldType="integer"
+                                                                   label="{!$Label.EventApi.Max_Per_Item_Event_Builder}"
+                                                                   aura:id="maxQuantityPerItem"
+                                                                   group="{!v.owner+'Package'}"
+                                                                   qaData='{type:"input", name:"packageItemMaxPerItem"}'
+                                                                   value="{!v.packageObj}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-modal__footer slds-text-align--right">
+                    <Framework:Button enableProgressIndicator="false"
+                                      onClickAction="{!c.closeModal}"
+                                      type="neutral"
+                                      qaData='{type:"button", name:"packageItemCancel"}'
+                                      label="{!$Label.EventApi.Cancel}"/>
+                    <Framework:Button enableProgressIndicator="true"
+                                      onClickAction="{!c.save}"
+                                      type="brand"
+                                      additionalClasses="slds-m-left--xx-small"
+                                      label="{!$Label.EventApi.Save_Event_Builder}"
+                                      qaData='{type:"button", name:"packageItemSave"}'
+                                      aura:id="upsertPackageItem"/>
+                </div>
+            </div>
+        </div>
+
+        <Framework:Toast aura:id="toastMessages"/>
+    </div>
+</aura:component>

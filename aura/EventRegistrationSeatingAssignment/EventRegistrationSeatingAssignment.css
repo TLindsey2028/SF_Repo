@@ -1,0 +1,21 @@
+.THIS li.slds-tabs_default__item > a.slds-tabs_default__link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black!important;
+}
+
+.THIS li.slds-tabs_default__item.slds-is-active > a.slds-tabs_default__link {
+    font-weight: 600!important;
+}
+
+.THIS .slds-tabs_default__item::after,
+.THIS .slds-tabs--default__item::after {
+    background-color: rgb(212, 212, 212);
+}
+.THIS .slds-tabs_default__item.slds-active::after,
+.THIS .slds-tabs_default__item.slds-is-active::after,
+.THIS .slds-tabs--default__item.slds-active::after,
+.THIS .slds-tabs--default__item.slds-is-active::after {
+    background-color: rgb(37, 116, 169);
+}

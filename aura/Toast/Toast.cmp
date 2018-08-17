@@ -1,0 +1,18 @@
+<aura:component access="global" controller="Framework.ToastsController">
+    <ltng:require scripts="{!join(',',$Resource.Framework__SLDS_BaseV2+'/js/iziToast.min.js',$Resource.Framework__ActionUtils)}" styles="{!$Resource.Framework__SLDS_BaseV2+'/css/iziToast.min.css'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:method name="showMessage" access="global" action="{!c.showMessage}">
+        <aura:attribute name="title" type="String"/>
+        <aura:attribute name="message" type="String"/>
+        <aura:attribute name="autoHide" type="Boolean" default="false"/>
+        <aura:attribute name="severity" type="String" default="info"/>
+        <aura:attribute name="position" type="String" default="topLeft"/>
+    </aura:method>
+    <aura:method name="showMessages" access="global" action="{!c.showMessages}">
+        <aura:attribute name="messages" type="List"/>
+    </aura:method>
+    <style>
+        .toast {
+            opacity: .95 !important;
+        }
+    </style>
+</aura:component>

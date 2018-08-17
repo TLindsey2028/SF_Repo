@@ -1,0 +1,381 @@
+.THIS .slds-builder {
+  overflow: hidden;
+}
+.THIS .uiInputDefaultError .form-element__help {
+  font-size: .75rem;
+  margin-top: .5rem;
+  color: rgb(194, 57, 52);
+}
+
+.THIS .tab--transparent , .THIS .slds-tabs--default {
+  background: transparent!important;
+}
+
+.THIS .slds-page-header {
+  z-index: 9000;
+  position: relative;
+}
+.THIS .slds-preview {
+  width: 1%;
+  background-color: white;
+}
+.THIS .slds-builder__sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 9em;
+  z-index: 9001;
+  position: relative;
+}
+
+.THIS .slds-sidebar--modal-open {
+  z-index: 8999;
+  transition-delay: 0s!important;
+}
+
+.THIS .slds-builder__sidebar, .THIS .slds-page-header {
+  transition-delay: .4s;
+}
+
+.THIS .slds-builder__sidebar .slds-builder__sidebar-nav {
+  flex: 1 1 auto;
+  flex-direction: column;
+  display: flex;
+  background-color: #fff;
+  align-items: center;
+  justify-content: center;
+  min-height: 7em;
+  max-height: 10em;
+  position: relative;
+  z-index: 9000;
+  transition: background-color .25s ease-in;
+}
+.THIS .slds-builder__sidebar .slds-builder__sidebar-nav:hover {
+  background-color: #f4f6f9;
+  cursor: pointer;
+}
+
+.THIS .slds-builder__sidebar--settings--full {
+  width : calc(100vw - 10.6em)!important;
+}
+
+.THIS .slds-builder__sidebar--settings {
+  position: absolute;
+  z-index: 8999;
+  left: calc(9em - 60em);
+  top: 0;
+  height: 100vh;
+  width: 60em;
+  min-width: 30em;
+  transition: left .3s ease-in-out;
+  box-shadow: 10px -4px 5px -5px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 960px) {
+  .THIS .slds-builder__sidebar--settings__small {
+    width: calc(100vw - 10.6em)!important;
+    min-width: 9em;
+  }
+  .THIS .slds-object-height--full__content {
+      max-width: 40em;
+      min-width: 0!important;
+  }
+}
+
+.THIS .horizontal-scrollbar-spacing {
+  height: 90vh;
+}
+
+.THIS .slds-builder__sidebar-nav.slds-sidebar--active {
+  background-color: #f4f6f9;
+  transition: background-color .25s ease-in;
+}
+
+.THIS .slds-builder__sidebar--settings.slds-sidebar--active {
+  left: 9em;
+}
+
+.THIS .slds-builder__sidebar--change {
+  min-height: 4.75em;
+  max-height: 4.75em;
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.THIS .slds-builder__sidebar-nav .slds-text-heading--label {
+  text-align: center;
+  max-width: 100%;
+
+}
+
+.THIS  .slds-object-height--full__content {
+  height: calc(100vh - 103px);
+  min-width: 60em;
+}
+
+.THIS.slds .slds-object-height--full__nofooter  {
+  height: calc(100vh - 69px);
+}
+.THIS.slds .slds-page-header {
+  padding: 1rem 1.5rem;
+}
+
+.THIS .slds-button.slds-action {
+  line-height: 2.125rem;
+}
+.THIS .slds-button.slds-action:hover {
+  background-color: white;
+}
+
+.THIS .slds-icon--xx-small,
+.THIS .slds-icon_xx-small{
+  line-height: 1;
+  width: .8rem!important;
+  height: 0.8rem!important;
+}
+
+.THIS.slds .slds-modal {
+  z-index: 9004
+}
+
+.THIS.slds .slds-backdrop--open {
+  z-index: 9003;
+}
+
+.THIS.slds .slds-backdrop--open.slds-backdrop--preview {
+  z-index: 8990;
+}
+
+.THIS .tab-content {
+  background-color: white;
+}
+
+.THIS .notSaving {
+  visibility: hidden;
+}
+
+.THIS .saving {
+  visibility: visible;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.THIS .small-spinner {
+  height: 18px;
+  width: 18px;
+}
+
+.THIS.slds .saving {
+  font-size: .775rem;
+}
+
+.THIS .preview-frame {
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
+.THIS  .slds-dropdown--trigger  .slds-dropdown--menu__hidden {
+  display: none;
+  z-index: 0;
+}
+
+.THIS  .slds-dropdown--trigger:hover  .slds-dropdown--menu__hidden,
+.THIS  .slds-dropdown--trigger:active  .slds-dropdown--menu__hidden {
+  display: block;
+  z-index: 100;
+}
+
+.THIS .slds-dropdown {
+  padding: 0 0!important;
+}
+
+.THIS .slds-dropdown__item > a {
+  justify-content: center!important;
+}
+
+.THIS .preview-site-selected {
+  fill : green;
+}
+
+.THIS .slds-builder__sidebar {
+  background-color: white;
+}
+
+.THIS .slds-position--back {
+  z-index: 9000;
+}
+
+.THIS .slds-icon.slds-icon-text-shade__dark {
+  fill: #d8dde6
+}
+
+.THIS .slds-icon.slds-icon-text-neutral {
+  fill: #0070d2;
+}
+
+.THIS .slds-disabled--inputfield {
+  opacity: .4;
+  pointer-events: none;
+  cursor: none;
+}
+
+.THIS .slds-datepicker{
+  font-size: 0.875rem!important;
+}
+
+.THIS .slds-dropdown.slds-dropdown--left.slds-dropdown--menu.slds-dropdown--menu__hidden.site-list {
+  min-width: 100%;
+  top: 34px;
+}
+
+.THIS .slds-dropdown__item.site-list--container {
+  display: flex;
+}
+
+.THIS .site-name {
+  max-width: 182px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.THIS .slds-dropdown__item > a.site-name--link {
+  width: 100%!important;
+  justify-content: flex-start!important;
+}
+
+.THIS .slds-backdrop.slds-backdrop--shade {
+  background-color: #f4f6f9!important;
+}
+
+.THIS .slds-form-element__label.darkText {
+  color: #16325c;
+}
+
+.THIS .site-checkbox-preview.hidden {
+  display: block!important;
+  opacity: 0;
+}
+
+.THIS .site-checkbox-preview {
+  pointer-events: none!important;
+}
+
+.THIS .sort2 {
+  position: absolute;
+  left: 7px;
+  top: 15px;
+}
+
+.THIS .sort1 {
+  position: absolute;
+  left: 1px;
+  top: 15px;
+}
+
+.THIS .threedots-vertical {
+  transform: rotate(90deg);
+  fill: #d9d9d9!important;
+}
+
+.THIS .slds-dropdown {
+  margin-top: 0!important;
+}
+
+.THIS .full-width-table {
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+.THIS .attendee-lookup {
+  max-width: 192px!important;
+  min-width: 192px!important;
+}
+
+.THIS .attendee-lookup-input {
+  padding-top: 6px!important;
+}
+
+.THIS .slds-event-status-link {
+  white-space: pre-wrap!important;
+}
+
+.THIS .fonteva-badge--warning {
+  background-color: #C23934!important;
+  color: white!important;
+}
+
+.THIS .fonteva-badge {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
+
+.THIS .slds-table thead th {
+  background-color: transparent;
+}
+
+.THIS [data-label="Tickets"] .slds-icon, .THIS [data-label="Access Permissions"] .slds-icon {
+  width: 3rem!important;
+  height: 3rem!important;
+}
+
+.THIS [data-name="ticketsModal"].active .ticket-image-modal {
+    width: 100%;
+
+}
+
+.THIS [data-name="ticketsModal"].active > .slds-modal__container > .slds-modal__header {
+    display: none;
+}
+
+.THIS [data-name="ticketsModal"].active .ticket-image-modal {
+    width: 100%;
+    height: 100%;
+    padding-top: 0;
+}
+.THIS [data-name="ticketsModal"].active .slds-backdrop.slds-backdrop--open {
+    display: none;
+}
+
+.THIS [data-name="mainBuilderDiv"] {
+   width: 98.5vw;
+}
+
+.THIS [data-name="mainBuilderDiv"].active [data-name="topNavDiv"],
+.THIS [data-name="mainBuilderDiv"].active [data-name="side-nav-div"] {
+    z-index: 8999;
+}
+.THIS .slds-button_icon-border {
+    border: 1px solid #d8dde6!important;
+    line-height: 1!important;
+    vertical-align: middle!important;
+    color: #54698d!important;
+    width: 2.25rem!important;
+    height: 2.25rem!important;
+}
+
+.THIS .fonteva-button_pagination div .slds-button_icon-border {
+    width: 2rem!important;
+    height: 2rem!important;
+}
+
+.THIS .fonteva-button_pagination div:first-of-type .slds-button_icon-border {
+    border-bottom-left-radius: 0!important;
+    border-bottom-right-radius: 0!important;
+}
+
+.THIS .fonteva-button_pagination div:last-of-type .slds-button_icon-border {
+    border-top-left-radius: 0!important;
+    border-top-right-radius: 0!important;
+}
+
+.THIS .fonteva-button_pagination div .slds-button[disabled] {
+    color: #d8dde6!important;
+}
+
+.THIS .slds-frame-position {
+    border-radius: 0;
+}

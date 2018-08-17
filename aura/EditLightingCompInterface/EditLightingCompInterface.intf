@@ -1,0 +1,5 @@
+<aura:interface description="EditLightingCompInterface" access="global">
+	<aura:attribute name="pageComponent" type="Map" required="true" access="global"/>
+	<aura:attribute name="validated" type="Boolean" access="global" default="true"/>
+	<aura:attribute name="index" type="Integer" access="global"/>
+</aura:interface>

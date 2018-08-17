@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="RegistrationProcessCompleteEvent" access="global">
+	<aura:attribute name="steps" type="List" required="true" access="global"/>
+</aura:event>

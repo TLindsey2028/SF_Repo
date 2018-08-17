@@ -1,0 +1,34 @@
+<aura:component description="RadioGroupAlternativeInputField">
+    <aura:attribute name="required" type="Boolean" description="If the field is required" default="false"/>
+    <aura:attribute name="value" type="String" description="The value" default=""/>
+    <aura:attribute name="uniqueId" type="String" access="private"/>
+    <aura:attribute name="listValues" type="List[]" default="[]"/>
+    <aura:attribute name="useRichText" type="Boolean" default="false"/>
+    <aura:attribute name="richTextClass" type="String" default=""/>
+    <aura:attribute name="disabled" type="Boolean" description="Disable Input" default="false"/>
+    <aura:handler name="change" value="{!v.disabled}" action="{!c.activateDeactivateField}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="Framework:InputFieldClearErrorMessagesEvent" action="{!c.handleInputFieldClearErrorMessagesEvent}"/>
+    <aura:method name="setErrorMessages" action="{!c.setErrorMessages}"
+                 description="Error Message For Field">
+        <aura:attribute name="errorMessages" type="Array" default="[]" description="Error Message"/>
+    </aura:method>
+    <aura:method name="loadExistingValue" action="{!c.loadExistingValue}"
+                 description="Load Existing Value">
+    </aura:method>
+    <aura:method name="clearExistingValue" action="{!c.clearExistingValue}"
+                 description="Clear Existing Value">
+    </aura:method>
+    <div class="slds-radio--button-group">
+        <aura:iteration items="{!v.listValues}" var="listValue">
+            <span class="slds-button slds-radio--button">
+                <input name="{!globalId+'_radio'}" type="radio" aura:id="radioGroup" id="{!v.uniqueId+'_'+listValue.value}" data-id="{!listValue.value}" onclick="{!c.captureChange}"/>
+                <label class="slds-radio--button__label" for="{!v.uniqueId+'_'+listValue.value}">
+                    <span class="{!v.useRichText ? 'slds-radio--faux' : 'hidden'}"><ui:outputRichText class="{!v.richTextClass}" value="{!listValue.label}"/></span>
+                    <span class="{!!v.useRichText ? 'slds-radio--faux' : 'hidden'}">{!listValue.label}</span>
+                </label>
+            </span>
+        </aura:iteration>
+    </div>
+    <Framework:ValidationErrorMessages aura:id="errorInput"/>
+</aura:component>

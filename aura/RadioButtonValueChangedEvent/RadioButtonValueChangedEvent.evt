@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="RadioButtonValueChangedEvent">
+    <aura:attribute name="name" type="String" required="true"/>
+    <aura:attribute name="fieldId" type="String" required="true"/>
+    <aura:attribute name="globalId" type="String" required="true"/>
+</aura:event>

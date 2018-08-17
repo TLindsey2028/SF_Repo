@@ -1,0 +1,138 @@
+<aura:component description="PaymentMethodDetail" controller="OrderApi.PaymentMethodController" implements="OrderApi:PaymentMethodsInterface">
+    <aura:attribute name="globalCCComp" type="String"/>
+    <aura:attribute name="iFrameStyles" type="String"/>
+    <aura:attribute name="isPortal" type="Boolean" access="public"/>
+    <aura:attribute name="textColor" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.paymentGateway}" action="{!c.handleGatewayChange}"/>
+    <aura:handler event="OrderApi:StopIndicatorEvent" action="{!c.stopIndicator}"/>
+    <aura:handler event="OrderApi:CreditCardTokenizeEvent" action="{!c.handleCCTokenizeEvent}"/>
+    <aura:handler event="Framework:ButtonToggleIndicatorEvent" action="{!c.handleButtonToggleIndicatorEvent}"/>
+
+    <div class="slds-grid slds-grid_vertical slds-p-bottom--medium">
+        <div class="slds-grid slds-p-horizontal--large slds-p-bottom_medium fonteva-cc fonteva-spacing_custom">
+            <div class="slds-grid slds-grid_vertical slds-col">
+                <div class="slds-text-heading_medium">
+                    <strong>{!$Label.OrderApi.Credit_Cards}</strong>
+                </div>
+                <div>
+                    {!$Label.OrderApi.Manage_Credit_Cards}
+                </div>
+            </div>
+            <div class="slds-align-middle slds-shrink-none">
+                <span class="{!empty(v.paymentGateway.id) ? 'hidden' : ''}">
+                    <Framework:Button type="brand"
+                                      label="New Credit Card"
+                                      onClickAction="{!c.newPayMethodModal}"
+                                      enableProgressIndicator="false"
+                                      additionalClasses="fonteva-button_reverse"
+                                      svgContainerClass="slds-button__icon_left"
+                                      lightningIcon="utility:add"
+                                      lightningIconSize="x-small"
+                                      lightningIconVariant="inverse"/>
+                </span>
+            </div>
+        </div>
+        <div class="fonteva-table--container">
+            <table class="slds-table slds-table_bordered slds-no-row-hover table table-default">
+                <thead class="slds-theme_shade">
+                <tr class="slds-text-title_caps">
+                    <th style="padding-left: 1.5rem;">
+                        {!$Label.OrderApi.Credit_Card_Type}
+                    </th>
+                    <th>
+                        {!$Label.OrderApi.Credit_Card_Ending_In}
+                    </th>
+                    <th>
+                        {!$Label.OrderApi.Payment_Method_Expiration}
+                    </th>
+                    <th>
+                        {!$Label.OrderApi.Payment_Method_Full_Name}
+                    </th>
+                    <th class="slds-size_1-of-3">
+                        {!$Label.OrderApi.Payment_Method_Billing_Address}
+                    </th>
+                    <th style="width: calc(64px + 3rem);">
+
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <aura:iteration items="{!v.paymentMethods}" var="paymentMethod">
+                    <tr>
+                        <td style="padding-left: 1.5rem;">
+                            {!paymentMethod.cardType}
+                        </td>
+                        <td>
+                            {!paymentMethod.lastFour}
+                        </td>
+                        <td>
+                            {!paymentMethod.expiration}
+                        </td>
+                        <td>
+                            {!paymentMethod.fullName}
+                        </td>
+                        <td class="slds-size_1-of-3 slds-cell-wrap">
+                             <span class="{!empty(paymentMethod.address.street_number) ? 'hidden' : ''}">
+                                    {!paymentMethod.address.street_number}&nbsp;
+                            </span>
+                            <span class="{!empty(paymentMethod.address.street_name) ? 'hidden' : ''}">
+                                {!paymentMethod.address.street_name},&nbsp;
+                            </span>
+                            <span class="{!empty(paymentMethod.address.city) ? 'hidden' : ''}">
+                                {!paymentMethod.address.city},&nbsp;
+                            </span>
+                            <span class="{!empty(paymentMethod.address.province) ? 'hidden' : ''}">
+                                {!paymentMethod.address.province}&nbsp;
+                            </span>
+                            <span class="{!empty(paymentMethod.address.postal_code) ? 'hidden' : ''}">
+                                {!paymentMethod.address.postal_code},&nbsp;
+                            </span>
+                                {!paymentMethod.address.country}
+                        </td>
+                        <td class="slds-text-align_right">
+                            <lightning:buttonIcon iconName="utility:edit" alternativeText="{!$Label.OrderApi.Manage_Payment_Methods_Edit}" class="slds-theme--shade slds-button--icon-border" onclick="{!c.editPayMethod}" value="{!paymentMethod.paymentMethodId}" />
+                            <lightning:buttonIcon iconName="utility:delete" alternativeText="{!$Label.OrderApi.Manage_Payment_Methods_Delete}" class="slds-theme--shade slds-button--icon-border" onclick="{!c.delPayMethod}"  value="{!paymentMethod.paymentMethodId}"/>
+                        </td>
+                    </tr>
+                </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- credit markup -->
+    <div class="slds-modal" aura:id="newPaymentMethodModal">
+        <div class="slds-modal__container payment-container">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium" id="modal-heading-label">
+                    {!$Label.OrderApi.Credit_Card_New}
+                </h2>
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+                    <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+                </button><!-- /.slds-button -->
+            </div><!-- /.slds-modal__header -->
+            <div class="slds-modal__content payment-comp">
+                <div class="slds-m-bottom--medium">
+                    <img src="https://s3.amazonaws.com/orderapi/payment-method-icons/credit_card_logos.png"/>
+                </div>
+                <div aura:id="ccDiv">
+                </div>
+            </div>
+            <div class="slds-modal__footer slds-text-align--right">
+                <Framework:Button enableProgressIndicator="false"
+                                  onClickAction="{!c.closeModal}"
+                                  type="neutral"
+                                  label="{!$Label.OrderApi.Payment_Method_Cancel}" />
+                <Framework:Button aura:id="saveModalButton"
+                                  onClickAction="{!c.savePaymentMethod}"
+                                  type="brand"
+                                  group="paymentButtons"
+                                  additionalClasses="slds-m-left--xx-small"
+                                  label="{!$Label.OrderApi.Payment_Method_Save}" />
+            </div><!-- /.slds-modal__footer -->
+        </div>
+    </div>
+    <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

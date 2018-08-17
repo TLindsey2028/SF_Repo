@@ -1,0 +1,33 @@
+/**
+ * Created by agupta on 11/30/16.
+ */
+.THIS .sp-wrapper {
+    top: 20px
+}
+
+.THIS .sponsor-images {
+    vertical-align: middle
+}
+
+.THIS .tns-controls {
+    transform : translateY(0);
+}
+
+.THIS .mediumImage {
+    min-width: 100px;
+}
+
+.THIS .mediumImage svg {
+    height: 100px!important;
+    width: 100px!important;
+}
+
+.THIS .sponsor-name {
+    position: relative;
+    top: 12px;
+}
+
+.THIS .sponsor-descr {
+    position: relative;
+    top: 24px;
+}

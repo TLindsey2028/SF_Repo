@@ -1,0 +1,140 @@
+<aura:component description="EventAgenda" implements="LTE:EventInterface" controller="LTE.EventAgendaComponentController" access="global" extends="LTE:EventBase">
+    <aura:attribute name="previousComponent" type="String" access="global"/>
+    <aura:attribute name="readOnly" type="Boolean" default="true" access="global"/>
+    <aura:attribute name="sessionSearchObj" type="Map" default="{}"/>
+    <aura:attribute name="attendeeObj" type="LTE.AttendeeRecord" access="global"/>
+    <aura:attribute name="showPurchase" type="Boolean" access="global" default="false"/>
+    <aura:attribute name="sessionDays" type="List" default="[]"/>
+    <aura:attribute name="sessionsSelected" type="Map" default="{}"/>
+    <aura:attribute name="disableAddAll" type="Boolean" default="false" access="private"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="LTE:SessionSelectEvent" action="{!c.handleSessionSelectEvent}"/>
+    <aura:dependency resource="markup://LTE:EventAgendaSection" />
+    <aura:registerEvent name="RegistrationProcessChangeEvent" type="LTE:RegistrationProcessChangeEvent"/>
+    <aura:registerEvent name="EventCancelRegistrationEvent" type="LTE:EventCancelRegistrationEvent"/>
+    <aura:registerEvent name="EventSummaryUpdateEvent" type="LTE:EventSummaryUpdateEvent"/>
+    <aura:registerEvent name="changeStep" type="LTE:ChangeStepEvent"/>
+    <aura:attribute name="agendaCriteriaCmpGlobalId" type="String" />
+    <aura:attribute name="eventAgendaCriteriaObj" type="Map" default="{}"/>
+    <aura:attribute name="scheduleItemsFiltered" type="List[]" default="[]"/>
+    <aura:attribute name="dateFormat" type="String"/>
+    <aura:handler event="EventApi:EventAgendaFilterEvent" action="{!c.handleAgendaFilterEvent}"/>
+    <aura:registerEvent name="SectionItemEvent" type="LTE:SectionItemEvent"/>
+    <aura:registerEvent name="UpdateButtonEvent" type="LTE:UpdateButtonEvent"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldChangeEvent}"/>
+    <aura:attribute name="currentContact" type="String"/>
+    <aura:attribute name="isCreateAllSessions" type="Boolean" default="false"/>
+    <aura:attribute name="salesOrderScheduleItemIds" type="List"/>
+    <aura:registerEvent name="RegistrationProcessSetGlobalObjectsEvent" type="LTE:RegistrationProcessSetGlobalObjectsEvent"/>
+    <aura:registerEvent type="LTE:UpdateShoppingCartItemCountEvent" name="UpdateShoppingCartItemCountEvent"/>
+    <aura:handler event="LTE:SalesOrderLineDeletedEvent" action="{!c.handleSalesOrderLineDeletedEvent}"/>
+
+    <div class="slds-size--1-of-1 slds-event--panes fonteva-event-component">
+        <div class="slds-event--pane slds-p-horizontal_large">
+            <div class="slds-col slds-p-vertical_medium slds-grid slds-grid_pull-padded-x-small">
+                <div class="{!v.readOnly ? 'slds-size_1-of-1 fonteva-frame_body' : 'slds-col slds-medium-size_2-of-3 slds-p-horizontal_small'}">
+                    <div class="slds-grid slds-grid_vertical">
+                        <div class="fonteva-event-content slds-size--1-of-1">
+                            <aura:if isTrue="{!!v.readOnly}">
+                                <aura:if isTrue="{!v.eventObj.eventAgendaInstructions.length > 0}">
+                                    <div class="slds-grid slds-p-bottom--medium slds-text-align--left">
+                                        <ui:outputRichText value="{!v.eventObj.eventAgendaInstructions}" linkify="true" class="event-rich-text"/>
+                                    </div>
+                                </aura:if>
+                            </aura:if>
+                            <aura:if isTrue="{!and(v.eventObj.allowReg, v.showPurchase)}">
+                                <div class="slds-grid">
+                                    <div class="slds-size--1-of-1">
+
+                                            <div class="slds-size--1-of-1 slds-text-align--right slds-text-align--left__small slds-m-bottom--small">
+                                                <Framework:Button type="brand" aura:id="newAttendee" label="{!$Label.LTE.Purchase_More_Sessions}" onClickAction="{!c.purchaseNewSession}"/>
+                                            </div>
+                                    </div>
+                                </div>
+                            </aura:if>
+                        </div>
+                        <div class="fonteva-event-content fonteva-slds-schedule-search-bar slds-size--1-of-1">
+                            <div class="slds-grid slds-grid--pull-padded slds-wrap">
+                                <div class="slds-size_1-of-1" aura:id="eventAgendaCriteriaPlaceholder" data-name="agendaCriteriaPlaceHolder"/>
+                            </div>
+                        </div>
+                        <aura:if isTrue="{!!v.readOnly}">
+                            <div class="slds-grid slds-wrap slds-p-around_small slds-grid_pull-padded-x-small" aura:id="addAllDiv">
+                                <div class="slds-col slds-p-horizontal_x-small slds-align-middle">
+                                    <p>
+                                        <strong>{!$Label.LTE.Event_Add_All_Description}</strong>
+                                    </p>
+                                    <p>
+                                        <strong>{!$Label.LTE.Event_Add_Individual_Description}</strong>
+                                    </p>
+                                </div>
+                                <div>
+                                    <Framework:Button type="brand" aura:id="addAllSessions" label="{!$Label.LTE.Event_Add_All_Button}" onClickAction="{!c.addAllSessions}"
+                                                      disable="{!v.disableAddAll}"/>
+                                </div>
+                            </div>
+                        </aura:if>
+                        <div class="slds slds-loading-layout" aura:id="mainLoader">
+                            <div class="slds-grid slds-loading-layout">
+                                <div class="slds-col slds-text-align--center slds-align-middle" >
+                                    <img src="{!$Resource.Framework__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+                                    <span class="slds-text-heading--medium">{!$Label.LTE.Loading}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fonteva-event-content slds-size--1-of-1 slds-hide" aura:id="mainBody">
+                            <div class="slds-grid slds-grid--vertical slds-p-horizontal_small">
+                                <div class="" aura:id="sessionDays">
+                                </div>
+                            </div>
+                        </div>
+                        <aura:if isTrue="{!!v.readOnly}">
+                            <div class="slds-grid slds-wrap slds-p-around_small slds-grid_pull-padded-x-small" aura:id="addAllDiv">
+                                <div class="slds-col slds-p-horizontal_x-small slds-align-middle">
+                                    <p>
+                                        <strong>{!$Label.LTE.Event_Add_All_Description}</strong>
+                                    </p>
+                                    <p>
+                                        <strong>{!$Label.LTE.Event_Add_Individual_Description}</strong>
+                                    </p>
+                                </div>
+                                <div>
+                                    <Framework:Button type="brand" aura:id="addAllSessions" label="{!$Label.LTE.Event_Add_All_Button}" onClickAction="{!c.addAllSessions}"
+                                                      disable="{!v.disableAddAll}"/>
+                                </div>
+                            </div>
+                        </aura:if>
+                    </div>
+                </div>
+                <aura:if isTrue="{!!v.readOnly}">
+                    <div class="slds-col slds-medium-size_1-of-3 fonteva-medium-p-horizontal_small fonteva-event_summary">
+                        <LTE:EventRegistrationSummary aura:id="eventRegistrationSummary" so="{!v.salesOrderObj}" eventObj="{!v.eventObj}" initialPurchase="{!v.initialPurchase}" displayDiscount="false" displayTotal="false" readOnly="true" attendeeObj="{!v.attendeeObj}" siteObj="{!v.siteObj}" storeObj="{!v.storeObj}"/>
+                        <div class="slds-grid slds-grid_align-center fonteva-footer_actions">
+                            <LTE:EventActionButtons cancelAction="{!c.openCancelModal}" aura:id="actionButtons" nextAction="{!c.nextStep}" previousAction="{!c.previousStep}" showPrevious="{!v.initialPurchase}" disableNext="{!not(and(v.salesOrderObj != null,or(v.salesOrderObj.lines.length > 0, v.salesOrderObj.waitlistEntries.length > 0)))}"/>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+        </div>
+    </div>
+    <Framework:MessagePrompt title="{!$Label.LTE.No_Available_Sessions}"
+                             message="{!$Label.LTE.No_Available_Sessions_Description}"
+                             severity="warning"
+                             aura:id="noSessionPrompt"
+                             showCancelButton="false"
+                             closeOnClickAction="{!c.showManageReg}"
+                             submitButtonLabel="{!$Label.LTE.No_Available_Sessions_Submit}"
+                             submitOnClickAction="{!c.showManageReg}"/>
+
+    <div class="fonteva-prompt_severity">
+        <Framework:MessagePrompt title="{!$Label.LTE.Cancel_Registration_Header}"
+                             message="{!'&lt;div>'+$Label.LTE.Cancel_Reg_First+'&lt;/div>'+$Label.LTE.Cancel_Reg_Second}"
+                             severity="error"
+                             aura:id="cancelPrompt"
+                             cancelButtonLabel="{!$Label.LTE.Cancel_Reg_No}"
+                             submitButtonLabel="{!$Label.LTE.Cancel_Reg_Yes}"
+
+                             submitOnClickAction="{!c.showManageReg}"/>
+    </div>
+    <div aura:id="sessionFormModal" />
+</aura:component>

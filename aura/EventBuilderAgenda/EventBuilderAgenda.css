@@ -1,0 +1,50 @@
+.THIS .tab--transparent , .THIS .slds-tabs--default {
+    background: transparent!important;
+}
+
+.THIS .slds-modal__container.track-modal {
+    max-width: 60rem!important;
+}
+
+.THIS .drag-n-drop-search-padding .slds-filter-search-bar {
+  margin-bottom: 25px;
+}
+
+.THIS .drag-n-drop-search-padding .second-list-values {
+  min-height: 266px;
+}
+
+.THIS .fonteva-modal_parent .slds-modal__container.packageEditor > .slds-modal__header,
+.THIS .fonteva-modal_parent .slds-modal__container.packageEditor > .slds-modal__footer,
+.THIS .fonteva-modal_parent .slds-modal__container.packageEditor > .slds-backdrop.slds-backdrop--open {
+    display: none;
+}
+
+.THIS .fonteva-modal_parent .slds-modal__container.packageEditor .slds-modal__container {
+    width: 100%;
+}
+
+.THIS .fonteva-modal_parent .slds-modal__container.packageEditor > .slds-modal__content {
+    height: 0;
+    padding: 0;
+}
+
+.THIS .strong {
+    font-weight: bold;
+}
+
+.THIS .hideLabel {
+    display: none!important;
+}
+
+.THIS .uiInputDefaultError .form-element__help {
+    white-space: pre-wrap;
+}
+
+.THIS .schedule-item-editable td {
+    vertical-align: top;
+}
+
+.THIS .duration-times {
+    font-size: 12px;
+}

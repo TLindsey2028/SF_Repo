@@ -1,0 +1,122 @@
+<aura:component description="Login" access="global" controller="LTE.LoginComponentController">
+    <aura:attribute default="{}" name="loginData" type="Map" access="global"/>
+    <aura:attribute name="returnUrl" type="String" access="global"/>
+    <aura:attribute name="eventId" type="String" access="global"/>
+    <aura:attribute name="storeObj" type="Map" access="global"/>
+    <aura:attribute name="showOverview" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="siteObj" type="Map" access="global"/>
+    <aura:attribute name="isGuestRegistrationEnabled" type="Boolean" default="true"/>
+    <aura:attribute name="guestRegistrationFields" type="List" default="[]"/>
+    <aura:attribute name="guestRegistrationFieldsGlobals" type="List" default="[]"/>
+    <aura:attribute name="foundContact" type="Map" default="{}"/>
+    <aura:registerEvent name="LoginComponentEvent" type="LTE:LoginComponentEvent" />
+    <aura:attribute name="showLoginModal" type="Boolean" default="false"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldChangeEvent}"/>
+    <ltng:require scripts="{!join(',',$Resource.Framework__SLDS_Base + '/js/scripts.js', $Resource.PagesApi__FontevaHelper + '/FontevaHelper.js')}" afterScriptsLoaded="{!c.doInit}"/>
+
+    <div class="slds-modal fonteva-modal" aura:id="loginModal" onkeyup="{!c.loginFormKeyUp}" role="dialog" tabindex="-1" aria-labelledby="header43">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium" id="header43">
+                    <aura:if isTrue="{!v.showLoginModal}">
+                        {!$Label.LTE.Login_Component_Login_Section_Header}
+                        <aura:set attribute="else">
+                            {!$Label.LTE.Login_Component_Guest_Checkout_Section}
+                        </aura:set>
+                    </aura:if>
+                </h2>
+                <button class="slds-button slds-modal__close slds-button--icon-inverse" data-close="modal" title="Close" onclick="{!c.hideLoginModal}">
+                    <lightning:icon iconName="utility:close" size="small"/>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+            </div>
+            <div class="slds-modal__content slds-p-around--medium">
+                <aura:if isTrue="{!v.showLoginModal}">
+                    <aura:if isTrue="{!v.siteObj.loginOverrideUrl == null}">
+                        <Framework:InputFields group="loginForm" fieldType="email" isRequired="true" aura:id="userName" label="{!$Label.LTE.Login_Component_UserName}" value="{!v.loginData}" maxlength="40"/>
+                        <Framework:InputFields group="loginForm" fieldType="password" isRequired="true" aura:id="password" label="{!$Label.LTE.Login_Component_Password}" value="{!v.loginData}" />
+                        <div><a onclick="{!c.showForgotPasswordModal}">{!$Label.LTE.Login_Component_ForgotPassword}</a></div>
+                    </aura:if>
+                    <aura:set attribute="else">
+                        <Framework:InputFields group="guestForm" fieldType="string" isRequired="true" aura:id="firstName" label="{!$Label.LTE.Login_Component_FirstName}" value="{!v.loginData}" maxlength="40"/>
+                        <Framework:InputFields group="guestForm" fieldType="string" isRequired="true" aura:id="lastName" label="{!$Label.LTE.Login_Component_LastName}" value="{!v.loginData}" maxlength="80"/>
+                        <Framework:InputFields group="guestForm" fieldType="email" isRequired="true" aura:id="email" label="{!$Label.LTE.Login_Component_Email}" value="{!v.loginData}" fireChangeEvent="true" maxlength="40"/>
+                        <aura:if isTrue="{!v.storeObj.showMatchField}">
+                            <div class="{!v.storeObj.showMatchField ? 'slds-col slds-size--1-of-1' : 'hidden'}" aura:id="customMatchFieldDiv">
+                                <Framework:InputFields group="guestForm" fieldType="{!v.storeObj.contactMatchFieldType}" isRequired="{!v.storeObj.requireContactMatchRuleField}" aura:id="matchingField" label="{!v.storeObj.contactMatchFieldLabel}" value="{!v.loginData}" fireChangeEvent="true" otherAttributes="{!v.storeObj.otherAttributes}"/>
+                            </div>
+                        </aura:if>
+                        <div class="slds-col slds-size--1-of-1 hidden" aura:id="newContactFields">
+                            <aura:if isTrue="{!and(v.storeObj.enableAccountSearch, (v.storeObj.accountMatchCriteria == 'All Accounts'))}">
+                                <LTE:AccountSearchComponent value="{!v.loginData}" queryFilter="OrderApi__Privacy_Settings__c = 'public'" storeObj="{!v.storeObj}"/>
+                            </aura:if>
+                            <div aura:id="fieldSetDiv">
+                            </div>
+                        </div>
+                        <aura:if isTrue="{!v.siteObj.createAccountOverrideUrl == null}">
+                            <div class="{!v.isGuestRegistrationEnabled ? 'slds-col slds-size--1-of-1' : 'hidden'}">
+                                <Framework:InputFields group="guestForm" fieldType="boolean" isRequired="true" aura:id="createUser" label="{!$Label.LTE.Login_Component_Create_User_Account}" value="{!v.loginData}" fireChangeEvent="true"/>
+                            </div>
+                            <div class="{!v.loginData.createUser ? 'slds-col slds-size--1-of-1' : 'hidden'}" aura:id="createUserDiv">
+                                <Framework:InputFields group="guestForm" fieldType="string" aura:id="registerGuestUserName" label="{!$Label.LTE.Login_Component_UserName}" value="{!v.loginData}" disabled="true"/>
+                                <Framework:InputFields group="guestForm" fieldType="password" isRequired="true" aura:id="guestPassword" label="{!$Label.LTE.Login_Component_Password}" value="{!v.loginData}" />
+                            </div>
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{!v.isGuestRegistrationEnabled}">
+                                    <div class="slds-col slds-size--1-of-1 slds-p-bottom--small">
+                                        <a href="javascript:void(0);" onclick="{!c.createAccountOverride}">{!$Label.LTE.Create_User_Account_Override_Button}</a>
+                                    </div>
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+            </div>
+            <div class="slds-modal__footer">
+                <aura:if isTrue="{!v.showLoginModal}">
+                <aura:if isTrue="{!v.siteObj.loginOverrideUrl != null}">
+                    <Framework:Button label="{!$Label.LTE.Login_Override_Button}" type="brand" onClickAction="{!c.loginOverride}"/>
+                    <aura:set attribute="else">
+                        <Framework:Button label="{!$Label.LTE.Login_Component_Login_BTN}" onClickAction="{!c.loginAction}" type="brand" aura:id="loginBtn"/>
+                    </aura:set>
+                </aura:if>
+                    <p class="slds-m-top--large slds-m-bottom--x-large">{!$Label.LTE.Login_Component_No_Uname_Pwd} &nbsp;<a onclick="{!c.showGuestModal}">{!$Label.LTE.Login_Component_Guest_Checkout_Section}</a></p>
+                    <aura:set attribute="else">
+                        <Framework:Button label="{!$Label.LTE.Event_Register_Button}" onClickAction="{!c.checkoutAsGuest}" type="brand" aura:id="guestRegistrationButton" disable="true"/>
+                        <p class="slds-m-top--medium">{!$Label.LTE.Login_Component_Already_An_Account} &nbsp;<a onclick="{!c.showLoginModal}">Login</a>&nbsp; {!$Label.LTE.Login_Component_Access_Benefits}</p>
+                    </aura:set>
+                </aura:if>
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.hideLoginModal}"></div>
+
+    <div aria-hidden="false" role="dialog" class="slds-modal" aura:id="slds-modal--forgotPassword">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium" id="modal-heading-label">
+                    {!$Label.LTE.Login_Component_ForgotPassword_Header}
+                </h2>
+                <button class="slds-button slds-modal__close slds-button--icon-inverse" data-close="modal" title="Close" onclick="{!c.hideForgotPasswordModal}">
+                    <lightning:icon iconName="utility:close" size="medium"/>
+                    <span class="slds-assistive-text">{!$Label.LTE.Login_Component_Cancel}</span>
+                </button>
+            </div>
+            <div class="slds-modal__content slds-p-horizontal--medium slds-p-vertical--x-large">
+                <p class="slds-text-heading--small slds-p-bottom--medium slds-text-align--center">{!$Label.LTE.Login_Component_ForgotPassword_Email_Label}</p>
+                <div class="slds-grid">
+                    <div class="slds-medium-size--1-of-6">
+                    </div>
+                    <div class="slds-medium-size--2-of-3 slds-size--1-of-1">
+                        <Framework:InputFields group="loginForm" fieldType="email" isRequired="true" aura:id="forgotUserName" label="{!$Label.LTE.Login_Component_UserName}" value="{!v.loginData}" />
+                    </div>
+                </div>
+            </div>
+            <div class="slds-modal__footer slds-modal__footer_clear slds-text-align--center">
+                <Framework:Button type="neutral" enableProgressIndicator="false" label="{!$Label.LTE.Login_Component_Cancel}" onClickAction="{!c.hideForgotPasswordModal}"/>
+                <Framework:Button label="{!$Label.LTE.Login_Component_Forgot_Password_Submit_Label}" onClickAction="{!c.forgotPassword}" type="brand" additionalClasses="slds-m-left--x-small" aura:id="forgotPasswordButton"/>
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop" aura:id="loginBackdrop" onclick="{!c.hideForgotPasswordModal}"/>
+</aura:component>

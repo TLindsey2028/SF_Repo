@@ -1,0 +1,85 @@
+<aura:component description="SubscriptionItemDetails" controller="ROEApi.SubscriptionItemDetailsController">
+    <aura:attribute name="orderItem" type="Map" required="true"/>
+    <aura:attribute name="subscriberObj" type="Map" default="{}"/>
+    <aura:attribute name="priceRuleObj" type="Map" default="{}"/>
+    <aura:attribute name="subscriptionPlanInfoObj" type="Map" default="{}"/>
+    <aura:attribute name="subscriptionPlans" type="Map" default="{}" />
+    <aura:attribute name="contactLookupId" type="String" />
+    <aura:attribute name="assignmentsComplete" type="Boolean" default="true"/>
+    <aura:attribute name="formComplete" type="Boolean" default="true"/>
+    <aura:attribute name="oldContactId" type="String" />
+    <aura:attribute name="contactPrefix" type="String" default=""/>
+    <aura:attribute name="customerObj" type="Map" default="{}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:handler event="OrderApi:ContactCreatedEvent" action="{!c.handleContactCreationEvent}"/>
+    <aura:handler event="ROEApi:PackageItemCompTotalUpdateEvent" action="{!c.handlePIItemTotalUpdateEvent}"/>
+    <aura:handler event="ROEApi:TogglePackageItemTableEvent" action="{!c.handleTogglePackageItemEvent}"/>
+    <aura:handler event="ROEApi:SubscriptionAssignmentUpdatedEvent" action="{!c.handleAssignmentUpdateEvent}"/>
+    <aura:handler event="OrderApi:CustomerLookupFilterUpdatedEvent" action="{!c.handleCustomerLookupFilterUpdateEvent}"/>
+    <aura:registerEvent name="ItemCompleteEvent" type="ROEApi:ItemCompleteEvent"/>
+    <aura:registerEvent name="ItemUpdateEvent" type="ROEApi:ItemUpdateEvent"/>
+    <aura:handler event="ROEApi:FormSubmittedEvent" action="{!c.handleFormSubmitEvent}"/>
+    <div class=" slds-size--1-of-1 slds-grid">
+        <div class="slds-size--1-of-5 slds-p-horizontal--small slds-m-bottom-x--small slds-position--relative" aura:id="subscriberLookup">
+            <OrderApi:ContactPopover customerObj="{!v.customerObj}" aura:id="assignmentPopOver" uniqueIdentifier="{!v.orderItem.salesOrderLine}"/>
+        </div>
+        <div class="slds-size--1-of-5 slds-p-horizontal--small slds-m-bottom-x--small">
+            <Framework:InputFields group="{!v.orderItem.salesOrderLine}" fieldType="picklist" value="{!v.orderItem}" label="{!$Label.ROEApi.Subscription_Plan}" isRequired="true" aura:id="subscriptionPlan" fireChangeEvent="true"/>
+        </div>
+        <div class="{!v.orderItem.priceRule == null ? 'slds-size--1-of-5 slds-p-horizontal--small slds-m-bottom-x--small slds-hidden' : 'slds-size--1-of-5 slds-p-horizontal--small slds-m-bottom-x--small'}">
+            <label class="slds-form-element__label helper-margin-right">{!$Label.ROEApi.Price_Rule}</label>
+            <div><strong>{!v.priceRuleObj.name} - <Framework:CurrencyField value="{!v.priceRuleObj.price}" currencyISOCode="{!v.orderItem.currencyISOCode}" isMultiCurrencyOrg="{!v.orderItem.isMultiCurrencyOrg}"/></strong></div>
+        </div>
+        <div class="slds-size--1-of-5 slds-p-horizontal--small slds-m-bottom-x--small" aura:id="newPrice">
+            <label class="slds-form-element__label helper-margin-right">{!$Label.ROEApi.Subscription_Sale_Price}</label>
+            <div><Framework:CurrencyField value="{!v.orderItem.overriddenPrice}" currencyISOCode="{!v.orderItem.currencyISOCode}" isMultiCurrencyOrg="{!v.orderItem.isMultiCurrencyOrg}"/></div>
+        </div>
+        <div class="slds-size--1-of-5 slds-p-horizontal--small slds-m-bottom-x--small slds-text-align--right slds-text-heading--medium">
+            <Framework:CurrencyField aura:id="itemPrice" value="{!v.orderItem.price}" currencyISOCode="{!v.orderItem.currencyISOCode}" isMultiCurrencyOrg="{!v.orderItem.isMultiCurrencyOrg}"/>
+        </div>
+    </div>
+    <div class="slds-size--1-of-1 slds-grid slds-m-top--medium slds-hidden slds-wrap slds-col--padded" aura:id="renewalSection">
+        <aura:if isTrue="{!v.subscriptionPlanInfoObj.autoRenew}">
+            <aura:if isTrue="{!v.subscriptionPlanInfoObj.autoRenewRequired}">
+                <aura:if isTrue="{!v.subscriptionPlanInfoObj.savedPaymentMethods.length > 0}">
+                    <div class="slds-size--1-of-1 slds-m-bottom--medium">{!$Label.ROEApi.Subscription_Renewal_Description}:</div>
+                    <div class="slds-size--1-of-1">
+                        <Framework:InputFields group="{!v.orderItem.salesOrderLine}" fieldType="radio" otherAttributes='{"name" : "requiredSaved"}' value="{!v.orderItem}" aura:id="requiredSavedMethod" label="{!$Label.ROEApi.Subscription_Saved_Payment_Method}" fireChangeEvent="true"/>
+                        <Framework:InputFields group="{!v.orderItem.salesOrderLine}" fieldType="picklist" value="{!v.orderItem}" styleClasses="slds-m-left--medium slds-size--1-of-4" labelStyleClasses="slds-hide" label="" aura:id="requiredPaymentMethodOption" fireChangeEvent="true"/>
+                        <Framework:InputFields group="{!v.orderItem.salesOrderLine}" fieldType="radio" otherAttributes='{"name" : "requiredSaved"}' value="{!v.orderItem}" aura:id="requiredSavedMethodCheckout" label="{!$Label.ROEApi.Subscription_Checkout_Payment_Method}" fireChangeEvent="true"/>
+                    </div>
+                    <aura:set attribute="else">
+                        <div class="slds-size--1-of-1">{!$Label.ROEApi.Subscription_Renewal_Description_Credit_Card}</div>
+                    </aura:set>
+                </aura:if>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.subscriptionPlanInfoObj.savedPaymentMethods.length > 0}">
+                        <Framework:InputFields group="{!v.orderItem.salesOrderLine}" fieldType="boolean" label="{!$Label.ROEApi.Subscription_Renewal_Payment_Method}" aura:id="renewSubWithPaymentMethod" value="{!v.orderItem}" fireChangeEvent="true"/>
+                        <div class="slds-size--1-of-1 slds-m-left--x-large">
+                            <Framework:InputFields group="{!v.orderItem.salesOrderLine}" fieldType="radio" otherAttributes='{"name" : "requiredSaved"}' value="{!v.orderItem}" aura:id="optionalSavedMethod" label="{!$Label.ROEApi.Subscription_Saved_Payment_Method}" fireChangeEvent="true" disabled="{!!v.orderItem.salesOrderLine.renewSubWithPaymentMethod}"/>
+                            <Framework:InputFields group="{!v.orderItem.salesOrderLine}" fieldType="picklist" value="{!v.orderItem}" styleClasses="slds-m-left--medium slds-size--1-of-4" labelStyleClasses="slds-hide" label="" aura:id="optionalPaymentMethodOption" fireChangeEvent="true" disabled="{!!v.orderItem.salesOrderLine.renewSubWithPaymentMethod}"/>
+                            <Framework:InputFields group="{!v.orderItem.salesOrderLine}" fieldType="radio" otherAttributes='{"name" : "requiredSaved"}' value="{!v.orderItem}" aura:id="optionalSavedMethodCheckout" label="{!$Label.ROEApi.Subscription_Checkout_Payment_Method}" fireChangeEvent="true" disabled="{!!v.orderItem.salesOrderLine.renewSubWithPaymentMethod}"/>
+                        </div>
+                        <aura:set attribute="else">
+                            <Framework:InputFields group="{!v.orderItem.salesOrderLine}" fieldType="boolean" label="{!$Label.ROEApi.Subscription_Renew_Auto_Description_Credit_Card}" aura:id="renewSub" value="{!v.orderItem}" fireChangeEvent="true"/>
+                        </aura:set>
+                    </aura:if>
+                </aura:set>
+            </aura:if>
+        </aura:if>
+    </div>
+    <div class="slds-size--1-of-1 slds-grid slds-m-top--medium slds-col--padded" aura:id="form">
+    </div>
+    <div class="slds-size--1-of-1 slds-grid slds-m-top--medium">
+        <aura:if isTrue="{!v.orderItem.assignmentsEnabled}">
+            <ROEApi:SubscriptionAssignments orderItem="{!v.orderItem}" aura:id="assignmentsPanel"/>
+        </aura:if>
+    </div>
+    <div class="slds-size--1-of-1 slds-grid slds-m-top--medium slds-hide" aura:id="packageItemWrapper">
+        <aura:if isTrue="{!!v.orderItem.isPackageItem}">
+            <ROEApi:PackageItemDetails customerId="{!v.orderItem.customerId}" parentSalesOrderLine="{!v.orderItem.salesOrderLine}" salesOrder="{!v.orderItem.salesOrder}" item="{!v.orderItem.itemId}" currencyISOCode="{!v.orderItem.currencyISOCode}" isMultiCurrencyOrg="{!v.orderItem.isMultiCurrencyOrg}"/>
+        </aura:if>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

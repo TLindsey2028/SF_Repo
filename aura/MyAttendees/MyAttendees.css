@@ -1,0 +1,54 @@
+.THIS .fonteva-slds-cancellation-requested {
+    background-color: #C23934!important;
+    color: white!important;
+    display: block;
+}
+
+.THIS .slds-truncate.slds-truncate--custom {
+    max-width: 80vw
+}
+
+.THIS .slds-large-grid--vertical-align-center {
+    align-items: normal;
+    align-content: normal;
+}
+.THIS .fonteva-text-overflow {
+    display: flex;
+}
+
+.THIS .fonteva-text-overflow div {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+}
+
+.THIS .slds-ticket-type--interaction > div:last-of-type {
+    text-align: right;
+    justify-content: flex-end;
+    display: flex;
+}
+
+@media (min-width: 64em) {
+    .THIS .slds-large-grid--vertical-align-center {
+        align-items: center;
+        align-content: center;
+    }
+    .THIS .fonteva-header_faux .slds-ticket-type--interaction:first-of-type > .fonteva-header_faux-anchor > div:before {
+        position: absolute;
+        display: block;
+        top: -36px;
+        left: 2px;
+        font-weight: 600;
+    }
+
+    .THIS .fonteva-header_faux .slds-ticket-type--interaction:first-of-type > .fonteva-header_faux-anchor > div {
+        position: relative;
+    }
+
+    .THIS .fonteva-header_faux .slds-ticket-type--interaction:first-of-type > .fonteva-header_faux-anchor > div:before {
+        content: attr(data-title);
+    }
+    .THIS .slds-ticket-type--interaction > div:last-of-type {
+        min-width: 140px;
+    }
+}

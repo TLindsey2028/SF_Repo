@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="TransitionAttendeeModal" access="global">
+	<aura:attribute name="class" type="String" access="global"/>
+	<aura:attribute name="action" type="String" access="global"/>
+</aura:event>

@@ -1,0 +1,894 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>false</sorted>
+    <standardValue>
+        <fullName>Accurint</fullName>
+        <default>false</default>
+        <label>Accurint</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Action/Task Report</fullName>
+        <default>false</default>
+        <label>Action/Task Report</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Alumni Center New</fullName>
+        <default>false</default>
+        <label>Alumni Center New</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Alumni Locator Service</fullName>
+        <default>false</default>
+        <label>Alumni Locator Service</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Alumni Membership Form</fullName>
+        <default>false</default>
+        <label>Alumni Membership Form</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Alumni Relations</fullName>
+        <default>false</default>
+        <label>Alumni Relations</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Annual Fund FY15 Dec Mailing</fullName>
+        <default>false</default>
+        <label>Annual Fund FY15 Dec Mailing</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Annual Fund FY16 Dec Mailing</fullName>
+        <default>false</default>
+        <label>Annual Fund FY16 Dec Mailing</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Annual Report</fullName>
+        <default>false</default>
+        <label>Annual Report</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Assessor Office</fullName>
+        <default>false</default>
+        <label>Assessor Office</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Athletic Director</fullName>
+        <default>false</default>
+        <label>Athletic Director</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Banner</fullName>
+        <default>false</default>
+        <label>Banner</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Beals, Suzanne</fullName>
+        <default>false</default>
+        <label>Beals, Suzanne</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Biographical Card</fullName>
+        <default>false</default>
+        <label>Biographical Card</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Blast Email</fullName>
+        <default>false</default>
+        <label>Blast Email</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Bolar, Gordon</fullName>
+        <default>false</default>
+        <label>Bolar, Gordon</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Bounced E-mail</fullName>
+        <default>false</default>
+        <label>Bounced E-mail</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Brey, Elyse</fullName>
+        <default>false</default>
+        <label>Brey, Elyse</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Bronson Hospital</fullName>
+        <default>false</default>
+        <label>Bronson Hospital</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Business Associate</fullName>
+        <default>false</default>
+        <label>Business Associate</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Business Card</fullName>
+        <default>false</default>
+        <label>Business Card</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Called Info-Ckd Phone Book</fullName>
+        <default>false</default>
+        <label>Called Info-Ckd Phone Book</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Career Planning &amp; Placement</fullName>
+        <default>false</default>
+        <label>Career Planning &amp; Placement</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Central Database</fullName>
+        <default>false</default>
+        <label>Central Database</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Clark, Janis</fullName>
+        <default>false</default>
+        <label>Clark, Janis</label>
+    </standardValue>
+    <standardValue>
+        <fullName>COA Card Signed By Person</fullName>
+        <default>false</default>
+        <label>COA Card Signed By Person</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Coach, Athletics</fullName>
+        <default>false</default>
+        <label>Coach, Athletics</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Commencement Program</fullName>
+        <default>false</default>
+        <label>Commencement Program</label>
+    </standardValue>
+    <standardValue>
+        <fullName>CompanyLink</fullName>
+        <default>false</default>
+        <label>CompanyLink</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Company Proxy</fullName>
+        <default>false</default>
+        <label>Company Proxy</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Concierge Desk</fullName>
+        <default>false</default>
+        <label>Concierge Desk</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Constituent Supplied</fullName>
+        <default>false</default>
+        <label>Constituent Supplied</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Conversion</fullName>
+        <default>false</default>
+        <label>Conversion</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Corp Schlp Project</fullName>
+        <default>false</default>
+        <label>Corp Schlp Project</label>
+    </standardValue>
+    <standardValue>
+        <fullName>CorrectAddress</fullName>
+        <default>false</default>
+        <label>CorrectAddress</label>
+    </standardValue>
+    <standardValue>
+        <fullName>CorrectAddress &amp; CorrectCALL</fullName>
+        <default>false</default>
+        <label>CorrectAddress &amp; CorrectCALL</label>
+    </standardValue>
+    <standardValue>
+        <fullName>CorrectCALL</fullName>
+        <default>false</default>
+        <label>CorrectCALL</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Cotton Bowl</fullName>
+        <default>false</default>
+        <label>Cotton Bowl</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Culhane, James</fullName>
+        <default>false</default>
+        <label>Culhane, James</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Curry, Sarah</fullName>
+        <default>false</default>
+        <label>Curry, Sarah</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Czajkowski, Doug</fullName>
+        <default>false</default>
+        <label>Czajkowski, Doug</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Dean, Arts &amp; Sciences</fullName>
+        <default>false</default>
+        <label>Dean, Arts &amp; Sciences</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Dean, Aviation</fullName>
+        <default>false</default>
+        <label>Dean, Aviation</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Dean, Educ</fullName>
+        <default>false</default>
+        <label>Dean, Educ</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Dean, Engr AS</fullName>
+        <default>false</default>
+        <label>Dean, Engr AS</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Dean, Fine Arts</fullName>
+        <default>false</default>
+        <label>Dean, Fine Arts</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Dean, HCOB</fullName>
+        <default>false</default>
+        <label>Dean, HCOB</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Dean, HHS</fullName>
+        <default>false</default>
+        <label>Dean, HHS</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Director&apos;s Name</fullName>
+        <default>false</default>
+        <label>Director&apos;s Name</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Donation Response</fullName>
+        <default>false</default>
+        <label>Donation Response</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Donor Relations</fullName>
+        <default>false</default>
+        <label>Donor Relations</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Donor Screening</fullName>
+        <default>false</default>
+        <label>Donor Screening</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Egan, Tom</fullName>
+        <default>false</default>
+        <label>Egan, Tom</label>
+    </standardValue>
+    <standardValue>
+        <fullName>E-Mail or Internet</fullName>
+        <default>false</default>
+        <label>E-Mail or Internet</label>
+    </standardValue>
+    <standardValue>
+        <fullName>EMS System</fullName>
+        <default>false</default>
+        <label>EMS System</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Endowment Report</fullName>
+        <default>false</default>
+        <label>Endowment Report</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Engagement</fullName>
+        <default>false</default>
+        <label>Engagement</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Engineering &amp; Applied Sciences</fullName>
+        <default>false</default>
+        <label>Engineering &amp; Applied Sciences</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Equifax</fullName>
+        <default>false</default>
+        <label>Equifax</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Event Attended</fullName>
+        <default>false</default>
+        <label>Event Attended</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Experience Database</fullName>
+        <default>false</default>
+        <label>Experience Database</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Figueroa, Hardy</fullName>
+        <default>false</default>
+        <label>Figueroa, Hardy</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Fisher, Emily</fullName>
+        <default>false</default>
+        <label>Fisher, Emily</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Fraternity Or Sorority</fullName>
+        <default>false</default>
+        <label>Fraternity Or Sorority</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Friend</fullName>
+        <default>false</default>
+        <label>Friend</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Front Desk</fullName>
+        <default>false</default>
+        <label>Front Desk</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Gee, Tiana</fullName>
+        <default>false</default>
+        <label>Gee, Tiana</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Gift Accounting</fullName>
+        <default>false</default>
+        <label>Gift Accounting</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Grad Card</fullName>
+        <default>false</default>
+        <label>Grad Card</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Greenhoe, John</fullName>
+        <default>false</default>
+        <label>Greenhoe, John</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Hammer, Pua</fullName>
+        <default>false</default>
+        <label>Hammer, Pua</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Harris Directory</fullName>
+        <default>false</default>
+        <label>Harris Directory</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Hartfelder, Andrew</fullName>
+        <default>false</default>
+        <label>Hartfelder, Andrew</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Hauenstein, Kassie</fullName>
+        <default>false</default>
+        <label>Hauenstein, Kassie</label>
+    </standardValue>
+    <standardValue>
+        <fullName>HCOB</fullName>
+        <default>false</default>
+        <label>HCOB</label>
+    </standardValue>
+    <standardValue>
+        <fullName>HEP Matching Gift</fullName>
+        <default>false</default>
+        <label>HEP Matching Gift</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Herm, Kyle</fullName>
+        <default>false</default>
+        <label>Herm, Kyle</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Human Resources-WMU</fullName>
+        <default>false</default>
+        <label>Human Resources-WMU</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Hunt, Lynda</fullName>
+        <default>false</default>
+        <label>Hunt, Lynda</label>
+    </standardValue>
+    <standardValue>
+        <fullName>ID-Director</fullName>
+        <default>false</default>
+        <label>ID-Director</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Identification Priority-prospects</fullName>
+        <default>false</default>
+        <label>Identification Priority-prospects</label>
+    </standardValue>
+    <standardValue>
+        <fullName>ID-Other</fullName>
+        <default>false</default>
+        <label>ID-Other</label>
+    </standardValue>
+    <standardValue>
+        <fullName>ID-Research</fullName>
+        <default>false</default>
+        <label>ID-Research</label>
+    </standardValue>
+    <standardValue>
+        <fullName>iModules</fullName>
+        <default>false</default>
+        <label>iModules</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Interview</fullName>
+        <default>false</default>
+        <label>Interview</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Johnson, Lisa</fullName>
+        <default>false</default>
+        <label>Johnson, Lisa</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Kai</fullName>
+        <default>false</default>
+        <label>Kai</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Kuntz, Julia</fullName>
+        <default>false</default>
+        <label>Kuntz, Julia</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Legislative Affairs</fullName>
+        <default>false</default>
+        <label>Legislative Affairs</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Letter</fullName>
+        <default>false</default>
+        <label>Letter</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Lexis-Nexis</fullName>
+        <default>false</default>
+        <label>Lexis-Nexis</label>
+    </standardValue>
+    <standardValue>
+        <fullName>License Plate-WMU Vanity Plate</fullName>
+        <default>false</default>
+        <label>License Plate-WMU Vanity Plate</label>
+    </standardValue>
+    <standardValue>
+        <fullName>LinkedIn File</fullName>
+        <default>false</default>
+        <label>LinkedIn File</label>
+    </standardValue>
+    <standardValue>
+        <fullName>LMC Dedication</fullName>
+        <default>false</default>
+        <label>LMC Dedication</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Lutwick, Suzanne</fullName>
+        <default>false</default>
+        <label>Lutwick, Suzanne</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Magazine</fullName>
+        <default>false</default>
+        <label>Magazine</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Mail Returned</fullName>
+        <default>false</default>
+        <label>Mail Returned</label>
+    </standardValue>
+    <standardValue>
+        <fullName>McKenzie, Rebecca</fullName>
+        <default>false</default>
+        <label>McKenzie, Rebecca</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Membership Roster</fullName>
+        <default>false</default>
+        <label>Membership Roster</label>
+    </standardValue>
+    <standardValue>
+        <fullName>MGAF Campaign</fullName>
+        <default>false</default>
+        <label>MGAF Campaign</label>
+    </standardValue>
+    <standardValue>
+        <fullName>MobileCause</fullName>
+        <default>false</default>
+        <label>MobileCause</label>
+    </standardValue>
+    <standardValue>
+        <fullName>NCOA</fullName>
+        <default>false</default>
+        <label>NCOA</label>
+    </standardValue>
+    <standardValue>
+        <fullName>NCOA &amp; CorrectCALL</fullName>
+        <default>false</default>
+        <label>NCOA &amp; CorrectCALL</label>
+    </standardValue>
+    <standardValue>
+        <fullName>NCOA-Correct Address</fullName>
+        <default>false</default>
+        <label>NCOA-Correct Address</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Newsletter</fullName>
+        <default>false</default>
+        <label>Newsletter</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Newspaper</fullName>
+        <default>false</default>
+        <label>Newspaper</label>
+    </standardValue>
+    <standardValue>
+        <fullName>No Tax Receipt Needed</fullName>
+        <default>false</default>
+        <label>No Tax Receipt Needed</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Obit Notice</fullName>
+        <default>false</default>
+        <label>Obit Notice</label>
+    </standardValue>
+    <standardValue>
+        <fullName>ObituaryData</fullName>
+        <default>false</default>
+        <label>ObituaryData</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Onyx Society Mailing List</fullName>
+        <default>false</default>
+        <label>Onyx Society Mailing List</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Other Dept On Campus</fullName>
+        <default>false</default>
+        <label>Other Dept On Campus</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Other Staff</fullName>
+        <default>false</default>
+        <label>Other Staff</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Paper Tech Fnd</fullName>
+        <default>false</default>
+        <label>Paper Tech Fnd</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Pearl, Renee</fullName>
+        <default>false</default>
+        <label>Pearl, Renee</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Phonathon-pledge</fullName>
+        <default>false</default>
+        <label>Phonathon-pledge</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Phonathon-refusal</fullName>
+        <default>false</default>
+        <label>Phonathon-refusal</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Phone Call</fullName>
+        <default>false</default>
+        <label>Phone Call</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Pinkham, Karen</fullName>
+        <default>false</default>
+        <label>Pinkham, Karen</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Pin NCOA</fullName>
+        <default>false</default>
+        <label>Pin NCOA</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Pin Original Address</fullName>
+        <default>false</default>
+        <label>Pin Original Address</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Pin Reverse SS</fullName>
+        <default>false</default>
+        <label>Pin Reverse SS</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Porter, Mellissa</fullName>
+        <default>false</default>
+        <label>Porter, Mellissa</label>
+    </standardValue>
+    <standardValue>
+        <fullName>PPC</fullName>
+        <default>false</default>
+        <label>PPC</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Praedel, Chris</fullName>
+        <default>false</default>
+        <label>Praedel, Chris</label>
+    </standardValue>
+    <standardValue>
+        <fullName>President, WMU</fullName>
+        <default>false</default>
+        <label>President, WMU</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Presidents Office</fullName>
+        <default>false</default>
+        <label>Presidents Office</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Press Release</fullName>
+        <default>false</default>
+        <label>Press Release</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Priest, Monica</fullName>
+        <default>false</default>
+        <label>Priest, Monica</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Proeschl, Wendy</fullName>
+        <default>false</default>
+        <label>Proeschl, Wendy</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Purchased List</fullName>
+        <default>false</default>
+        <label>Purchased List</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Recent Grad Alumni Spotlight</fullName>
+        <default>false</default>
+        <label>Recent Grad Alumni Spotlight</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Registrar&apos;s Office</fullName>
+        <default>false</default>
+        <label>Registrar&apos;s Office</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Relative</fullName>
+        <default>false</default>
+        <label>Relative</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Research-alumni</fullName>
+        <default>false</default>
+        <label>Research-alumni</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Research-email</fullName>
+        <default>false</default>
+        <label>Research-email</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Research-Initital Solic</fullName>
+        <default>false</default>
+        <label>Research-Initital Solic</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Research-internet</fullName>
+        <default>false</default>
+        <label>Research-internet</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Research-magazine</fullName>
+        <default>false</default>
+        <label>Research-magazine</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Research-newspaper</fullName>
+        <default>false</default>
+        <label>Research-newspaper</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Research Office</fullName>
+        <default>false</default>
+        <label>Research Office</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Research-phone</fullName>
+        <default>false</default>
+        <label>Research-phone</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Reunion</fullName>
+        <default>false</default>
+        <label>Reunion</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Rossman,Kimberly</fullName>
+        <default>false</default>
+        <label>Rossman,Kimberly</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Routhier, Amy</fullName>
+        <default>false</default>
+        <label>Routhier, Amy</label>
+    </standardValue>
+    <standardValue>
+        <fullName>SEC Filings</fullName>
+        <default>false</default>
+        <label>SEC Filings</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Shifflett, Al</fullName>
+        <default>false</default>
+        <label>Shifflett, Al</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Smartcall</fullName>
+        <default>false</default>
+        <label>Smartcall</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Smith, Carolyn</fullName>
+        <default>false</default>
+        <label>Smith, Carolyn</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Smith, Simone</fullName>
+        <default>false</default>
+        <label>Smith, Simone</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Staff Member</fullName>
+        <default>false</default>
+        <label>Staff Member</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Student Help-Projects</fullName>
+        <default>false</default>
+        <label>Student Help-Projects</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Survey</fullName>
+        <default>false</default>
+        <label>Survey</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Terrentine, Tim</fullName>
+        <default>false</default>
+        <label>Terrentine, Tim</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Top Prospect</fullName>
+        <default>false</default>
+        <label>Top Prospect</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Tracer - business letter</fullName>
+        <default>false</default>
+        <label>Tracer - business letter</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Tracer - email</fullName>
+        <default>false</default>
+        <label>Tracer - email</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Tracer - General</fullName>
+        <default>false</default>
+        <label>Tracer - General</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Tracking Notes</fullName>
+        <default>false</default>
+        <label>Tracking Notes</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Tuohy, Alaina</fullName>
+        <default>false</default>
+        <label>Tuohy, Alaina</label>
+    </standardValue>
+    <standardValue>
+        <fullName>University Relations</fullName>
+        <default>false</default>
+        <label>University Relations</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Unreachables F2010</fullName>
+        <default>false</default>
+        <label>Unreachables F2010</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Update</fullName>
+        <default>false</default>
+        <label>Update</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Updater.com</fullName>
+        <default>false</default>
+        <label>Updater.com</label>
+    </standardValue>
+    <standardValue>
+        <fullName>VanDerMaas, Catherine</fullName>
+        <default>false</default>
+        <label>VanDerMaas, Catherine</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Vendor Mailing Return</fullName>
+        <default>false</default>
+        <label>Vendor Mailing Return</label>
+    </standardValue>
+    <standardValue>
+        <fullName>WealthEngine</fullName>
+        <default>false</default>
+        <label>WealthEngine</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Wealth Engine</fullName>
+        <default>false</default>
+        <label>Wealth Engine</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Wealth Engine-Not Prospect</fullName>
+        <default>false</default>
+        <label>Wealth Engine-Not Prospect</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Wealth Engine-Prospect</fullName>
+        <default>false</default>
+        <label>Wealth Engine-Prospect</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Western News</fullName>
+        <default>false</default>
+        <label>Western News</label>
+    </standardValue>
+    <standardValue>
+        <fullName>WMUFAMILY</fullName>
+        <default>false</default>
+        <label>WMUFAMILY</label>
+    </standardValue>
+    <standardValue>
+        <fullName>WMUK Radio Station</fullName>
+        <default>false</default>
+        <label>WMUK Radio Station</label>
+    </standardValue>
+    <standardValue>
+        <fullName>WMU Magazine</fullName>
+        <default>false</default>
+        <label>WMU Magazine</label>
+    </standardValue>
+    <standardValue>
+        <fullName>WMU Phonebook-Online</fullName>
+        <default>false</default>
+        <label>WMU Phonebook-Online</label>
+    </standardValue>
+    <standardValue>
+        <fullName>WMU School of Medicine</fullName>
+        <default>false</default>
+        <label>WMU School of Medicine</label>
+    </standardValue>
+    <standardValue>
+        <fullName>WMU Web Page</fullName>
+        <default>false</default>
+        <label>WMU Web Page</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Zip Update</fullName>
+        <default>false</default>
+        <label>Zip Update</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Zollinger, Jana</fullName>
+        <default>false</default>
+        <label>Zollinger, Jana</label>
+    </standardValue>
+</StandardValueSet>

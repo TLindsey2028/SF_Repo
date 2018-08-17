@@ -1,0 +1,24 @@
+<aura:component description="CodeEditorInputField">
+    <aura:attribute name="value" type="String" description="The value" default=""/>
+    <aura:attribute name="aceEditor" type="Map" description="The value" default="{}"/>
+    <aura:attribute name="theme" type="String" description="The theme" default="ace/theme/github"/>
+    <aura:attribute name="mode" type="String" description="The mode" default="ace/mode/xml"/>
+    <aura:attribute name="required" type="Boolean" default="false"/>
+    <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/ace.js'}" afterScriptsLoaded="{!c.initCodeEditor}"/>
+    <aura:handler event="Framework:InputFieldClearErrorMessagesEvent" action="{!c.handleInputFieldClearErrorMessagesEvent}"/>
+    <aura:method name="setErrorMessages" action="{!c.setErrorMessages}"
+                 description="Error Message For Field">
+        <aura:attribute name="errorMessages" type="Array" default="[]" description="Error Message"/>
+    </aura:method>
+    <aura:method name="loadExistingValue" action="{!c.loadExistingValue}"
+                 description="Load Existing Value">
+    </aura:method>
+    <aura:method name="clearExistingValue" action="{!c.clearExistingValue}"
+                 description="Clear Existing Value">
+    </aura:method>
+    <div class="slds-col slds-grid slds-m-bottom--medium editor" style="height: calc(90vh - 145px);" aura:id="codeEditorInput">
+        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small ace-editor" id="{!globalId+'_code_editor'}">
+        </div>
+        <Framework:ValidationErrorMessages aura:id="errorInput"/>
+    </div><!-- /.slds-col -->
+</aura:component>

@@ -1,0 +1,24 @@
+<aura:component description="FeaturedEventSponsors" access="global" implements="LTE:EventInterface" controller="LTE.SponsorsController">
+    <aura:attribute name="sponsors" type="LTE.Sponsor[]"/>
+    <aura:attribute name="uniqueId" type="String"/>
+    <ltng:require styles="{!join(',', $Resource.LTE__SLDS_Lens + '/css/lens.css', $Resource.LTE__SLDS_Lens + '/css/tiny-slider.css' , $Resource.LTE__SLDS_Lens+'/css/fa.css')}" scripts="{!join(',', $Resource.PagesApi__FontevaHelper+'/FontevaHelper.js', $Resource.LTE__SLDS_Lens + '/js/tiny-slider.js')}" afterScriptsLoaded="{!c.doInit}"/>
+    <div class="fonteva-event-component slds-p-horizontal--medium">
+        <div class="slds-grid slds-grid--vertical slds-p-top_medium">
+            <p class="slds-text-heading--medium slds-font-weight--semi-bold">
+                {!$Label.LTE.Event_Featured_Sponsors}
+            </p>
+            <span class="hidden" aura:id="sponsorList">
+                <div class="{!v.uniqueId+'-fonteva-slider--featured-sponsors'}" aura:id="currentSponsors">
+                    <aura:iteration items="{!v.sponsors}" var="sponsor" indexVar="index">
+                        <aura:if isTrue="{!sponsor.imageURL != null}">
+                            <div class="slds-is-relative slds-m-bottom--small">
+                                <Framework:Img src="{!sponsor.imageURL}"/>
+                            </div>
+                        </aura:if>
+                    </aura:iteration>
+                </div>
+            </span>
+
+        </div>
+    </div>
+</aura:component>

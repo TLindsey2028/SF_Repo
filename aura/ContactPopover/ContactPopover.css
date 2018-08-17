@@ -1,0 +1,57 @@
+.THIS .slds-popover.slds-nubbin--right-top {
+    right: 100%!important;
+}
+
+.THIS .slds-popover.slds-nubbin--left-top {
+    left: 100%!important;
+}
+
+.THIS .slds-popover {
+    z-index: 100009!important;
+}
+
+.THIS .slds-customer-lookup--backdrop{
+    width: 100vw;
+    background: transparent;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100000!important;
+}
+
+.THIS .slds-object-height--custom {
+    min-height: 35vh;
+    max-height: 55vh!important;
+}
+
+.THIS span.wrapper-button {
+     position: relative;
+ }
+
+.THIS .wrapper-input div div input {
+    padding-left: 114px!important;
+}
+
+.THIS .wrapper-select-input .slds-form-element__control div {
+    border-top-right-radius: 0px!important;
+    border-bottom-right-radius: 0px!important;
+    -webkit-border-top-right-radius: 0px!important;
+    -webkit-border-bottom-right-radius: 0px!important;
+    -moz-border-radius-topright: 0px!important;
+    -moz-border-radius-bottomright: 0px!important;
+}
+
+.THIS .wrapper-select-input div div .slds-select {
+    border-top-right-radius: 0px!important;
+    border-bottom-right-radius: 0px!important;
+    -webkit-border-top-right-radius: 0px!important;
+    -webkit-border-bottom-right-radius: 0px!important;
+    -moz-border-radius-topright: 0px!important;
+    -moz-border-radius-bottomright: 0px!important;
+    position: absolute;
+    z-index: 100;
+    margin-top: 23px;
+    width: 110px;
+    margin-left: 1px;
+}

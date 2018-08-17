@@ -1,0 +1,20 @@
+<aura:component description="AccountSearchComponent" controller="LTE.AccountSearchComponentsController" access="global">
+  <aura:attribute name="value" default="{}" description="input value" type="Map" access="global"/>
+  <aura:attribute name="queryFilter" default=""
+                  description="additional query filter to narrow down the accounts returned in the result"
+                  type="String" access="global"/>
+  <aura:attribute name="storeObj" type="LTE.Store" access="global"/>
+  <aura:attribute name="accountResults" default="[]" type="List"/>
+  <style>
+    .account-found {
+      margin-top: -10px;
+      margin-bottom: 10px;
+      color: green!important;
+    }
+  </style>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldChangeEvent}"/>
+  <Framework:InputFields fieldType="string" aura:id="account" label="{!$Label.LTE.Account_Label}" value="{!v.value}" fireChangeEvent="true" maxlength="100" otherAttributes='{"updateOn" : "keyup"}'/>
+  <div aura:id="bodycomp">
+  </div>
+
+</aura:component>

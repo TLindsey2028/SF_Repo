@@ -1,0 +1,42 @@
+<aura:component description="MultiGroupDragPane">
+	<ltng:require scripts="{!join(',', $Resource.Framework__SLDS_BaseV2+'/js/scripts.min.js', $Resource.Framework__SLDS_BaseV2+'/js/Sortable.min.js', $Resource.Framework__SLDS_BaseV2 + '/js/lodash.min.js')}"
+                afterScriptsLoaded="{!c.init}"/>
+
+	<aura:attribute name="groupHeader" type="String" default="Group Header" access="public"/>
+	<aura:attribute name="groupId" type="String" default="common" access="public"/>
+	<aura:attribute name="isDestination" type="Boolean" default="false" access="public"/>
+	<aura:attribute name="maxAvailable" type="Integer" default="0" access="public"/>
+	<aura:attribute name="sortable" type="Boolean" default="true"/>
+	<aura:attribute name="required" type="Integer" default="0" access="public"/>
+	<aura:attribute name="data" type="Map[]" default="[]" access="public"/>
+	<aura:attribute name="value" type="Map[]" description="Shared Value across panes" default="[]" access="public"/>
+	<!-- Private -->
+	<aura:attribute name="countAdded" type="Integer" default="0" access="public"/>
+
+	<h2 class="slds-text-title--caps slds-p-around--medium">{!v.groupHeader}
+    <aura:if isTrue="{!and(v.isDestination, v.maxAvailable)}">
+	    <aura:if isTrue="{!lessthan(v.maxAvailable, v.countAdded)}">
+	      <span class="{!'hidden fonteva-picklist__group_remaining fonteva-picklist__group_remaining_for_' + v.groupId}" id="{!'cap_' + globalId + v.groupId}">
+          {!'remove ' + (v.countAdded - v.maxAvailable)}
+        </span>
+	      <aura:set attribute="else">
+	        <span class="{!'hidden fonteva-picklist__group_remaining fonteva-picklist__group_remaining_for_' + v.groupId}" id="{!'cap_' + globalId + v.groupId}">
+            {!(v.maxAvailable - v.countAdded) + ' more'}
+          </span>
+        </aura:set>
+      </aura:if>
+    </aura:if>
+  </h2>
+  <ul class="{!'fonteva-picklist__group fonteva-picklist__group_id_' + v.groupId}"
+      id="{!globalId + v.groupId}"
+      data-groupid="{!v.groupId}"
+      data-countadded="{!v.countAdded}"
+      data-maxavailable="{!v.maxAvailable}"
+      data-destination="{!v.isDestination}">
+	  <aura:iteration items="{!v.data}" var="item">
+	    <li class="fonteva-picklist__item slds-navigation-list--vertical__action slds-text-link--reset" data-key="{!item.key}">
+          {!item.value}
+      </li>
+    </aura:iteration>
+	</ul>
+</aura:component>

@@ -1,0 +1,8 @@
+<aura:interface description="PaymentMethodTabInterface" access="global">
+    <aura:attribute name="paymentTabConfigObj" type="Map"/>
+	<aura:attribute name="renderAsTabs" type="Boolean" default="false"/>
+	<aura:attribute name="displayPayButton" type="Boolean" default="false"/>
+	<aura:attribute name="index" type="Integer"/>
+	<aura:attribute name="salesOrderId" type="String"/>
+	<aura:attribute name="epaymentId" type="String"/>
+</aura:interface>

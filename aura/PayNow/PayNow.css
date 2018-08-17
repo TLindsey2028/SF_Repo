@@ -1,0 +1,29 @@
+.THIS .slds-tabs--default__nav.fonteva-slds-payment-nav {
+    overflow: hidden;
+    overflow-x: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.THIS {
+    font-size: 14px!important;
+}
+
+.THIS .fonteva-paypal-label{
+    margin-top: 15px;
+}
+
+.THIS .payment-rich-text ul {
+    list-style: disc!important;
+}
+
+.THIS .payment-rich-text ol {
+    list-style: decimal!important;
+}
+
+.THIS .fonteva-slds-payment-tab--item.slds-active a {
+    font-weight: 600!important;
+}
+
+.THIS .fonteva-slds-payment-tabs-default {
+    background-color: transparent;
+}

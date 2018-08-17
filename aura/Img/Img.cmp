@@ -1,0 +1,23 @@
+<aura:component description="Img" access="global">
+    <aura:attribute name="src" type="String" access="global" description="the img tag source"/>
+    <aura:attribute name="modifiedSrc" type="String" access="public" description="the modified source"/>
+    <aura:attribute name="class" type="String" access="global" description="the img tag class"/>
+    <aura:attribute name="id" type="String" access="global" description="the img tag id"/>
+    <aura:attribute name="style" type="String" access="global" description="the img tag style"/>
+    <aura:attribute name="alt" type="String" access="global" description="the img tag alt text"/>
+    <aura:attribute name="width" type="String" access="global" description="the img tag width"/>
+    <aura:attribute name="height" type="String" access="global" description="the img tag height"/>
+    <aura:attribute name="title" type="String" access="global" description="the img tag title"/>
+    <aura:attribute name="onclick" type="Aura.Action" access="global" description="A callback for onclick events"/>
+
+    <aura:attribute name="extra" type="String" access="global" default=""
+                    description="comma-separated `key=value` to add extra attributes to the img tag"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.src}" action="{!c.srcChange}"/>
+
+    <div>
+        <img aura:id="imgTag" id="{!v.id}" src="{!v.modifiedSrc}" class="{!v.class}" style="{!v.style}" alt="{!v.alt}" width="{!v.width}" height="{!v.height}" title="{!v.title}"
+             onclick="{!v.onclick}"/>
+    </div>
+</aura:component>

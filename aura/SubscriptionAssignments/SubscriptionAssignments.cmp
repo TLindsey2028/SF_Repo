@@ -1,0 +1,84 @@
+<aura:component description="SubscriptionAssignments" controller="ROEApi.SubscriptionItemDetailsController">
+    <aura:attribute name="orderItem" type="Map" required="true"/>
+    <aura:attribute name="assignments" type="List" default="[]"/>
+    <aura:attribute name="assignmentObj" type="Map" default="{}"/>
+    <aura:attribute name="assignmentsText" type="String"/>
+    <aura:attribute name="assignmentsComplete" type="Boolean" default="false"/>
+    <aura:attribute name="contactLookupId" type="String" />
+    <aura:method name="reloadAssignments" action="{!c.reloadAssignments}"/>
+    <aura:attribute name="oldContactId" type="String" />
+    <aura:handler event="OrderApi:ContactCreatedEvent" action="{!c.handleContactCreationEvent}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="SubscriptionAssignmentUpdatedEvent" type="ROEApi:SubscriptionAssignmentUpdatedEvent"/>
+    <div class="slds-col--padded slds-size--1-of-1">
+        <div class="slds-grid slds-grid--pull-padded">
+            <div class="slds-size--1-of-2 slds-p-horizontal--small slds-m-bottom--medium">
+                <span class="slds-text-heading--small">Assignments</span>
+                <aura:if isTrue="{!and(!v.assignmentsComplete,v.orderItem.assignmentsRequired)}">
+                    <Framework:FONSVG svgPath="{!$Resource.ROEApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#warning'}"
+                                   containerClass="slds-icon__container slds-m-left--small slds-m-right--xx-small"
+                                   svgClass="slds-icon slds-icon-text-error slds-icon--small" />
+                    <span class="slds-text-body--small slds-text--danger">Required assignments</span>
+                </aura:if>
+            </div>
+            <div class="slds-size--1-of-2 slds-p-horizontal--small slds-m-bottom--medium">
+                <div class="{!v.orderItem.assignmentsRequired ? 'slds-text-heading--small slds-float--right slds-text--danger' : 'slds-text-heading--small slds-float--right'}">{!v.assignmentsText}</div>
+            </div>
+        </div>
+        <div class="slds-grid slds-grid--pull-padded">
+            <span class="slds-size--1-of-3 slds-p-horizontal--small slds-m-bottom-x--small slds-position--relative" aura:id="customerLookup">
+                <OrderApi:ContactPopover customerObj="{!v.assignmentObj}" aura:id="assignmentPopOver" uniqueIdentifier="{!v.orderItem.salesOrderLine+'_assignment'}"/>
+            </span>
+            <div class="slds-p-top--large">
+                <Framework:Button onClickAction="{!c.createAssignmentObj}"
+                                  type="brand"
+                                  label="{!$Label.ROEApi.Subscription_Assign}"
+                                  disable="true"
+                                  aura:id="assignContacts"/>
+            </div>
+        </div>
+        <div class="slds-grid slds-grid--pull-padded">
+            <div class="slds-size--1-of-1 slds-grid slds-col--padded slds-wrap slds-m-top--medium">
+                <table class="slds-table slds-table--bordered slds-no-row-hover slds-table--actions">
+                    <thead>
+                    <tr class="slds-text-heading--label">
+                        <th>
+                            <div class="slds-truncate"></div>
+                        </th>
+                        <th>
+                            <div class="slds-truncate">{!$Label.ROEApi.Subscription_Name}</div>
+                        </th>
+                        <th>
+                            <div class="slds-truncate">{!$Label.ROEApi.Subscription_Email}</div>
+                        </th>
+                        <th>
+                            <div class="slds-truncate">{!$Label.ROEApi.Subscription_Role}</div>
+                        </th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <aura:if isTrue="{!v.assignments.length == 0}">
+                        <tbody>
+                        <tr>
+                            <td>{!$Label.ROEApi.Subscription_No_Assignments}</td>
+                            <td class="slds-size--1-of-3"></td>
+                            <td class="slds-size--1-of-3"></td>
+                            <td class="slds-size--1-of-4"></td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                        <aura:set attribute="else">
+                            <tbody>
+                                <aura:iteration items="{!v.assignments}" var="assignment" indexVar="index">
+                                    <ROEApi:SubscriptionAssignmentRow removeItem="{!c.removeAssignment}" itemIndex="{!index + 1}" item="{!assignment}" uniqueIdentifier="{!assignment.assignmentId}"/>
+                                </aura:iteration>
+                            </tbody>
+                        </aura:set>
+                    </aura:if>
+                </table>
+            </div>
+        </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

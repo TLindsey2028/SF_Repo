@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="ScheduleItemsCompletenessUpdateEvent">
+    <aura:attribute name="salesOrderLine" type="String" required="true"/>
+	<aura:attribute name="scheduleItemsComplete" type="Boolean" required="true"/>
+</aura:event>

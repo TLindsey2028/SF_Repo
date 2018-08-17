@@ -1,0 +1,67 @@
+<aura:component description="EventBuilderSection" controller="EventApi.EventsBuilderSectionController">
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:registerEvent name="AddSelectorEvent" type="EventApi:AddSelectorEvent"/>
+    <aura:attribute name="section" type="EventApi.Section" required="true"/>
+    <aura:attribute name="reloadSections" type="Aura.Action" required="true"/>
+    <aura:attribute name="sectionTotal" type="Integer" required="true"/>
+    <aura:attribute name="eventQuantity" type="Integer" required="true"/>
+	<aura:attribute name="eventObj" type="Map" required="true"/>
+    <aura:registerEvent name="CreateEditSectionEvent" type="EventApi:CreateEditSectionEvent"/>
+	<aura:handler event="EventApi:StatusChangedEvent" action="{!c.handleStatusChangedEvent}"/>
+    <div class="slds-size--1-of-1 slds-p-vertical--x-small event-section" data-id="{!v.section.id}">
+        <div class="slds-box slds-section-box slds-theme--default slds-grid slds-grid--vertical">
+            <div class="slds-media slds-media--responsive">
+                <div class="slds-media__figure fonteva-media_figure">
+                    <aura:if isTrue="{!v.section.image != null}">
+                        <Framework:Img src="{!v.section.image}" class="slds-icon-section-large"/>
+                        <aura:set attribute="else">
+                            <lightning:icon iconName="utility:image" size="large" class="slds-icon-section-large"/>
+                        </aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-media__body">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-size--1-of-1 slds-text-align--center section-dots">
+                            <lightning:icon iconName="utility:threedots" size="small"/>
+                        </div>
+                        <div class="slds-size--1-of-2">
+                            <div class="slds-text-heading--small">
+                                <strong>
+                                    {!v.section.name}
+                                </strong>
+                            </div>
+                        </div>
+                        <div class="slds-size--1-of-2 slds-float--right slds-text-align--right">
+                            <aura:if isTrue="{!v.eventObj.currentEventStatus.isActive}">
+	                            <lightning:buttonIcon iconName="utility:preview" class="slds-button slds-button--icon slds-m-right--xxx-small" variant="border" onclick="{!c.editSection}" alternativeText="View" size="small" />
+                                <aura:set attribute="else">
+	                                <lightning:buttonIcon iconName="utility:edit" class="slds-button slds-button--icon slds-m-right--xxx-small" variant="border" onclick="{!c.editSection}" alternativeText="Edit" size="small" />
+	                                <lightning:buttonIcon iconName="utility:delete" class="slds-button slds-button--icon" variant="border" onclick="{!c.deleteSectionShowModal}" alternativeText="Delete" size="small"/>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                        <div class="slds-size--1-of-1">
+                            <ui:outputRichText linkify="true" value="{!v.section.description}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+    <Framework:MessagePrompt title="Delete Section"
+                             message=""
+                             severity="clear"
+                             submitButtonLabel="Delete"
+                             closeOnClickAction="{!c.closeModal}"
+                             submitOnClickAction="{!c.deleteSection}"
+                             cancelButtonLabel="{!$Label.EventApi.Cancel}"
+                             aura:id="deleteSectionPrompt"/>
+    <Framework:MessagePrompt title="Cannot Delete Section"
+                             message=""
+                             severity="clear"
+                             showSubmitButton="false"
+                             closeOnClickAction="{!c.closeModal}"
+                             cancelButtonLabel="{!$Label.EventApi.Cancel}"
+                             aura:id="cannotDeleteSectionPrompt"/>
+</aura:component>

@@ -1,0 +1,12 @@
+.THIS .slds-form-element.display-element span:nth-of-type(2){
+    display: none;
+}
+
+.THIS .slds-form-element.display-element .selectize-dropdown-content span:nth-of-type(2){
+    display: inline;
+}
+
+.THIS .fonteva-filter-builder--field .single .selectize-input div {
+    padding-right: 35px;
+    text-overflow: ellipsis;
+}

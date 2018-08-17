@@ -1,0 +1,23 @@
+.THIS {
+    text-align: left;
+    left: 0;
+    right: 0;
+    height: 240px;
+    font-weight: 500;
+    background-color: #fff;
+}
+
+.THIS .header {
+    font-size: 1.0rem;
+    text-transform: uppercase;
+}
+
+.THIS .blu {
+    color: #0000ff;
+    font-weight: bold;
+}
+
+.THIS .redbutton {
+	background-color: #f33446;
+    font-weight: bold;
+}

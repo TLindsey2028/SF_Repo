@@ -1,0 +1,99 @@
+<aura:component description="PackageItemRow" controller="ROEApi.PackageItemDetailsController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="item" type="Map" required="true"/>
+    <aura:attribute name="salesOrder" type="String" required="true"/>
+    <aura:attribute name="parentSalesOrderLine" type="String" required="true"/>
+    <aura:attribute name="currencyISOCode" type="String" default="USD" />
+    <aura:attribute name="isMultiCurrencyOrg" type="Boolean" default="false" />
+    <aura:attribute name="uniqueIdentifier" type="String" required="true"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:registerEvent name="PackageItemTotalUpdateEvent" type="ROEApi:PackageItemTotalUpdateEvent"/>
+    <aura:registerEvent name="PackageItemPriceHeadingEvent" type="ROEApi:PackageItemPriceHeadingEvent"/>
+    <tr>
+        <td class="slds-cell-shrink">
+            <Framework:InputFields group="{!v.parentSalesOrderLine}"
+                                   secondaryGroup="{!v.item.itemId}"
+                                   fieldType="boolean"
+                                   value="{!v.item}"
+                                   aura:id="selectItem"
+                                   labelStyleClasses="slds-hide"
+                                   fireChangeEvent="true"
+                                   styleClasses="slds-m-bottom--none" />
+        </td>
+        <td class="slds-size--1-of-4">
+            <strong>{!v.item.name}</strong>
+        </td>
+        <td class="slds-size--1-of-4">
+            <span class="slds-hidden slds-grid slds-size--1-of-4" aura:id="quantityWrapper">
+                <Framework:InputFields group="{!v.parentSalesOrderLine}"
+                                       secondaryGroup="{!v.item.itemId}"
+                                       fieldType="integer"
+                                       value="{!v.item}"
+                                       aura:id="quantity"
+                                       format="0"
+                                       otherAttributes='{min : 1,max: 500000}'
+                                       isRequired="true"
+                                       labelStyleClasses="slds-hide"
+                                       styleClasses="slds-m-bottom--none"
+                                       fireChangeEvent="true" />
+            </span>
+        </td>
+        <td class="slds-cell-shrink">
+            <div>
+                <strong>{!v.item.priceRuleObj.name} - <Framework:CurrencyField value="{!v.item.priceRuleObj.price}" currencyISOCode="{!v.currencyISOCode}"/></strong>
+            </div>
+            <div>
+                <Framework:InputFields group="{!v.parentSalesOrderLine}"
+                                       secondaryGroup="{!v.item.itemId}"
+                                       fieldType="boolean"
+                                       aura:id="priceOverride"
+                                       value="{!v.item}"
+                                       format="0.00"
+                                       label="{!$Label.ROEApi.Override_Price}"
+                                       disabled="true"
+                                       styleClasses="slds-m-bottom--none"
+                                       fireChangeEvent="true" />
+            </div>
+        </td>
+        <td class="slds-size--1-of-4">
+            <span class="slds-hidden slds-grid slds-size--1-of-3" aura:id="overridePriceWrapper">
+
+                <Framework:InputFields group="{!v.parentSalesOrderLine}"
+                                       secondaryGroup="{!v.item.itemId}"
+                                       fieldType="currency"
+                                       value="{!v.item}"
+                                       label="{!$Label.ROEApi.Package_Items_New_Price}"
+                                       otherAttributes='{min : 1,max: 9999999}'
+                                       fireChangeEvent="true"
+                                       labelStyleClasses="slds-hide"
+                                       isRequired="true"
+                                       styleClasses="slds-m-bottom--none"
+                                       aura:id="overriddenPrice"
+                                       minValueValidationMessage="{!$Label.ROEApi.Min_Price_Validation_Message}" maxValueValidationMessage="{!$Label.ROEApi.Max_Price_Validation_Message}"/>
+            </span>
+        </td>
+        <td class="slds-cell-shrink">
+            <div class="slds-dropdown-trigger">
+                <Framework:Button enableProgressIndicator="false"
+                                  onClickAction=""
+                                  type="neutral"
+                                  additionalClasses="slds-button--icon-border slds-p-around--none"
+                                  label=""
+                                  svgPath="{!$Resource.ROEApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#threedots'}"
+                                  svgContainerClass=""
+                                  svgClass="slds-button__icon"
+                                  svgAssistiveText="Label.ROEApi.More_Options" />
+                <div class="slds-dropdown slds-dropdown--right" aura:id="dropdown">
+                    <ul class="dropdown__list" role="menu">
+                        <li class="slds-dropdown__item">
+                            <a href="javascript:void(0);" role="menuitem" data-id="{!v.item.itemId}" onclick="{!c.showPackageItem}">
+                                {!$Label.ROEApi.View_Item_in_Salesforce}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

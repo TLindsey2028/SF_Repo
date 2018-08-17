@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?><CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help><!-- Determines if the user&apos;s deletes on Accounts are setup for approval. --></help>
+        <label><!-- Account Delete --></label>
+        <name>AQB__AccountDelete__c</name>
+    </fields>
+    <fields>
+        <help><!-- Determines if the user&apos;s inserts on Accounts are setup for approval. --></help>
+        <label><!-- Account Insert --></label>
+        <name>AQB__AccountInsert__c</name>
+    </fields>
+    <fields>
+        <help><!-- Determines if the user&apos;s updates on Accounts are setup for approval. --></help>
+        <label><!-- Account Update --></label>
+        <name>AQB__AccountUpdate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Determines if the user&apos;s deletes on Alternate Addresses are setup for approval. --></help>
+        <label><!-- Alternate Address Delete --></label>
+        <name>AQB__AddressDelete__c</name>
+    </fields>
+    <fields>
+        <help><!-- Determines if the user&apos;s inserts on Alternate Addresses are setup for approval. --></help>
+        <label><!-- Alternate Address Insert --></label>
+        <name>AQB__AddressInsert__c</name>
+    </fields>
+    <fields>
+        <help><!-- Determines if the user&apos;s updates on Alternate Addresses are setup for approval. --></help>
+        <label><!-- Alternate Address Update --></label>
+        <name>AQB__AddressUpdate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Changes made by this user will be placed in this Change Verification Queue.  For users who verify changes, only changes in this Change Verification Queue will be available. --></help>
+        <label><!-- Change Verification Queue --></label>
+        <name>AQB__ChangeVerificationQueue__c</name>
+        <picklistValues>
+            <masterLabel>--ALL--</masterLabel>
+            <translation><!-- - - ALL- -  --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Advancement</masterLabel>
+            <translation><!-- Advancement --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alumni</masterLabel>
+            <translation><!-- Alumni --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Determines if the user&apos;s deletes on Contacts are setup for approval. --></help>
+        <label><!-- Contact Delete --></label>
+        <name>AQB__ContactDelete__c</name>
+    </fields>
+    <fields>
+        <help><!-- Determines if the user&apos;s inserts on Contacts are setup for approval. --></help>
+        <label><!-- Contact Insert --></label>
+        <name>AQB__ContactInsert__c</name>
+    </fields>
+    <fields>
+        <help><!-- Determines if the user&apos;s updates on Contacts are setup for approval. --></help>
+        <label><!-- Contact Update --></label>
+        <name>AQB__ContactUpdate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Determines if the user&apos;s deletes on Employment are setup for approval. --></help>
+        <label><!-- Employment Delete --></label>
+        <name>AQB__EmploymentDelete__c</name>
+    </fields>
+    <fields>
+        <help><!-- Determines if the user&apos;s inserts on Employment are setup for approval. --></help>
+        <label><!-- Employment Insert --></label>
+        <name>AQB__EmploymentInsert__c</name>
+    </fields>
+    <fields>
+        <help><!-- Determines if the user&apos;s updates on Employment are setup for approval. --></help>
+        <label><!-- Employment Update --></label>
+        <name>AQB__EmploymentUpdate__c</name>
+    </fields>
+    <fields>
+        <help><!-- These are the Prospect Management Groups to which the user belongs. --></help>
+        <label><!-- Prospect Management Groups --></label>
+        <name>AQB__Prospect_Management_Groups__c</name>
+        <picklistValues>
+            <masterLabel>Athletics</masterLabel>
+            <translation><!-- Athletics --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Scholarships</masterLabel>
+            <translation><!-- Scholarships --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- This indicates the users role in the prospect queue. --></help>
+        <label><!-- User Type --></label>
+        <name>AQB__UserType__c</name>
+        <picklistValues>
+            <masterLabel>Prospect Manager</masterLabel>
+            <translation><!-- Prospect Manager --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Researcher</masterLabel>
+            <translation><!-- Researcher --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Researcher &amp; Prospect Manager</masterLabel>
+            <translation><!-- Researcher &amp; Prospect Manager --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Converted User --></label>
+        <name>Converted_User__c</name>
+    </fields>
+    <fields>
+        <label><!-- Millennium User Name --></label>
+        <name>Millennium_User_Name__c</name>
+    </fields>
+    <fields>
+        <label><!-- FONTEVA SYSTEM FIELD --></label>
+        <name>OrderApi__Shopping_Cart_ID__c</name>
+    </fields>
+    <fields>
+        <label><!-- Is Federated User --></label>
+        <name>PagesApi__Is_Federated_User__c</name>
+    </fields>
+    <fields>
+        <help><!-- The secure (&quot;https://&quot;) url where the profile cover image file is located. We recommend uploaded a logo that has a width of 1100px and height of 300px. --></help>
+        <label><!-- Profile Cover Image --></label>
+        <name>PagesApi__Profile_Cover_Image__c</name>
+    </fields>
+    <fields>
+        <label><!-- Default Marketing Cloud Page --></label>
+        <name>et4ae5__Default_ET_Page__c</name>
+    </fields>
+    <fields>
+        <label><!-- Default MID --></label>
+        <name>et4ae5__Default_MID__c</name>
+    </fields>
+    <fields>
+        <label><!-- Marketing Cloud for AppExchange Admin --></label>
+        <name>et4ae5__ExactTargetForAppExchangeAdmin__c</name>
+    </fields>
+    <fields>
+        <label><!-- Marketing Cloud for AppExchange User --></label>
+        <name>et4ae5__ExactTargetForAppExchangeUser__c</name>
+    </fields>
+    <fields>
+        <label><!-- Marketing Cloud Username --></label>
+        <name>et4ae5__ExactTargetUsername__c</name>
+    </fields>
+    <fields>
+        <label><!-- @deprecated --></label>
+        <name>et4ae5__ExactTarget_OAuth_Token__c</name>
+    </fields>
+    <fields>
+        <label><!-- Valid Marketing Cloud Admin --></label>
+        <name>et4ae5__ValidExactTargetAdmin__c</name>
+    </fields>
+    <fields>
+        <label><!-- Valid Marketing Cloud User --></label>
+        <name>et4ae5__ValidExactTargetUser__c</name>
+    </fields>
+    <layouts>
+        <layout>User Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>User Profile Layout</layout>
+        <layoutType>UserAlt</layoutType>
+        <sections>
+            <label><!-- About --></label>
+            <section>About</section>
+        </sections>
+        <sections>
+            <label><!-- Background --></label>
+            <section>Background</section>
+        </sections>
+        <sections>
+            <label><!-- Contact --></label>
+            <section>Contact</section>
+        </sections>
+    </layouts>
+</CustomObjectTranslation>

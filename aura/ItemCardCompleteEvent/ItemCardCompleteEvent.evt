@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="ItemCardCompleteEvent">
+    <aura:attribute name="groupName" type="String" required="true"/>
+    <aura:attribute name="cardComplete" type="Boolean" default="false"/>
+</aura:event>

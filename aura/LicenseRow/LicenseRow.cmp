@@ -1,0 +1,30 @@
+<aura:component controller="Framework.AdminLicenseUsageController">
+
+    <aura:attribute name="licenseOptions" type="Object[]" default="[{}]" />
+    <aura:attribute name="packageOptions" type="Object[]" default="[{}]" />
+    <aura:attribute name="licenseRow" type="Object" default="{}" />
+    <aura:attribute name="group" type="String" default="" />
+    <aura:attribute name="showDeleteButton" type="Boolean" default="false" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.valueChanged}"/>
+    <aura:registerEvent name="LicenseRowActionEvent" type="Framework:LicenseRowActionEvent"/>
+
+    <div class="slds-grid slds-grid--pull-padded" id="licenseEntry">
+
+        <div class="slds-col--padded slds-size--4-of-12">
+            <Framework:InputFields group="{!v.group}" fieldType="AdvancedSelectField" fireChangeEvent="true" aura:id="packageName" value="{!v.licenseRow}" otherAttributes='{"allowCreate" : false}' />
+        </div>
+        <div class="slds-col--padded slds-size--5-of-12">
+            <Framework:InputFields group="{!v.group}" fieldType="AdvancedSelectField" fireChangeEvent="true" aura:id="licenseName" value="{!v.licenseRow}" otherAttributes='{"allowCreate" : false}' />
+        </div>
+        <div class="slds-col--padded slds-size--2-of-12">
+            <Framework:InputFields group="{!v.group}" fieldType="integer" aura:id="count" value="{!v.licenseRow}"  />
+        </div>
+        <div class="slds-col--padded slds-size--1-of-12 slds-grid">
+            <aura:if isTrue="{!v.showDeleteButton}">
+                <Framework:Button aura:id="deleteRow" group="{!v.group}" type="icon" onClickAction="{!c.deleteRow}" label="&nbsp;" svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#clear'}" svgClass="slds-button__icon" svgAssistiveText="Delete Row" additionalClasses="slds-align-middle" enableProgressIndicator="false"/>
+            </aura:if>
+        </div>
+    </div>
+
+</aura:component>

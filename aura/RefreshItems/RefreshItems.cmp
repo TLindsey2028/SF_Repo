@@ -1,0 +1,3 @@
+<aura:component description="RefreshItems" controller="OrderApi.RefreshItemController" implements="force:LightningQuickActionWithoutHeader,force:hasRecordId" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+</aura:component>

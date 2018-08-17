@@ -1,0 +1,461 @@
+<aura:component controller="Framework.AdminConfigController">
+  <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:attribute name="coreSettings" type="List" default="[]" description="Core Settings" />
+  <aura:attribute name="registeredApps" type="List" default="[]" description="Registered Apps" />
+  <aura:attribute name="objects" type="List" default="[]" description="Objects" />
+  <aura:attribute name="rules" type="List" default="[]" description="Rules" />
+  <aura:attribute name="apiServices" type="List" default="[]" description="Api Services" />
+  <aura:attribute name="scripts" type="List" default="[]" description="Custom Scripts" />
+  <aura:attribute name="rollups" type="List" default="[]" description="Rollup Summaries" />
+  <aura:attribute name="settingsPages" type="List" default="[]" description="Settings Pages" />
+  <aura:attribute name="successLabel" type="String" default="{!$Label.Framework.Success}" description="Success Label"/>
+  <aura:attribute name="scriptSuccessfullyRun" type="String" default="{!$Label.Framework.Script_Successfully_Run}" description="Successfully Run Message"/>
+
+  <div class="slds-medium-size--3-of-4 slds-size--1-of-1 slds-grid slds-wrap slds-border--left">
+    <div class="slds-col slds-size--1-of-1">
+      <div class="slds-page-header">
+        <div class="slds-media slds-media--center">
+          <div class="slds-media__figure slds-ie-fix--width__icon">
+            <img src="//fonteva-cdn.s3.amazonaws.com/framework-admin/FrameworkSettings/FrameworkSettings.svg" style="height:50px;" alt="Placeholder" />
+          </div><!-- /.slds-media__figure -->
+          <div class="slds-media__body">
+            <nav role="navigation">
+              <p id="bread-crumb-label" class="slds-assistive-text">Dashboard:</p>
+              <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                  <li class="slds-list__item slds-text-heading--label">
+                      <a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.showComponent}" data-name="Framework:SparkAdminSidebar" >
+                         {!$Label.Framework.Dashboard}
+                      </a>
+                  </li>
+              </ol>
+            </nav>
+            <span class="slds-text-heading--medium">
+              {!$Label.Framework.Configuration}&nbsp;{!$Label.Framework.Summary}
+            </span>
+          </div><!-- /.slds-media__body -->
+            <button class="slds-button slds-button--brand slds-m-around--xxx-small reset-config" onclick="{!c.resetPrompt}">{!$Label.Framework.Clear_All_Configurations}</button>
+        </div><!-- /.slds-media -->
+      </div><!-- /.slds-page-header -->
+
+      <div aura:id="mainBody" class="slds-object-height--full__nofooter slds-scrollable--y slds-container--center slds-container--x-large">
+        <!-- Core Table -->
+        <div class="slds-page-header slds-size--1-of-1">{!$Label.Framework.Core_Config}</div>
+        <div class="slds-scrollable--x slds-size--1-of-1">
+          <table class="slds-table slds-table--bordered slds-m-bottom--x-large">
+            <thead class="slds-col-rule--bottom">
+              <tr class="slds-text-heading--label">
+                <!-- <th scope="col"> <span class="slds-truncate">Action</span> </th> -->
+            <th scope="col">
+              <span class="slds-truncate">{!$Label.Framework.Location}</span>
+            </th>
+            <th scope="col">
+              <span class="slds-truncate">{!$Label.Framework.Is_Enabled}</span>
+            </th>
+            <th scope="col">
+              <span class="slds-truncate">{!$Label.Framework.Triggers_Enabled}</span>
+            </th>
+            <th scope="col">
+              <span class="slds-truncate">{!$Label.Framework.Custom_Domain}</span>
+            </th>
+            <th scope="col">
+              <span class="slds-truncate">{!$Label.Framework.Enable_Async_Rollups}</span>
+            </th>
+            </tr>
+            </thead>
+            <tbody>
+              <aura:iteration items="{!v.coreSettings}" var="core">
+                <tr class="slds-hint-parent">
+                  <td data-label="location">
+                    {!core.SetupOwner.Name}
+                  </td>
+                  <td data-label="is enabled" class="{!core.Is_Enabled__c ? '' :'slds-hide'}">
+                    <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                  </td>
+                  <td data-label="triggers enabled" class="{!core.Triggers_Enabled__c ? '' :'slds-hide'}">
+                    <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                  </td>
+                  <td data-label="custom domain">
+                    {!core.Custom_Domain__c}
+                  </td>
+                  <td data-label="custom Enable Async Rollups" class="{!core.Enable_Async_Rollups__c ? '' :'slds-hide'}">
+                    <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                  </td>
+                </tr>
+              </aura:iteration>
+            </tbody>
+          </table>
+        </div><!-- /.slds-scrollable-x -->
+          <!-- /Core Table -->
+
+          <!-- Registered Apps Table -->
+        <div class="slds-page-header slds-size--1-of-1">{!$Label.Framework.Registered_Apps}</div>
+        <div class="slds-scrollable--x slds-size--1-of-1">
+          <table class="slds-table slds-table--bordered slds-m-bottom--x-large">
+            <thead class="slds-col-rule--bottom">
+              <tr class="slds-text-heading--label">
+                <!-- <th scope="col"><span class="slds-truncate">{!$Label.Action}</span></th> -->
+            <th scope="col">
+              <span class="slds-truncate">{!$Label.Framework.Namespace}</span>
+            </th>
+            <th scope="col">
+              <span class="slds-truncate">{!$Label.Framework.Name}</span>
+            </th>
+            <th scope="col">
+              <span class="slds-truncate">{!$Label.Framework.Description}</span>
+            </th>
+            <th scope="col">
+              <span class="slds-truncate">{!$Label.Framework.Apex_Class}</span>
+            </th>
+            <th scope="col">
+              <span class="slds-truncate">{!$Label.Framework.Is_Enabled}</span>
+            </th>
+            <th scope="col">
+              <span class="slds-truncate">{!$Label.Framework.Is_Managed}</span>
+            </th>
+            </tr>
+            </thead>
+            <tbody>
+              <aura:iteration items="{!v.registeredApps}" var="app">
+                <tr class="slds-hint-parent">
+                  <!-- <td data-label="action"><a href="javascript:void(0)">del</a></td> -->
+                  <td data-label="name">
+                    {!app.Name__c}
+                  </td>
+                  <td data-label="triggers enabled">
+                    {!app.Name}
+                  </td>
+                  <td data-label="description" class="slds-truncate">
+                    {!app.Description__c}
+                  </td>
+                  <td data-label="apex class">
+                    {!app.Apex_Class__c}
+                  </td>
+                  <td data-label="is enabled" class="{!app.Is_Enabled__c ? '' :'slds-hide'}">
+                    <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                  </td>
+                  <td data-label="is managed" class="{!app.Is_Managed__c ? '' :'slds-hide'}">
+                    <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                  </td>
+                </tr>
+              </aura:iteration>
+            </tbody>
+          </table>
+        </div><!-- /.slds-scrollable-x -->
+          <!-- /Registered Apps Table -->
+
+          <!-- Registered Objects Table -->
+        <div class="slds-page-header slds-size--1-of-1">{!$Label.Framework.Registered_Objects}</div>
+        <div class="slds-scrollable--x slds-size--1-of-1">
+          <table class="slds-table slds-table--bordered slds-m-bottom--x-large">
+            <thead class="slds-col-rule--bottom">
+              <tr class="slds-text-heading--label">
+                <!-- <th scope="col"><span class="slds-truncate">Action</span></th> -->
+                <th scope="col">
+                  <span class="slds-truncate">{!$Label.Framework.Name}</span>
+                </th>
+                <th scope="col">
+                  <span class="slds-truncate">{!$Label.Framework.Namespace}</span>
+                </th>
+                <th scope="col">
+                  <span class="slds-truncate">{!$Label.Framework.Apex_Class}</span>
+                </th>
+                <th scope="col">
+                  <span class="slds-truncate">{!$Label.Framework.SOQL_Limit}</span>
+                </th>
+                <th scope="col">
+                  <span class="slds-truncate">{!$Label.Framework.Is_Enabled}</span>
+                </th>
+                <th scope="col">
+                  <span class="slds-truncate">{!$Label.Framework.Triggers_Enabled}</span>
+                </th>
+                <th scope="col">
+                  <span class="slds-truncate">{!$Label.Framework.Validation_Disabled}</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <aura:iteration items="{!v.objects}" var="object">
+                <tr class="slds-hint-parent">
+                  <td data-label="name">
+                    {!object.Name}
+                  </td>
+                  <td data-label="namespace">
+                    {!object.Namespace__c}
+                  </td>
+                  <td data-label="apex class">
+                    {!object.Apex_Class__c}
+                  </td>
+                  <td data-label="soql limit">
+                    {!object.SOQL_Limit__c}
+                  </td>
+                  <td data-label="is enabled" class="{!object.Is_Enabled__c ? '' :'slds-hide'}">
+                    <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                  </td>
+                  <td data-label="triggers enabled" class="{!object.Triggers_Enabled__c ? '' :'slds-hide'}">
+                    <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                  </td>
+                  <td data-label="validation disabled" class="{!object.Validion_Disabled__c ? '' :'slds-hide'}">
+                    <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                  </td>
+                </tr>
+              </aura:iteration>
+            </tbody>
+          </table>
+        </div><!-- /.slds-scrollable-x -->
+          <!-- /Registered Objects Table -->
+
+          <!-- Routing Rules Table -->
+        <div class="slds-page-header slds-size--1-of-1">{!$Label.Framework.Routing_Rules}</div>
+        <div class="slds-scrollable--x slds-size--1-of-1">
+          <table class="slds-table slds-table--bordered slds-m-bottom--x-large">
+            <thead class="slds-col-rule--bottom">
+              <tr class="slds-text-heading--label">
+                <th scope="col">
+                  {!$Label.Framework.Name}
+                </th>
+                <th scope="col">
+                    {!$Label.Framework.SObject_Name}
+                </th>
+                <th scope="col">
+                  {!$Label.Framework.Apex_Class}
+                </th>
+                <th scope="col">
+                  {!$Label.Framework.Namespace}
+                </th>
+                <th class="text-center">
+                  {!$Label.Framework.Is_Enabled}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <aura:iteration items="{!v.rules}" var="rule">
+                <tr>
+                  <td>{!rule.Name}</td>
+                  <td>{!rule.SObject_Name__c}</td>
+                  <td>{!rule.Apex_Class__c}</td>
+                  <td>{!rule.Namespace__c}</td>
+                  <td align="center" class="{!rule.Is_Enabled__c ? '' :'slds-hide'}">
+                    <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                  </td>
+                </tr>
+              </aura:iteration>
+            </tbody>
+          </table>
+        </div><!-- /.slds-scrollable-x -->
+          <!-- /Registered Objects Table -->
+
+          <!-- API Services Table -->
+        <div class="slds-page-header slds-size--1-of-1">{!$Label.Framework.API_Services}</div>
+        <div class="slds-scrollable--x slds-size--1-of-1">
+          <table class="slds-table slds-table--bordered slds-m-bottom--x-large">
+            <thead class="slds-col-rule--bottom">
+              <tr class="slds-text-heading--label">
+                <th scope="col">
+                  {!$Label.Framework.Name}
+                </th>
+                <th scope="col">
+                  {!$Label.Framework.Namespace}
+                </th>
+                <th scope="col">
+                  {!$Label.Framework.Endpoint}
+                </th>
+                <th scope="col">
+                  {!$Label.Framework.Is_Enabled}
+                </th>
+                <th class="col">
+                  {!$Label.Framework.Debug_Mode}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <aura:iteration items="{!v.apiServices}" var="apiService">
+                <tr>
+                  <td data-label="name">
+                    {!apiService.Name}
+                  </td>
+                  <td data-label="namespace">
+                    {!apiService.Namespace__c}
+                  </td>
+                  <td data-label="endpoint">
+                    {!apiService.Endpoint__c}
+                  </td>
+                  <td data-label="is enabled" class="{!apiService.Is_Enabled__c ? '' :'slds-hide'}">
+                    <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                  </td>
+                  <td data-label="debug mode" class="{!apiService.Debug_Mode__c ? '' :'slds-hide'}">
+                    <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                  </td>
+                </tr>
+              </aura:iteration>
+            </tbody>
+          </table>
+        </div><!-- /.slds-scrollable-x -->
+          <!-- /API Services Table -->
+
+          <!-- Custom Scripts Table -->
+        <div class="slds-page-header slds-size--1-of-1">{!$Label.Framework.Custom_Scripts}</div>
+        <div class="slds-scrollable--x slds-size--1-of-1">
+          <table class="slds-table slds-table--bordered slds-m-bottom--x-large">
+            <thead class="slds-col-rule--bottom">
+              <tr class="slds-text-heading--label">
+                <th scope="col" class="slds-truncate">{!$Label.Framework.Action}</th>
+                <th scope="col" class="slds-truncate">
+                  {!$Label.Framework.Namespace}
+                </th>
+                <th scope="col" class="slds-truncate">
+                 {!$Label.Framework.Name}
+                </th>
+                <th scope="col" class="slds-truncate">
+                  {!$Label.Framework.Description}
+                </th>
+                <th scope="col" class="slds-truncate">
+                  {!$Label.Framework.Namespace}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <aura:iteration items="{!v.scripts}" var="script">
+                <tr>
+                  <td data-label="action">
+                    <a href="javascript:void(0)" data-id="{!script.Name}" onclick="{!c.runCustomScript}">{!$Label.Framework.Run}</a>
+                  </td>
+                  <td data-label="name" class="slds-truncate">
+                    {!script.Name__c}
+                  </td>
+                  <td data-label="name" class="slds-truncate">
+                    {!script.Name}
+                  </td>
+                  <td data-label="description" class="slds-truncate">
+                    {!script.Description__c}
+                  </td>
+                  <td data-label="namespace" class="slds-truncate">
+                    {!script.Namespace__c}
+                  </td>
+                </tr>
+              </aura:iteration>
+            </tbody>
+          </table>
+        </div><!-- /.slds-scrollable-x -->
+      <!-- /Custom Scripts Table -->
+
+      <!-- Rollup Summary Field Table -->
+        <div class="slds-page-header slds-size--1-of-1">{!$Label.Framework.Rollup_Summary_Fields}</div>
+        <div class="slds-scrollable--x slds-size--1-of-1">
+          <table class="slds-table slds-table--bordered slds-m-bottom--x-large">
+            <thead class="slds-col-rule--bottom">
+              <tr class="slds-text-heading--label">
+                <!-- <apex:outputPanel rendered="{!NOT(installedAsMP)}"><th>{!$Label.Action}</th></apex:outputPanel> -->
+                <th scope="col" class="slds-truncate">
+                 {!$Label.Framework.Parent_SObject}
+                </th>
+                <th scope="col" class="slds-truncate">
+                  {!$Label.Framework.Parent_Field}
+                </th>
+                <th scope="col" class="slds-truncate">
+                  {!$Label.Framework.Child_SObject}
+                </th>
+                <th scope="col" class="slds-truncate">
+                    {!$Label.Framework.Child_Field}
+                </th>
+                <th scope="col" class="slds-truncate">
+                  {!$Label.Framework.Relationship_Field}
+                </th>
+                <th scope="col" class="slds-truncate">
+                  {!$Label.Framework.Operation}
+                </th>
+                <th scope="col" class="slds-truncate">
+                 {!$Label.Framework.Filter}
+                </th>
+                <th scope="col" class="slds-truncate">
+                 {!$Label.Framework.Is_Enabled}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <aura:iteration items="{!v.rollups}" var="rollup">
+                <tr>
+                  <td data-label="parent sobject" class="slds-truncate">
+                    {!rollup.Parent_SObject__c}
+                  </td>
+                  <td data-label="parent field" class="slds-truncate">
+                    {!rollup.Parent_Field__c}
+                  </td>
+                  <td data-label="child sobject" class="slds-truncate">
+                    {!rollup.Child_SObject__c}
+                  </td>
+                  <td data-label="child field" class="slds-truncate">
+                    {!rollup.Child_Field__c}
+                  </td>
+                  <td data-label="relationship" class="slds-truncate">
+                    {!rollup.Relationship_Field__c}
+                  </td>
+                  <td data-label="operation" class="slds-truncate">
+                    {!rollup.Operation__c}
+                  </td>
+                  <td data-label="filter" class="slds-truncate">
+                    {!rollup.Filter__c}
+                  </td>
+                  <td data-label="is enabled" class="{!rollup.Is_Enabled__c ? '' :'slds-hide'}">
+                    <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                  </td>
+                </tr>
+              </aura:iteration>
+            </tbody>
+          </table>
+
+        </div><!-- /.slds-scrollable-x -->
+
+        <!-- /Rollup Summary Field Table -->
+
+        <!-- Settings Table -->
+        <div class="slds-page-header slds-size--1-of-1">{!$Label.Framework.Settings_Pages}</div>
+
+        <div class="slds-scrollable--x slds-size--1-of-1">
+          <table class="slds-table slds-table--bordered slds-m-bottom--x-large">
+            <thead class="slds-col-rule--bottom">
+              <tr class="slds-text-heading--label">
+                <!-- <apex:outputPanel rendered="{!NOT(installedAsMP)}"><th>{!$Label.Action}</th></apex:outputPanel> -->
+                <th scope="col" class="slds-truncate">
+                  {!$Label.Framework.Label}
+                </th>
+                <th scope="col" class="slds-truncate">
+                  {!$Label.Framework.Namespace}
+                </th>
+                <th scope="col" class="slds-truncate">
+                  {!$Label.Framework.Apex_Component}
+                </th>
+                <th scope="col" class="slds-truncate">
+                  {!$Label.Framework.Description}
+                </th>
+              </tr>
+            </thead>
+            <tbody >
+              <aura:iteration items="{!v.settingsPages}" var="settingsPage">
+                <tr>
+                  <td data-label="label" class="slds-truncate">
+                    {!settingsPage.Label__c}
+                  </td>
+                  <td data-label="namespace" class="slds-truncate">
+                    {!settingsPage.Namespace__c}
+                  </td>
+                  <td data-label="apex component" class="slds-truncate">
+                    {!settingsPage.Apex_Component__c}
+                  </td>
+                  <td data-label="description" class="slds-truncate">
+                    {!settingsPage.Description__c}
+                  </td>
+                </tr>
+              </aura:iteration>
+            </tbody>
+          </table>
+
+        </div><!-- /.slds-scrollable-x -->
+        <!-- /Settings Table -->
+      </div>
+
+    </div><!-- /.slds-col -->
+  </div><!-- /.slds-medium-size__3-of-4 -->
+  <Framework:MessagePrompt title="{!v.successLabel}" severity="success slds-theme--alert-texture" message="{!v.scriptSuccessfullyRun}" showCancelButton="false" submitButtonLabel="{!$Label.Framework.Close}" aura:id="successfullyRunScriptModal"/>
+  <Framework:MessagePrompt title="{!$Label.Framework.Clear_All_Configurations}" severity="error slds-theme--alert-texture" message="{!$Label.Framework.Clear_All_Configurations_Description}" cancelButtonLabel="{!$Label.Framework.Cancel}" submitButtonLabel="{!$Label.Framework.Clear}" aura:id="resetSettings" submitOnClickAction="{!c.resetConfig}"/>
+</aura:component>

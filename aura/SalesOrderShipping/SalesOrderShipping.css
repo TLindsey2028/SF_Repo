@@ -1,0 +1,25 @@
+.THIS .slds-table tr > th:first-child,
+.THIS .slds-table tr > td:first-child {
+    padding-left: 0!important;
+}
+
+.THIS .slds-table tr > th:last-child,
+.THIS .slds-table tr > td:last-child {
+    padding-right: 0!important;
+}
+
+.THIS .slds-select_container {
+    display: inline-block;
+}
+.THIS .fonteva-shipping-table {
+   background-color: transparent!important;
+}
+
+.THIS .slds-table, .THIS .slds-table thead tr th {
+    background-color: transparent!important;
+}
+
+.THIS .no-address-icon {
+    height: auto;
+    width: 50px;
+}

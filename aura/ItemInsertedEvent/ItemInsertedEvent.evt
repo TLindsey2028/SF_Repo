@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="ItemInsertedEvent">
+    <aura:attribute name="uniqueIdentifier" type="String" required="true"/>
+	<aura:attribute name="orderItem" type="Map" required="true"/>
+</aura:event>

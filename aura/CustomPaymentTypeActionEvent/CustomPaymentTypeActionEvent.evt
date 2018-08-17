@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="CustomPaymentTypeActionEvent" access="global">
+    <aura:attribute name="type" type="String" required="true" access="global"/>
+    <aura:attribute name="params" type="Map" access="global" default="{}"/>
+</aura:event>

@@ -1,0 +1,76 @@
+<aura:component description="EventRegistrationEditOrderDetail" controller="LTE.ManageMyRegistrationController">
+	<aura:attribute name="attendeeObj" type="Map"/>
+	<aura:attribute name="eventObj" type="Map"/>
+	<aura:attribute name="formsSaved" type="Boolean" default="false"/>
+	<aura:attribute name="attendeeSaved" type="Boolean" default="false"/>
+	<aura:registerEvent name="MyAttendeesLoadedEvent" type="LTE:MyAttendeesLoadedEvent"/>
+	<aura:registerEvent name="ReloadAttendeesEvent" type="LTE:ReloadAttendeesEvent"/>
+	<aura:attribute name="usr" type="Map"/>
+	<aura:method name="openModal" action="{!c.openModal}"/>
+	<div class="fonteva-modal_container slds-modal" aura:id="modalContainer">
+		<div class="slds-modal__header slds-modal__header_empty">
+				<lightning:buttonIcon iconName="utility:close" alternativeText='{!$Label.LTE.Login_Component_Cancel}' variant="bare-inverse" class="slds-modal__close" size="large" onclick="{!c.closeModal}"/>
+		</div>
+		<div class="fonteva-modal_body slds-p-around_large">
+			<div class="slds-grid slds-grid_vertical">
+				<div class="slds-text-heading_medium slds-m-bottom_small">
+					<strong>
+						{!v.attendeeObj.fullName}
+					</strong>
+				</div>
+				<div class="fonteva-box_custom slds-m-bottom_large">
+					<aura:iteration items="{!v.attendeeObj.forms}" var="form" indexVar="index">
+						<aura:if isTrue="{!index == 0}">
+							<div class="slds-box active" aura:id="tabHeader" data-response="{!form.formResponseId}" onclick="{!c.changeTab}">
+								<div>{!form.itemName}
+									<span class="slds-float--right slds-hide" aura:id="errorIcon" data-response="{!form.formResponseId}"><lightning:icon iconName="utility:warning" size="small" variant="warning"/> </span>
+								</div>
+							</div>
+							<aura:set attribute="else">
+								<div class="slds-box" aura:id="tabHeader" data-response="{!form.formResponseId}" onclick="{!c.changeTab}">
+									<div>{!form.itemName}
+										<span class="slds-float--right slds-hide" aura:id="errorIcon" data-response="{!form.formResponseId}"><lightning:icon iconName="utility:warning" size="small" variant="warning"/> </span>
+									</div>
+								</div>
+							</aura:set>
+						</aura:if>
+					</aura:iteration>
+				</div>
+			</div>
+			<div class="fonteva-theme_shade slds-grid_pull-padded-large">
+				<div class="slds-grid slds-grid_vertical fonteva-theme_shade fonteva-modal_body-content slds-p-top_large">
+					<aura:iteration items="{!v.attendeeObj.forms}" var="form" indexVar="index">
+						<aura:if isTrue="{!index == 0}">
+							<div class="slds-size_1-of-1 slds-col" aura:id="formDiv" data-response="{!form.formResponseId}">
+								<div>
+									<Framework:InputFields qaData='{"type" : "input", "name": "firstName"}' fieldType="String" isRequired="true" label="{!$Label.LTE.First_Name_Attendee_Information_My_Reg}" value="{!v.attendeeObj}" aura:id="firstName" maxlength="80"/>
+									<Framework:InputFields qaData='{"type" : "input", "name": "lastName"}' fieldType="String" isRequired="true" label="{!$Label.LTE.Last_Name_Attendee_Information_My_Reg}" value="{!v.attendeeObj}" aura:id="lastName" maxlength="80"/>
+									<Framework:InputFields qaData='{"type" : "input", "name": "email"}' fieldType="email" isRequired="{!!v.eventObj.guestEmailOptional}" label="{!$Label.LTE.Email_Attendee_Information_My_Reg}" value="{!v.attendeeObj}" aura:id="email" maxlength="80"/>
+								</div>
+								<aura:if isTrue="{!form.formResponseId != 'ticketOnly'}">
+									<hr/>
+									<LTE:EventRegistrationForm eventObj="{!v.eventObj}" aura:id="formCmp" formId="{!form.formId}" formResponseId="{!form.formResponseId}" autoSubmitForm="false" formUniqueIdentifier="{!form.formResponseId}"/>
+								</aura:if>
+							</div>
+							<aura:set attribute="else">
+								<div class="slds-size_1-of-1 slds-col slds-hide" aura:id="formDiv" data-response="{!form.formResponseId}">
+									<aura:if isTrue="{!form.formResponseId != 'ticketOnly'}">
+										<LTE:EventRegistrationForm eventObj="{!v.eventObj}" aura:id="formCmp" formId="{!form.formId}" formResponseId="{!form.formResponseId}" autoSubmitForm="false" formUniqueIdentifier="{!form.formResponseId}"/>
+									</aura:if>
+								</div>
+							</aura:set>
+						</aura:if>
+					</aura:iteration>
+				</div>
+			</div>
+		</div>
+		<div class="slds-p-around_medium fonteva-modal_footer">
+			<div class="slds-text-align_center">
+				<Framework:Button type="neutral" onClickAction="{!c.closeModal}" label="{!$Label.LTE.Event_Manage_Reg_Details_Cancel}" enableProgressIndicator="false"/>
+				<Framework:Button onClickAction="{!c.save}" label="{!$Label.LTE.Event_Manage_Reg_Details_Save}" aura:id="save"/>
+			</div>
+		</div>
+	</div>
+	<Framework:Toast aura:id="toastMessages"/>
+	<div data-name="attendeeBackdrop" class="slds-backdrop" aura:id="attendeeBackdrop" onclick="{!c.closeModal}"/>
+</aura:component>

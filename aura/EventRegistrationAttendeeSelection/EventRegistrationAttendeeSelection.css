@@ -1,0 +1,34 @@
+.THIS .fonteva-event-content {
+    margin: 0 auto;
+    max-width: 1200px;
+}
+.THIS .fonteva-info-header {
+    justify-content: flex-start!important;
+}
+.THIS .stencil-visible .fonteva-event-content,
+.THIS .stencil-visible .fonteva-event-content.slds-theme--shade > div {
+    max-width: 1200px;
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
+}
+.THIS .stencil-visible .fonteva-event-content {
+    margin: 0 auto;
+}
+
+.THIS .fonteva-ticket-image {
+    height: 100px;
+    width: 100px;
+}
+
+.THIS .slds-medium-size--1-of-6-custom {
+    width : 8.6%!important;
+}
+
+.THIS .slds-medium-size--5-of-6-custom {
+    width : 91.4%!important;
+}
+.THIS {
+    max-width: 1200px;
+    margin: 0 auto;
+}

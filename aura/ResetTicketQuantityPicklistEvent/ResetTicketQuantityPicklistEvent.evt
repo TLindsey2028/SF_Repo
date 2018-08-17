@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="ResetTicketQuantityPicklistEvent">
+    <aura:attribute name="ticketId" type="String"/>
+    <aura:attribute name="salesOrder" type="Object"/>
+</aura:event>

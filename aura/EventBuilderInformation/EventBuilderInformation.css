@@ -1,0 +1,16 @@
+.THIS .slds-input-width--auto input {
+    width: auto!important;
+}
+
+.THIS .fonteva-icon_rotate {
+    transform: rotate(0deg);
+    transition: transform .25s ease-in-out;
+}
+
+.THIS .fonteva-icon_rotate.close {
+    transform: rotate(-90deg);
+}
+
+.THIS .uiInputDefaultError .form-element__help {
+    margin-top: 0.20rem;
+}

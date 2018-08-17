@@ -1,0 +1,180 @@
+<aura:component controller="EventApi.EventsBuilderController" implements="EventApi:EventBuilderTabInterface">
+  <aura:attribute name="customFields" type="List" default="[]"/>
+  <aura:attribute name="customFieldsFound" type="Boolean" default="false"/>
+  <aura:handler event="Framework:UIApiResponseEvent" action="{!c.handleUIApiResponseEvent}"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+  <Framework:UIApi uniqueId="venues" aura:id="customFieldsUIApi"/>
+
+  <!-- LOCAL ATTRIBUTES -->
+  <aura:attribute name="venueObj" type="Object" default="{}" description="Venue Obj"/>
+  <aura:attribute name="venueIdToDelete" type="String" default="" description="Venue Id To Delete"/>
+  <aura:attribute name="organizationId" type="String" description="Organization Id"/>
+  <aura:attribute name="modalState" type="String"/>
+  <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+  <aura:handler event="Framework:RichTextInputFieldModalEvent" action="{!c.handleRichTextInputFieldModalEvent}"/>
+  <aura:registerEvent name="AddSelectorEvent" type="EventApi:AddSelectorEvent"/>
+  <div class="" aura:id="loader">
+    <div class="slds-grid">
+      <div class="slds-col slds-text-align--center slds-align-middle">
+        <img src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+        <span class="slds-text-heading--medium">{!$Label.EventApi.Loading_Event_Builder}</span>
+      </div>
+    </div>
+  </div>
+  <div class="hidden" aura:id="mainBody">
+  <div class="slds-col slds-size--1-of-1">
+    <div class="slds-grid slds-grid--align-spread slds-p-bottom--medium slds-m-bottom--medium">
+      <div class="slds-col slds-align-middle">
+        <div class="slds-text-heading--small">{!$Label.EventApi.Venues_Event_Builder} ({!v.eventObj.venues.length})</div>
+      </div>
+      <button class="slds-button slds-button--brand" onclick="{!c.addNewVenue}">
+        <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--x-small slds-button__icon--left" assistiveText="Save &amp; Close" />
+        {!$Label.EventApi.Add_Venue_Event_Builder}
+      </button>
+    </div>
+  </div>
+  <div class="slds-col slds-size--1-of-1 slds-m-bottom--large">
+    <table class="slds-table slds-table--bordered slds-theme--shade slds-no-row-hover">
+      <aura:if isTrue="{!v.eventObj.venues.length == 0}">
+        <tbody>
+          <tr>
+            <td class="slds-truncate">
+              {!$Label.EventApi.No_Venues_Event_Builder}&nbsp;<a href="javascript:void(0);" onclick="{!c.addNewVenue}">{!$Label.EventApi.Create_New_Venues_Event_Builder}</a>
+            </td>
+          </tr>
+        </tbody>
+        <aura:set attribute="else">
+          <thead>
+            <tr class="slds-text-heading--label">
+              <th></th>
+              <th>{!$Label.EventApi.Name_Event_Builder}</th>
+              <th>{!$Label.EventApi.Address_Event_Builder}</th>
+              <th>Is Primary</th>
+              <th class="slds-truncate slds-text-align--right">{!$Label.EventApi.Actions_Event_Builder}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <aura:iteration items="{!v.eventObj.venues}" var="venue">
+              <tr>
+                <td class="slds-truncate" data-label="">
+                  <span class="{!venue.venueImageUrl != null ? '' : 'hidden'}">
+                    <Framework:Img src="{!venue.venueImageUrl}" width="35" />
+                  </span>
+                  <span class="{!venue.venueImageUrl == null ? '' : 'hidden'}">
+                    <lightning:icon iconName="utility:image" class="slds-icon slds-icon--small slds-icon-text-shade__dark"/>
+                  </span>
+                </td>
+                <td class="slds-truncate" data-label="Name">{!venue.venueName}</td>
+                <td class="slds-truncate" data-label="Address">
+                  <span class="{!venue.addressObj.street_number != null ? '' : 'hidden'}">
+                    {!venue.addressObj.street_number},&nbsp;
+                  </span>
+                  <span class="{!venue.addressObj.street_name != null ? '' : 'hidden'}">
+                    {!venue.addressObj.street_name},&nbsp;
+                  </span>
+                  <span class="{!venue.addressObj.city != null ? '' : 'hidden'}">
+                    {!venue.addressObj.city},&nbsp;
+                  </span>
+                  {!venue.addressObj.country}
+                </td>
+                <td class="slds-truncate" data-label="">
+                  <span class="{!venue.isPrimaryVenue ? '' : 'hidden'}">
+                    <lightning:icon iconName="utility:check" class="slds-icon slds-icon--x-small slds-icon-text-default" size="xx-small"/>
+                  </span>
+                  <span class="{!!venue.isPrimaryVenue ? 'hidden' : ''}">
+                    &nbsp;
+                  </span>
+                </td>
+                <td class="slds-truncate slds-text-align--right" data-label="Actions">
+                  <a href="javascript:void(0);" class="slds-button slds-button--icon-border slds-action" data-id="{!venue.venueId}" onclick="{!c.editVenue}">
+                    <img class="slds-button__icon" src="{!$Resource.EventApi__SLDS_Icons+'/icons/utility/edit_60.png'}" width="16" height="34" data-id="{!venue.venueId}"/>
+                  </a>
+                  <a href="javascript:void(0);" class="slds-button slds-button--icon-border slds-action" data-id="{!venue.venueId}" onclick="{!c.deleteVenuePrompt}">
+                    <img class="slds-button__icon" src="{!$Resource.EventApi__SLDS_Icons+'/icons/utility/delete_60.png'}" width="16" height="34" data-id="{!venue.venueId}"/>
+                  </a>
+                </td>
+              </tr>
+            </aura:iteration>
+          </tbody>
+        </aura:set>
+      </aura:if>
+    </table>
+  </div>
+    <aura:if isTrue="{!v.eventObj.style == 'Conference'}">
+      <div class="slds-col slds-size--1-of-1">
+        <Framework:InputFields group="eventTickets" fieldType="richText" label="{!$Label.EventApi.Venues_Overview_Event_Builder}" aura:id="venueOverview" value="{!v.eventObj}" />
+      </div>
+    </aura:if>
+
+  <div class="slds-modal" aura:id="venuesModal">
+    <div class="slds-modal__container">
+      <div class="slds-modal__header">
+        <h2 class="slds-text-heading--medium" id="modal-heading-label">
+          {!v.modalState}
+        </h2>
+        <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+          <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+        </button><!-- /.slds-button -->
+      </div><!-- /.slds-modal__header -->
+      <div class="slds-modal__content slds-object-height--half slds-scrollable--y" id="venueBody">
+        <div class="slds-grid slds-wrap slds-grid--pull-padded">
+          <div class="slds-col slds-size--1-of-1">
+            <div class="slds-grid slds-wrap">
+              <div class="slds-size--1-of-2 slds-col--padded">
+                <Framework:InputFields group="eventVenues" fieldType="string" aura:id="venueName" isRequired="true" label="{!$Label.EventApi.Venue_Name_Event_Builder}" value="{!v.venueObj}" maxlength="80"/>
+              </div>
+              <div class="slds-size--1-of-2 slds-p-top--x-large slds-col--padded">
+                <Framework:InputFields group="eventVenues" fieldType="boolean" aura:id="isPrimaryVenue" label="{!$Label.EventApi.Primary_Venue_Event_Builder}" value="{!v.venueObj}" helpText="{!$Label.EventApi.Event_Builder_Venue_Primary_Venue}"/>
+              </div>
+            </div>
+          </div>
+          <div class="slds-size--1-of-1 slds-col--padded">
+            <Framework:InputFields group="eventVenues" fieldType="richtext" aura:id="description" label="{!$Label.EventApi.Description_Event_Builder}" value="{!v.venueObj}" maxlength="32767" helpText="{!$Label.EventApi.Event_Builder_Venue_Description}"/>
+          </div>
+          <div class="slds-size--1-of-1 slds-col--padded">
+            <Framework:InputFields group="eventVenuesExcempt" fieldType="address" aura:id="addressObj" label="{!$Label.EventApi.Address_Event_Builder}" value="{!v.venueObj}"/>
+          </div>
+          <div class="slds-size--1-of-2 slds-col--padded">
+            <Framework:InputFields group="eventVenues" fieldType="boolean" aura:id="displayMap" label="{!$Label.EventApi.Display_Map_Event_Builder}" value="{!v.venueObj}" helpText="{!$Label.EventApi.Event_Builder_Venue_Display_Map}"/>
+          </div>
+          <div class="slds-size--1-of-1 slds-col--padded">
+            <Framework:InputFields group="eventVenues" fieldType="fileUpload" aura:id="venueImageUrl" label="{!$Label.EventApi.Venue_Image_Url_Event_Builder}" value="{!v.venueObj}" otherAttributes='{maximumFileSize : 5242880,allowedMimeTypes:["image/png","image/jpeg","image/jpg","image/gif","image/bmp","image/tiff"]}' helpText="{!$Label.EventApi.Event_Builder_Venue_Venue_Image_Url}"/>
+          </div>
+          <aura:if isTrue="{!v.customFields.length > 0}">
+            <div class="slds-size--1-of-1 slds-col--padded">
+              <div class="slds-m-bottom--x-small">
+                <strong>{!$Label.EventApi.Event_Builder_Custom_Fields}</strong>
+              </div>
+              <aura:iteration items="{!v.customFields}" var="customField">
+                <div class="slds-size--1-of-1">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "customfield"}' aura:id="customField" group="venueBuilderCustomFields" value="{!v.venueObj.customFieldValues}" sObjectName="{!customField.objectName}" fieldName="{!customField.apiName}" secondaryId="{!customField.apiName}" useSecondaryId="true"/>
+                </div>
+              </aura:iteration>
+            </div>
+          </aura:if>
+        </div>
+      </div>
+      <div class="slds-modal__footer slds-text-align--right">
+        <button class="slds-button slds-button--neutral" onclick="{!c.closeModal}">{!$Label.EventApi.Cancel}</button>
+        <Framework:Button aura:id="venueModalSaveButton"
+                          onClickAction="{!c.saveVenue}"
+                          type="brand"
+                          additionalClasses="slds-m-left--xx-small"
+                          label="{!$Label.EventApi.Save_Continue_Event_Builder}" />
+      </div><!-- /.slds-modal__footer -->
+    </div><!-- /.modal-dialog .slds-modal__container -->
+  </div><!-- /.modal .slds-modal -->
+
+  <Framework:MessagePrompt title="Delete Venue"
+                           message="Delete this Venue?"
+                           severity="clear"
+                           submitButtonLabel="{!$Label.EventApi.Delete_Ticket_Type_Event_Builder}"
+                           submitOnClickAction="{!c.deleteVenue}"
+                           closeOnClickAction="{!c.closeModal}"
+                           cancelButtonLabel="{!$Label.EventApi.Cancel}"
+                           aura:id="deleteModal"/>
+
+  <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+  </div>
+</aura:component>

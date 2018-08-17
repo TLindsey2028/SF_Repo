@@ -1,0 +1,6 @@
+.THIS .header-label{
+    font-weight: token(fontWeightRegular);
+}
+.THIS .slds-text-heading--medium {
+    line-height: 1.5 !important;
+}

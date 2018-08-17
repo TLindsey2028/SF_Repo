@@ -1,0 +1,13 @@
+.THIS .slds-m-bottom--none,
+.THIS .slds-m-bottom--none .slds-form-element__control{
+    margin-bottom: 0!important;
+}
+
+.THIS .slds-dropdown-trigger {
+    pointer: cursor;
+}
+
+.THIS .slds-border-top--none,
+.THIS .slds-border-top--none td {
+    border-top: none!important;
+}

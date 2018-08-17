@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="FilterCriteriaRowSetIndexEvent">
+  <aura:attribute name="rowIndex" type="Integer" description="filter row index" />
+</aura:event>

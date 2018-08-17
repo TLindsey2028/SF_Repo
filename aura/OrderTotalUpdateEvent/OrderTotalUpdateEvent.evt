@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="OrderTotalUpdateEvent">
+    <aura:attribute type="Decimal" name="cardTotal" required="true"/>
+	<aura:attribute type="String" name="uniqueIdentifier" required="true"/>
+</aura:event>

@@ -1,0 +1,11 @@
+.THIS .slds-time--hour {
+  position: relative;
+}
+
+.THIS .slds-text--error, .THIS .slds-form-element__label.slds-text--error {
+  color: #c23934;
+}
+
+.THIS .slds-datepicker {
+  font-size: .875rem!important;
+}

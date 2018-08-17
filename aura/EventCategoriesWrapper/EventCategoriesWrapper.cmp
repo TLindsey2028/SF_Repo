@@ -1,0 +1,15 @@
+<aura:component description="EventCategoriesWrapper">
+    <aura:handler event="Framework:ShowComponentEvent" action="{!c.handleSwitchComponent}"/>
+    <style>
+        @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+            .slds-ie-fix--width {
+                max-width: calc(98vw - 11px)!important;
+            }
+        }
+    </style>
+    <div class="slds slds-ie-fix--width">
+        <div aura:id="mainBodyWrapper">
+            <EventApi:EventCategories/>
+        </div>
+    </div>
+</aura:component>

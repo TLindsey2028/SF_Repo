@@ -1,0 +1,19 @@
+<aura:component description="EventBuilderWrapper" implements="flexipage:availableForAllPageTypes,force:hasRecordId,lightning:actionOverride" access="global" extends="Framework:BaseComponent" controller="EventApi.EventBuildQuickActionsController">
+    <aura:attribute name="eventId" type="String" description="Event Id"/>
+    <aura:attribute name="organizationId" type="String" description="Organization Id"/>
+    <aura:attribute name="sitePrefix" type="String" default=""/>
+    <aura:attribute name="eventCategoryId" type="String" description="Event Category Id"/>
+    <aura:attribute name="communityGroupId" type="String"/>
+    <aura:attribute name="eventObj" type="Map" description="Event Object" access="public" />
+    <aura:attribute name="dateFormat" type="String" description="Date Format"/>
+    <aura:registerEvent name="ComponentLoadedEvent" type="EventApi:ComponentLoadedEvent"/>
+    <aura:handler event="Framework:ShowComponentEvent" action="{!c.handleSwitchComponent}"/>
+    <ltng:require scripts="{!join(',',$Resource.EventApi__CustomFieldUtils,$Resource.Framework__ActionUtils,$Resource.Framework__UIApi,$Resource.Framework__UrlUtil,$Resource.Framework__SLDS_BaseV2+'/js/scripts.min.js',$Resource.Framework__SLDS_BaseV2+'/js/lodash.min.js',$Resource.PagesApi__FontevaHelper+'/FontevaHelper.js',$Resource.EventApi__Event_Builder+'/eventbuilder/FontevaStyler.js')}"  styles="{!join(',',$Resource.EventApi__SLDS_Base+'/css/styles.css',$Resource.Framework__SLDS_BaseV2+'/css/fullStyles.css')}" afterScriptsLoaded="{!c.doInit}"/>
+    <style>
+        #auraErrorMessage {
+            display : none;
+        }
+    </style>
+    <div class="slds" aura:id="eventBuilderWrapperDiv">
+    </div>
+</aura:component>

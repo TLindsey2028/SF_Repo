@@ -1,0 +1,37 @@
+.THIS .slds-text-color--body span {
+    word-break: break-word;
+}
+
+.THIS .slds-object-height--full__nofooter {
+    height: calc(100vh - 73px)!important;
+}
+.THIS .slds-icon--xx-small {
+  line-height: 1;
+  width: .8rem!important;
+  height: 0.8rem!important;
+}
+.THIS  .slds-dropdown--trigger  .slds-dropdown--menu__hidden {
+  display: none;
+  z-index: 0;
+}
+.THIS  .slds-dropdown--trigger:hover  .slds-dropdown--menu__hidden,
+.THIS  .slds-dropdown--trigger:active  .slds-dropdown--menu__hidden {
+  display: block;
+  z-index: 100;
+}
+.THIS .notSaving {
+  visibility: hidden;
+}
+.THIS .saving {
+  visibility: visible;
+  display: inline-block;
+  font-size: .775rem;
+}
+.THIS .small-spinner {
+  height: 36px;
+  width: 36px;
+}
+
+.THIS .slds-dropdown {
+  margin-top: 0!important;
+}

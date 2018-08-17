@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="RegistrationToolbarUpdateEvent" access="global">
+    <aura:attribute name="title" type="String" required="true"/>
+    <aura:attribute name="total" type="Decimal" required="true"/>
+</aura:event>

@@ -1,0 +1,26 @@
+<aura:component description="EventRegistrationWrapper" access="global" implements="LTE:EventInterface">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="secondaryCompName" type="String" access="global"/>
+    <aura:attribute name="agendaOnly" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="readOnly" type="Boolean" default="true" access="global"/>
+    <aura:attribute name="initialPurchase" type="Boolean" access="global" default="true"/>
+    <aura:attribute name="environmentKey" type="String"/>
+    <aura:handler event="Framework:ShowComponentEvent" action="{!c.handleSwitchComponent}"/>
+    <aura:registerEvent name="RegistrationProcessSetGlobalObjectsEvent" type="LTE:RegistrationProcessSetGlobalObjectsEvent"/>
+    <aura:dependency resource="markup://LTE:EventRegistrationAttendeeSelection"/>
+    <aura:dependency resource="markup://LTE:EventRegistrationSeatingWrapper"/>
+    <aura:dependency resource="markup://LTE:EventRegistrationTicketSelection"/>
+    <aura:dependency resource="markup://LTE:EventRegistrationCheckoutSummary"/>
+    <LTE:RegistrationProcessFlow attendeeObj="{!v.attendeeObj}"
+                               eventObj="{!v.eventObj}"
+                               usr="{!v.usr}"
+                               initialPurchase="{!v.initialPurchase}"
+                               siteObj="{!v.siteObj}"
+                               storeObj="{!v.storeObj}"
+                               salesOrder="{!v.salesOrderObj}"
+                               event="{!v.eventObj.id}"
+                               timerLength="{!v.eventObj.registrationTimer}"
+                               aura:id="regProcessFlow"/>
+    <div class="slds-size--1-of-4"></div>
+    <div aura:id="registrationBody" class="{!$Browser.isIPhone ? 'fonteva-registration_body touch' : 'fonteva-registration_body'}" id="registrationBody"/>
+</aura:component>

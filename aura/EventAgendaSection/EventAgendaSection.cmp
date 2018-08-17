@@ -1,0 +1,23 @@
+<aura:component description="EventAgendaSection" access="global" implements="LTE:EventInterface" controller="LTE.EventAgendaComponentController">
+  <aura:attribute name="session" type="Map" required="true" access="global"/>
+  <aura:attribute name="sessionDays" type="List" default="[]"/>
+  <aura:attribute name="readOnly" type="Boolean" required="true" access="global"/>
+  <aura:attribute name="initialPurchase" type="Boolean" access="global" default="true"/>
+  <aura:attribute name="showPurchase" type="Boolean" access="global" default="false"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldChangeEvent}"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:handler event="LTE:SectionItemEvent" action="{!c.handleSectionItemEvent}"/>
+  <aura:dependency resource="markup://LTE:EventAgendaSectionItem" />
+  <aura:attribute name="currentContact" type="String"/>
+
+  <div class="slds-collapse-section slds-m-bottom--xxx-small" aura:id="sessionDiv">
+    <a class="slds-collapse-section-title fonteva-slds-schedule-item-header" onclick="{!c.toggleAccordion}">
+      <lightning:buttonIcon alternativeText="down" iconName="utility:chevrondown" variant="bare-inverse" iconClass="slds-button--icon-inverse" aura:id="sessionChevron"/>
+      <span class="slds-p-left--small slds-text-heading--small slds-font-weight--semi-bold slds-m-vertical--xx-small fonteva-slds-schedule-item-header">{!v.session.sessionDate}</span>
+    </a>
+    <div aura:id="itemListDiv" class="slds-collapse-section-content open" style="display: block;">
+      <div class="slds-grid slds-col slds-wrap" aura:id="sessions">
+      </div>
+    </div>
+  </div>
+</aura:component>

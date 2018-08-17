@@ -1,0 +1,208 @@
+<aura:component description="GroupRegistration" controller="ROEApi.GroupRegistrationDetailsController">
+    <aura:attribute name="currencyISOCode" type='String' default="USD"/>
+    <aura:attribute name="total" type='Decimal' default="0.00"/>
+    <aura:attribute name="groupRegGlobalId" type="String" />
+    <aura:attribute name="salesOrder" type="String" required="true"/>
+    <aura:attribute name="groupUniqueIdentifier" type="String" required="true"/>
+    <aura:attribute name="orderItem" type="Map" required="true" default="{}"/>
+    <aura:attribute name="attendeeCompleteStatus" type="Map" default="{}"/>
+    <aura:attribute name="childItems" type="List" default="[]"/>
+    <aura:attribute name="event" type="String" required="true"/>
+    <aura:attribute name="currentIndexShown" type="Integer"/>
+    <aura:attribute name="attendees" type='List' default="[]"/>
+    <aura:attribute name="ticketTypes" type='List' default="[]"/>
+    <aura:attribute name="invites" type='List'/>
+    <aura:attribute name="groupObj" type='Map' default="{}"/>
+    <aura:attribute name="scTotals" type="Map" default="{}" />
+    <aura:attribute name="selectedAttendeeName" type="String" default=""/>
+    <aura:attribute name="copySettingsFrom" type="Map" default="{}"/>
+    <aura:handler event="ROEApi:GroupRegistrationTotalUpdateEvent" action="{!c.handleTotalUpdateEvent}"/>
+    <aura:handler event="ROEApi:GroupRegistrationNameUpdateEvent" action="{!c.handleNameUpdateEvent}"/>
+    <aura:handler event="ROEApi:GroupRegistrationChangeAttendeeEvent" action="{!c.handleSwitchPersonEvent}"/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:handler event="ROEApi:ScheduleItemCompTotalUpdateEvent" action="{!c.handleSCItemTotalUpdateEvent}"/>
+    <aura:handler event="ROEApi:FormSubmittedEvent" action="{!c.handleFormSubmitEvent}"/>
+    <aura:registerEvent name="GroupRegistrationAttendeeSwitchEvent" type="ROEApi:GroupRegistrationAttendeeSwitchEvent"/>
+    <aura:registerEvent name="ItemUpdateEvent" type="ROEApi:ItemUpdateEvent"/>
+    <aura:registerEvent name="ItemCompleteEvent" type="ROEApi:ItemCompleteEvent"/>
+    <aura:registerEvent name="UpdateSimilarTTSOLsEvent" type="ROEApi:UpdateSimilarTTSOLsEvent"/>
+    <aura:handler event="ROEApi:GroupRegistrationShowNewPriceEvent" action="{!c.handleGroupRegShowNewPriceEvent}"/>
+    <aura:handler event="ROEApi:GroupRegistrationCompleteEvent" action="{!c.handleGroupRegCompleteEvent}"/>
+    <aura:handler event="ROEApi:UpdateSimilarTTSOLsEvent" action="{!c.handleUpdateSimilarTTSOLsEvent}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="formFilled" type="Boolean" default="false"/>
+    <aura:registerEvent name="GroupRegistrationAttendeeEvent" type="ROEApi:GroupRegistrationAttendeeEvent"/>
+    <aura:registerEvent name="GroupRegistrationAttendeesUpdateEvent" type="ROEApi:GroupRegistrationAttendeesUpdateEvent"/>
+    <style>
+    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+        .slds-box--group {
+            max-width: calc(100vw - 91.08px);
+        }
+    }
+    </style>
+    <div class="slds-col--padded">
+        <div class="slds-grid slds-grid--pull-padded slds-ie-fixed--width">
+            <div class="slds-size--1-of-1 slds-col--padded slds-grid slds-wrap">
+                <div class="slds-size--1-of-1">
+                    <div class="slds-grid slds-grid--pull-padded slds-wrap">
+                        <div class="slds-col--padded slds-size--1-of-1 slds-m-bottom--small">
+                            <div class="slds-grid slds-grid--align-spread">
+                                <div class="slds-col slds-text-heading--medium">
+                                    {!$Label.ROEApi.Group_Reg_Attendees}
+                                </div>
+                                <div class="slds-col slds-text-heading--medium">
+                                    <Framework:CurrencyField value="{!v.total}" currencyISOCode="{!v.currencyISOCode}" aura:id="price"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-col--padded slds-size--1-of-1">
+                            <div class="slds-col--padded">
+                                <div class="slds-grid slds-grid--pull-padded">
+                                    <div class="slds-p-horizontal--small slds-align-middle slds-attendee__number">
+
+                                    </div>
+                                    <div class="slds-col--padded slds-size--1-of-4 slds-position--relative attendee-text">
+                                        <label class="slds-form-element__label helper-margin-right">
+                                            <abbr class="slds-required" title="required">*</abbr>
+                                            {!$Label.ROEApi.Group_Reg_Attendee}
+                                        </label>
+                                    </div>
+                                    <div class="slds-col--padded slds-size--1-of-4 ticket-type-text">
+                                        <label class="slds-form-element__label helper-margin-right">
+                                            <abbr class="slds-required" title="required">*</abbr>
+                                                {!$Label.ROEApi.Group_Reg_Ticket_Type}
+                                        </label>
+                                    </div>
+                                    <div class="slds-col--padded slds-size--1-of-4">
+                                        <label class="slds-form-element__label helper-margin-right">
+                                            {!$Label.ROEApi.Price_Rule}
+                                        </label>
+                                    </div>
+                                    <div class="slds-col--padded slds-size--1-of-4">
+                                        <label class="slds-form-element__label helper-margin-right slds-hide" aura:id="newPriceDiv">
+                                            {!$Label.ROEApi.Group_Reg_New_Price}
+                                        </label>
+                                    </div>
+                                    <div class="slds-col--padded slds-p-top--large slds-text-align--right slds-size--1-of-4">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <aura:iteration items="{!v.invites}" var="invite" indexVar="index" aura:id="addAttendee">
+                                <ROEApi:GroupRegistrationAddAttendee groupUniqueIdentifier="{!v.groupUniqueIdentifier}" inviteObj="{!invite}" index="{!index + 1}" dataindex="{!index}" removePerson="{!c.removePerson}" ticketTypes="{!v.ticketTypes}" salesOrder="{!v.salesOrder}" aura:id="attendeeRow"/>
+                            </aura:iteration>
+                        </div>
+                        <div class="slds-col--padded slds-size--1-of-1 slds-m-bottom--medium">
+                            <hr class="slds-m-vertical--small" />
+                            <div class="slds-grid slds-grid--pull-padded">
+                                <div class="slds-p-horizontal--small slds-align-middle slds-object--custom"></div>
+
+                                <div class="slds-col--padded slds-size--1-of-4 slds-position--relative">
+                                    <label class="slds-form-element__label helper-margin-right">
+                                        {!$Label.ROEApi.Group_Reg_Copy_Settings_From}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="slds-grid slds-grid--pull-padded">
+                                <div class="slds-p-horizontal--small slds-align-middle slds-object--custom"></div>
+                                <div class="slds-col--padded slds-size--1-of-4 slds-position--relative">
+                                    <Framework:InputFields fieldType="picklist"
+                                                           value="{!v.copySettingsFrom}"
+                                                           label=""
+                                                           isRequired="true"
+                                                           labelStyleClasses="slds-hide "
+                                                           aura:id="copyFromPicklist"
+                                                           useSecondaryId="true"
+                                                           secondaryId="selectedId" />
+                                </div>
+                                <div class="slds-col--padded slds-size--3-of-4">
+                                    <Framework:Button type="brand"
+                                                      aura:id="addAttendeeBtn"
+                                                      label="{!$Label.ROEApi.Group_Reg_Add_Another_Attendee}"
+                                                      onClickAction="{!c.newPerson}"
+                                                      enableProgressIndicator="true"
+                                                      additionalClasses="fonteva-button_reverse"
+                                                      svgContainerClass="slds-button__icon_left"
+                                                      lightningIcon="utility:add"
+                                                      lightningIconSize="x-small"
+                                                      lightningIconVariant="inverse"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap slds-box--group">
+            <div class="slds-size--1-of-1">
+                <div class="slds-grid slds-grid--pull-padded slds-theme--shade__dark slds-p-horizontal--medium slds-p-top--medium" aura:id="groupRegistrationOverview">
+                    <div class="slds-col--padded slds-size--1-of-1">
+                        <div class="slds-grid">
+                            <div class="slds-hidden slds-p-horizontal--small">
+                                <Framework:FONSVG svgPath="{!$Resource.ROEApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#chevrondown'}"
+                                               containerClass="slds-icon__container slds-rotate"
+                                               svgClass="slds-icon slds-icon--x-small slds-icon-text-default" />
+                            </div>
+                            <div class="slds-grid slds-wrap slds-col slds-grid--pull-padded">
+                                <div class="slds-col slds-size--1-of-1">
+                                    <div class="slds-grid slds-grid--align-spread">
+                                        <div class="slds-col slds-align-middle">
+                                            <aura:if isTrue="{!v.attendees.length > 1}">
+                                                <Framework:Button enableProgressIndicator="false"
+                                                              onClickAction="{!c.personPrev}"
+                                                              type=""
+                                                              additionalClasses="slds-button--icon-border-inverse slds-group-reg--previous"
+                                                              label=""
+                                                              svgPath="{!$Resource.ROEApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#chevronleft'}"
+                                                              svgContainerClass=""
+                                                              svgClass="slds-button__icon"
+                                                              aura:id="prevButton"
+                                                              svgAssistiveText="" />
+                                            </aura:if>
+                                        </div>
+                                        <div class="slds-col slds-align-middle">
+                                            <aura:iteration items="{!v.invites}" var="attendee" indexVar="index">
+                                                <div id="{!attendee.salesOrderLineItem.salesOrderLine+'_attendeeName'}" data-id="{!attendee.salesOrderLineItem.salesOrderLine+'_attendeeName'}" class="slds-tabs--default__content slds-hide" role="tabpanel" aria-labelledby="{!attendee.salesOrderLineItem.salesOrderLine+'_attendeeName'}" aura:id="attendeeName">
+                                                    <span class="slds-text-heading--small">
+                                                        <span>Attendee:&nbsp;{!attendee.salesOrderLineItem.customerName}</span>
+                                                    </span>
+                                                </div>
+                                            </aura:iteration>
+                                        </div>
+                                        <div class="slds-col slds-align-middle">
+                                            <aura:if isTrue="{!v.attendees.length > 1}">
+                                                <Framework:Button enableProgressIndicator="false"
+                                                              onClickAction="{!c.personNext}"
+                                                              type=""
+                                                              additionalClasses="slds-button--icon-border-inverse slds-group-reg--next"
+                                                              label=""
+                                                              svgPath="{!$Resource.ROEApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#chevronright'}"
+                                                              svgContainerClass=""
+                                                              svgClass="slds-button__icon"
+                                                              aura:id="nextButton"
+                                                              svgAssistiveText="" />
+                                            </aura:if>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-hidden slds-p-horizontal--small slds-object--custom">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--1-of-1">
+                <div class="slds-theme--shade__dark slds-p-vertical--medium slds-group--slider" aura:id="groupCarousel">
+                    <aura:iteration items="{!v.attendees}" var="attendee" indexVar="index">
+                        <div id="{!attendee.salesOrderLineItem.salesOrderLine+'_attendee'}" class="slds-tabs--default__content slds-hide" role="tabpanel" aria-labelledby="{!attendee.salesOrderLineItem.salesOrderLine+'_attendee'}" aura:id="attendeeContent">
+                            <ROEApi:GroupRegistrationAttendee event="{!v.event}" uniqueIdentifier="{!attendee.salesOrderLineItem.salesOrderLine}" dataindex="{!attendee.index}" salesOrderLineItem="{!attendee.salesOrderLineItem}"/>
+                        </div>
+                    </aura:iteration>
+                </div>
+            </div>
+        </div>
+        <Framework:Toast aura:id="toastMessages"/>
+    </div>
+</aura:component>

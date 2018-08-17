@@ -1,0 +1,20 @@
+<aura:component access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="helpText" type="String" default="" description="Help Text" access="global"/>
+    <aura:attribute name="showHelp" type="Boolean" default="false" description="Show Help Text" access="private"/>
+    <style>
+        .tooltip-tether-arrows {
+            z-index: 100000;
+        }
+        .tooltip-open {
+            z-index: 100000;
+        }
+        .slds-tooltip--help-text {
+            color : white!important;
+        }
+    </style>
+    <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/vendor.js'}" afterScriptsLoaded="{!c.doTetherInit}"/>
+    <span data-name="toolTip" id="{!globalId+'_icon'}" class="{!globalId+'_icon icon_tooltip'}">
+        <lightning:icon iconName="utility:info" size="x-small" class="tooltip-slds-icon"/>
+    </span>
+</aura:component>

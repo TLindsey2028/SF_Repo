@@ -1,0 +1,11 @@
+<aura:component description="UIApi" controller="Framework.AdminController" access="global">
+    <ltng:require scripts="{!join(',',$Resource.Framework__ActionUtils,$Resource.Framework__UIApi,$Resource.Framework__UrlUtil)}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute name="showLightningContainer" type="Boolean" default="false"/>
+    <aura:attribute name="iFrameUrl" type="String" default=""/>
+    <aura:attribute name="uniqueId" type="String" access="global" required="true"/>
+    <aura:registerEvent name="UIApiResponseEvent" type="Framework:UIApiResponseEvent"/>
+    <iframe aura:id="uiApiFrame" id="{!v.uniqueId}" src="{!v.iFrameUrl}" frameborder="0" width="0" height="0" scrolling="no"/>
+    <aura:method name="getFieldsFromLayout" access="global" action="{!c.getFieldObjsFromLayout}">
+        <aura:attribute name="sObjectName" type="String" access="global" required="true"/>
+    </aura:method>
+</aura:component>

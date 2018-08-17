@@ -1,0 +1,15 @@
+<aura:component description="PaymentMethodTabsVF" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="index" type="Integer" default="0"/>
+    <aura:attribute name="paymentTypes" type="List" default="[]"/>
+    <aura:attribute name="salesOrderId" type="String"/>
+    <aura:iteration items="{!v.paymentTypes}" var="paymentType" indexVar="index">
+        <div class="tab-pane fade slds" id="{!index+'_form'}">
+            <div class="row">
+                <div class="col-md-12" aura:id="paymentTypeBody">
+
+                </div>
+            </div>
+        </div>
+    </aura:iteration>
+</aura:component>

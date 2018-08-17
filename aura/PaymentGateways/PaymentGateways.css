@@ -1,0 +1,29 @@
+.THIS .country_flag {
+    width: 24px;
+    margin-right: 6px;
+    margin-top: 6px;
+}
+
+.THIS .slds-icon--x-small-gateway {
+    width: 1rem!important;
+    height: 1rem!important;
+    padding : 2px;
+}
+
+.THIS .slds-icon__container--circle-gateway-supports {
+    padding: 0.01rem;
+    border-radius: 61%!important;
+    background: green;
+}
+
+.THIS .hide-unsupported-payment-method-type {
+    opacity: 0;
+}
+
+.THIS .slds-gateway-supports--disabled {
+    opacity: .5;
+}
+
+.THIS .file-upload-field .slds-form-element {
+    width: 85%;
+}

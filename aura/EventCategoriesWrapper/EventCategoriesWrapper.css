@@ -1,0 +1,11 @@
+.THIS .slds-custom-table-size {
+    width: 58%!important;
+}
+
+.THIS .slds-search--icon span svg {
+    margin-bottom: 10px;
+}
+
+.THIS .slds-table thead th {
+    background-color: transparent;
+}

@@ -1,0 +1,22 @@
+<aura:component description="AddToCalendar">
+    <aura:attribute name="eventObj" type="Object"/>
+    <aura:attribute name="emptySpace" type="String" default=" "/>
+    <ltng:require styles="{!$Resource.LTE__SLDS_Lens+'/css/addtocalendar.css'}"
+                  scripts="{!join(',',$Resource.EventApi__AddToCalendar+'/js/moment.js',$Resource.EventApi__AddToCalendar+'/js/moment-timezone.js',$Resource.EventApi__AddToCalendar+'/js/icsFormatter.js',$Resource.EventApi__AddToCalendar+'/js/addToCalendar.js')}"/>
+    <span class="addtocalendar"
+          data-secure="true"
+          data-calendars="iCalendar,Google Calendar,Outlook,Outlook Online,Yahoo! Calendar">
+        <lightning:buttonIcon iconName="utility:dayview"
+                               alternativeText="Add To Calendar"
+                               class="atcb-link"
+                               variant="bare-inverse"/>
+        <var class="atc_event">
+            <var class="atc_date_start">{!v.eventObj.startDateTime}</var>
+            <var class="atc_date_end">{!v.eventObj.endDateTime}</var>
+            <var class="atc_timezone">{!v.eventObj.formattedTimeZone}</var>
+            <var class="atc_title">{!v.eventObj.name}</var>
+            <var class="atc_description">{!v.eventObj.calendarReminderText}</var>
+            <var class="atc_location">{!v.eventObj.primaryVenue.street}{!v.emptySpace}{!v.eventObj.primaryVenue.city}, {!v.eventObj.primaryVenue.state}, {!v.eventObj.primaryVenue.country}{!v.emptySpace}{!v.eventObj.primaryVenue.postalCode}</var>
+        </var>
+    </span>
+</aura:component>

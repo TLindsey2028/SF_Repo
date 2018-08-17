@@ -1,0 +1,76 @@
+<aura:component controller="Framework.AdminApiServicesController">
+    <ltng:require scripts="{!join(',',$Resource.Framework__SLDS_BaseV2+'/js/scripts.min.js',$Resource.Framework__SLDS_BaseV2+'/js/plugins.js')}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute name="modalApiServiceHeader" type="String"/>
+    <aura:handler event="Framework:RefreshComponentEvent" action="{!c.handleRefreshComponentEvent}"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:handler event="Framework:RefreshInputField" action="{!c.handleRefreshComponentEvent}"/>
+    <!-- LOCAL ATTRIBUTES -->
+    <aura:attribute name="services" type="List" default="[]" description="Api Services"/>
+    <div class="slds-medium-size--3-of-4 slds-size--1-of-1 slds-grid slds-wrap">
+      <div class="slds-col slds-size--1-of-1">
+        <div class="slds-page-header">
+          <div class="slds-media slds-media--center">
+            <div class="slds-media__figure slds-ie-fix--width__icon">
+              <img src="//fonteva-cdn.s3.amazonaws.com/framework-admin/APIServices/APIServices.svg" style="height:50px;" alt="Placeholder" />
+            </div><!-- /.slds-media__figure -->
+            <div class="slds-media__body">
+              <nav role="navigation">
+                <p id="bread-crumb-label" class="slds-assistive-text">{!$Label.Framework.Dashboard}:</p>
+                <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                    <li class="slds-list__item slds-text-heading--label">
+                        <a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.showComponent}" data-name="Framework:SparkAdminSidebar" >
+                            {!$Label.Framework.Dashboard}
+                        </a>
+                    </li>
+                </ol>
+              </nav>
+              <div class="slds-text-heading--medium">
+                {!$Label.Framework.API}&nbsp;{!$Label.Framework.Services}
+              </div>
+            </div><!-- /.slds-media__body -->
+              <Framework:Button enableProgressIndicator="false"
+                        onClickAction="{!c.newApiService}"
+                        type="brand"
+                        label="{!$Label.Framework.New_API_Service}"
+                        additionalClasses="fonteva-button_reverse new-reg-object slds-m-left--xx-small"
+                        svgContainerClass="slds-button__icon_left"
+                        lightningIcon="utility:add"
+                        lightningIconSize="x-small"
+                        lightningIconVariant="inverse"/>
+          </div><!-- /.slds-media -->
+        </div><!-- /.slds-page-header -->
+        <div aura:id="mainBody" class="slds-object-height--full__nofooter slds-scrollable--y">
+          <div class="slds-grid slds-wrap slds-p-around--medium">
+            <aura:iteration items="{!v.services}" var="service">
+              <div class="slds-col--padded slds-size--1-of-3 slds-m-bottom--medium">
+                <div class="slds-media slds-tile">
+                  <div class="slds-media__figure slds-ie-fix--width__icon">
+                    <a href="javascript:void(0)" onclick="{!c.renderApiServiceComp}" data-id="{!service.name}">
+                      <aura:if isTrue="{!service.noImage}">
+                          <Framework:FONSVG svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#image'}" containerClass="slds-avatar" svgClass="slds-icon slds-icon--large slds-icon-text-default" assistiveText="No Image"/>
+                        <aura:set attribute="else">
+                            <img class="slds-avatar slds-avatar--medium" src="{!service.imagePath}" data-id="{!service.name}"/>
+                        </aura:set>
+                      </aura:if>
+                    </a>
+                  </div>
+                  <div class="slds-media__body">
+                    <p class="{!service.isEnabled+' slds-tile__title slds-text-heading--small slds-truncate'}">
+                      <a href="javascript:void(0)" onclick="{!c.renderApiServiceComp}" data-id="{!service.name}">
+                        {!service.displayName}
+                      </a>
+                    </p>
+                    <span class="slds-tile__detail slds-text-body--small slds-truncate">
+                      {!service.description}
+                    </span>
+                  </div>
+                </div>
+              </div>
+          </aura:iteration>
+        </div>
+      </div>
+    </div>
+  </div>
+  <Framework:ApiServiceInput/>
+</aura:component>

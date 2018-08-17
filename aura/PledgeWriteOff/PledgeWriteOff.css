@@ -1,0 +1,7 @@
+.THIS .myInLine{
+  	display: inline-block;
+}
+.THIS .mySelect{
+  	display: inline-block;
+    size: 10;
+}

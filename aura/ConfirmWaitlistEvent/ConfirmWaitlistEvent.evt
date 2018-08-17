@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="ConfirmWaitlistEvent">
+	<aura:attribute name="attendeeObj" type="Map" access="global"/>
+</aura:event>

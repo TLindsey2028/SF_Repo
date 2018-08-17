@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="GroupRegistrationAttendeeSwitchEvent">
+    <aura:attribute name="activeAttendee" type="String" required="true"/>
+	<aura:attribute name="groupUniqueIdentifier" type="String" required="true"/>
+</aura:event>

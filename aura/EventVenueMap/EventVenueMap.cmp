@@ -1,0 +1,9 @@
+<aura:component description="EventVenueMap" access="global" extends="LTE:EventBase" implements="LTE:EventInterface">
+  <aura:attribute name="iframeAddress" type="String"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <div onclick="{!c.enableMapInteraction}" class="slds-p-vertical_medium">
+    <aura:if isTrue="{!v.iframeAddress != null}">
+      <iframe class="no-scroll" aura:id="map" src="{!v.iframeAddress}" width="100%" height="300px" frameborder="0"></iframe>
+    </aura:if>
+  </div>
+</aura:component>

@@ -1,0 +1,475 @@
+<aura:component controller="Framework.AdminApiServiceController">
+    <aura:attribute name="apiServiceKey" type="String" default="" description="Key for the Api Service to load"/>
+    <aura:attribute name="service" type="Map" default="{}" description="Api Service Object"/>
+    <aura:attribute name="apiService" type="Map" default="{}"/>
+    <aura:attribute name="serviceConnection" type="Map" default="{}" description="Api Service Object"/>
+    <aura:attribute name="modalHeader" type="String" default=""/>
+	<aura:attribute name="modalMode" type="String" default=""/>
+    <aura:attribute name="apiServiceConnections" type="List" default="[]"/>
+    <aura:attribute name="apiServiceInputDiv" type="String"/>
+    <aura:attribute name="apiServiceEndpoint" type="String"/>
+    <aura:attribute name="apiDispatchObjs" type="List" default="[]"/>
+    <aura:attribute name="dispatchObj" type="Map" default="{}" description="Api Dispatch Obj"/>
+    <aura:attribute name="apiGroupings" type="List" default="[]"/>
+    <aura:attribute name="apiGrouping" type="Map" default="{}" description="Api Grouping"/>
+    <aura:attribute name="isBasic" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="isOAuth" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="isOAuth1A" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="isOAuth2" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="isNone" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="isEnabled" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="requiresLogin" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="apiResources" type="List" default="[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="InputFieldValidationEvent" type="Framework:InputFieldValidationEvent"/>
+    <aura:handler event="Framework:RefreshComponentEvent" action="{!c.handleRefreshComponentEvent}"/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+
+    <div class="slds-medium-size--3-of-4 slds-size--1-of-1 slds-grid slds-wrap">
+        <div class="slds-col slds-size--1-of-1">
+            <div class="slds-page-header">
+                <div class="slds-media slds-media--center">
+                    <div class="slds-media__figure slds-ie-fix--width__icon">
+                        <aura:if isTrue="{!empty(v.apiService.imagePath)}">
+                            <Framework:FONSVG svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#image'}"
+                                   containerClass="slds-avatar"
+                                   svgClass="breadcrumb-service-image slds-icon slds-icon--large slds-icon-text-default"
+                                   assistiveText="No Image"/>
+                            <aura:set attribute="else">
+                                <img src="{!v.apiService.imagePath}" class="slds-avatar breadcrumb-service-image"/>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                    <!-- /.slds-media__figure -->
+                    <div class="slds-media__body">
+                        <nav role="navigation">
+                            <p id="bread-crumb-label" class="slds-assistive-text">{!$Label.Framework.Dashboard}:</p>
+                            <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                                <li class="slds-list__item slds-text-heading--label">
+                                    <a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.showComponent}" data-name="Framework:SparkAdminSidebar" >
+                                            {!$Label.Framework.Dashboard}
+                                    </a>
+                                </li>
+                                <li class="slds-list__item slds-text-heading--label">
+                                    <a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.renderApiServices}" data-name="Framework:SparkAdminSidebar" >
+                                    {!$Label.Framework.API}&nbsp;{!$Label.Framework.Services}
+                                    </a>
+                                </li>
+                            </ol>
+                        </nav>
+                        <div class="slds-text-heading--medium">
+							{!v.apiService.displayName}
+                            <span class="margin-left">
+								<aura:if isTrue="{!!v.isEnabled}">
+								  <lightning:badge label="{!$Label.Framework.Disabled}" class="slds-theme--error slds-m-left--x-small"/>
+								</aura:if>
+								<aura:if isTrue="{!v.isEnabled}">
+								  <lightning:badge label="{!$Label.Framework.Active}" class="slds-theme--success slds-m-left--x-small"/>
+								</aura:if>
+						    </span>
+                        </div>
+                    </div>
+                    <!-- /.slds-media__body -->
+                    <a class="slds-button slds-button--neutral" href="javascript:void(0)" onclick="{!c.editApiServiceObj}">
+                            {!$Label.Framework.Edit}
+                    </a>
+                    <aura:if isTrue="{!v.requiresLogin}">
+                        <a class="slds-button slds-button--neutral slds-m-left--xx-small" href="javascript:void(0)" onclick="{!c.loginDefaultServiceConnection}">
+                                {!$Label.Framework.Login}
+                        </a>
+                    </aura:if>
+                    <aura:if isTrue="{!v.isEnabled}">
+                        <a class="slds-button slds-button--destructive" onclick="{!c.toggleServiceObjStatus}" data-status="false">
+                                {!$Label.Framework.Disable}
+                        </a>
+                        <aura:set attribute="else">
+                            <a class="slds-button slds-button--brand" onclick="{!c.toggleServiceObjStatus}" data-status="true">
+                                    {!$Label.Framework.Enable}
+                            </a>
+                        </aura:set>
+                    </aura:if>
+                </div>
+                <!-- /.slds-media -->
+            </div>
+            <!-- /.slds-page-header -->
+            <div aura:id="mainBody" class="slds-object-height--full__nofooter slds-scrollable--y">
+                <div class="slds-grid slds-wrap slds-p-around--large">
+                    <div class="slds-col slds-object--full__width">
+                        <div class="slds-media slds-media--responsive slds-media--top">
+                            <!-- /.slds-media__figure -->
+                            <div class="slds-media__body">
+                                <table class="slds-table slds-table--bordered">
+                                    <tbody>
+                                    <tr>
+                                        <th><strong>{!$Label.Framework.API_Service_Key}</strong></th>
+                                        <td>{!v.apiService.name}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>{!$Label.Framework.API_Endpoint}</strong></th>
+                                        <td>{!v.apiServiceEndpoint}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>{!$Label.Framework.API_Service_ApexClass}</strong></th>
+                                        <td>{!v.apiService.apexClass}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>{!$Label.Framework.API_Service_AuthType}</strong></th>
+                                        <td>{!v.apiService.authType}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>{!$Label.Framework.Description}</strong></th>
+                                        <td>{!v.apiService.description}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.slds-media__body -->
+                        </div>
+                        <!-- /.slds-media -->
+                    </div>
+                    <!-- /.slds-col -->
+                </div>
+                <!-- /.slds-grid -->
+                <div class="slds-col slds-p-bottom--xx-large">
+                    <div class="slds-page-header slds-object--full-width slds-grid slds-grid--align-spread">
+                        <div class="slds-text-heading--medium">{!$Label.Framework.API_Service_Connections}</div>
+                        <Framework:Button onClickAction="{!c.apiServiceConnectionCreate}"
+                                  aura:id="newServiceConnection"
+                                  enableProgressIndicator="false"
+                                  type="brand"
+                                  label="{!$Label.Framework.New+' API Service Connection'}"
+                                  svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}"
+                                  svgContainerClass="slds-float--left slds-m-right--small"
+                                  svgClass="slds-button__icon slds-m-top--x-small"
+                                  svgAssistiveText="{!$Label.Framework.New+' API Service Connection'}" />
+                    </div>
+                    <span class="slds-scrollable--x slds-object--full__width">
+            <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+              <thead>
+                <tr class="slds-text-heading--label">
+                  <th>{!$Label.Framework.Name}</th>
+                  <th>{!$Label.Framework.Is_Default}</th>
+                  <th>{!$Label.Framework.Action}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <aura:iteration items="{!v.apiServiceConnections}" var="connection">
+                  <tr>
+                    <td>
+                      <a href="javascript:void(0)" onclick="{!c.renderApiServiceConnectionComp}" data-id="{!connection.connectionId}">
+                      {!connection.connectionId}
+                      </a>
+                    </td>
+                    <td>
+                      {!connection.isDefault}
+                    </td>
+                    <td>
+                      <div class="slds-dropdown-trigger">
+                        <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" aria-haspopup="true">
+                          <lightning:icon iconName="utility:down" size="x-small" alternativeText="Enabled"/>
+                        </button>
+                        <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+                          <ul class="slds-dropdown__list" role="menu">
+                            <li class="slds-dropdown__item">
+                              <a href="javascript:void(0)" class="modaleditAPIServiceConnection" data-id="{!connection.connectionId}" onclick="{!c.apiServiceConnectionEdit}" data-type="edit">
+                              {!$Label.Framework.Edit}
+                              </a>
+                            </li>
+                            <li class="slds-dropdown__item">
+                              <a class="text-danger" data-id="{!connection.connectionId}" onclick="{!c.apiServiceConnectionDelete}">
+                              {!$Label.Framework.Remove}
+                              </a>
+                            </li>
+                            <li class="slds-dropdown__item">
+                              <a class="text-danger" data-id="{!connection.connectionId}" onclick="{!c.apiServiceConnectionLogin}">
+                              Login
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                        <!-- /.slds-dropdown -->
+                      </div>
+                      <!-- /.slds-dropdown-trigger -->
+                    </td>
+                  </tr>
+                </aura:iteration>
+              </tbody>
+            </table>
+          </span>
+          <!-- /.slds-scrollable-x -->
+        </div>
+        <!-- /.slds-col -->
+		<div class="slds-col slds-p-bottom--xx-large">
+			<div class="slds-page-header slds-object--full-width slds-grid slds-grid--align-spread">
+				<div class="slds-text-heading--medium">{!$Label.Framework.API_Resources}
+			</div>
+				<Framework:Button onClickAction="{!c.showCreateResourceModal}"
+						  aura:id="newServiceResource"
+						  enableProgressIndicator="false"
+						  type="brand"
+						  label="{!$Label.Framework.New+' API Resource'}"
+						  svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}"
+						  svgContainerClass="slds-float--left slds-m-right--small"
+						  svgClass="slds-button__icon slds-m-top--x-small"
+						  svgAssistiveText="{!$Label.Framework.New+' API Resource'}" />
+			</div>
+			<span class="slds-scrollable--x slds-object--full__width">
+            <form id="service_resources">
+              <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+                <thead>
+                  <tr class="slds-text-heading--label">
+                    <th>{!$Label.Framework.Name}</th>
+                    <th>{!$Label.Framework.Target_SObject}</th>
+                    <th>{!$Label.Framework.API_Object}</th>
+                    <th>{!$Label.Framework.Action}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <aura:iteration items="{!v.apiResources}" var="resource">
+                    <tr>
+                      <td>
+                        <a href="javascript:void(0)" data-id="{!resource.configId}" onclick="{!c.renderApiResourceComp}">
+                        {!resource.configId}
+                        </a>
+                      </td>
+                      <td>
+                        {!resource.targetSObject}
+                      </td>
+                      <td>
+                        {!resource.apiObject}
+                      </td>
+                      <td>
+                        <div class="slds-dropdown-trigger">
+                          <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" aria-haspopup="true">
+                            <lightning:icon iconName="utility:down" size="x-small" alternativeText="Enabled"/>
+                          </button>
+                          <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+                            <ul class="slds-dropdown__list" role="menu">
+                              <li class="slds-dropdown__item">
+                                <!-- <a href="javascript:void(0)" class="modaleditAPIResource" data-id="{!resource.configId}" data-type="edit">
+                                {!$Label.Framework.Edit}
+                                </a> -->
+                              </li>
+                              <li class="slds-dropdown__item">
+                                    <a href="javascript:void(0)" data-id="{!resource.configId}" onclick="{!c.deleteResource}">
+                                    {!$Label.Framework.Remove}
+                              </a>
+                              </li>
+                            </ul>
+                          </div>
+                          <!-- /.slds-dropdown -->
+                        </div>
+                        <!-- /.slds-dropdown-trigger -->
+                      </td>
+                    </tr>
+                  </aura:iteration>
+                </tbody>
+              </table>
+            </form>
+          </span>
+          <!-- /.slds-scrollable-x -->
+        </div>
+        <!-- /.slds-col -->
+		<div class="slds-col slds-p-bottom--xx-large">
+			<div class="slds-page-header slds-object--full-width slds-grid slds-grid--align-spread">
+				<div class="slds-text-heading--medium">{!$Label.Framework.Dispatch_Objects}</div>
+				<Framework:Button onClickAction="{!c.showCreateDispatchObjModal}"
+						  aura:id="newDispatchObject"
+						  enableProgressIndicator="false"
+						  type="brand"
+						  label="{!$Label.Framework.New+' '+$Label.Framework.Dispatch_Object}"
+						  svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}"
+						  svgContainerClass="slds-float--left slds-m-right--small"
+						  svgClass="slds-button__icon slds-m-top--x-small"
+						  svgAssistiveText="{!$Label.Framework.New+' '+$Label.Framework.Dispatch_Object}"/>
+			</div>
+			<span class="slds-scrollable--x slds-object--full__width">
+            <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+              <thead>
+                <tr class="slds-text-heading--label">
+                  <th>{!$Label.Framework.Name}</th>
+                  <th>{!$Label.Framework.API_Resource}</th>
+                  <th>{!$Label.Framework.SObject_Name}</th>
+                  <th>{!$Label.Framework.Is_Enabled}</th>
+                  <th>{!$Label.Framework.Http_Verb}</th>
+                  <th>{!$Label.Framework.Action}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <aura:iteration items="{!v.apiDispatchObjs}" var="dispatchObj">
+                  <tr>
+                    <td>
+                            {!dispatchObj.configId}
+                    </td>
+                    <td>
+                            {!dispatchObj.apiResource}
+                    </td>
+                    <td>
+                            {!dispatchObj.sObjectName}
+                    </td>
+                    <td>
+                      <ui:outputCheckbox aura:id="dispatchObj_isEnabled" value="{!dispatchObj.isEnabled}"/>
+                    </td>
+                    <td>
+                            {!dispatchObj.httpVerb}
+                    </td>
+                    <td>
+                        <div class="slds-dropdown-trigger">
+                        <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" aria-haspopup="true">
+                          <lightning:icon iconName="utility:down" size="x-small" alternativeText="Enabled"/>
+                        </button>
+                        <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+                          <ul class="slds-dropdown__list" role="menu">
+                            <li class="slds-dropdown__item">
+                              <a href="javascript:void(0)" data-id="{!dispatchObj.configId}" onclick="{!c.editDispatchObj}">
+                                {!$Label.Framework.Edit}
+                              </a>
+                            </li>
+                              <li class="slds-dropdown__item">
+                              <a href="javascript:void(0)" data-id="{!dispatchObj.configId}" onclick="{!c.redirectToHeaderVars}">
+                                {!$Label.Framework.Header_Vars}
+                              </a>
+                            </li>
+                              <li class="slds-dropdown__item">
+                              <a href="javascript:void(0)" data-id="{!dispatchObj.configId}" onclick="{!c.setDispatchObjIsEnable}">
+                                {!$Label.Framework.Enable}/{!$Label.Framework.Disable}
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                        <!-- /.slds-dropdown -->
+                      </div>
+                      <!-- /.slds-dropdown-trigger -->
+                    </td>
+                  </tr>
+                </aura:iteration>
+              </tbody>
+            </table>
+          </span>
+			<!-- /.slds-scrollable-x -->
+		</div>
+		<!-- /.slds-col -->
+		<div class="slds-col slds-p-bottom--large">
+			<div class="slds-page-header slds-object--full-width slds-grid slds-grid--align-spread">
+				<div class="slds-text-heading--medium">{!$Label.Framework.API_Groupings}</div>
+				<Framework:Button onClickAction="{!c.showCreateApiGroupingModal}"
+						  aura:id="newServiceConnection"
+						  enableProgressIndicator="false"
+						  type="brand"
+						  label="{!$Label.Framework.New+' '+$Label.Framework.API_Grouping}"
+						  svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}"
+						  svgContainerClass="slds-float--left slds-m-right--small"
+						  svgClass="slds-button__icon slds-m-top--x-small"
+						  svgAssistiveText="{!$Label.Framework.New+' '+$Label.Framework.API_Grouping}"/>
+			</div>
+			<span class="slds-scrollable--x slds-object--full__width">
+			  <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+				<thead>
+				  <tr class="slds-text-heading--label">
+					<th>{!$Label.Framework.Name}</th>
+					<th>{!$Label.Framework.API_Resource}</th>
+					<th>{!$Label.Framework.API_Object}</th>
+					<th>{!$Label.Framework.Target_Related_Lookup_Field}</th>
+					<th>{!$Label.Framework.Action}</th>
+				  </tr>
+				</thead>
+				<tbody>
+				  <aura:iteration items="{!v.apiGroupings}" var="grouping">
+					<tr>
+					  <td>
+							  {!grouping.groupingId}
+					  </td>
+					  <td>
+							  {!grouping.apiResource}
+					  </td>
+					  <td>
+							  {!grouping.apiObject}
+					  </td>
+					  <td>
+							  {!grouping.targetrelatedLookupField}
+					  </td>
+					  <td>
+						<div class="slds-dropdown-trigger">
+						  <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" aria-haspopup="true">
+							<lightning:icon iconName="utility:down" size="x-small" alternativeText="Enabled"/>
+						  </button>
+						  <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+							<ul class="slds-dropdown__list" role="menu">
+							  <li class="slds-dropdown__item">
+								<a href="javascript:void(0)" data-id="{!grouping.groupingId}" onclick="{!c.editGrouping}">
+								  {!$Label.Framework.Edit}
+								</a>
+							  </li>
+							  <li class="slds-dropdown__item">
+								<a href="javascript:void(0)" data-id="{!grouping.groupingId}" onclick="{!c.redirectToApiResources}">
+								  {!$Label.Framework.API_Resources}
+								</a>
+							  </li>
+							</ul>
+						  </div>
+							  <!-- /.slds-dropdown -->
+						</div>
+							<!-- /.slds-dropdown-trigger -->
+					  </td>
+					</tr>
+				  </aura:iteration>
+				</tbody>
+			  </table>
+			</span>
+			<!-- /.slds-scrollable-x -->
+		</div>
+		<!-- /.slds-col -->
+      </div>
+    </div>
+  </div>
+  <div class="modal fade slds-modal slds-fade-in-open" id="modalNewAPIServiceConnection">
+    <div class="modal-dialog slds-modal__container">
+        <div class="modal-content service-connection-modal-content">
+  <div class="slds-modal__header">
+           <h2 class="slds-text-heading--medium">{!v.modalHeader}</h2>
+           <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal">
+               <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+           </button><!-- /.slds-button -->
+       </div><!-- /.slds-modal__header -->
+       <div class=" service-connection-body">
+       <form id="credential-api-service-connection-form" onsubmit="{!c.saveServiceConnection}">
+       <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+         <div class="slds-col slds-p-vertical--medium slds-size--1-of-1">
+           <Framework:InputFields group="serviceConnection" isRequired="true" fieldType="String" aura:id="connectionId" label="{!$Label.Framework.Connection_Name}" value="{!v.serviceConnection}"/>
+           <aura:if isTrue="{!v.isBasic}">
+             <Framework:InputFields group="serviceConnection" isRequired="true" fieldType="String" aura:id="username" label="{!$Label.Framework.Username}" value="{!v.serviceConnection}"/>
+             <Framework:InputFields group="serviceConnection" isRequired="true" fieldType="Password" aura:id="password" label="{!$Label.Framework.Password}" value="{!v.serviceConnection}"/>
+		   </aura:if>
+           <aura:if isTrue="{!v.isOAuth}">
+             <Framework:InputFields group="serviceConnection" isRequired="true" fieldType="string" aura:id="clientId" label="{!$Label.Framework.Client_ID}" value="{!v.serviceConnection}"/>
+             <Framework:InputFields group="serviceConnection" isRequired="true" fieldType="password" aura:id="clientSecret" label="{!$Label.Framework.Client_Secret}" value="{!v.serviceConnection}"/>
+             <Framework:InputFields group="serviceConnection" fieldType="string" aura:id="scope" label="{!$Label.Framework.Scope}" value="{!v.serviceConnection}"/>
+            </aura:if>
+            <aura:if isTrue="{!v.isOAuth1A}">
+             <Framework:InputFields group="serviceConnection" isRequired="true" fieldType="url" aura:id="requestTokenUrl" label="{!$Label.Framework.Request_Token_URL}" value="{!v.serviceConnection}"/>
+            </aura:if>
+            <aura:if isTrue="{!v.isOAuth}">
+               <Framework:InputFields group="serviceConnection" isRequired="true" fieldType="url" aura:id="loginDialogUrl" label="{!$Label.Framework.Login_Dialog_URL}" value="{!v.serviceConnection}"/>
+               <Framework:InputFields group="serviceConnection" isRequired="true" fieldType="url" aura:id="authorizationCodeUrl" label="{!$Label.Framework.Authorization_Code_URL}" value="{!v.serviceConnection}"/>
+               <Framework:InputFields group="serviceConnection" isRequired="true" fieldType="picklist" aura:id="httpMethodGetToken" label="{!$Label.Framework.HTTP_Method_For_Token}" value="{!v.serviceConnection}"/>
+            </aura:if>
+            <aura:if isTrue="{!v.isOAuth2}">
+             <Framework:InputFields group="serviceConnection" isRequired="true" fieldType="url" aura:id="refreshTokenUrl" label="{!$Label.Framework.Refresh_Token_URL}" value="{!v.serviceConnection}"/>
+            </aura:if>
+         </div>
+       </div>
+       <div class="slds-modal__footer slds-text-align--right">
+         <a class="slds-button slds-button--neutral" data-dismiss="modal">{!$Label.Framework.Cancel}</a>
+                            <input onclick="{!c.validateFields}" type="submit" class="slds-button slds-button--brand save-connection slds-m-right--xx-small" href="javascript:void(0)" value="{!$Label.Framework.Save}"></input>
+       </div>
+       </form>
+     </div>
+ </div>
+</div>
+</div>
+<Framework:ApiResourceInput apiService="{!v.apiServiceKey}" aura:id="apiResourceInputComp"/>
+    <Framework:DispatchObjectInput dispatchObj="{!v.dispatchObj}" apiServiceKey="{!v.apiServiceKey}" modalHeader="{!v.modalHeader}" modalMode="{!v.modalMode}" aura:id="dispatchObjectInputComp"/>
+    <Framework:ApiGroupingInput grouping="{!v.apiGrouping}" apiServiceKey="{!v.apiServiceKey}" modalHeader="{!v.modalHeader}" modalMode="{!v.modalMode}" aura:id="apiGroupingInputComp"/>
+    <Framework:ApiServiceInput apiService="{!v.apiService}" mode="edit"/>
+</aura:component>

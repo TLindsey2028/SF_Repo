@@ -1,0 +1,78 @@
+.THIS .slds-button--icon-inverse .slds-icon-text-default {
+    fill: white!important;
+}
+
+.THIS .slds-modal__content {
+    max-height: 50vh;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.THIS .selectize-dropdown.single {
+    border: 2px solid #eee;
+    border-top: 0!important;
+}
+
+.THIS .slds-modal__content .slds-m-bottom_small.slds-p-horizontal_medium.slds-grid.slds-grid_pull-padded-x-small .slds-form-element__label.helper-margin-right {
+    margin-bottom: .25rem;
+}
+
+@media (min-width: 48em) {
+    .THIS  .slds-modal__container {
+        min-width: 50vw;
+    }
+    .THIS .slds-medium-size_1-of-4 .slds-form-element__label.helper-margin-right {
+        position: relative;
+    }
+    .THIS .slds-modal__content .slds-m-bottom_small.slds-p-horizontal_medium.slds-grid.slds-grid_pull-padded-x-small .slds-form-element__label.helper-margin-right {
+        width: 100px;
+        top: -.9rem;
+    }
+    .THIS.fonteva-portal .slds-size_1-of-1.slds-order_1.slds-medium-order_2.slds-medium-size_1-of-4 {
+        padding-top: .55rem;
+        display: flex;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 48em) {
+    .THIS .slds-m-bottom_small.slds-p-horizontal_medium.slds-grid.slds-grid_pull-padded-x-small .address-label {
+        bottom: -2.85rem
+    }
+    .THIS .slds-medium-size_1-of-4 .slds-form-element.slds-p-left_small.slds-p-top_x-small {
+        top: .5rem;
+    }
+}
+
+
+.THIS .fonteva-col_width-full {
+    width: 100%;
+}
+
+.THIS .fonteva-input_spacing .input-fields-span .slds-form-element.display-element.is-required > div > div > div .slds-select_container {
+    width: 100%;
+}
+
+.THIS .fonteva-input_spacing .input-fields-span .slds-form-element.display-element.is-required > div > div > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.THIS .fonteva-input_spacing .input-fields-span .slds-form-element.display-element.is-required > div > div > div .slds-select {
+    background-image: none
+}
+.THIS.fonteva-portal .slds-modal__content {
+    padding: 1.25rem 1rem;
+}
+
+.THIS.fonteva-portal .selectize-input input{
+    padding-left: .75rem;
+    border: none;
+}
+
+.THIS.fonteva-portal .selectize-control.single .selectize-input,
+.THIS.fonteva-portal textarea {
+    border-color: #eee;
+    padding-left: .75rem;
+    color: #555!important;
+}

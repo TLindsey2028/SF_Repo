@@ -1,0 +1,6 @@
+<aura:component description="LTE.EventBase" implements="LTE:EventInterface" extensible="true" abstract="true" controller="LTE.EventBase">
+  <aura:attribute name="eventBase" type="Object" default="Event Base Helper Object" />
+  <ltng:require scripts="{!$Resource.PagesApi__FontevaHelper+'/FontevaHelper.js'}"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  {!v.body}
+</aura:component>

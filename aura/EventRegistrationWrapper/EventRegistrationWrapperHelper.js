@@ -1,0 +1,3 @@
+({
+    divId : 'registrationBody'
+})

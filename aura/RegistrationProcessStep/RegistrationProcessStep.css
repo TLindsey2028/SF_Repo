@@ -1,0 +1,55 @@
+.THIS .fonteva-slds-process-icon {
+    width: auto!important;
+    height: auto!important;
+    display: flex!important;
+    justify-content: center!important;
+    align-items: center!important;
+    top: 2px!important;
+    left: 3.5px!important;
+}
+.THIS .fonteva-slds-process-icon {
+    border-width: 0!important;
+}
+.THIS .fonteva-process-completed-icon:hover {
+    cursor: pointer;
+}
+.THIS .slds-step-description:hover,
+.THIS .slds-step-description:focus {
+    text-decoration: none ;
+}
+
+.THIS .slds-step-description--hoverable:hover {
+    cursor: pointer;
+}
+
+.THIS .slds-progress__marker.slds-progress__marker--icon.slds-is-completed.slds-button--icon.slds-progress__marker--icon {
+    border-width: 2px;
+    background-color: #26d011!important;
+}
+
+.THIS .slds-progress__marker.slds-progress__marker--icon.slds-is-completed.slds-button--icon.slds-progress__marker--icon .fonteva-process-completed-icon svg use{
+    fill: white!important;
+    stroke-width: 3px;
+    stroke: white;
+}
+
+.THIS .slds-progress__marker.slds-progress__marker--icon.slds-is-completed.slds-button--icon.slds-progress__marker--icon {
+    border-color: white!important;
+}
+
+.THIS .slds-progress__marker.slds-progress__marker--icon.slds-button--icon.slds-progress__marker--icon {
+    border-color: #333333!important;
+}
+
+.THIS .slds-progress__marker.slds-progress__marker--icon {
+    border-color: #333333!important;
+}
+
+.THIS .slds-text-body--regular.slds-step-description {
+    font-size: 14px;
+}
+
+.THIS .slds-button.fonteva-slds-process-icon {
+    min-height: auto!important;
+    min-width: auto!important;
+}

@@ -1,0 +1,61 @@
+<aura:component description="EventRegistrationForm" access="global" extends="LTE:EventBase" implements="LTE:EventInterface">
+  <aura:attribute name="formId" type="String" default="" />
+  <aura:attribute name="formHeading" type="String"/>
+  <aura:attribute name="subjectId" type="String" default="" />
+  <aura:attribute name="contactId" type="String" default="" />
+  <aura:attribute name="subjectLookupField" type="String" default="" />
+  <aura:attribute name="formResponseId" type="String" default="" />
+  <aura:attribute name="formUniqueIdentifier" type="String" default="" />
+  <aura:attribute name="formComplete" type="Boolean" default="true"/>
+  <aura:attribute name="formObj" type="Map" default="{}"/>
+  <aura:attribute name="formLoadObj" type="Map" default="{}"/>
+  <aura:attribute name="formRenderComplete" type="Boolean" default="false"/>
+  <aura:attribute name="saveStatus" type="Integer" default="0"/>
+  <aura:registerEvent name="FormSubmittedEvent" type="LTE:FormSubmittedEvent"/>
+  <aura:method name="validate" action="{!c.validate}"/>
+  <aura:method name="validateOnly" action="{!c.validateOnly}"/>
+  <aura:handler event="LTE:FormMultipleEntrySubmitEvent" action="{!c.handleFormMultipleEntrySubmitEvent}"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFormSubmittedEvent}"/>
+  <aura:method name="submitForm" action="{!c.handleFormSubmit}"/>
+  <aura:attribute name="autoSubmitForm" type="Boolean" default="true"/>
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+  <div class="slds-col slds-p-bottom--small slds-p-horizontal--medium" aura:id="formBase">
+      <div class="slds-col slds-grid slds-wrap">
+        <div class="slds-col slds-grid slds-wrap slds-size--1-of-1 slds-form--group">
+          <aura:if isTrue="{!and(v.formObj.instructions != null,v.formObj.instructions != '')}">
+              <div class="slds-col slds-grid slds-wrap slds-size--1-of-1 slds-p-vertical--large slds-p-left--large slds-p-right--large slds-m-bottom--large fonteva-slds-form-instructions-header">
+                  <div class="slds-col slds-size--1-of-1">
+                      <ui:outputRichText value="{!v.formObj.instructions}" class="event-rich-text" />
+                  </div>
+              </div>
+          </aura:if>
+          <aura:iteration items="{!v.formObj.fieldGroups}" var="fieldGroup">
+	          <div class="slds-size--1-of-1 slds-m-bottom--small">
+		          <div class="slds-text-heading--small slds-m-bottom-small">
+                      <ui:outputRichText value="{!fieldGroup.name}" class="event-rich-text"/>
+		          </div>
+            </div>
+              <aura:if isTrue="{!and(fieldGroup.instructions != null,fieldGroup.instructions != '')}">
+            <div class="slds-col slds-grid slds-wrap slds-size--1-of-1 slds-p-vertical--large slds-p-left--large slds-p-right--large slds-m-bottom--large fonteva-slds-form-instructions-header">
+		          <div class="slds-col slds-size--1-of-1">
+  		          <ui:outputRichText value="{!fieldGroup.instructions}" class="event-rich-text" />
+		          </div>
+	          </div>
+              </aura:if>
+
+            <aura:if isTrue="{!fieldGroup.isMultiple}">
+              <div class="slds-form--item slds-size--1-of-1">
+                <LTE:FormFieldGroupMultiple value="{!fieldGroup}" formUniqueIdentifier="{!v.formUniqueIdentifier}" secondaryGroup="{!v.subjectId}"/>
+              </div>
+
+              <aura:set attribute="else">
+                <LTE:FormFields aura:id="fields" fields="{!fieldGroup.fields}" values="{!fieldGroup.values}" secondaryGroup="{!v.subjectId}"/>
+              </aura:set>
+            </aura:if>
+          </aura:iteration>
+        </div>
+      </div>
+  </div>
+</aura:component>

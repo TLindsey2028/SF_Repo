@@ -1,0 +1,462 @@
+<aura:component controller="EventApi.EventsBuilderController" implements="EventApi:EventBuilderTabInterface">
+  <aura:attribute name="eventAgenda" type="Object"/>
+  <aura:attribute name="fieldOptionsObj" type="Map" default="{}"/>
+  <aura:attribute name="eventAgendaCriteriaObj" type="Map" default="{}"/>
+  <aura:attribute name="advancedEventAgendaCriteriaObj" type="Map" default="{}"/>
+  <aura:attribute name="dateFormat" type="String" required="true"/>
+  <aura:attribute name="trackObj" type="Object" default="{}"/>
+  <aura:attribute name="trackObjs" type="List[]" default="[]"/>
+	<aura:attribute name="loadingTTInfo" type="Boolean" default="false"/>
+  <aura:attribute name="trackToDelete" type="String"/>
+  <aura:attribute name="trackGlobalId" type="String"/>
+  <aura:attribute name="organizationId" type="String" description="Organization Id"/>
+  <aura:attribute name="scheduleItems" type="List[]" default="[]"/>
+  <aura:attribute name="scheduleItemsFiltered" type="List[]" default="[]"/>
+  <aura:attribute name="ttScheduleItemsFiltered" type="List[]" default="[]"/>
+  <ltng:require scripts="{!join(',',$Resource.EventApi__moment+'/min/moment.min.js',$Resource.EventApi__moment+'/min/moment.timezones.min.js')}" afterScriptsLoaded="{!c.doInit}"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+  <aura:handler event="Framework:RichTextInputFieldModalEvent" action="{!c.handleRichTextInputFieldModalEvent}"/>
+  <aura:handler event="EventApi:SavingEvent" action="{!c.handleSavingEvent}"/>
+  <aura:attribute name="currentTabOpen" default="agenda" type="String"/>
+  <aura:attribute name="scheduleItemIdToDelete" default="" type="String"/>
+  <aura:attribute name="scheduleEditId" default="" type="String"/>
+  <aura:attribute name="packageItemId" default="" type="String"/>
+  <aura:attribute name="packageItemName" default="" type="String"/>
+  <aura:attribute name="packageModalState" default="base" type="String" access="private"/>
+  <aura:attribute name="scheduleItemObj" default="{}" type="Map"/>
+  <aura:attribute name="agendaCriteriaCmpGlobalId" type="String" default="false" />
+  <aura:attribute name="advancedAgendaCriteriaCmpGlobalId" type="String" default="false" />
+  <aura:attribute name="showMangebyTT" type="Boolean"/>
+  <aura:handler event="EventApi:EventAgendaFilterEvent" action="{!c.handleAgendaFilterEvent}"/>
+  <aura:method name="doInit" action="{!c.doInit}"/>
+  <aura:method name="buildSpeakersFilter" action="{!c.buildSpeakersFilter}"/>
+  <aura:registerEvent name="ResetAgendaFilterCmpEvent" type="EventApi:ResetAgendaFilterCmpEvent"/>
+
+  <style>
+    .action-cell {
+      overflow: visible!important;
+    }
+  </style>
+  <div data-name="loader" class="" aura:id="loader">
+    <div class="slds-grid">
+      <div class="slds-col slds-text-align--center slds-align-middle">
+        <img src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+        <span data-name="Loading_Event_Builder" class="slds-text-heading--medium">{!$Label.EventApi.Loading_Event_Builder}</span>
+      </div>
+    </div>
+  </div>
+  <div data-name="mainBody" class="hidden" aura:id="mainBody">
+  <div class="tab-content tab--transparent" >
+    <div class="slds-tabs--default">
+      <ul data-name="tablist" class="slds-tabs--default__nav" role="tablist">
+        <li data-name="agendaLabel" aura:id="agendaLabel" class="slds-tabs__item slds-text-heading--label slds-active" title="{!$Label.EventApi.Agenda_Event_Builder}" role="presentation">
+          <a href="javascript:void(0);" data-tab="agenda" onclick="{!c.changeTab}">{!$Label.EventApi.Agenda_Event_Builder}</a>
+        </li>
+        <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+          <li data-name="tracksLabel" aura:id="tracksLabel" class="slds-tabs__item slds-text-heading--label" title="{!$Label.EventApi.Event_Builder_Tracks}" role="presentation">
+            <a href="javascript:void(0);"  data-tab="tracks" onclick="{!c.changeTab}">{!$Label.EventApi.Event_Builder_Tracks}</a>
+          </li>
+          <li data-name="advancedSettingsLabel" aura:id="advancedSettingsLabel" class="slds-tabs__item slds-text-heading--label" title="Advanced Settings" role="presentation">
+            <a href="javascript:void(0);"  data-tab="advancedSettings" onclick="{!c.changeTab}">Advanced Settings</a>
+          </li>
+        </aura:if>
+      </ul>
+    </div>
+    <div data-name="agenda" aura:id="agenda" class="slds-tabs--default__content slds-show" role="tabpanel">
+      <!-- Agenda -->
+      <aura:if isTrue="{!v.eventObj.style != 'Simple'}">
+        <div class="slds-col slds-size--1-of-1 slds-m-vertical--x-small">
+          <div class="slds-grid slds-wrap">
+            <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+              <div class="slds-size--1-of-1">
+                <Framework:InputFields qaData='{"type" : "input", "name": "eventAgendaInstructions"}' group="eventInformationText" fieldType="richtext" aura:id="eventAgendaInstructions" label="{!$Label.EventApi.Event_Builder_Agenda_Instructions}" value="{!v.eventObj}" helpText="{!$Label.EventApi.Event_Builder_Agenda_Instructions_Help_Text}"/>
+              </div>
+              <aura:set attribute="else">
+                <div class="slds-size--1-of-1">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "eventAgendaOverview"}' group="simpleEventBuilder" fieldType="richText" aura:id="eventAgendaOverview" label="{!$Label.EventApi.Agenda_Overview}" value="{!v.eventObj}" disabled="{!!v.eventObj.enableScheduleItems}"/>
+                </div>
+              </aura:set>
+            </aura:if>
+          </div>
+        </div>
+      </aura:if>
+      <!-- Schedule Items Filter -->
+      <div class="slds-col slds-size--1-of-1">
+        <div class="slds-grid slds-wrap">
+          <div class="slds-size_1-of-1" aura:id="eventAgendaFiltersPlaceholder"/>
+        </div>
+      </div>
+      <!-- Total Schedule Items Label with Add Button -->
+      <div class="slds-col slds-size--1-of-1 slds-p-top--large">
+        <div class="slds-grid slds-wrap">
+          <div data-name="Schedule-Items" class="slds-col slds-size--3-of-4 slds-m-top--medium">
+	          Schedule Items ({!v.scheduleItemsFiltered.length})
+          </div>
+          <div data-name="newScheduleItem" class="slds-col slds-size--1-of-4 slds-m-bottom--small">
+            <button onclick="{!c.newScheduleItem}" class="slds-button slds-button--brand slds-float--right">
+              <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--x-small slds-button__icon--left" assistiveText="Create New Schedule Item" />
+              {!$Label.EventApi.Create_New_Schedule_Item_Event_Builder}
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Schedule Items List -->
+      <div class="slds-col slds-size--1-of-1 slds-m-bottom--large">
+        <table data-name="schedule-items-list" class="slds-table slds-table--bordered slds-theme--shade slds-no-row-hover">
+          <aura:if isTrue="{!v.scheduleItemsFiltered.length == 0}">
+            <tr>
+              <td class="slds-truncate">
+              {!$Label.EventApi.None_Schedule_Items_Found}
+              </td>
+            </tr>
+            <aura:set attribute="else">
+              <thead>
+              <tr class="slds-text-heading--label">
+                <th style="width:18rem;">Display Name</th>
+                <th>{!$Label.EventApi.Price_Event_Builder}</th>
+                <th>{!$Label.EventApi.Event_Builder_Agenda_Capacity}</th>
+                <th>Is Active</th>
+                <th>Date &amp; Time</th>
+                <th class="slds-truncate slds-text-align--right">{!$Label.EventApi.Actions_Event_Builder}</th>
+              </tr>
+              </thead>
+              <tbody data-name="scheduleItemsFiltered" class="schedule-item-editable">
+              <aura:iteration items="{!v.scheduleItemsFiltered}" var="scheduleItem">
+                <tr data-name="{!scheduleItem.scheduleItemDisplayName}">
+                  <td class="slds-truncate" data-label="Name">
+                      <Framework:InputFields label="Display Name" isRequired="true" labelStyleClasses="hideLabel" fieldType="String" maxlength="255" aura:id="scheduleItemDisplayName" value="{!scheduleItem}" group="agendaInlineEdit" secondaryGroup="{!scheduleItem.scheduleItemId}" qaData='{"type" : "input", "name": "displayName"}' fireChangeEvent="true"/>
+                  </td>
+                  <td class="slds-truncate" data-label="List Price">
+                      <Framework:InputFields label="Price" labelStyleClasses="hideLabel" fieldType="currency" format=".00" aura:id="price" value="{!scheduleItem}" group="agendaInlineEdit" secondaryGroup="{!scheduleItem.scheduleItemId}" fireChangeEvent="true" otherAttributes='{min : 0 , max : 1000000}' qaData='{"type" : "input", "name": "price"}' minValueValidationMessage="Price cannot be negative and must be equal to or greater than "/>
+                  </td>
+                  <td class="slds-truncate" data-label="Quantity">
+                      <Framework:InputFields label="Capacity" labelStyleClasses="hideLabel" fieldType="integer" aura:id="quantity" value="{!scheduleItem}" group="agendaInlineEdit" fireChangeEvent="true" secondaryGroup="{!scheduleItem.scheduleItemId}" otherAttributes='{min : 0,max : 10000000}' qaData='{"type" : "input", "name": "capacity"}' minValueValidationMessage="Capacity cannot be negative and must be equal to or greater than "/>
+                  </td>
+                  <td class="slds-truncate slds-text-align--center" data-label="Active">
+                      <Framework:InputFields labelStyleClasses="hideLabel" fieldType="boolean" aura:id="isActive" value="{!scheduleItem}" group="agendaInlineEdit" secondaryGroup="{!scheduleItem.scheduleItemId}" fireChangeEvent="true" qaData='{"type" : "input", "name": "isActive"}'/>
+                  </td>
+                  <td class="slds-truncate duration-times">
+                    {!scheduleItem.formattedStartDate} | {!scheduleItem.startTime}<br/>
+                    Duration: {!scheduleItem.duration}
+                  </td>
+                  <td class="slds-truncate slds-text-align--right action-cell" data-label="Actions">
+                    <div class="slds-m-left--small slds-dropdown-trigger">
+                      <Framework:Button qaData='{"type" : "button", "name": "more_options"}' enableProgressIndicator="false"
+                                        onClickAction=""
+                                        type="neutral"
+                                        additionalClasses="slds-button--icon-border slds-p-around--none slds-theme--shade"
+                                        label=""
+                                        svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#threedots'}"
+                                        svgContainerClass=""
+                                        svgClass="slds-button__icon"
+                                        svgAssistiveText="{!$Label.EventApi.More_Options}" />
+                      <div class="slds-dropdown slds-dropdown--right">
+                        <ul class="dropdown__list" role="menu">
+                          <li data-name="Event_Builder_Edit_Schedule_Item" class="slds-dropdown__item">
+                            <a href="javascript:void(0);" onclick="{!c.editScheduleItem}" role="menuitem" data-index="{!index}" data-id="{!scheduleItem.scheduleItemId}">
+                              {!$Label.EventApi.Event_Builder_Edit_Schedule_Item}
+                            </a>
+                          </li>
+                          <li data-name="Edit_Price_Rules_Ticket_Type" class="slds-dropdown__item">
+                            <a href="javascript:void(0);" role="menuitem" onclick="{!c.editPriceRules}" data-prid="{!scheduleItem.firstPriceRule}" data-id="{!scheduleItem.scheduleItemId}">
+                              {!$Label.EventApi.Edit_Price_Rules_Ticket_Type}
+                            </a>
+                          </li>
+                          <li data-name="manageBadgeTypes" class="slds-dropdown__item">
+                            <a href="javascript:void(0);" role="menuitem" onclick="{!c.manageBadgeTypes}" data-name="{!scheduleItem.scheduleItemName}" data-id="{!scheduleItem.scheduleItemItemId}">
+                              Manage Badges
+                            </a>
+                          </li>
+                          <li data-name="deleteScheduleItem" class="slds-dropdown__item">
+                            <a href="javascript:void(0);" onclick="{!c.deleteScheduleItem}" role="menuitem" data-id="{!scheduleItem.scheduleItemId}">
+                              {!$Label.EventApi.Event_Builder_Delete_Schedule_Item}
+                              </a>
+                            </li>
+                            <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+                            <li class="slds-dropdown__item">
+                              <a href="javascript:void(0);" onclick="{!c.managePackageItems}" role="menuitem" data-id="{!scheduleItem.scheduleItemItemId}" data-sc="{!scheduleItem.scheduleItemId}">
+                                  {!$Label.EventApi.Event_Builder_Manage_Package_Items}
+                              </a>
+                            </li>
+                            </aura:if>
+                          </ul>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </aura:iteration>
+                </tbody>
+              </aura:set>
+            </aura:if>
+          </table>
+        </div>
+    </div>
+
+    <div data-name="tracks" aura:id="tracks" class="slds-tabs--default__content slds-hide" role="tabpanel">
+      <div class="slds-col slds-size--1-of-1 slds-m-top--xx-large">
+        <div class="slds-grid slds-grid--align-spread slds-p-bottom--medium slds-m-bottom--medium">
+          <div class="slds-col slds-align-middle">
+            <div data-name="tracks-length" class="slds-text-heading--small slds-m-bottom--small">{!$Label.EventApi.Event_Event_Builder}&nbsp;Tracks ({!v.trackObjs.length})</div>
+            <div data-name="Event_Builder_Tracks_Description" class="slds-text-body--regular">
+              {!$Label.EventApi.Event_Builder_Tracks_Description}
+            </div>
+          </div>
+          <div data-name="Event_Builder_Add_Track" class="slds-align-bottom">
+            <button class="slds-button slds-button--brand" onclick="{!c.addNewTrack}">
+              <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--x-small slds-button__icon--left" assistiveText="Save &amp; Close" />
+              {!$Label.EventApi.Event_Builder_Add_Track}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="slds-col slds-size--1-of-1">
+        <table data-name="Event_Builder_Add_Track" class="slds-table slds-table--bordered slds-no-row-hover" role="grid">
+          <aura:if isTrue="{!v.trackObjs.length == 0}">
+            <tr>
+              <td class="slds-grid slds-theme--shade">
+                {!$Label.EventApi.No_Tracks_Event_Builder}&nbsp;<a href="javascript:void(0);" onclick="{!c.addNewTrack}">{!$Label.EventApi.Event_Builder_Add_Track}</a>
+              </td>
+            </tr>
+            <aura:set attribute="else">
+              <thead>
+              <tr class="slds-text-title--caps slds-grid slds-theme--shade">
+                <th scope="col" class="slds-col">
+                  <div data-name="Name_Event_Builder" class="slds-truncate" title="Name">{!$Label.EventApi.Name_Event_Builder}</div>
+                </th>
+                <th scope="col">
+                  <div data-name="Actions_Event_Builder" class="slds-truncate" title="Actions">{!$Label.EventApi.Actions_Event_Builder}</div>
+                </th>
+              </tr>
+              </thead>
+              <tbody id="status-container-agenda">
+              <aura:iteration items="{!v.trackObjs}" var="trackObj">
+                <tr class="slds-grid slds-theme--shade status-type" data-id="{!trackObj.id}" data-name="{!trackObj.name}">
+                  <td data-label="Name" class="slds-col slds-grid">
+                    <div data-name="track_name" class="slds-truncate slds-align-middle">{!trackObj.name}</div>
+                  </td>
+                  <td data-label="slds-truncate slds-text-align--right">
+                    <a href="javascript:void(0);" class="slds-button slds-button--icon-border slds-action" data-id="{!trackObj.id}" onclick="{!c.editTrack}" data-name="{!trackObj.name}">
+                      <img class="slds-button__icon" src="{!$Resource.EventApi__SLDS_Icons+'/icons/utility/edit_60.png'}" width="16" height="34" data-id="{!trackObj.id}" data-name="{!trackObj.name}"/>
+                    </a>
+                    <a href="javascript:void(0);" class="slds-button slds-button--icon-border slds-action" data-id="{!trackObj.id}" onclick="{!c.deleteTrackPrompt}">
+                      <img class="slds-button__icon" src="{!$Resource.EventApi__SLDS_Icons+'/icons/utility/delete_60.png'}" width="16" height="34" data-id="{!trackObj.id}"/>
+                    </a>
+                  </td>
+                </tr>
+              </aura:iteration>
+              </tbody>
+            </aura:set>
+          </aura:if>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div data-name="advancedSettings" aura:id="advancedSettings" class="slds-tabs--default__content slds-hide" role="tabpanel">
+    <div class="slds-text-body--regular slds-p-around--medium">
+      {!$Label.EventApi.Event_Builder_Agenda_Advanced_HelpText_1} <br/>
+      - {!$Label.EventApi.Event_Builder_Agenda_Advanced_HelpText_2} <br/>
+      - {!$Label.EventApi.Event_Builder_Agenda_Advanced_HelpText_3} <br/>
+      - {!$Label.EventApi.Event_Builder_Agenda_Advanced_HelpText_4} <br/>
+    </div>
+
+    <!-- Select Ticket Type -->
+    <div class="slds-col slds-size--1-of-1">
+      <div class="slds-grid slds-wrap slds-p-vertical--small">
+        <div class="slds-size--1-of-2 slds-p-right--medium" aura:id="advancedTTDiv">
+          <Framework:InputFields qaData='{"type" : "input", "name": "advancedAgendaTicketTypes"}' fieldType="advancedselectfield" aura:id="advancedAgendaTicketTypes" group="managebyTT"  value="{!v.eventObj}" label="{!$Label.EventApi.Event_Builder_Agenda_Advanced_TicketTypes}" helpText="{!$Label.EventApi.Event_Builder_Agenda_Advanced_TicketType_HelpText}" fireChangeEvent="true" otherAttributes='{"allowCreate" : false,"otherMethods" : {"create" : false,"placeholder": "Select Ticket"}}'/>
+        </div>
+        <div class="slds-size--1-of-2 slds-p-top--x-large">
+          <Framework:InputFields qaData='{"type" : "input", "name": "manageAgendabyTT"}' fieldType="boolean" aura:id="manageAgendabyTT" group="managebyTT" label="{!$Label.EventApi.Event_Builder_Agenda_Advanced_ManageAgenda}" value="{!v.eventObj}" disabled="true" helpText="{!$Label.EventApi.Event_Builder_Agenda_Advanced_ManageAgenda_HelpText}" fireChangeEvent="true"/>
+        </div>
+      </div>
+    </div>
+		<aura:if isTrue="{!v.loadingTTInfo}">
+			<div class="slds-col slds-size--1-of-1">
+				<div class="slds-grid slds-wrap">
+					<div class="slds-size--1-of-1 slds-text-align--center slds-align-content-center" >
+						<img src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+						<span class="slds-text-heading--medium">{!$Label.EventApi.Loading_Text}</span>
+					</div>
+				</div>
+			</div>
+		</aura:if>
+    <aura:if isTrue="{!v.showMangebyTT}">
+      <!-- Schedule Items Filter -->
+      <div class="slds-col slds-size--1-of-1">
+        <div class="slds-grid slds-wrap">
+          <div class="slds-size_1-of-1" aura:id="advancedAgendaFiltersPlaceholder"/>
+        </div>
+      </div>
+
+      <!-- Total Schedule Items Label with Add Button -->
+      <div class="slds-col slds-size--1-of-1 slds-p-top--large">
+        <div class="slds-grid slds-wrap">
+          <div data-name="Schedule-Items" class="slds-col slds-size--3-of-4 slds-m-top--medium">
+            Schedule Items ({!v.ttScheduleItemsFiltered.length})
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Schedule Items List -->
+      <div class="slds-col slds-size--1-of-1 slds-m-bottom--large" aura:id="advanceScheduleItemList">
+        <table data-name="schedule-items-list" class="slds-table slds-table--bordered slds-theme--shade slds-no-row-hover">
+          <aura:if isTrue="{!v.ttScheduleItemsFiltered.length == 0}">
+            <tr>
+              <td class="slds-truncate">
+                {!$Label.EventApi.None_Schedule_Items_Found}
+              </td>
+            </tr>
+            <aura:set attribute="else">
+              <thead>
+              <tr class="slds-text-heading--label">
+                <th style="width:18rem;">{!$Label.EventApi.Event_Builder_Agenda_Advanced_DisplayName}</th>
+                <th>Date &amp; Time</th>
+                <th>{!$Label.EventApi.Event_Builder_Agenda_Advanced_HideduringRegistration}</th>
+                <th>{!$Label.EventApi.Event_Builder_Agenda_Advanced_DisableRegistration}</th>
+                <th>{!$Label.EventApi.Event_Builder_Agenda_Advanced_RequiredforRegistration}</th>
+              </tr>
+              </thead>
+              <tbody data-name="ttScheduleItemsFiltered" class="schedule-item-editable">
+                <aura:iteration items="{!v.ttScheduleItemsFiltered}" var="ttScheduleItem">
+                  <tr data-name="{!ttScheduleItem.scheduleItemDisplayName}">
+                    <td class="slds-truncate" data-label="Name">
+                      {!ttScheduleItem.scheduleItemDisplayName}
+                    </td>
+                    <td class="slds-truncate duration-times">
+                      {!ttScheduleItem.formattedStartDate} | {!ttScheduleItem.startTime}<br/>
+                      Duration: {!ttScheduleItem.duration}
+                    </td>
+                    <td class="slds-truncate slds-text-align--center" data-label="registrationDisplay">
+                      <Framework:InputFields label="Registration Display" labelStyleClasses="hideLabel" fieldType="boolean" aura:id="hideDuringRegistration" value="{!ttScheduleItem}" group="advancedAgendaInlineEdit" secondaryGroup="{!ttScheduleItem.scheduleItemId}" qaData='{"type" : "input", "name": "hideDuringRegistration"}'/>
+                    </td>
+                    <td class="slds-truncate slds-text-align--center" data-label="NotforRegistration">
+                      <Framework:InputFields fireChangeEvent="true" disabled="{!ttScheduleItem.requiredForRegistration}" label="Not for Registration" labelStyleClasses="hideLabel" fieldType="boolean" aura:id="disableRegistration" value="{!ttScheduleItem}" group="advancedAgendaInlineEdit" secondaryGroup="{!ttScheduleItem.scheduleItemId}" qaData='{"type" : "input", "name": "disableRegistration"}'/>
+                    </td>
+                    <td class="slds-truncate slds-text-align--center" data-label="Required">
+                      <Framework:InputFields fireChangeEvent="true" disabled="{!ttScheduleItem.disableRegistration}" label="Required for Registration" labelStyleClasses="hideLabel" fieldType="boolean" aura:id="requiredForRegistration" value="{!ttScheduleItem}" group="advancedAgendaInlineEdit" secondaryGroup="{!ttScheduleItem.scheduleItemId}" qaData='{"type" : "input", "name": "requiredForRegistration"}'/>
+                    </td>
+                  </tr>
+              </aura:iteration>
+              </tbody>
+            </aura:set>
+          </aura:if>
+        </table>
+      </div>
+
+    </aura:if>
+  </div>
+
+
+  <div data-name="agendaTrackModal" class="slds-modal" aura:id="agendaTrackModal">
+    <div class="slds-modal__container track-modal">
+      <div class="slds-modal__header">
+        <h2 class="slds-text-heading--medium" id="modal-heading-label">Event Track</h2>
+        <button class="slds-button slds-button--icon-inverse slds-modal__close"  onclick="{!c.closeModal}">
+          <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+        </button><!-- /.slds-button -->
+      </div><!-- /.slds-modal__header -->
+
+      <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+        <div class="slds-col slds-size--1-of-1">
+            <Framework:InputFields qaData='{"type" : "input", "name": "name"}' fieldType="string" aura:id="name" isRequired="true" label="Name" value="{!v.trackObj}" maxlength="35"/>
+        </div>
+        <div class="slds-col slds-large-size--1-of-1">
+          <div class="slds-size--1-of-2 slds-medium-size--1-of-1 slds-large-size--1-of-3">
+            <Framework:InputFields qaData='{"type" : "input", "name": "trackColor"}' isRequired="true" fieldType="colorpickerfield" aura:id="trackColor" label="{!$Label.EventApi.Event_Builder_Track_Color}" helpText="Color for the related track badge in a lightning event's agenda builder component." value="{!v.trackObj}"/>
+          </div>
+        </div>
+        <div class="slds-col slds-size--1-of-1 drag-n-drop-search-padding" aura:id="siTrackDragDropDiv">
+        </div>
+      </div>
+
+      <div class="slds-modal__footer slds-text-align--right">
+        <Framework:Button qaData='{"type" : "button", "name": "close_modal"}' enableProgressIndicator="false"
+                          onClickAction="{!c.closeModal}"
+                          type="neutral"
+                          label="{!$Label.EventApi.Cancel}"/>
+        <Framework:Button qaData='{"type" : "button", "name": "eventTrackSaveModalButton"}' enableProgressIndicator="true"
+                          onClickAction="{!c.saveTrack}"
+                          type="brand"
+                          additionalClasses="slds-m-left--xx-small"
+                          label="{!$Label.EventApi.Save_Event_Builder}"
+                          aura:id="eventTrackSaveModalButton"/>
+      </div><!-- /.slds-modal__footer -->
+    </div><!-- /.modal-dialog .slds-modal__container -->
+  </div><!-- /.modal .slds-modal -->
+
+	<div data-name="scheduleItemEditorModal" class="slds-modal" aura:id="scheduleItemEditorModal">
+		<div class="slds-modal__container track-modal">
+			<div class="slds-modal__header">
+				<h2 class="slds-text-heading--medium" id="modal-heading-label">{! empty(v.scheduleEditId) ? $Label.EventApi.Event_Builder_Add_Schedule_Item_Caption : $Label.EventApi.Event_Builder_Edit_Schedule_Item_Caption}</h2>
+				<button class="slds-button slds-button--icon-inverse slds-modal__close"  onclick="{!c.closeModal}">
+					<lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+				</button>
+			</div>
+
+			<div data-name="agendaEditor" class="slds-modal__content slds-object-height--half slds-scrollable--y">
+                <EventApi:EventBuilderAgendaEditor aura:id="agendaEditor" eventScheduleItem="{!v.scheduleItemObj}" dateFormat="{!v.dateFormat}" eventAgenda="{!v.eventObj}" eventObj="{!v.eventObj}"/>
+			</div>
+
+			<div class="slds-modal__footer slds-text-align--right">
+				<Framework:Button qaData='{"type" : "button", "name": "closeModal"}' enableProgressIndicator="false"
+				                  onClickAction="{!c.closeModal}"
+				                  type="neutral"
+				                  label="{!$Label.EventApi.Cancel}"/>
+				<Framework:Button qaData='{"type" : "button", "name": "saveUpdateScheduleItem"}' enableProgressIndicator="true"
+				                  onClickAction="{!c.saveUpdateScheduleItem}"
+				                  type="brand"
+				                  additionalClasses="slds-m-left--xx-small"
+				                  label="{!$Label.EventApi.Save_Event_Builder}"
+				                  aura:id="saveUpdateScheduleItem"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="{!v.packageModalState == 'base' ? 'slds-modal' : v.packageModalState == 'show' ? 'slds-modal slds-fade-in-open slds-modal_large' : 'slds-modal fonteva-modal_parent slds-fade-in-open'}" aura:id="packageModal">
+      <div class="slds-modal__container packageEditor">
+        <div class="slds-modal__header">
+          <h2 class="slds-text-heading--medium" id="modal-heading-label">
+            <aura:unescapedHtml value="{!format($Label.EventApi.Event_Builder_Manage_Package_Items_For, v.packageItemName)}"/>
+          </h2>
+          <button class="slds-button slds-button--icon-inverse slds-modal__close"  onclick="{!c.closeModal}">
+            <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+          </button>
+        </div>
+
+        <EventApi:EventBuilderPackageEditor isTicket="false" aura:id="packageEditor" parentItemId="{!v.packageItemId}" packageModalState="{!v.packageModalState}" packageItemName="{!v.packageItemName}" owner="agenda"/>
+
+        <div class="slds-modal__footer slds-text-align--right">
+          <Framework:Button enableProgressIndicator="false"
+                            onClickAction="{!c.closeModal}"
+                            type="brand"
+                            additionalClasses="slds-m-left--xx-small"
+                            label="{!$Label.EventApi.Close_Event_Builder}"
+                            aura:id="close"/>
+			</div>
+		</div>
+	</div>
+
+
+	<div data-name="modalBackdrop" class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+  <Framework:Toast aura:id="toastMessages"/>
+	<Framework:MessagePrompt title="{!$Label.EventApi.Event_Builder_Delete_Schedule_Item}"
+	                         message="{!$Label.EventApi.Event_Builder_Delete_Schedule_Item_Text}"
+	                         severity="clear"
+	                         submitButtonLabel="{!$Label.EventApi.Delete_Ticket_Type_Event_Builder}"
+	                         submitOnClickAction="{!c.deleteScheduleItemAction}"
+	                         cancelButtonLabel="{!$Label.EventApi.Cancel}"
+	                         closeOnClickAction="{!c.closeModal}"
+	                         aura:id="deleteScheduleModal"/>
+  <Framework:MessagePrompt title="{!$Label.EventApi.Event_Builder_Delete_Track}"
+                           message="{!$Label.EventApi.Event_Builder_Delete_Track_Text}"
+                           severity="clear"
+                           submitButtonLabel="{!$Label.EventApi.Delete_Ticket_Type_Event_Builder}"
+                           submitOnClickAction="{!c.deleteTrack}"
+                           cancelButtonLabel="{!$Label.EventApi.Cancel}"
+                           closeOnClickAction="{!c.closeModal}"
+                           aura:id="deleteTrackModal"/>
+  </div>
+  <EventApi:EventBuilderManageBadgeTypes aura:id="manageBadgeTypes" organizationId="{!v.organizationId}"/>
+</aura:component>

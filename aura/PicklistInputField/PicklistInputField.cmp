@@ -1,0 +1,35 @@
+<aura:component description="PicklistInputField">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="required" type="Boolean" description="If the field is required" default="false"/>
+    <aura:attribute name="value" type="String" description="The value" default=""/>
+    <aura:attribute name="options" type="List" default="[]"/>
+    <aura:attribute name="disabled" type="Boolean" description="Disable Input" default="false"/>
+    <aura:attribute name="errors" type="List[]" default="[]" access="global"/>
+    <aura:handler event="Framework:InputFieldClearErrorMessagesEvent" action="{!c.handleInputFieldClearErrorMessagesEvent}"/>
+    <aura:method name="setErrorMessages" action="{!c.setErrorMessages}"
+                 description="Error Message For Field">
+        <aura:attribute name="errorMessages" type="Array" default="[]" description="Error Message"/>
+    </aura:method>
+    <aura:method name="loadExistingValue" action="{!c.loadExistingValue}"
+                 description="Load Existing Value">
+    </aura:method>
+    <aura:method name="reInitialize" action="{!c.reInitialize}"
+                 description="Re Initialize">
+    </aura:method>
+    <aura:method name="validate" action="{!c.validate}"
+                 description="Validate Field">
+    </aura:method>
+    <aura:method name="clearExistingValue" action="{!c.clearExistingValue}"
+                 description="Clear Existing Value">
+    </aura:method>
+    <aura:method name="setSelectOptions" action="{!c.setSelectOptions}"
+                 description="Set Select Options">
+        <aura:attribute name="selectOptions" type="Array" default="[]" description="Select Options"/>
+    </aura:method>
+    <lightning:select name="" label="" variant="label-hidden" value="{!v.value}" disabled="{!v.disabled}">
+        <aura:iteration items="{!v.options}" var="option">
+            <option value="{!option.value}" text="{!option.label}" selected="{!option.isSelected}"></option>
+        </aura:iteration>
+    </lightning:select>
+    <Framework:ValidationErrorMessages aura:id="errorInput"/>
+</aura:component>

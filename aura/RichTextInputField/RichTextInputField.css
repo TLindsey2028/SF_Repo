@@ -1,0 +1,33 @@
+.THIS .ql-showHtml:after {
+    content: "source";
+    width: auto!important;
+}
+
+.THIS .ql-snow.ql-toolbar button {
+    width: auto!important;
+}
+
+.THIS .quillEditor , .THIS .ql-editor{
+    min-height: 200px;
+}
+
+.THIS .ql-toolbar{
+    background-color: #f4f6f9!important;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-color: rgb(217, 219, 221)!important;
+}
+
+.THIS .ql-picker-label {
+    color: rgb(22, 50, 92)!important;
+}
+
+.THIS .ql-container {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-color: rgb(217, 219, 221)!important;
+}
+
+.THIS .ql-editor {
+    background: white;
+}

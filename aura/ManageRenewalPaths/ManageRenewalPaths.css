@@ -1,0 +1,20 @@
+.THIS .drag-drop{
+    height: 300px!important;
+}
+
+.THIS .slds-form-element .fonteva-filter-input-drag-drop,
+.THIS .slds-multi-group-drag-drop_custom-width .fonteva-picklist__options--multi,
+.THIS .slds-picklist__options,
+.THIS .slds-filter-input-drag-drop .slds-filter-input-drag-drop {
+    width: 100%!important;
+}
+.THIS .slds-picklist--draggable .slds-form-element {
+    width: 50%;
+    max-width: 50%;
+    overflow: hidden;
+}
+
+.THIS .slds-input-action-icon {
+    left: inherit!important;
+    right: 0px!important;
+}

@@ -1,0 +1,67 @@
+<aura:component description="EventRegistrationSummary" implements="LTE:EventInterface" controller="LTE.EventRegistrationController">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:attribute name="so" type="LTE.SalesOrder"/>
+	<aura:attribute name="eventObj" type="Map"/>
+	<aura:attribute name="displayDiscount" type="Boolean" default="true"/>
+	<aura:attribute name="displayTotal" type="Boolean" default="true"/>
+	<aura:attribute name="initialPurchase" type="Boolean" default="true"/>
+	<aura:attribute name="showPurchase" type="Boolean" default="true"/>
+	<aura:attribute name="isFreeOrder" type="Boolean" default="false"/>
+	<aura:attribute name="readOnly" type="Boolean" default="true"/>
+	<aura:attribute name="regSummaryNested" type="Boolean" default="false"/>
+	<aura:method name="doInit" action="{!c.doInit}"/>
+	<aura:dependency resource="markup://LTE:EventRegistrationSummaryDetail"/>
+	<aura:registerEvent name="EventRegistrationFlowSummaryEvent" type="LTE:EventRegistrationFlowSummaryEvent"/>
+	<aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+	<aura:handler event="LTE:ToggleOrderSummaryCloseButtonEvent" action="{!c.handleToggleOrderSummaryCloseButtonEvent}"/>
+	<aura:attribute name="attendeeObj" type="Map"/>
+	<aura:registerEvent name="ProcessingChangesEvent" type="OrderApi:ProcessingChangesEvent"/>
+	<aura:attribute name="siteObj" type="Map"/>
+	<aura:attribute name="storeObj" type="Map"/>
+
+	<div aura:id="modalContainer" class="fonteva-object_summary fonteva-modal_container">
+		<div class="{!v.regSummaryNested ? 'fonteva-modal_body slds-p-around_large' : ''}">
+			<div class="slds-m-bottom--medium">
+				<div class="slds-card slds-theme--default">
+					<div class="slds-card__header slds-p-vertical--medium slds-p-horziontal--large slds-m-bottom_none">
+						<span data-name="Registration_Summary" class="slds-text-heading--small slds-font-weight--bold">{!$Label.LTE.Registration_Summary}</span>
+						<span data-name="processingChanges" class="slds-float--right hidden" aura:id="processingChanges">
+								{!$Label.LTE.Processing_Changes}&nbsp;<img src="{!$Resource.Framework__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" class="small-spinner" />
+						</span>
+					</div>
+					<div class="slds-card__body slds-theme--default slds-m-bottom--none slds-p-vertical--large">
+						<div class="slds-grid slds-grid--vertical slds-p-horizontal--large">
+							<aura:if isTrue="{!and(v.displayDiscount, and(v.so.enableDiscountCount, !v.isFreeOrder))}">
+								<div class="slds-grid slds-grid--pull-padded slds-size--1-of-1 fonteva-input--discount">
+									<div class="slds-col slds-p-horizontal--small">
+										<Framework:InputFields group="summary" fieldType="string"
+										                       qaData='{"type" : "input", "name": "Discount_Code_Sales_Order"}'
+										                       aura:id="sourceCodeName"
+										                       label="{!$Label.LTE.Discount_Code_Sales_Order}"
+										                       value="{!v.so}"
+										                       fireChangeEvent="true"
+										                       otherAttributes='{"updateOn" : "keyup"}'/>
+									</div>
+									<div class="slds-m-top--medium slds-p-top--xx-small slds-p-right--small">
+										<Framework:Button type="brand" onClickAction="{!c.applyDiscount}"
+										                  qaData='{"type" : "button", "name": "discountButton"}'
+										                  label="{!$Label.LTE.Apply_Sales_Order}" aura:id="discountButton"
+										                  additionalClasses="slds-m-top--xx-small fonteva-apply-discount"
+										                  disable="true"/>
+									</div>
+								</div>
+								<hr class="slds-m-vertical--large"/>
+							</aura:if>
+							<div data-name="summaryDetailDiv" aura:id="summaryDetailDiv"/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<aura:if isTrue="{!v.regSummaryNested}">
+			<div class="slds-text-align_center slds-p-around_medium fonteva-modal_footer  slds-hide_small" aura:id="closeButton">
+				<lightning:button variant="neutral" label="Close" onclick="{!c.closeSummary}" />
+			</div>
+		</aura:if>
+	</div>
+</aura:component>

@@ -1,0 +1,4 @@
+.THIS .fonteva-link--disable {
+    pointer-events: none;
+    cursor: none;
+}

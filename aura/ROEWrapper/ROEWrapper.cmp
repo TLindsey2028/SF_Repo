@@ -1,0 +1,35 @@
+<aura:component description="ROEWrapper" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,flexipage:availableForAllPageTypes" access="global" controller="ROEApi.RapidOrderEntryController">
+    <ltng:require scripts="{!join(',',$Resource.Framework__SLDS_BaseV2 + '/js/scripts.min.js', $Resource.PagesApi__FontevaHelper + '/FontevaHelper.js')}" styles="{!$Resource.ROEApi__SLDS_Base+'/css/styles.css'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="salesOrder" type="String"/>
+    <aura:attribute name="contact" type="String"/>
+    <aura:attribute name="account" type="String"/>
+    <aura:attribute name="exceptionContact" type="String"/>
+    <aura:attribute name="exceptionAccount" type="String"/>
+    <aura:attribute name="dateFormat" type="String"/>
+    <aura:handler event="Framework:ShowComponentEvent" action="{!c.handleSwitchComponent}"/>
+    <aura:handler event="aura:locationChange" action="{!c.update}"/>
+    <style>
+        @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+            .slds-ie-fix--width {
+                max-width: calc(100vw - 23px)!important;
+            }
+        }
+        .slds-modal__content {
+            padding: 0!important;
+        }
+        .forceModal .slds-modal__container {
+            width: 99.5%!important;
+            max-width: 100%!important;
+        }
+        .forceChatterLightningComponent .bodyWrapper{height:100%;width:100%;padding:0;box-sizing:border-box}
+        button.disabled {
+            background-color: #0070d2!important;
+            opacity: 0.6!important;
+            border: 1px solid #0070d2!important;
+            cursor: not-allowed!important;
+        }
+    </style>
+    <div aura:id="roeBody" class="slds">
+    </div>
+</aura:component>

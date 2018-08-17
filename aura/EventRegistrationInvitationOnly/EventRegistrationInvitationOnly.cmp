@@ -1,0 +1,98 @@
+<aura:component description="EventRegistrationInvitationOnly" implements="LTE:EventInterface" extends="LTE:EventBase" access="global" controller="LTE.EventRegistrationController">
+	<aura:attribute name="showRegisterButton" type="Boolean" default="true" access="global"/>
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+	<aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+	<aura:registerEvent name="RegistrationToolbarUpdateEvent" type="LTE:RegistrationToolbarUpdateEvent"/>
+	<aura:attribute name="rsvpObject" type="Map" default="{}"/>
+	<aura:attribute name="ticket" type="Map" default="{}"/>
+	<aura:attribute name="guestsWaitlisted" type="Integer" default="0"/>
+	<aura:attribute name="attendeeWaitlisted" type="Boolean" default="false"/>
+	<aura:registerEvent name="RegistrationProcessChangeEvent" type="LTE:RegistrationProcessChangeEvent"/>
+
+	<div class="slds-size--1-of-1 slds-event--panes fonteva-event-component" aura:id="invOnlyRegistrationContainer">
+		<div id="selection" class="slds-event--pane animated slds-p-horizontal--medium" data-type="pane">
+			<p class="slds-text-heading--medium slds-font-weight--semi-bold slds-m-bottom--x-small slds-m-top--medium">
+                    {!$Label.LTE.Event_Invitation_Response}
+			</p>
+            <div class="slds-col slds-p-vertical--xx-large">
+                <div class="slds-grid slds-wrap">
+                    <div aura:id="mainData" class="stencil-hidden slds-size--1-of-1">
+                        <div class="slds-size--1-of-1 slds-text-align--center" aura:id="acceptInvitationDiv">
+                        </div>
+	                    <div class="slds-size--1-of-1 slds-text-align--center">
+							<div aura:id="rsvpPaneAccept" class="slds-grid slds-wrap">
+								<aura:if isTrue="{!and(and(v.attendeeObj.maxGuestsAllowed != null, v.attendeeObj.maxGuestsAllowed > 0), v.attendeeObj.invitationSent)}">
+									<div class="slds-size--1-of-1 slds-text-align--center slds-p-top--medium">
+										{!$Label.LTE.Invitation_Only_Guests_Prompt}
+									</div>
+									<div class="slds-size--1-of-1 slds-text-align--center slds-p-top--large">
+										<b>{!$Label.LTE.Invitation_Only_Guests_Number}</b>
+									</div>
+									<div class="slds-size--1-of-1 slds-text-align--center">
+										<div class="slds-grid slds-wrap">
+											<div class="slds-size--1-of-3"></div>
+											<div class="slds-size--1-of-3">
+												<div class="slds-size--1-of-1 slds-text-align--center">
+													<div class="fonteva-num-guests">
+														<Framework:InputFields fieldType="picklist"
+														    aura:id="numberOfGuests"
+															value="{!v.rsvpObject}"
+															labelStyleClasses="hidden"
+															label=""
+															styleClasses="slds-input-width--medium slds-text-align--center slds-border-radius--none"
+															fireChangeEvent="true"/>
+
+													</div>
+													<aura:if isTrue="{!or(v.attendeeWaitlisted, v.guestsWaitlisted > 0)}">
+													  <p><span class="fonteva-info-block">
+															<aura:if isTrue="{!v.attendeeWaitlisted}">
+																	<span>{!$Label.LTE.Event_Invitation_Waitlisted_You}&nbsp;</span>
+															</aura:if>
+															<aura:if isTrue="{!and(v.attendeeWaitlisted, v.guestsWaitlisted > 0)}">
+																<span>{!$Label.LTE.Event_Invitation_Waitlisted_And}&nbsp;</span>
+															</aura:if>
+															<aura:if isTrue="{!v.guestsWaitlisted > 0}">
+																<span>{!v.guestsWaitlisted}&nbsp;{!$Label.LTE.Event_Invitation_Waitlisted_Guests}&nbsp;</span>
+															</aura:if>
+															{!$Label.LTE.Event_Invitation_Waitlisted}
+														</span></p>
+													</aura:if>
+												</div>
+											</div>
+											<div class="slds-size--1-of-3"></div>
+										</div>
+									</div>
+									<aura:set attribute="else">
+										<div class="slds-p-vertical--large">&nbsp;</div>
+									</aura:set>
+								</aura:if>
+							</div>
+	                    </div>
+	                    <div aura:id="rsvpPaneReject" class="slds-grid slds-wrap slds-hide">
+                            <div class="slds-size--1-of-1 slds-text-align--center slds-p-top--large">
+                                <b>{!$Label.LTE.Invitation_Only_Decline_Header_Text}</b>
+                            </div>
+                            <div class="slds-size--1-of-1 slds-text-align--center slds-p-top--large">
+                                <p><aura:unescapedHtml value="{!$Label.LTE.Invitation_Only_Decline_Description_Text}"/></p>
+                            </div>
+                        </div>
+                        <div class="slds-size--1-of-1 slds-text-align--center slds-p-top--large">
+                            <aura:if isTrue="{!and(v.attendeeObj.invitationSent, and(!v.attendeeObj.invitationAccepted, !v.attendeeObj.invitationDeclined))}">
+                                <Framework:Button additionalClasses="fonteva-rsvp-button" type="brand" aura:id="rsvpAttendee" label="{!$Label.LTE.Invitation_Only_Button}" onClickAction="{!c.handleRSVP}" disable="{!!v.attendeeObj.invitationSent}"/>
+                            </aura:if>
+                        </div>
+                    </div>
+					<div class="slds-size--1-of-1 slds-text-align--center slds-p-top--large">
+						<aura:if isTrue="{!and(v.attendeeObj.invitationSent, v.attendeeObj.invitationAccepted)}">
+                            {!$Label.LTE.Invitation_Only_Already_Registered}
+						</aura:if>
+						<aura:if isTrue="{!and(v.attendeeObj.invitationSent, v.attendeeObj.invitationDeclined)}">
+                            {!$Label.LTE.Invitation_Only_Already_Declined}
+						</aura:if>
+					</div>
+                </div>
+			</div>
+		</div>
+	</div>
+</aura:component>

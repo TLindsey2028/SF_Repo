@@ -1,0 +1,5 @@
+<aura:component description="EpaymentError" controller="OrderApi.CreditCardPaymentsController">
+  <aura:attribute name="ePaymentId" type="String" required="true"/>
+  <ltng:require scripts="{!$Resource.OrderApi__SLDS_Base+'/js/scripts.js'}" styles="{!$Resource.OrderApi__SLDS_Base+'/css/styles.css'}" afterScriptsLoaded="{!c.doInit}"/>
+  <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

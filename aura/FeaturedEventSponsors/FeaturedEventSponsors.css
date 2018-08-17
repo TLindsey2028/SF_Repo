@@ -1,0 +1,39 @@
+.THIS .slds-button--prev,
+.THIS .slds-button--next {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.THIS .slds-button--prev .slds-button__icon--large,
+.THIS .slds-button--next .slds-button__icon--large{
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: rgba(255,255,255,.5);
+    border-radius: 50%;
+    padding: 0.5em;
+}
+.THIS .slds-button--prev {
+    left: -1rem;
+}
+
+.THIS .slds-button--next {
+    right: -1rem;
+}
+
+.THIS .tns-controls {
+    transform: translateY(0);
+}
+
+.THIS .tns-controls button[disabled] {
+    visibility : hidden;
+}
+
+@media(min-width: 1200px) {
+    .THIS .hide-controls .tns-controls button {
+        visibility: hidden;
+    }
+}

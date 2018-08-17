@@ -1,0 +1,4 @@
+<design:component>
+	<design:attribute name="event" label="Event Id"/>
+	<design:attribute name="salesOrder" label="Sales Order Id"/>
+</design:component>

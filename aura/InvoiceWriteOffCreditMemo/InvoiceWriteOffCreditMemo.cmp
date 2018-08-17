@@ -1,0 +1,14 @@
+<aura:component description="InvoiceWriteOffCreditMemo" controller="OrderApi.InvoiceWriteOffCreditMemosController">
+    <aura:attribute name="actionType" type="String" required="true"/>
+    <aura:attribute name="invoice" type="String" required="true"/>
+    <aura:attribute name="errorMessage" type="String"/>
+    <ltng:require scripts="{!join(',', $Resource.OrderApi__SLDS_Base+'/js/scripts.js', $Resource.Framework__UrlUtil)}" styles="{!$Resource.OrderApi__SLDS_Base+'/css/styles.css'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:registerEvent name="ComponentLoadedEvent" type="OrderApi:ComponentLoadedEvent"/>
+    <div class="slds hidden main-wrapper" aura:id="mainWrapperDiv">
+        <div class="slds-grid slds-loading-layout slds-theme--shade">
+            <Framework:MessagePrompt title="Invoice WriteOff" showCancelButton="true" severity="info slds-theme--alert-texture" message="{!$Label.OrderApi.Invoice_WriteOff_Continue}" submitButtonLabel="{!$Label.OrderApi.Continue_Refund}" submitOnClickAction="{!c.continueWriteOff}" aura:id="writeOff" closeOnClickAction="{!c.goBack}"/>
+            <Framework:MessagePrompt title="Error" showCancelButton="false" severity="error slds-theme--alert-texture" message="{!v.errorMessage}" submitButtonLabel="{!$Label.OrderApi.Continue_Refund}" closeOnClickAction="{!c.goBack}" submitOnClickAction="{!c.goBack}" aura:id="errorThrown"/>
+            <Framework:Toast aura:id="toastMessages"/>
+        </div>
+    </div>
+</aura:component>

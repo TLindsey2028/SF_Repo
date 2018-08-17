@@ -1,0 +1,38 @@
+.THIS {
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+@media (max-width: 30em) {
+  .THIS .slds-text-heading--mobile {
+    font-size: 1em;
+  }
+  .THIS .slds-text-heading--mobile-show {
+    display: initial;
+  }
+  .THIS .slds-text-heading--mobile-hide {
+    display: none!important;
+  }
+}
+@media (min-width: 30em) {
+  .THIS .slds-text-heading--mobile-show {
+    display: none!important;
+  }
+  .THIS .slds-text-heading--mobile-hide {
+    display: initial;
+  }
+}
+
+.THIS .fonteva-slds-form-instructions-header > div,
+.THIS .fonteva-slds-form-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.THIS .fonteva-slds-date-field {
+  max-width: 125px;
+}
+
+.THIS .fonteva-slds-date-time-field {
+  max-width: 330px;
+}

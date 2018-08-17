@@ -1,0 +1,314 @@
+<aura:component controller="Framework.AdminApiResourceController">
+  <ltng:require scripts="{!join(',',$Resource.Framework__SLDS_BaseV2+'/js/scripts.min.js',$Resource.Framework__SLDS_BaseV2+'/js/plugins.js')}" afterScriptsLoaded="{!c.doInit}"/>
+   <aura:attribute name="apiResourceKey" type="String" default="" description="Api Resource Key"/>
+  <aura:attribute name="apiResourceVariable" type="Map" default="{}" description="Api Resource Key"/>
+  <aura:attribute name="apiResourceVariables" type="List" default="[]"/>
+  <aura:attribute name="apiResourceMapping" type="Map" default="{}" description="Api Resource Key"/>
+  <aura:attribute name="apiResourceMappings" type="List" default="[]"/>
+  <aura:attribute name="modalApiResourceMappingHeader" type="String" default=""/>
+  <aura:attribute name="modalApiResourceVariableHeader" type="String" default=""/>
+  <aura:attribute name="targetFieldOptions" type="List" default="[]"/>
+  <aura:attribute name="mappingToDelete" type="String" default="" description="Api Resource Key"/>
+  <aura:attribute name="variableToDelete" type="String" default="" description="Api Resource Key"/>
+  <aura:attribute name="apiResource" type="Map" default="{}"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+  <aura:registerEvent name="InputFieldValidationEvent" type="Framework:InputFieldValidationEvent"/>
+  <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+  <div class="slds-medium-size--3-of-4 slds-size--1-of-1 slds-grid slds-wrap">
+    <div class="slds-col slds-size--1-of-1">
+      <div class="slds-page-header">
+        <div class="slds-media slds-media--center">
+          <div class="slds-media__figure slds-ie-fix--width__icon">
+            <img src="//fonteva-cdn.s3.amazonaws.com/framework-admin/APIServices/APIServices.svg" style="height:50px;" alt="Placeholder" />
+          </div>
+          <!-- /.slds-media__figure -->
+          <div class="slds-media__body">
+            <nav role="navigation">
+              <p id="bread-crumb-label" class="slds-assistive-text">{!$Label.Framework.Dashboard}:</p>
+              <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                  <li class="slds-list__item slds-text-heading--label">
+                      <a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.showComponent}" data-name="Framework:SparkAdminSidebar">
+                          {!$Label.Framework.Dashboard}
+                      </a>
+                  </li>
+                <li class="slds-list__item slds-text-heading--label">
+                  <a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.showApiService}">
+                    {!v.apiResource.apiService}
+                  </a>
+                </li>
+                <li class="slds-list__item slds-text-heading--label slds-p-left--x-small">
+                   {!v.apiResource.configId}
+                </li>
+              </ol>
+            </nav>
+            <div class="slds-text-heading--medium">
+              {!v.apiResource.configId}
+            </div>
+          </div>
+          <!-- /.slds-media__body -->
+        </div>
+        <!-- /.slds-media -->
+      </div>
+      <!-- /.slds-page-header -->
+      <div aura:id="mainBody" class="slds-object-height--full__nofooter slds-scrollable--y">
+        <div class="slds-grid slds-wrap slds-p-around--large">
+          <div class="slds-col slds-object--full__width">
+            <div class="slds-media slds-media--responsive slds-media--top">
+              <div class="slds-media__figure slds-ie-fix--width__icon">
+                <img src="{!v.apiResource.imagePath}" style="height: 150px; width: auto;" class="slds-avatar"></img>
+              </div>
+              <!-- /.slds-media__figure -->
+              <div class="slds-media__body">
+                <table class="slds-table slds-table--bordered">
+                  <tbody>
+                    <tr>
+                      <th><strong>{!$Label.Framework.API_Service_Key}</strong></th>
+                      <td>{!v.apiResource.apiService}</td>
+                    </tr>
+                    <tr>
+                      <th><strong>{!$Label.Framework.API_Resource_Name}</strong></th>
+                      <td>{!v.apiResource.configId}</td>
+                    </tr>
+                    <tr>
+                      <th><strong>{!$Label.Framework.API_Resource_Target_SObject}</strong></th>
+                      <td>{!v.apiResource.targetSObject}</td>
+                    </tr>
+                    <tr>
+                      <th><strong>{!$Labelcl.c.API_Resource_Target_SObject_Key}</strong></th>
+                      <td>{!v.apiResource.targetObjectKeyField}</td>
+                    </tr>
+                    <tr>
+                      <th><strong>{!$Label.Framework.API_Resource_Api_Object}</strong></th>
+                      <td>{!v.apiResource.apiObject}</td>
+                    </tr>
+                    <tr>
+                      <th><strong>{!$Label.Framework.API_Resource_Api_Object_Key}</strong></th>
+                      <td>{!v.apiResource.apiObjectKeyField}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.slds-media__body -->
+            </div>
+            <!-- /.slds-media -->
+          </div>
+          <!-- /.slds-col -->
+        </div>
+        <!-- /.slds-grid -->
+        <div class="slds-col slds-p-bottom--xx-large">
+          <div class="slds-page-header slds-object--full-width slds-grid slds-grid--align-spread">
+            <div class="slds-text-heading--medium">{!$Label.Framework.API_Mappings}</div>
+            <Framework:Button onClickAction="{!c.modalCreateApiResourceMapping}"
+                      aura:id="newApiMapping"
+                      enableProgressIndicator="false"
+                      type="brand"
+                      label="{!$Label.Framework.New_API_Mapping_API_Resource}"
+                      svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}"
+                      svgContainerClass="slds-float--left slds-m-right--small"
+                      svgClass="slds-button__icon slds-m-top--x-small"
+                      svgAssistiveText="{!$Label.Framework.New_API_Mapping_API_Resource}" />
+          </div>
+          <span class="slds-scrollable--x slds-object--full__width">
+            <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+              <thead>
+                <tr class="slds-text-heading--label">
+                  <th>
+                      {!$Label.Framework.API_Field_API_Resource}
+                  </th>
+                  <th>
+                      {!$Label.Framework.Target_Field_API_Resource}
+                  </th>
+                  <th>
+                      {!$Label.Framework.Action_API_Resource}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <aura:iteration items="{!v.apiResourceMappings}" var="apiResourceMapping">
+                  <tr>
+                    <td>
+                      {!apiResourceMapping.apiField}
+                    </td>
+                    <td>
+                      {!apiResourceMapping.targetField}
+                    </td>
+                    <td>
+                      <div class="slds-dropdown-trigger">
+                        <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" aria-haspopup="true">
+                          <lightning:icon iconName="utility:down" size="x-small" alternativeText="{!$Label.Framework.Close}"/>
+                          <span class="slds-assistive-text">Dropdown</span>
+                        </button>
+                        <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+                          <ul class="slds-dropdown__list" role="menu">
+                            <li class="slds-dropdown__item">
+                              <a href="javascript:void(0)" onclick="{!c.modalApiResourceMapping}" data-id="{!apiResourceMapping.configId}" data-type="edit">
+                              <span class="slds-truncate" data-container="editReg" title="Edit Resource">
+                                {!$Label.Framework.Edit_API_Resource}
+                              </span>
+                              </a>
+                            </li>
+                            <li class="slds-dropdown__item">
+                              <a href="javascript:void(0)" onclick="{!c.modalApiDeleteResourceMapping}"  data-id="{!apiResourceMapping.configId}">
+                              <span class="slds-truncate" title="Delete Resource">
+                                {!$Label.Framework.Remove_API_Resource}
+                              </span>
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                        <!-- /.slds-dropdown -->
+                      </div>
+                      <!-- /.slds-dropdown-trigger -->
+                    </td>
+                  </tr>
+                </aura:iteration>
+              </tbody>
+            </table>
+          </span>
+          <!-- /.slds-scrollable-x -->
+        </div>
+        <div class="slds-col slds-p-bottom--large">
+          <div class="slds-page-header slds-object--full-width slds-grid slds-grid--align-spread">
+            <div class="slds-text-heading--medium">API Variables</div>
+            <Framework:Button onClickAction="{!c.modalCreateApiResourceVariables}"
+                      aura:id="newApiVariable"
+                      enableProgressIndicator="false"
+                      type="brand"
+                      label="{!$Label.Framework.New_API_Variable_API_Resource}"
+                      svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}"
+                      svgContainerClass="slds-float--left slds-m-right--small"
+                      svgClass="slds-button__icon slds-m-top--x-small"
+                      svgAssistiveText="{!$Label.Framework.New_API_Variable_API_Resource}" />
+          </div>
+          <span class="slds-scrollable--x slds-object--full__width">
+            <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+              <thead>
+                <tr class="slds-text-heading--label">
+                  <th>
+                    {!$Label.Framework.Field_API_Name_API_Resource}
+                  </th>
+                  <th>
+                    {!$Label.Framework.Field_API_Value_API_Resource}
+                  </th>
+                  <th>
+                      {!$Label.Framework.Action_API_Resource}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <aura:iteration items="{!v.apiResourceVariables}" var="apiResourceVariable">
+                  <tr>
+                    <td>
+                      {!apiResourceVariable.fieldApiName}
+                    </td>
+                    <td>
+                      {!apiResourceVariable.fieldApiValue}
+                    </td>
+                    <td>
+                      <div class="slds-dropdown-trigger">
+                        <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" aria-haspopup="true">
+                          <lightning:icon iconName="utility:down" size="x-small" alternativeText="Close"/>
+                          <span class="slds-assistive-text">Dropdown</span>
+                        </button>
+                        <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+                          <ul class="slds-dropdown__list" role="menu">
+                            <li class="slds-dropdown__item">
+                              <a href="javascript:void(0)" onclick="{!c.modalApiResourceVariables}" data-id="{!apiResourceVariable.configId}" data-type="edit">
+                              <span class="slds-truncate" data-container="editReg" title="Edit Resource">
+                                {!$Label.Framework.Edit_API_Resource}
+                              </span>
+                              </a>
+                            </li>
+                            <li class="slds-dropdown__item">
+                              <a href="javascript:void(0)" onclick="{!c.modalApiDeleteResourceVariable}"  data-id="{!apiResourceVariable.configId}">
+                              <span class="slds-truncate" title="Delete Resource">
+                                {!$Label.Framework.Remove_API_Resource}
+                              </span>
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                        <!-- /.slds-dropdown -->
+                      </div>
+                      <!-- /.slds-dropdown-trigger -->
+                    </td>
+                  </tr>
+                </aura:iteration>
+              </tbody>
+            </table>
+          </span>
+          <!-- /.slds-scrollable-x -->
+        </div>
+      </div>
+      <!-- /aura:id="mainBody" -->
+    </div>
+  </div>
+  <div class="modal fade slds-modal slds-fade-in-open" id="modalApiResourceMapping">
+    <div class="modal-dialog slds-modal__container">
+      <div class="modal-content">
+        <div class="slds-modal__header">
+          <h2 class="slds-text-heading--medium">{!v.modalApiResourceMappingHeader}</h2>
+          <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal">
+            <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+            <span class="slds-assistive-text">Close</span>
+          </button>
+          <!-- /.slds-button -->
+        </div>
+        <!-- /.slds-modal__header -->
+          <div class="slds-modal__content slds-object-height--max-half slds-scrollable--y">
+            <div class="slds-col slds-size--1-of-1">
+              <div class="slds-form">
+                <Framework:InputFields group="apiMapping" fieldType="string" isRequired="true" aura:id="apiField" label="Api Field" value="{!v.apiResourceMapping}"/>
+                <Framework:InputFields group="apiMapping" fieldType="picklist" label="Target Field" isRequired="true" aura:id="targetField" value="{!v.apiResourceMapping}"/>
+                <Framework:InputFields group="apiMapping" fieldType="string" aura:id="relatedObjectField" label="Relationship Field" value="{!v.apiResourceMapping}"/>
+              </div>
+              <!-- /.slds-form -->
+            </div>
+            <!-- /.slds-col -->
+          </div>
+          <!-- /.slds-modal__content -->
+          <div class="slds-modal__footer slds-text-align--right">
+            <button class="slds-button slds-button--neutral" data-dismiss="modal" >{!$Label.Framework.Cancel}</button>
+            <Framework:Button onClickAction="{!c.saveResourceMapping}" type="brand" additionalClasses="slds-m-left--xx-small" label="{!$Label.Framework.Save}" aura:id="saveMappingButton"></Framework:Button>
+          </div>
+          <!-- /.slds-modal__footer -->
+      </div>
+    </div>
+  </div>
+  <div class="modal fade slds-modal slds-fade-in-open" id="modalApiResourceVariable">
+    <div class="modal-dialog slds-modal__container">
+      <div class="modal-content">
+        <div class="slds-modal__header">
+          <h2 class="slds-text-heading--medium">{!v.modalApiResourceVariableHeader}</h2>
+          <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal">
+            <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+            <span class="slds-assistive-text">Close</span>
+          </button>
+          <!-- /.slds-button -->
+        </div>
+        <!-- /.slds-modal__header -->
+          <div class="slds-modal__content slds-object-height--max-half slds-scrollable--y">
+            <div class="slds-col slds-size--1-of-1">
+              <div class="slds-form">
+                <Framework:InputFields group="apiVariable" fieldType="string" isRequired="true" aura:id="fieldApiName" label="Api Field" value="{!v.apiResourceVariable}"/>
+                <Framework:InputFields group="apiVariable" fieldType="string" aura:id="fieldApiValue" label="Field Value" value="{!v.apiResourceVariable}"/>
+                <Framework:InputFields group="apiVariable" fieldType="string" aura:id="defaultValue" label="Default Value" value="{!v.apiResourceVariable}"/>
+                <Framework:InputFields group="apiVariable" fieldType="boolean" aura:id="required" label="Is Required" value="{!v.apiResourceVariable}"/>
+              </div>
+              <!-- /.slds-form -->
+            </div>
+            <!-- /.slds-col -->
+          </div>
+          <!-- /.slds-modal__content -->
+          <div class="slds-modal__footer slds-text-align--right">
+            <button class="slds-button slds-button--neutral" data-dismiss="modal" >{!$Label.Framework.Cancel}</button>
+            <Framework:Button onClickAction="{!c.saveResourceVariable}" type="brand" additionalClasses="slds-m-left--xx-small" label="{!$Label.Framework.Save}" aura:id="saveResourceVariable"></Framework:Button>
+          </div>
+          <!-- /.slds-modal__footer -->
+      </div>
+    </div>
+  </div>
+  <Framework:MessagePrompt title="{!$Label.Framework.Delete_API_Mapping_API_Resource}" message="{!$Label.Framework.Delete_API_Mapping_Description_API_Resource}" submitOnClickAction="{!c.deleteMappingObject}" aura:id="deleteMappingModal"/>
+  <Framework:MessagePrompt title="{!$Label.Framework.Delete_API_Variable_API_Resource}" message="{!$Label.Framework.Delete_API_Variable_Description_API_Resource}" submitOnClickAction="{!c.deleteVariableObject}" aura:id="deleteVariableModal"/>
+</aura:component>

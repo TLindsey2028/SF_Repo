@@ -1,0 +1,218 @@
+<aura:component description="ConfEventMainView" implements="LTE:EventInterface" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="EventToggleSideNavEvent" type="LTE:EventToggleSideNavEvent"/>
+    <aura:handler event="LTE:EventChangePageEvent" action="{!c.handleEventChangePageEvent}"/>
+    <aura:handler event="LTE:HashChangedEvent" action="{!c.handleHashChangedEvent}"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:registerEvent name="HashChangingEvent" type="LTE:HashChangingEvent"/>
+    <aura:registerEvent name="EventRegisterButtonToggleEvent" type="LTE:EventRegisterButtonToggleEvent"/>
+    <aura:attribute name="menuNumber" type="Integer"/>
+    <aura:attribute name="expandAtScrollWidth" type="Integer" default="0"/>
+
+    <div aura:id="eventMainView">
+        <aura:if isTrue="{!v.eventObj.eventPages.length > 0}">
+            <div class="fonteva-slds--navbar slds-theme_shade">
+                <div class="fonteva-navbar--container slds-p-vertical_x-small fonteva-slds--navbar" id="navbar">
+                    <div class="slds-grid fonteva-navbar_mobile" aura:id="navbarResponsive">
+                        <aura:if isTrue="{!not(empty(v.eventObj.logoImage))}">
+                            <div class="slds-col slds-grow-none slds-shrink-none slds-show_small fonteva-client_logo slds-p-left_large fonteva-navbar_title">
+                                <img src="{!v.eventObj.logoImage}"/>
+                            </div>
+                        </aura:if>
+                        <div class="slds-col slds-grid slds-grid_vertical slds-grid_align-space fonteva-width_full slds-p-horizontal_large">
+                            <div class="slds-grid slds-grid_align-spread slds-show_small">
+                                <div class="slds-align-middle fonteva-event_title-wrapper">
+                                    <div class="slds-text-heading_medium slds-font-weight--semi-bold fonteva-event_title">
+                                        <aura:if isTrue="{!v.eventObj.enableEventDisplayNameAndDT == true}">
+                                            {!v.eventObj.name}
+                                        </aura:if>
+                                    </div>
+                                </div>
+                                <div class="slds-grid slds-gutters_medium">
+                                    <div class="slds-col slds-grow-none slds-align-middle slds-grid">
+                                        <div class="slds-show_large fonteva-event_supernav-text slds-grid slds-wrap">
+                                            <aura:if isTrue="{!v.eventObj.locationAndDate != null}">
+                                                <span>{!v.eventObj.locationAndDate}</span>
+                                                <aura:set attribute="else">
+                                                    <aura:if isTrue="{!and(v.eventObj.enableEventDisplayNameAndDT == true, v.eventObj.primaryLocation != null)}">
+                                                        <span>{!v.eventObj.primaryLocation}<span>,&nbsp;</span></span>
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!v.eventObj.enableEventDisplayNameAndDT == true}">
+                                                        <span>{!v.eventObj.eventDurationStringDates}
+                                                            &nbsp;{!v.eventObj.eventDurationStringTimes}</span>
+                                                    </aura:if>
+                                                </aura:set>
+                                            </aura:if>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-grow-none slds-border_right slds-border_left slds-align-middle">
+                                        <LTE:AddToCalendar eventObj="{!v.eventObj}"/>
+                                    </div>
+                                    <div class="slds-col slds-grow-none slds-grid slds-align-middle">
+                                        <aura:if isTrue="{!and(v.usr.contactId != null,v.usr.isAuthenticated,not(v.usr.isContactAuthenticated))}">
+                                            <aura:if isTrue="{!!v.attendeeObj.hasAttendees}">
+                                                <a class="slds-nav--link slds-nav-bordered" href="javascript:void(0);" onclick="{!c.logout}" aura:id="registration-panel" data-name="registration-panel">
+                                                   {!$Label.LTE.Logout_Tab_Name}
+                                                </a>
+                                            </aura:if>
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(!v.usr.isAuthenticated,!v.isPreview)}">
+                                            <a class="slds-nav--link slds-nav-bordered" href="javascript:void(0);" onclick="{!c.showLogin}" aura:id="login-panel" data-name="login-panel">
+                                               {!$Label.LTE.Login_Tab_Name}
+                                            </a>
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.attendeeObj.hasAttendees,v.usr.isAuthenticated)}">
+                                            <aura:if isTrue="{!or(!v.eventObj.isInvitationOnly,v.attendeeObj.invitationAccepted)}">
+                                                <div class="slds-align-middle slds-nav-bordered slds-nav--link__dropdown slds-dropdown-trigger slds-dropdown-trigger__static slds-show_small slds-shrink-none">
+                                                    <button class="slds-button slds-button--icon slds-truncate"
+                                                            aria-haspopup="true" title="Show More">
+                                                        <span class="slds-show_medium">{!v.usr.usrName}
+                                                            <lightning:icon iconName="utility:down"
+                                                                            class="slds-m-left_x-small" variant="inverse"
+                                                                            size="x-small"/></span>
+                                                        <span class="slds-hide_medium"><lightning:icon variant="inverse"
+                                                                                                       alternativeText="profile"
+                                                                                                       iconName="utility:user"
+                                                                                                       size="x-small"/> </span>
+                                                    </button>
+                                                    <div class="slds-dropdown slds-dropdown_right">
+                                                        <ul data-name="userActions" class="slds-dropdown__list" role="menu">
+                                                            <li class="slds-dropdown__item" role="presentation">
+                                                                <a onclick="{!c.showMyRegistration}"
+                                                                   aura:id="registrationupdateAttendeeanel">
+                                                                    <span class="slds-truncate">{!$Label.LTE.Manage_Registration_Tab_Name}</span>
+                                                                </a>
+                                                            </li>
+                                                            <li class="slds-dropdown__item" role="presentation">
+                                                                <a onclick="{!c.logout}">
+                                                                    <span class="slds-truncate">{!$Label.LTE.Logout_Tab_Name}</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </aura:if>
+                                        </aura:if>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-grid fonteva-navbar_nested slds-is-relative" aura:id="navWrapper" id="navWrapper">
+                                <div class="slds-grid slds-size_1-of-1" aura:id="navNested">
+                                    <div data-name="showSideNav" class="slds-nav--burger slds-hide_small slds-col slds-align-middle slds-order_2 slds-col_bump-left" data-target="#nav-slide" data-type="slide" onclick="{!c.showSideNav}">
+                                        <lightning:icon iconName="utility:rows" size="small" class=""/>
+                                    </div>
+                                    <div class="slds-grid slds-gutters_medium slds-show_small">
+                                        <aura:iteration items="{!v.eventObj.eventPages}" var="eventPage" indexVar="index">
+                                            <aura:if isTrue="{!index == 0}">
+                                                <a class="slds-col active slds-align-middle slds-show_small" data-type="{!eventPage.name}" onclick="{!c.showTab}" data-name="linkPanel" aura:id="linkPanel" data-title="{!eventPage.title}">
+                                                    <LTE:EventPageName pageName="{!eventPage.name}"/>
+                                                </a>
+                                            </aura:if>
+                                            <aura:if isTrue="{!and(index > 0,v.menuNumber > index)}">
+                                                <a class="slds-col slds-align-middle slds-show_small" data-type="{!eventPage.name}" onclick="{!c.showTab}" data-name="linkPanel" aura:id="linkPanel" data-title="{!eventPage.title}">
+                                                    <LTE:EventPageName pageName="{!eventPage.name}"/>
+                                                </a>
+                                            </aura:if>
+                                        </aura:iteration>
+                                        <aura:if isTrue="{!v.eventObj.eventPages.length > v.menuNumber}">
+                                            <div class="more-button slds-col slds-align-middle slds-nav-bordered slds-nav--link__dropdown slds-dropdown-trigger slds-dropdown-trigger__static slds-show_small slds-shrink-none">
+                                                <span>
+                                                    {!$Label.LTE.More_Pages}
+                                                    <lightning:icon iconName="utility:down" class="fonteva-dropdown_icon-custom" variant="inverse" size="x-small"/>
+                                                </span>
+                                                <div class="slds-dropdown fonteva-slds--navbar slds-dropdown_right">
+                                                    <ul data-name="eventPages" class="slds-dropdown__list" role="menu">
+                                                        <aura:iteration items="{!v.eventObj.eventPages}" var="eventPage" indexVar="index">
+                                                            <aura:if isTrue="{!index >= v.menuNumber}">
+                                                                <li class="slds-dropdown__item" role="presentation">
+                                                                    <a class="" data-type="{!eventPage.name}" onclick="{!c.showTab}" data-name="linkPanel" aura:id="linkPanel" data-title="{!eventPage.title}">
+                                                                        <LTE:EventPageName pageName="{!eventPage.name}"/>
+                                                                    </a>
+                                                                </li>
+                                                            </aura:if>
+                                                        </aura:iteration>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                    </div>
+                                    <div class="slds-col_bump-left slds-shrink-none slds-show_small slds-align-middle">
+                                        <aura:if isTrue="{!and(v.eventObj.allowReg, !v.attendeeObj.hasAttendees )}">
+                                            <aura:if isTrue="{!not(v.eventObj.isInvitationOnly )}">
+                                            <Framework:Button qaData='{"type" : "button", "name": "registerButton"}'
+                                                              type="heroBtn"
+                                                              label="{!$Label.LTE.Event_Register_Now_Button}"
+                                                              onClickAction="{!c.registerEvent}"
+                                                              aura:id="registerButton"/>
+
+                                            </aura:if>
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(!v.eventObj.allowReg, !empty(v.eventObj.closedStatusText,!v.isSoldOut))}">
+                                            {!v.eventObj.closedStatusText}
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(!v.eventObj.allowReg, v.eventObj.isSoldOut)}">
+                                          {!$Label.LTE.Event_Sold_Out}
+                                        </aura:if>
+                                      <aura:if isTrue="{!and(v.eventObj.isInvitationOnly, v.attendeeObj.isCancelled)}">
+                                        {!$Label.LTE.RSVP_Ticket_Cancelled}
+                                      </aura:if>
+                                    </div>
+                                  <div class="slds-hide_small slds-grid">
+                                        <aura:if isTrue="{!not(empty(v.eventObj.logoImage))}">
+                                            <div class="slds-align-middle fonteva-client_logo fonteva-navbar_title slds-p-right_medium ">
+                                                <img src="{!v.eventObj.logoImage}"/>
+                                            </div>
+                                        </aura:if>
+                                        <div class="fonteva-sidebar_close">
+                                            <lightning:buttonIcon iconName="utility:close" alternativeText="close" onclick="{!c.showSideNav}" variant="bare-inverse" class="fonteva-button_clear"/>
+                                        </div>
+                                        <div class="slds-align-middle slds-text-heading_small fonteva-navbar_title">
+                                            {!v.eventObj.name}
+                                        </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aura:if>
+        <div class="fonteva-content-wrapper">
+            <div class="slds-grid">
+                <div class="slds-col slds-company-header slds-grid slds-wrap slds-grid--vertical-align-center" id="companyHeader"/>
+            </div>
+            <div data-name="page-details" class="slds-grid" aura:id="page-details">
+                <div class="slds-col slds-grid">
+                    <aura:iteration items="{!v.eventObj.eventPages}" var="eventPage" indexVar="index">
+                        <aura:if isTrue="{!index == 0}">
+                            <div data-name="viewPanel" class="slds-size--1-of-1" aura:id="viewPanel" data-type="{!eventPage.name}">
+                                <LTE:EventPage eventObj="{!v.eventObj}" siteObj="{!v.siteObj}" storeObj="{!v.storeObj}" attendeeObj="{!v.attendeeObj}" pageObj="{!eventPage}" usr="{!v.usr}" isPreview="{!v.isPreview}" index="{!index}"/>
+                            </div>
+                            <aura:set attribute="else">
+                                <div data-name="viewPanel" class="slds-size--1-of-1 hidden" aura:id="viewPanel" data-type="{!eventPage.name}">
+                                    <LTE:EventPage eventObj="{!v.eventObj}" siteObj="{!v.siteObj}" storeObj="{!v.storeObj}" attendeeObj="{!v.attendeeObj}" pageObj="{!eventPage}" usr="{!v.usr}" isPreview="{!v.isPreview}" index="{!index}"/>
+                                </div>
+                            </aura:set>
+                        </aura:if>
+                    </aura:iteration>
+                    <aura:if isTrue="{!and(!v.usr.isAuthenticated,!v.isPreview)}">
+                        <div data-name="viewPanel" class="slds-size--1-of-1 hidden"
+                             aura:id="viewPanel" data-type="login">
+                            <div aura:id="loginDiv"/>
+                        </div>
+                    </aura:if>
+                    <div data-name="viewPanel" class="slds-size--1-of-1 hidden"
+                         aura:id="viewPanel" data-type="manage">
+                        <div aura:id="manageDiv"/>
+                    </div>
+                </div>
+            </div>
+            <aura:if isTrue="{!and(v.attendeeObj != null,v.usr.isAuthenticated)}">
+                <div data-name="registration-details" class="slds-grid hidden" aura:id="registration-details">
+                    <div data-name="manageReg" class="slds-col slds-grid" aura:id="manageReg">
+                    </div>
+                </div>
+            </aura:if>
+        </div>
+    </div>
+</aura:component>

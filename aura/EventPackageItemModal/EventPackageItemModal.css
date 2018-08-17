@@ -1,0 +1,63 @@
+.THIS .slds-form-element.slds-size_2-of-3 .slds-select_container,
+.THIS .slds-form-element.slds-size_1-of-3 .slds-select_container {
+    display: inline-flex; 
+}
+
+.THIS .slds-badge {
+    color: white !important;
+}
+
+.THIS.slds-backdrop_open,
+.THIS.slds-backdrop--open {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.4s linear;
+}
+
+.THIS .slds-modal__header_empty, .THIS .slds-modal__header--empty {
+    padding: 0px;
+    border-bottom: 0px;
+}
+
+.THIS .slds-modal__content {
+    padding: 0!important;
+}
+
+.THIS .fonteva-modal_footer:before {
+    display: none;
+}
+
+.THIS.fonteva-modal_container {
+    z-index: 9001!important;
+    height: 80!important;
+}
+
+@media (max-width: 48em) {
+    .THIS .fonteva-modal {
+        margin: 0;
+        padding: 0;
+    }
+    .THIS .fonteva-modal_body-item {
+        max-height: 100%;
+    }
+    .THIS .slds-col.slds-size_1-of-1.slds-small-size_1-of-3 {
+        margin-bottom: small;
+    }
+    .THIS .fonteva-max-small-m-top_small {
+        margin-top: .75rem
+    }
+}
+.THIS .fonteva-modal_body-item {
+    padding: 1.5rem 1.5rem 0;
+    background-color: white;
+    overflow-y: auto;
+    max-height: 30rem;
+}
+
+.THIS .fonteva-modal_footer {
+    background-color: white;
+}
+
+.THIS .slds-form-element.slds-size_1-of-3 {
+    width: 100%!important;
+}

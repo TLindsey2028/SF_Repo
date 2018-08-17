@@ -1,0 +1,6 @@
+<design:component label="Prospect Queue">
+    <design:attribute name="prospectname" label="Prospect" description="Name of the prospect" />
+    <sfdc:objects>
+        <sfdc:object>AQB__ProspectQueue__c</sfdc:object>
+    </sfdc:objects>
+</design:component>

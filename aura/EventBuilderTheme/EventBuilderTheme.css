@@ -1,0 +1,11 @@
+.THIS.tab--transparent {
+    background: transparent!important;
+}
+
+.THIS .color-picker .input-fields-span {
+    width: 230px!important;
+}
+
+.THIS .banner-image-modal {
+    min-width: 78rem !important;
+}

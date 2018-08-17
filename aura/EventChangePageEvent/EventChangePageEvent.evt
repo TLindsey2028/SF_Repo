@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="EventChangePageEvent" access="global">
+    <aura:attribute name="title" type="String" required="true"/>
+    <aura:attribute name="type" type="String" required="true"/>
+</aura:event>

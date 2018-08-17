@@ -1,0 +1,132 @@
+<aura:component description="CreditCardPayment" controller="OrderApi.CreditCardPaymentsController" implements="OrderApi:CustomPaymentTypeInterface">
+    <ltng:require scripts="{!$Resource.Framework__UrlUtil}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute type="String" name="salesOrderId"/>
+    <aura:attribute name="paymentGateway" type="Object"/>
+    <aura:attribute name="pathPrefix" type="String" default=""/>
+    <aura:attribute name="showAddressInFrame" type="Map"/>
+    <aura:attribute name="asPayment" type="Boolean" default="true"/>
+    <aura:attribute name="contact" type="String"/>
+    <aura:attribute name="messageInitialized" type="Boolean" default="false"/>
+    <aura:attribute name="wipeInputAfterSuccess" type="Boolean" default="false"/>
+    <aura:attribute name="labelStyleClasses" type="String" default=""/>
+    <aura:attribute name="contactName" type="String"/>
+    <aura:attribute name="errorsShown" type="Boolean" default="false"/>
+    <aura:attribute name="globalNameField" type="String"/>
+    <aura:attribute name="environmentKey" type="String" required="true"/>
+    <aura:attribute name="isFrontEnd" type="Boolean" default="true"/>
+    <aura:attribute name="creditCardObj" type="Map" default="{}"/>
+    <aura:attribute name="creditCardReturnObj" type="Object"/>
+    <aura:attribute name="iFrameStyles" type="String"/>
+    <aura:attribute name="textColor" type="String"/>
+    <aura:attribute name="displaySavePaymentMethod" type="Boolean" default="true"/>
+    <aura:attribute name="forceSavePayment" type="Boolean" default="false"/>
+    <aura:attribute name="showTokenizeButton" type="Boolean" default="false"/>
+    <aura:attribute name="addressObj" type="Map" default="{}"/>
+    <aura:attribute name="uniqueId" type="String"/>
+    <aura:attribute name="iFrameUrl" type="String"/>
+    <aura:attribute name="isPortal" type="Boolean" access="public" default="false"/>
+    <aura:attribute name="isThemed" type="Boolean"/>
+    <aura:registerEvent name="CreditCardTokenizeEvent" type="OrderApi:CreditCardTokenizeEvent"/>
+    <aura:registerEvent name="ButtonToggleIndicatorEvent" type="Framework:ButtonToggleIndicatorEvent"/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:registerEvent name="StopIndicatorEvent" type="OrderApi:StopIndicatorEvent"/>
+    <aura:registerEvent name="CreditCardValidateEvent" type="OrderApi:CreditCardValidateEvent"/>
+	  <aura:handler event="OrderApi:SalesOrderUpdateEvent" action="{!c.handleSalesOrderUpdate}"/>
+    <aura:handler event="OrderApi:CreditCardContactUpdateEvent" action="{!c.handleCCContactUpdateEvent}"/>
+    <aura:method name="updatePaymentGateway" action="{!c.updateGateway}"/>
+    <aura:method name="tokenizeCC" action="{!c.tokenizeCC}">
+    <aura:attribute name="onlyValidate" type="Boolean" default="false"/>
+    </aura:method>
+    <aura:method name="showForm" action="{!c.showForm}">
+        <aura:attribute name="formHtml" type="String" required="true"/>
+    </aura:method>
+    <aura:method name="resetForm" action="{!c.resetForm}"/>
+    <aura:attribute name="isCCValidated" type="Boolean" default="false"/>
+    <aura:attribute name="isCCValidateSuccess" type="Boolean" default="false"/>
+
+    <div data-name="spreedly-payment-form" aura:id="spreedly-payment-form">
+        <aura:if isTrue="{!not(empty(v.customPaymentTypeObj.instructions))}">
+            <div data-name="instructions" class="slds-col">
+                <ui:outputRichText linkify="true" value="{!v.customPaymentTypeObj.instructions}" class="fonteva-paypal-label slds-m-bottom--x-large payment-rich-text"/>
+            </div>
+        </aura:if>
+        <div class="{!v.paymentGateway.ccImageUrl != null ? 'slds-col slds-grid' : 'hidden'}">
+            <div class="slds-size--1-of-1 slds-m-bottom--small slds-m-top-x--small">
+                <div class="cc-images" style="{!'background-image: url(' + v.paymentGateway.ccImageUrl + ')'}"></div>
+            </div>
+        </div>
+        <div class="slds-col slds-grid">
+            <div class="slds-size--1-of-2 slds-m-bottom-x--small" data-name="fullNameWrapper" aura:id="fullNameWrapper">
+                <Framework:InputFields qaData='{"type" : "input", "name": "full_name"}' aura:id="full_name" fieldType="string" isRequired="true" label="{!$Label.OrderApi.Card_Holder_Name}" value="{!v.creditCardObj}"/>
+            </div>
+        </div>
+        <iframe id="{!v.uniqueId}" src="{!v.iFrameUrl}"  frameborder="0" width="100%" height="95px" scrolling="no">
+        </iframe>
+        <div class="slds-col slds-grid">
+            <div class="slds-m-bottom-x--small">
+                <Framework:InputFields qaData='{"type" : "input", "name": "month"}' aura:id="month" fieldType="picklist" label="{!$Label.OrderApi.Exp_Month}" value="{!v.creditCardObj}" isRequired="true"/>
+            </div>
+            <div class="slds-m-bottom-x--small slds-p-horizontal--small">
+                <Framework:InputFields qaData='{"type" : "input", "name": "year"}' aura:id="year" fieldType="picklist" label="{!$Label.OrderApi.Exp_Year}" value="{!v.creditCardObj}" isRequired="true"/>
+            </div>
+        </div>
+        <div class="{!v.paymentGateway.requireEmail ? 'slds-col slds-grid' : 'hidden'}">
+            <div class="slds-size--1-of-2 slds-m-bottom-x--small">
+                <Framework:InputFields qaData='{"type" : "input", "name": "email"}' aura:id="email" fieldType="email" label="{!$Label.OrderApi.Email}" value="{!v.creditCardObj}" isRequired="true"/>
+            </div>
+        </div>
+        <div class="{!v.paymentGateway.requirePhone ? 'slds-col slds-grid' : 'hidden'}">
+            <div class="slds-size--1-of-3 slds-m-bottom-x--small">
+                <Framework:InputFields qaData='{"type" : "input", "name": "phone_number"}' aura:id="phone_number" fieldType="phone" label="{!$Label.OrderApi.Phone}" value="{!v.creditCardObj}" isRequired="true"/>
+            </div>
+        </div>
+        <div class="{!v.displaySavePaymentMethod ? 'slds-col slds-grid' :'hidden'}">
+            <div class="slds-col slds-size--1-of-1 slds-align-middle">
+                <Framework:InputFields qaData='{"type" : "input", "name": "savePaymentMethod"}' aura:id="savePaymentMethod" fieldType="boolean" label="{!$Label.OrderApi.Save_Payment_Method_Checkbox_Label}" value="{!v.creditCardObj}"/>
+            </div>
+        </div>
+        <div class="slds-col slds-grid">
+            <div class="slds-col slds-size--1-of-1 slds-m-bottom--medium">
+                <div class="slds-text-heading_small"><strong>{!$Label.OrderApi.Billing_Address_CC}</strong></div>
+            </div>
+        </div>
+        <div class="slds-col slds-grid">
+            <div data-name="knownAddresses" class="slds-col slds-size--1-of-1 slds-m-bottom-x--small">
+                <OrderApi:KnownAddresses isThemed="{!v.isThemed}" isPortal="{!v.isPortal}" createModalAddressHeader="{!$Label.OrderApi.Known_Address_New_Billing_Address}" editModalAddressHeader="{!$Label.OrderApi.Known_Address_Edit_Billing_Address}" aura:id="knownAddresses" showNoAddressText="true" contactId="{!v.contact}" value="{!v.creditCardObj.billingAddress}" uniqueId="creditCard" salesOrderId="{!v.salesOrderId}" paymentGateway="{!v.paymentGateway}"/>
+            </div>
+        </div>
+        <div class="{!v.showTokenizeButton ? 'slds-col slds-grid slds-grid--align-center' : 'hidden'}">
+            <div class="slds-m-bottom--medium">
+                <Framework:Button type="brand" label="Tokenize" qaData='{"type" : "button", "name": "tokenizeCCBtn"}' aura:id="tokenizeCCBtn" onClickAction="{!c.tokenizeCC}"/>
+            </div>
+        </div>
+    </div>
+    <div aria-hidden="false" role="dialog" class="slds-modal authorize-modal" data-name="3DSFormModal" aura:id="3DSFormModal">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium" id="modal-heading-label">
+                    {!$Label.OrderApi.ThreeDS_Form_Title}
+                </h2>
+                <button data-name="Cancel" class="slds-button slds-modal__close slds-button--icon-inverse" data-close="modal" title="Close" onclick="{!c.closeModal}">
+                    <lightning:icon iconName="utility:close" size="medium"/>
+                    <span class="slds-assistive-text">Cancel</span>
+                </button>
+            </div>
+            <div class="slds-modal__content slds-p-horizontal--medium slds-p-vertical--x-large">
+                <div class="slds-grid">
+                    <div class="slds-size--1-of-1 slds-p-top--medium slds-text-align--center">
+                        {!$Label.OrderApi.ThreeDS_Form_Body}
+                    </div>
+                </div>
+                <div class="slds-grid">
+                    <div class="slds-size--1-of-1 slds-p-bottom--x-small">
+                        <div id="3dsForm" data-name="3dsForm" aura:id="3dsForm" class="3dsForm slds-text-align--center slds-p-vertical--medium"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop" data-name="modalBackdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+    <Framework:MessagePrompt severity="error" title="{!$Label.OrderApi.Cannot_Accept_3DS}" message="{!$Label.OrderApi.Cannot_Accept_3DS_Message}" showSubmitButton="false" aura:id="threeDSErrorModal"/>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

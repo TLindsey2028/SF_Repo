@@ -1,0 +1,5 @@
+<aura:component description="EventBuilderEditor" implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="EventApi.EventBuildQuickActionsController">
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="eventObj" type="Object"/>
+    <aura:dependency resource="EventApi:EventBuilderTemplate"/>
+</aura:component>

@@ -1,0 +1,1 @@
+<aura:event type="COMPONENT" description="Extends on click event for button"/>

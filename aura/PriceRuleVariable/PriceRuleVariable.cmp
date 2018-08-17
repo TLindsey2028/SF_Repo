@@ -1,0 +1,28 @@
+<aura:component description="PriceRuleVariable">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="variableObj" type="Map" default="{}"/>
+    <aura:attribute name="contactFields" type="Object[]"/>
+    <aura:attribute name="accountFields" type="Object[]"/>
+    <aura:attribute name="groupName" type="String"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:registerEvent name="DeletePriceRuleVariable" type="OrderApi:DeletePriceRuleVariable"/>
+    <div class="slds-grid slds-size--1-of-1">
+        <div class="slds-col slds-size--1-of-4 slds-p-horizontal--small">
+            <Framework:InputFields group="{!v.groupName}" fieldType="picklist" aura:id="objectName" label="" value="{!v.variableObj}" labelStyleClasses="slds-hide " fireChangeEvent="true"/>
+        </div>
+        <div class="slds-col slds-size--1-of-4 slds-p-horizontal--small">
+            <Framework:InputFields group="{!v.groupName}" fieldType="picklist" aura:id="field" label="" value="{!v.variableObj}" labelStyleClasses="slds-hide " fireChangeEvent="true"/>
+        </div>
+        <div class="slds-col slds-size--1-of-4 slds-p-horizontal--small">
+            <Framework:InputFields group="{!v.groupName}" fieldType="picklist" aura:id="operator" label="" labelStyleClasses="slds-hide " value="{!v.variableObj}"/>
+        </div>
+        <div class="slds-col slds-size--1-of-4 slds-p-horizontal--small" aura:id="valueField">
+        </div>
+        <div class="slds-col slds-p-top--x-small">
+            <Framework:Button aura:id="deleteRow" group="{!v.group}" type="icon" onClickAction="{!c.deleteVariableRow}"
+                              label="&nbsp;"
+                              svgPath="{!$Resource.OrderApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#clear'}"
+                              svgClass="slds-button__icon" svgAssistiveText="Delete Criteria" enableProgressIndicator="false" />
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,12 @@
+.THIS .slds-object--custom {
+    background-color: rgba(126, 140, 153, 0.8);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left:0;
+    right:0;
+    z-index:100;
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
+}

@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="AnalyticsEvent" access="global">
+    <aura:attribute name="pageName" type="String" required="true" access="global"/>
+	<aura:attribute name="event" type="String" default="pageview" access="global"/>
+	<aura:attribute name="trackerId" type="String" default="UA-35884772-9" access="global"/>
+</aura:event>

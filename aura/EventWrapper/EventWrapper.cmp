@@ -1,0 +1,315 @@
+<aura:component description="EventWrapper" implements="PagesApi:FontevaBaseInterface" controller="LTE.EventRegistrationController" access="global">
+    <aura:attribute name="so" type="Map" access="private"/>
+    <ltng:require styles="{!join(',',$Resource.Framework__SLDS_BaseV2+'/css/styles.css',$Resource.LTE__SLDS_Lens+'/css/reg_navbar.css') }" scripts="{!join(',',$Resource.Framework__SLDS_BaseV2+'/js/lodash.min.js',$Resource.PagesApi__FontevaHelper+'/FontevaHelper.js')}" afterScriptsLoaded="{!c.doInit}"/>
+    <ltng:require styles="{!join(',',$Resource.Framework__SLDS_BaseV2+'/css/styles.css',$Resource.LTE__SLDS_Lens+'/css/reg_navbar.css') }" scripts="{!join(',',$Resource.Framework__ActionUtils,$Resource.Framework__SLDS_BaseV2+'/js/lodash.min.js',$Resource.PagesApi__FontevaHelper+'/FontevaHelper.js')}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:handler event="Framework:ShowComponentEvent" action="{!c.handleSwitchComponent}"/>
+    <aura:handler event="LTE:EventCancelRegistrationEvent" action="{!c.handleCancelRegistration}"/>
+    <aura:handler event="LTE:ConfirmWaitlistEvent" action="{!c.handleConfirmWaitlistEvent}"/>
+    <aura:handler event="LTE:HashChangingEvent" action="{!c.handleHashChangingEvent}"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:registerEvent name="HashChangedEvent" type="LTE:HashChangedEvent"/>
+    <aura:registerEvent name="Toast" type="force:showToast"/>
+    <aura:attribute name="eventFooter" type="String" default="" />
+    <aura:handler event="LTE:EventRegistrationFlowSummaryEvent" action="{!c.summaryModal}"/>
+    <aura:handler event="LTE:SessionSelectEvent" action="{!c.updateSalesOrder}"/>
+
+    <style>
+        @media (max-width: 30em) {
+          body { overflow: hidden; }
+          .slds-page {
+            overflow-y: auto; /* remove */
+          }
+        }
+        body .uiContainerManager {
+            display: none;
+        }
+        .slds-col--padded.contentRegion.comm-layout-column {
+          padding-top: 0;
+          padding-bottom: 0;
+        }
+
+        .slds-col--padded.comm-content-footer.comm-layout-column {
+          display: none;
+        }
+        html {
+            height: 100%;
+        }
+        body  {
+            padding-top: 0px!important;
+            height: 100%;
+        }
+        .cCenterPanel {
+            max-width: 100%!important;
+        }
+        .ui-widget {
+            margin: 0px!important;
+        }
+        .slds-col--padded.contentRegion {
+            padding-right: 0;
+            padding-left: 0;
+        }
+
+        .noscroll {
+            overflow: hidden;
+            position: relative;
+        }
+        .tns-controls {
+            z-index: 1001;
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            margin-left: -3px;
+            transform: translateY(-28px);
+            pointer-events: none;
+        }
+
+        .slds-col--padded.comm-content-footer.comm-layout-column {
+            background-color: white;
+            z-index: 0;
+            padding-left: 0!important;
+            padding-right: 0!important;
+            position: relative;
+            transition: margin-right .25s ease-in-out;
+        }
+        .slds-col--padded.comm-content-footer.comm-layout-column > div{
+            padding-left: .75rem!important;
+            padding-right: .75rem!important;
+            width: 100vw;
+        }
+
+        .slds-col--padded.comm-content-footer.comm-layout-column.sidenav-active {
+            z-index: 0;
+            overflow: hidden;
+            margin-right: 80vw;
+            transition: margin-right .25s ease-in-out;
+        }
+        .slds-col--padded.comm-content-footer.comm-layout-column.sidenav-active > div {
+            min-width: 100vw;
+            overflow: hidden;
+        }
+
+        body.sidenav-active {
+            overflow: hidden;
+        }
+
+        .fonteva-event-component > div > .fonteva-slider--speakers {
+             margin-left: 1rem;
+        }
+
+        .tns-controls button {
+            pointer-events: auto;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            background-color: rgba(255,255,255,.7);
+            color: #777;
+        }
+
+        .tns-controls button:first-of-type {
+            padding-right: 2px;
+        }
+
+        .tns-controls button:last-of-type {
+            padding-left: 4px;
+        }
+
+        .fonteva-event-component {
+            max-width: 100vw!important;
+        }
+        @media (min-width: 1200px) {
+           .fonteva-event-component {
+               max-width: 1200px!important;
+           }
+        }
+
+        .tns-outer {
+            position: relative;
+            padding-left: 5px!important;
+            padding-right: 5px!important;
+        }
+
+        .tns-nav {
+            display: none;
+        }
+
+        .tns-inner {
+            position: relative;
+            z-index: 1000;
+            overflow: hidden;
+            margin: 0px -7px 0px -4px!important;
+        }
+        .slds-col--padded.contentRegion.comm-layout-column {
+          padding-top: 0!important;
+          padding-bottom: 0!important;
+        }
+        @media (min-width: 768px) {
+            /*.slds-custom-navbar {
+                padding-top: 2.25em !important;
+            }*/
+        }
+
+        .slds-card__header {
+            background-color: #f8f8f8!important;
+            padding: 1rem 1.5rem!important;
+            margin-bottom: 0 important;
+        }
+
+        [data-name="lightningPreview"] {
+            border: 1rem solid white;
+            position: relative;
+        }
+
+        [data-name="lightningPreview"] [data-name="showSideNav"] {
+            pointer-events: none;
+        }
+
+        [data-name="lightningPreview"] .more-button {
+            padding-right: 50px!important;
+        }
+
+        [data-name="lightningPreview"] .more-button .slds-dropdown {
+            left: inherit;
+            transform: inherit;
+        }
+
+        [data-name="lightningPreview"] .more-button .slds-dropdown .slds-dropdown__item > a {
+            justify-content: start!important;
+        }
+
+    </style>
+    <aura:if isTrue="{!v.isPreview}">
+        <style>
+            .slds-preview {
+                padding: 0!important;
+            }
+            .fonteva-slds {
+                width: 100%!important;
+            }
+            .slds-preview span {
+                width: 100%!important;
+            }
+        </style>
+    </aura:if>
+    <aura:if isTrue="{!v.params.record.id == null}">
+        <style>
+            .event-not-found svg use {
+                fill : red!important;
+            }
+        </style>
+        <div class="slds-text-align--center slds-m-top--large">
+            <p class="slds-text-heading--large">{!$Label.LTE.Event_Not_Found_Message}</p>
+            <lightning:icon iconName="utility:close" size="large" class="event-not-found"/>
+        </div>
+        <aura:set attribute="else">
+            <aura:if isTrue="{!empty(v.params.record.bannerImageUrl)}">
+                <style>
+                    .slds-company-header {
+                        height: 0px!important;
+                    }
+                </style>
+                <aura:set attribute="else">
+                    <style>
+                        .slds-company-header {
+                            background: url("{!v.params.record.bannerImageUrl}");
+                    </style>
+                </aura:set>
+            </aura:if>
+            <style>
+
+                .slds-nav--slider .slds-nav--link {
+                    padding: 1.5rem;
+                    text-transform: uppercase;
+                    font-weight: bold;
+                    white-space: nowrap;
+                }
+                .slds-nav--slider .slds-nav--link:hover,
+                .slds-nav--slider .slds-nav--link.active {
+                    cursor: pointer;  }
+                @media (max-width: 768px) {
+                    .slds-medium-show-max {
+                        display: block !important;
+                    }
+                    .slds-medium-show-max.inline {
+                        display: inline-block !important;
+                    }
+                }
+
+                @media (min-width: 1024px) {
+                    .slds-medium-show-max {
+                        display: none !important;
+                    }
+                    .slds-large-show {
+                        display: inherit !important;
+                    }
+                }
+
+                @media (max-width: 479px) and (min-width: 320px) {
+                    .slds-x-small-show-only {
+                        display: block !important;
+                    }
+                    .slds-x-small-show-only.inline {
+                        display: inline-block !important;
+                    }
+                    .slds-small-show,
+                    .slds-small-show--inherit,
+                    .slds-medium-show-only {
+                        display: none !important;
+                    }
+                }
+
+                @media (max-width: 767px) and (min-width: 480px) {
+                    .slds-small-show-only {
+                        display: block !important;
+                    }
+                    .slds-small-show-only.inline {
+                        display: inline-block !important;
+                    }
+                    .slds-small-show--inherit {
+                        display: inherit !important;
+                    }
+                }
+
+                .slds-img--small {
+                    max-width: 50%;
+                }
+                .slds-img--small.center {
+                    margin: 0 auto;
+                    margin-bottom: .75rem;
+                }
+
+                .slds-nav--sticky__user {
+                    height: 100%;
+                    border-right: 1px solid #ccc; }
+                .slds-nav--sticky__user.active {
+                    width: 14.3%;
+                    top: 55px;
+                    left: 0;
+                    z-index: 100; }
+                .slds-nav--sticky__user .slds-nav--link.slds-nav--burger {
+                    display: none; }
+                {!v.params.record.lightningStyles}
+                {!v.params.record.customCSS}
+                .fonteva-event_wrapper.slds-hide {
+                  display: none;
+                }
+                .slds-theme--info.slds-notify--toast.slds-notify.slds-notify--toast.forceToastMessage{
+                    display: flex;
+                    width: calc(100% - 16px);
+                    min-width: 0!important;
+                }
+            </style>
+            <div class="slds">
+                <div aura:id="eventBody" class="fonteva-event_wrapper"/>
+
+                <div class="fonteva-state_fixed">
+                    <LTE:EventRegistrationSummary aura:id="regFlowSummary" regSummaryNested="true" displayDiscount="false" displayTotal="false" siteObj="{!v.params.siteObj}" storeObj="{!v.params.storeObj}"/>
+                </div>
+
+              <PagesApi:CookieUsagePrompt contact="{!v.params.usr.contactId}" site="{!v.params.siteObj.id}" isGuest="{!not(v.params.usr.isAuthenticated)}" isThemed="false"/>
+            </div>
+        </aura:set>
+    </aura:if>
+</aura:component>

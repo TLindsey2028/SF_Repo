@@ -1,0 +1,159 @@
+<aura:component description="KnownAddresses" controller="OrderApi.KnownAddressController" access="global">
+    <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/lodash.min.js'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute name="value" type="Map" default="{}" access="global"/>
+    <aura:attribute name="salesOrderId" type="String"/>
+    <aura:attribute name="paymentGateway" type="Object"/>
+    <aura:attribute name="selectedAddress" type="OrderApi.KnownAddress"/>
+    <aura:attribute name="selectedAddressName" type="String"/>
+    <aura:attribute name="addressNotFoundText" type="String" default="{!$Label.OrderApi.Known_Address_None_Found}"/>
+    <aura:attribute name="isShippingTaxAddress" type="Boolean" default="false"/>
+    <aura:attribute name="addressType" type="String" default="Address"/>
+    <aura:attribute name="addressedLoaded" type="Boolean" default="false"/>
+    <aura:attribute name="knownAddressObj" type="Map" access="global"/>
+    <aura:attribute name="knownAddresses" type="OrderApi.KnownAddress[]" access="global"/>
+    <aura:attribute name="loadKnownAddresses" type="Boolean" default="true" access="global"/>
+    <aura:attribute name="contactId" type="String" required="true" access="global"/>
+    <aura:attribute name="showNoAddressText" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="forceResetToDefaultOnChange" type="Boolean" default="false"/>
+    <aura:attribute name="uniqueId" type="String" default="" access="global"/>
+    <aura:attribute name="showSummary" type="Boolean" access="global" default="false"/>
+    <aura:attribute name="otherAttributes" type="Map" default="{}"/>
+    <aura:attribute name="createModalAddressHeader" type="String" default="{!$Label.OrderApi.Known_Address_New_Address_Modal_Header}" access="global"/>
+    <aura:attribute name="editModalAddressHeader" type="String" default="{!$Label.OrderApi.Known_Address_Edit_Address_Modal_Header}" access="global"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:registerEvent name="KnownAddressChangeEvent" type="OrderApi:KnownAddressChangeEvent"/>
+	<aura:attribute name="isThemed" type="Boolean" default="false" />
+    <aura:attribute name="useBackdrop" type="Boolean" default="true" access="global"/>
+    <aura:attribute name="addressLoadedAction" type="Aura.Action"/>
+    <aura:method name="validate" action="{!c.validate}" access="global"/>
+    <aura:attribute name="validated" type="Boolean" access="global" default="false"/>
+    <aura:attribute name="isPortal" type="Boolean"/>
+    <aura:handler event="OrderApi:SaveKnownAddressEvent" action="{!c.loadAddresses}"/>
+    <aura:handler event="OrderApi:ToggleKnownAddressSummaryEvent" action="{!c.toggleKnownAddressSummaryEventHandler}"/>
+    <aura:method access="global" name="validateSummaryAddress" action="{!c.checkSelectedKnownAddress}"/>
+    <aura:registerEvent name="ToggleCheckoutPanelsEvent" type="OrderApi:ToggleCheckoutPanelsEvent"/>
+    <aura:method name="resetToDefaultAddress" action="{!c.changeAddress}" access="global"/>
+    <aura:method name="openAddressModal" action="{!c.openAddressModal}"/>
+    <aura:method name="reInitialize" action="{!c.doInit}"/>
+    <div class="{!v.isThemed ? 'fonteva-portal' : ''}">
+        <aura:if isTrue="{!v.showSummary}">
+            <div class="slds-grid slds-grid_vertical slds-p-horizontal--large--custom" data-name="addressSummaryDiv" aura:id="addressSummaryDiv">
+                <div class="slds-grid slds-grid_align-spread slds-p-bottom_small slds-wrap">
+                    <div class="slds-grid slds-grid_vertical slds-max-small-size_1-of-1">
+                        <aura:if isTrue="{!v.knownAddressObj.name != null}">
+                            <div data-name="knownAddressObj_name">{!v.knownAddressObj.name}</div>
+                        </aura:if>
+                        <div data-name="knownAddressObj_stname">{!v.knownAddressObj.address.street_name}</div>
+                        <div data-name="knownAddressObj_city_postal">
+                            <aura:if isTrue="{!v.knownAddressObj.address.city != null}">
+                                {!v.knownAddressObj.address.city}
+                            </aura:if>
+                            <aura:if isTrue="{!v.knownAddressObj.address.province != null}">
+                                <aura:if isTrue="{!v.knownAddressObj.address.city != null}">
+                                    ,
+                                </aura:if>
+                                {!v.knownAddressObj.address.province}
+                            </aura:if>
+                            <aura:if isTrue="{!v.knownAddressObj.address.postal_code != null}">
+                                <aura:if isTrue="{!or(v.knownAddressObj.address.province != null,v.knownAddressObj.address.city != null)}">
+                                ,
+                            </aura:if>
+                                {!v.knownAddressObj.address.postal_code}
+                            </aura:if>
+                        </div>
+                        <div data-name="knownAddressObj_country">{!v.knownAddressObj.address.country}</div>
+                    </div>
+                    <div>
+                        <div class="slds-grid slds-grid_vertical slds-max-small-size_1-of-1">
+                            <div class="slds-m-bottom_xx-small slds-hidden">
+                                {!$Label.OrderApi.Known_Address_Change_Summary_Link}
+                            </div>
+                            <div data-name="ka_change_address"><a href="javascript:void(0)" onclick="{!c.changeAddress}">{!$Label.OrderApi.Known_Address_Change_Summary_Link}</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <aura:set attribute="else">
+                <span class="{!v.addressedLoaded ? '' : 'hidden'}">
+                <div class="slds-grid slds-p-bottom_x-small slds-p-top_xx-small slds-m-bottom_large">
+                    <Framework:Button type="brand"
+                                      qaData='{"type" : "button", "name": "addressCreateButton"}'
+                                      aura:id="addressCreateButton"
+                                      additionalClasses="fonteva-portal-button fonteva-button_custom"
+                                      label="{!$Label.OrderApi.Known_Address_New_Address_Button}"
+                                      onClickAction="{!c.openAddressModal}"
+                                      enableProgressIndicator="false"
+                                      lightningIcon="utility:add"
+                                      lightningIconSize="x-small"
+                                      lightningIconVariant="inverse"
+                                      svgContainerClass="slds-float--left slds-m-right--small"/>
+                </div>
+                    <aura:if isTrue="{!and(v.showNoAddressText,v.knownAddresses.length == 0)}">
+                        <aura:if isTrue="{!v.isShippingTaxAddress}">
+                            <div class="fonteva-slds-text slds-m-bottom_large">
+                                {!v.addressNotFoundText}
+                            </div>
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{!or(v.paymentGateway.enableAVSZipOnly,v.paymentGateway.enableAVS)}">
+                                    <div class="fonteva-slds-text slds-m-bottom_large">
+                                        {!v.addressNotFoundText}
+                                    </div>
+                                    <aura:set attribute="else">
+                                        <div class="fonteva-slds-text slds-m-bottom_large">
+                                            {!$Label.OrderApi.Address_Optional}
+                                        </div>
+                                    </aura:set>
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>
+                        <aura:set attribute="else">
+                            <div class="slds-grid slds-m-bottom_small fonteva-slds-text">
+                                <div class="slds-form-element__control">
+                                    <aura:iteration items="{!v.knownAddresses}" var="knownAddress">
+                                        <div data-name="known-addresses-list" class="slds-grid slds-m-bottom_small address-text--fonteva">
+                                            <div data-name="know-addresses-radio" class="slds-p-top_xxx-small radio-button-known-address--fonteva">
+                                                <Framework:InputFields qaData='{"type" : "input", "name": "selectedAddress"}' fieldType="radio" label="" labelStyleClasses="slds-hide" fireChangeEvent="true"
+                                                aura:id="selectedAddress" group="{!v.uniqueId}" secondaryGroup="{!knownAddress.id}" value="{!knownAddress}"
+                                                                       otherAttributes="{!v.otherAttributes}"/>
+                                            </div>
+                                            <div data-name="know-addresses-text" class="slds-p-left_x-small">
+                                                <strong class="slds-m-right_xx-small">{!knownAddress.name}</strong>
+                                                {!knownAddress.address.street_name}
+                                               <aura:if isTrue="{!knownAddress.address.city != null}">
+                                                    <aura:if isTrue="{!knownAddress.address.street_name != null}">
+                                                        ,
+                                                    </aura:if>
+                                                    {!knownAddress.address.city}
+                                                </aura:if>
+                                                <aura:if isTrue="{!knownAddress.address.province != null}">
+                                                    <aura:if isTrue="{!knownAddress.address.city != null}">
+                                                        ,
+                                                    </aura:if>
+																									{!knownAddress.address.province}
+                                                </aura:if>
+                                                <aura:if isTrue="{!knownAddress.address.country != null}">
+                                                    <aura:if isTrue="{!knownAddress.address.province != null}">
+                                                        ,
+                                                    </aura:if>
+																									{!knownAddress.address.country}
+                                                </aura:if>
+                                                <aura:if isTrue="{!knownAddress.address.postal_code != null}">
+                                                    <aura:if isTrue="{!knownAddress.address.country != null}">
+                                                        ,
+                                                    </aura:if>
+																									{!knownAddress.address.postal_code}
+                                                </aura:if><a href="javascript:void(0)" class="slds-m-left_medium" onclick="{!c.editAddressModal}" data-name="edit_link" data-id="{!knownAddress.id}">Edit</a>
+                                            </div>
+                                        </div>
+                                    </aura:iteration>
+                                </div>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                </span>
+            </aura:set>
+        </aura:if>
+        <Framework:Toast aura:id="toastMessages"/>
+        <OrderApi:KnownAddressesModal isPortal="{!v.isPortal}" isThemed="{!v.isThemed}" aura:id="knownAddressesModal" useBackdrop="{!v.useBackdrop}" uniqueId="{!v.uniqueId}" contactId="{!v.contactId}" createModalAddressHeader="{!v.createModalAddressHeader}" editModalAddressHeader="{!v.editModalAddressHeader}"/>
+    </div>
+</aura:component>

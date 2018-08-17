@@ -1,0 +1,11 @@
+<aura:component description="EventBuilderSections" implements="EventApi:EventBuilderTabInterface">
+    <aura:dependency resource="markup://EventApi:EventBuilderSectionsListing"/>
+    <aura:dependency resource="markup://EventApi:EventBuilderSection"/>
+    <aura:dependency resource="markup://EventApi:EventBuilderSectionCreateEdit"/>
+    <aura:handler event="Framework:ShowComponentEvent" action="{!c.handleSwitchComponent}"/>
+    <aura:handler event="EventApi:CreateEditSectionEvent" action="{!c.handleCreateEditSectionEvent}"/>
+    <div aura:id="sectionWrapper" id="sectionWrapperId">
+      <EventApi:EventBuilderSectionsListing eventId="{!v.eventObj.eventId}" eventObj="{!v.eventObj}"/>
+    </div>
+    <EventApi:EventBuilderSectionCreateEdit aura:id="sectionCreateEdit" eventObj="{!v.eventObj}"/>
+</aura:component>

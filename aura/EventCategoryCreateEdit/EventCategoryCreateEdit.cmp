@@ -1,0 +1,71 @@
+<aura:component description="EventCategoryCreateEdit" controller="EventApi.EventCategoriesListingController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:handler event="EventApi:EventCategorySiteDeleteEvent" action="{!c.handleEventCategorySiteDeleteEventHandler}"/>
+    <aura:attribute name="category" type="Map" default="{}"/>
+    <aura:attribute name="siteGlobalId" type="String"/>
+    <aura:attribute name="sites" type="Object" default="{}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <div class="slds-page-header">
+        <div class="slds-media slds-media--center">
+            <div class="slds-media__body">
+                <span class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
+                    <aura:if isTrue="{!v.category.id != null}">
+                        Edit Event Category&nbsp;<strong>{!v.category.name}</strong>
+                        <aura:set attribute="else">
+                            Create Event Category
+                        </aura:set>
+                    </aura:if>
+
+                </span>
+                <Framework:Button type="neutral" label="Cancel" onClickAction="{!c.cancelCategory}" enableProgressIndicator="false"/>
+                <span class="slds-float--right">
+                    <Framework:Button type="brand" label="Save and Close" aura:id="saveAndClose" onClickAction="{!c.saveAndClose}"/>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="slds-grid slds-wrap slds-object-height--full__header slds-scrollable--y slds-theme--shade slds-grid--vertical-align-start slds-p-around--small">
+        <div class="slds-size--1-of-1 slds-grid slds-wrap">
+            <div class="slds-size--1-of-1 slds-medium-size--1-of-2">
+                <Framework:InputFields fieldType="string" value="{!v.category}" aura:id="name" isRequired="true" label="Event Category Name" maxlength="80"/>
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 slds-grid slds-wrap">
+            <div class="slds-size--1-of-1 slds-medium-size--1-of-2">
+                <Framework:InputFields fieldType="lookup" value="{!v.category}" aura:id="businessGroup" isRequired="true" label="Business Group" otherAttributes='{"type" : "OrderApi__Business_Group__c","pluralLabel" :"Business Groups","otherMethods": {"dropdownParent": "body"}}'/>
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 slds-grid slds-wrap">
+            <div class="slds-size--1-of-1 slds-medium-size--1-of-2">
+                <span class="slds-text-heading--medium">Select at least one site for your event category.</span>
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 slds-grid slds-wrap">
+            <div class="slds-size--1-of-1 slds-medium-size--1-of-2" aura:id="siteWrapper">
+            </div>
+            <span class="slds-m-left--small slds-m-top--large">
+                <Framework:Button type="brand" label="Add Site" aura:id="addSiteBtn" onClickAction="{!c.addSite}" disable="true"/>
+            </span>
+        </div>
+        <div class="slds-col slds-size--1-of-1 slds-m-bottom--large">
+            <div class="slds-size--1-of-1 slds-medium-size--1-of-2 slds-custom-table-size">
+            <table class="slds-table slds-table--bordered slds-theme--shade slds-no-row-hover">
+                <thead>
+                <tr class="slds-text-heading--label">
+                    <th class="slds-size--1-of-1">SELECTED SITE</th>
+                    <th>DEFAULT</th>
+                    <th class="slds-truncate slds-text-align--right">{!$Label.EventApi.Actions_Event_Builder}</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.category.siteEventCategories}" var="siteEventCategory">
+                        <EventApi:EventCategorySiteTableRow siteEventCategory="{!siteEventCategory}"/>
+                    </aura:iteration>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

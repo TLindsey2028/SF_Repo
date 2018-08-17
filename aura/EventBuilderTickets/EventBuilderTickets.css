@@ -1,0 +1,56 @@
+.THIS .modal-dialog {
+  width: auto!important;
+}
+
+.THIS .boolean-margin .display-element.slds-m-bottom--small {
+  margin-bottom: 0.5rem!important;
+}
+
+.THIS .slds-box.fonteva-box_small {
+    padding: .75rem;
+}
+
+.THIS .strong {
+  font-weight: 700;
+}
+
+.THIS .slds-modal__container {
+  /*max-width: 60rem!important;*/
+}
+
+.THIS .fonteva-modal_parent .slds-modal__container.track-modal > .slds-modal__header,
+.THIS .fonteva-modal_parent .slds-modal__container.track-modal > .slds-modal__footer,
+.THIS .fonteva-modal_parent .slds-modal__container.track-modal .slds-backdrop.slds-backdrop--open {
+  display: none;
+}
+
+.THIS .fonteva-modal_parent .slds-modal__container.track-modal .slds-modal__container {
+  width: 100%;
+}
+
+.THIS .fonteva-modal_parent .slds-modal__container.track-modal > .slds-modal__content {
+  height: 0;
+  padding: 0;
+}
+
+.THIS .strong {
+  font-weight: bold;
+}
+
+.THIS .quantity-div {
+  margin-left: -2.5px;
+}
+
+.THIS .fonteva-tr_nested-elements >td {
+    border: none!important;
+}
+
+.THIS [data-name="ticketsModal"].active > .slds-modal__container > .slds-modal__header,
+.THIS [data-name="ticketsModal"].active > .slds-modal__container > .slds-modal__footer,
+.THIS [data-name="ticketsModal"].active > .slds-modal__container > .tab-content > .slds-tabs--default {
+    display: none;
+}
+
+.THIS [data-name="ticketsModal"].active > .slds-modal__container > .tab-content > .slds-tabs__content.active {
+    height: 0;
+}

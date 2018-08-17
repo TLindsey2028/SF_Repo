@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="UIApiResponseEvent" access="global">
+		<aura:attribute name="uniqueId" type="String" required="true" access="global"/>
+		<aura:attribute name="fields" type="Map" access="global" required="true"/>
+</aura:event>

@@ -1,0 +1,25 @@
+<aura:component description="FormText">
+    <aura:attribute name="formUniqueIdentifier" type="String"/>
+    <aura:attribute name="header" type="String"/>
+    <aura:attribute name="isValidated" type="Boolean"/>
+    <aura:attribute name="instructions" type="String"/>
+    <aura:attribute name="hasInstructions" type="Boolean" default="false"/>
+    <aura:attribute name="isMultiple" type="Boolean" default="false"/>
+    <aura:attribute name="headingSize" type="String" default="slds-text-heading--small"/>
+    <aura:handler event="ROEApi:ShowHideFormInstructionsEvent" action="{!c.handleShowHideFormInstructionsEvent}"/>
+    <div class="{!v.isMultiple ? 'hidden' : 'slds-m-bottom--small'}">
+        <div class="slds-col slds-grid hidden" aura:id="header">
+            <div class="{!v.headingSize +' slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom-x--small'}">
+                {!v.header}
+            </div>
+        </div>
+        <div class="slds-col slds-grid hidden" aura:id="instructions">
+            <div class="slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom-x--small slds-text-body--small">
+                {!v.instructions}
+            </div>
+        </div>
+    </div>
+    <div class="slds-size--1-of-1 slds-p-horizontal--medium hidden" aura:id="instructionsMultiple">
+        {!v.instructions}
+    </div>
+</aura:component>

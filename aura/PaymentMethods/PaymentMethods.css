@@ -1,0 +1,50 @@
+.THIS .slds-icon-add-fonteva {
+    margin-top: 0rem!important;
+}
+
+.THIS .fonteva-modal_parent .payment-container > .slds-modal__header,
+.THIS .fonteva-modal_parent .payment-container > .slds-modal__footer,
+.THIS .fonteva-modal_parent .payment-container > .slds-modal__content .slds-backdrop.slds-backdrop--open {
+    display: none;
+}
+
+.THIS .fonteva-modal_parent .payment-container > .slds-modal__content.payment-comp {
+    height: 0!important;
+    max-height: 0!important;
+    overflow: hidden!important;
+}
+
+@media (min-width: 48em) {
+    .THIS .slds-modal__container .slds-modal__container .slds-medium-size_1-of-4 label.slds-checkbox .slds-form-element__label {
+        position: relative;
+        top: -9px;
+    }
+}
+
+@media(max-width: 48em) {
+    .THIS .slds-modal__container .slds-modal__container .slds-medium-size_1-of-4 {
+        position: relative;
+        top: -1.6rem;
+    }
+    .THIS .slds-modal__container .slds-modal__container .slds-medium-size_1-of-4 label.slds-checkbox .slds-form-element__label {
+        position: relative;
+        top: 0px;
+    }
+}
+
+.THIS .slds-modal__container .slds-modal__container {
+        margin: 0;
+}
+
+.THIS .slds-modal__content.payment-comp {
+    padding: 1rem 2.25rem
+}
+
+.THIS.fonteva-portal .uiInputDefaultError .form-element__help {
+   font-size: 1.2rem;
+   margin-top: 0;
+}
+.THIS.fonteva-portal .slds-select_container select.slds-select {
+   padding-top: .75rem;
+   padding-bottom: .75rem;
+}

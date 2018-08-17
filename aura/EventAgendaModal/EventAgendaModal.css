@@ -1,0 +1,41 @@
+.THIS.fonteva-modal_container {
+    z-index: 9001!important;
+}
+
+.THIS .fonteva-modal_body-content > * {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+@media (min-width: 767px) {
+    .THIS .fonteva-modal_body-content > * {
+        padding: 0;
+    }
+}
+
+.THIS .fonteva-form_wrapper > div {
+    padding: 0;
+}
+
+.THIS .slds-backdrop.slds-backdrop--open {
+    z-index: 9000;
+}
+.THIS .slds-modal.prompt-modal .slds-modal__footer {
+    border-top: none;
+    border-radius: 0;
+}
+
+.THIS .slds-modal.prompt-modal .slds-modal__footer .slds-button--brand {
+    background-color: #ed1f1e!important;
+    border-color: #ed1f1e!important;
+}
+.THIS .slds-modal.prompt-modal .slds-modal__header {
+    border-bottom: none!important;
+}
+.THIS .slds-modal.prompt-modal .slds-modal__content {
+    padding-bottom: 0;
+}
+
+.THIS .slds-modal.prompt-modal .slds-modal__content > .slds-grid.slds-wrap {
+    max-width: 260px;
+    margin: 0 auto;
+}

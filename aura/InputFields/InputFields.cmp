@@ -1,0 +1,131 @@
+<aura:component access="global" controller="Framework.InputFieldController" extends="Framework:BaseComponent">
+    <aura:attribute name="label" default="" description="input name" type="String" access="global"/>
+    <aura:attribute name="id" type="String" access="global" default=""/>
+    <aura:attribute name="fieldType" default="" description="input type field" type="String" access="global"/>
+    <aura:attribute name="stylesheet" default="" description="input stylesheet" type="String" access="global" />
+    <aura:attribute name="value" default="{}" description="input value" type="Map" access="global"/>
+    <aura:attribute name="linkText" type="String" default="" access="global"/>
+    <aura:attribute name="sObjectName" type="String" access="global"/>
+    <aura:attribute name="fieldName" type="String" access="global"/>
+    <aura:attribute name="linkTextAction" type="Aura.Action" access="global"/>
+    <aura:attribute name="suppressValidationMessages" default="false" type="Boolean" access="global"/>
+    <aura:attribute name="validationObj" default="{}" description="validation value" type="Map"/>
+    <aura:attribute name="isRequired" default="false" description="input value" type="Boolean" access="global"/>
+    <aura:attribute name="maxValueValidationMessage" default="Input max value is: " type="String" access="global"/>
+    <aura:attribute name="minValueValidationMessage" default="Input must be greater than: " type="String" access="global"/>
+    <aura:attribute name="helpText" description="Help Text" type="String" access="global"/>
+    <aura:attribute name="selectOptions" default="" description="select options" type="List" access="global"/>
+    <aura:attribute name="maxlength" default="" description="input length" type="Integer" access="global"/>
+    <aura:attribute name="group" default="" description="Group name" type="String" access="global"/>
+    <aura:attribute name="secondaryGroup" default="" description="Group name" type="String" access="global"/>
+    <aura:attribute name="format" description="Format for field" type="String" access="global"/>
+    <aura:attribute name="disabled" description="Disable Field" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="otherAttributes" type="Map" default="{}" description="Other Attributes" access="global"/>
+    <aura:attribute name="validated" type="Boolean" default="true" description="Validated" access="global"/>
+    <aura:attribute name="fireChangeEvent" description="Fire Change Event" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="disableRadioEvent" description="Disable Radio Event" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="customFieldType" description="Custom Field Type" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="styleClasses" description="Addition CSS Classes" type="String" default="" access="global"/>
+    <aura:attribute name="labelStyleClasses" description="Addition CSS Classes for label" type="String" default="" access="global"/>
+    <aura:attribute name="secondaryId" type="String" default="" access="global"/>
+    <aura:attribute name="useSecondaryId" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="isBoolean" type="Boolean" default="false" access="global"/>
+    <!--LOCAL ATTRIBUTES -->
+    <aura:attribute name="globalId" description="Global Id" type="String" default="" access="global"/>
+    <aura:attribute name="errors" description="Errors" type="List" default="[]" access="global"/>
+    <aura:attribute name="loading" type="Boolean" default="true" description="Loaded" access="global"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.isRequired}" action="{!c.showHideRequired}"/>
+    <aura:handler event="Framework:RefreshInputField" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:handler event="Framework:InputFieldValidationEvent" action="{!c.handleFieldValidationEvent}"/>
+    <aura:handler event="Framework:RadioButtonValueChangedEvent" action="{!c.handleRadioButtonValueChangedEvent}"/>
+    <aura:registerEvent name="InputFieldValueChangedEvent" type="Framework:InputFieldValueChangedEvent"/>
+    <aura:registerEvent name="RadioButtonValueChangedEvent" type="Framework:RadioButtonValueChangedEvent"/>
+    <aura:registerEvent name="InputFieldClearErrorMessagesEvent" type="Framework:InputFieldClearErrorMessagesEvent"/>
+    <aura:method name="validate" action="{!c.validate}" access="global"
+                 description="Validate Field">
+    </aura:method>
+    <aura:method name="clearErrorMessages" action="{!c.clearErrorMessages}" access="global"
+                 description="Error Message For Field">
+    </aura:method>
+    <aura:method name="setErrorMessages" action="{!c.setErrorMessages}" access="global"
+                 description="Set Error Messages">
+        <aura:attribute name="errorMessages" type="Array" default="[]" description="Error Message"/>
+    </aura:method>
+    <aura:method name="setSelectOptions" action="{!c.setSelectOptions}" access="global"
+                 description="Validate Field">
+        <aura:attribute name="selectOptions" type="Array" default="[]" description="Select Options"/>
+        <aura:attribute name="value" type="String" default="" description="SelectedValue"/>
+    </aura:method>
+    <aura:method name="setOtherAttributes" action="{!c.setOtherAttributes}" access="global"
+                 description="Set Other Attributes">
+        <aura:attribute name="otherAttributes" type="Object" default="{}" description="Other Attributes"/>
+        <aura:attribute name="forceReInitialization" type="Boolean" default="true" description="Force ReInitialization"/>
+    </aura:method>
+    <aura:method name="updateValue" action="{!c.updateValue}" access="global"
+                 description="Update Value via Method">
+        <aura:attribute name="value" type="String" default="" description="Value To Set"/>
+        <aura:attribute name="refresh" type="Boolean" default="true" description="Fires input change event"/>
+    </aura:method>
+    <aura:method name="clearValue" action="{!c.clearValue}" access="global"
+                 description="Clear Value via Method">
+    </aura:method>
+    <aura:method name="reInitialize" action="{!c.reInitialize}" access="global"
+                 description="Reinitialize Comp">
+    </aura:method>
+    <aura:method name="changeFieldType" action="{!c.changeFieldType}" access="global"
+                 description="Change Field Type">
+        <aura:attribute name="fieldType" type="String" required="true"/>
+        <aura:attribute name="value" type="String" default="" description="SelectedValue"/>
+        <aura:attribute name="otherAttributes" type="Object" default="{}" description="SelectedValue"/>
+    </aura:method>
+  <aura:method name="clearOptions" action="{!c.clearOptions}" access="global"
+               description="Clear Options available for the input"/>
+    <div class="slds-form-element slds-m-bottom--small" aura:id="stencil-field-wrapper">
+        <div class="slds-size--1-of-5 slds-medium-size--1-of-5 slds-large-size--1-of-5 loading-span slds-m-bottom--xx-small">&nbsp;</div>
+        <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+    </div>
+    <div aura:id="input-fields-span" class="hidden input-fields-span" id="{!v.id}">
+        <div class="slds-form-element slds-m-bottom--small display-element hidden" aura:id="boolean-field-wrapper">
+            <span class="{!v.fieldType == 'boolean' || v.fieldType == 'BOOLEAN' ? '' : 'hidden'}">
+                <label class="slds-checkbox" for="{!v.globalId}" aura:id="booleanInputFieldHere">
+                        <span class="slds-checkbox--faux"></span>
+                        <span class="{!v.labelStyleClasses+' slds-form-element__label helper-margin-right'}">
+                                            {!v.label}
+                                        </span>
+                </label>
+            </span>
+            <span class="{!v.fieldType == 'radio' || v.fieldType == 'radio' ? '' : 'hidden'}">
+                <label class="slds-checkbox" for="{!v.globalId}" aura:id="radioInputFieldHere">
+                    <span class="{!v.labelStyleClasses+' slds-form-element__label helper-margin-right slds-m-left--x-small'}">
+                        {!v.label}
+                    </span>
+                </label>
+            </span>
+            <span aura:id="booleanTooltip"/>
+        </div>
+        <div class="slds-form-element display-element hidden" aura:id="field-wrapper">
+            <span class="{!v.fieldType == 'multidragdrop' ? 'slds-show--inline-block slds-m-bottom--x-small' : 'hidden'}">
+                <label class="{!v.labelStyleClasses+' slds-text-body--regular helper-margin-right'}" for="inputSObjectName">
+                    <abbr class="slds-required hidden" title="required" aura:id="drag-required-asterisk">*</abbr>
+                        {!v.label}
+                </label>
+            </span>
+            <span class="{!v.fieldType == 'address' ? 'address-label' : v.fieldType != 'multidragdrop' ? '' : 'hidden' }">
+                <label class="{!v.labelStyleClasses+' slds-form-element__label helper-margin-right'}" for="inputSObjectName">
+                    <abbr class="slds-required hidden" title="required" aura:id="required-asterisk">*</abbr>
+                    {!v.label}
+                </label>
+                <a class="{!v.linkText == '' ? 'hidden' : 'slds-form-element__custom_label slds-p-left--x-small'}" onclick="{!v.linkTextAction}">
+                    {!v.linkText}
+                </a>
+            </span>
+            <span aura:id="mainTooltip"/>
+            <div class="slds-form-element__control slds-m-bottom--small">
+                <div aura:id="inputFieldHere"></div>
+            </div>
+            <!-- /.slds-form-element__control -->
+        </div>
+        <!-- /.slds-form-element -->
+    </div>
+</aura:component>

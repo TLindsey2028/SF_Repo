@@ -1,0 +1,13 @@
+<aura:component access="global">
+  <aura:attribute name="value" type="String" access="global" default="0"/>
+  <aura:handler name="change" value="{!v.value}" action="{!c.valueChanged}"/>
+  <aura:attribute name="currencyISOCode" type="String" required="true" access="global"/>
+  <aura:attribute name="showFreeLabel" type="Boolean" default="true" access="global"/>
+  <aura:attribute name="isMultiCurrencyOrg" type="Boolean" access="global" default="false"/>
+  <aura:attribute name="formattedValue" type="String" access="global"/>
+  <ltng:require scripts="{!join(',',$Resource.Framework__Currency+'/assets/currency/accounting.min.js',$Resource.Framework__Currency+'/assets/currency/currencytable.js')}" afterScriptsLoaded="{!c.initCurrency}"/>
+  <aura:method name="updateValue" action="{!c.updateValue}" access="global">
+    <aura:attribute name="value" type="String" default="" description="Updated Value"/>
+  </aura:method>
+  <span class="currencyInputSpan" name="currencyInputSpan">{!v.formattedValue}</span>
+</aura:component>

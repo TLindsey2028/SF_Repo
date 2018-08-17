@@ -1,0 +1,26 @@
+<aura:component description="InvoiceMe" controller="OrderApi.OfflinePaymentController" implements="OrderApi:CustomPaymentTypeInterface">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="offlinePaymentObj" type="Object" default="{}" description="Offline Payment Lightning Events Form Object"/>
+    <aura:attribute name="salesOrder" type="String"/>
+    <aura:attribute name="successRedirectUrl" type="String"/>
+    <aura:attribute name="paymentSuccessReturnObj" type="Map"/>
+    <aura:method name="postInvoice" action="{!c.postInvoice}"/>
+    <aura:registerEvent name="ButtonToggleIndicatorEvent" type="Framework:ButtonToggleIndicatorEvent"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:attribute name="validated" type="Boolean" default="false"/>
+    <div aura:id="offline-payment-lightning-events-form">
+        <div class="slds-col slds-grid">
+            <aura:if isTrue="{!not(empty(v.customPaymentTypeObj.instructions))}">
+                <div data-name="instructions" class="slds-col">
+                    <ui:outputRichText linkify="true" value="{!v.customPaymentTypeObj.instructions}" class="fonteva-paypal-label slds-m-bottom--x-large payment-rich-text"/>
+                </div>
+            </aura:if>
+        </div>
+        <div class="slds-col slds-grid">
+            <div class=" slds-size--1-of-1 slds-m-bottom-x--small">
+                <Framework:InputFields group="offlinePaymentLightningEventsForm" fieldType="string" isRequired="true" aura:id="referenceNumber" label="{!$Label.OrderApi.Customer_Reference_Number}" value="{!v.offlinePaymentObj}" maxlength="255"/>
+            </div>
+        </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

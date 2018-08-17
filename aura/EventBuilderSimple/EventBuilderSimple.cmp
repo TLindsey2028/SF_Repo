@@ -1,0 +1,186 @@
+<aura:component controller="EventApi.EventsBuilderController">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+  <ltng:require styles="/resource/Framework__SLDS_Base/css/styles.css" scripts="/resource/Framework__SLDS_Base/js/scripts.js,https://s3.amazonaws.com/package-assets/master/emerald/lib/fonteva/helpers.js" /><!--   -->
+  <!-- LOCAL ATTRIBUTES -->
+  <aura:attribute name="eventObj" type="Object" default="{}" description="Event Object"/>
+  <aura:attribute name="eventModalObj" type="Object" default="{}" description="Event Modal Object"/>
+  <aura:attribute name="venueObj" type="Object" default="{}" description="Venue Object"/>
+  <aura:attribute name="autosaving" type="Boolean" default="false" description="Auto Saving"/>
+  <aura:attribute name="isConference" type="Boolean" default="false" description="Is Conference"/>
+  <aura:attribute name="hasSites" type="Boolean" default="false" description="Has Sites"/>
+  <aura:attribute name="dateFormat" type="String" description="Date Format"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+
+  <div class="slds">
+    <div class="slds-grid slds-wrap">
+      <div class="slds-col slds-size--1-of-1">
+        <div class="slds-page-header">
+          <div class="slds-grid slds-p-horizontal--x-small">
+            <div class="slds-has-flexi-truncate">
+              <div class="slds-media">
+                <div class="slds-media__body">
+                  <div class="slds-grid">
+                    <h1 class="slds-text-heading--medium slds-m-right--small slds-truncate slds-align-middle" title="Simple Event">{!$Label.EventApi.New_Event_Event_Builder}</h1>
+                    <div class="slds-col slds-shrink-none">
+                      <button class="slds-button slds-button--neutral slds-m-right--small" aria-live="assertive" onclick="{!c.getEventPrefix}">
+                        {!$Label.EventApi.Cancel}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slds-grid--spread slds-grid slds-align-bottom">
+              <div aura:id="savingEventLoader" class="notUploading slds-m-right--x-small hidden">
+                <img src="/resource/Framework__SLDS_Base/img/spinners/slds_spinner_brand.gif" alt="uploading" class="small-spinner" />&nbsp;{!$Label.EventApi.Saving_Event_Builder}
+              </div>
+               <div class="slds-col slds-grid slds-wrap">
+                 <aura:if isTrue="{!v.hasSites}">
+                     <div class="slds-button-group" role="group">
+                       <span class="slds-button slds-button--neutral slds-button--icon slds-dropdown--trigger event-builder-action-button">
+                         {!$Label.EventApi.Preview_In_Event_Builder}
+                         <Framework:SVG svgPath="/resource/EventApi__SLDS_Icons/icons/utility-sprite/svg/symbols.svg#down" containerClass="slds-icon__container slds-m-left--small" svgClass="slds-icon--xx-small slds-icon-text-brand" assistiveText="{!$Label.EventApi.Save_Close_Event_Builder}" />
+                         <div class="slds-dropdown slds-dropdown slds-dropdown--right slds-dropdown--menu slds-dropdown--menu__hidden" aura:id="previewIn">
+                            <ul class="slds-dropdown__list" role="menu">
+                           <aura:iteration items="{!v.sites}" var="site">
+                             <li class="slds-dropdown__item">
+                               <a href="#" data-id="{!site.id}" onclick="{!c.previewOnSite}">{!site.name}</a>
+                             </li>
+                          </aura:iteration>
+                            </ul>
+                         </div>
+                       </span>
+                     </div>
+                 </aura:if>
+                 <div class="slds-button-group" role="group">
+                  <button class="slds-button slds-button--brand event-builder-action-button" onclick="{!c.saveEvent}" data-preview="false">{!$Label.EventApi.Save_Event_Builder}</button>
+                  <span class="slds-button slds-button--brand slds-button--icon slds-dropdown--trigger event-builder-action-button">
+                    <Framework:SVG svgPath="/resource/EventApi__SLDS_Icons/icons/utility-sprite/svg/symbols.svg#down" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--xx-small" assistiveText="Save &amp; Close" />
+                    <div class="slds-dropdown slds-dropdown slds-dropdown--right slds-dropdown--menu slds-dropdown--menu__hidden" aura:id="saveAndClose">
+                      <ul class="slds-dropdown__list" role="menu">
+                        <li class="slds-dropdown__item">
+                          <a href="#" onclick="{!c.saveAndCloseEvent}">{!$Label.EventApi.Save_Close_Event_Builder}</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slds-col slds-size--1-of-1 slds-object-height--full__nofooter slds-theme--shade slds-scrollable--y">
+        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--x-large slds-p-top--small">
+          <a href="#" onclick="{!c.showEventSelectModal}">{!$Label.EventApi.Change_Event_Category}</a>
+        </div>
+        <div class="slds-col slds-size--1-of-1 slds-border--bottom">
+          <div class="slds-grid slds-wrap slds-p-vertical--large">
+            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-horizontal--x-large">
+              <Framework:InputFields group="simpleEventBuilder" fieldType="string" isRequired="true" aura:id="name" label="Event Name" value="{!v.eventObj}"/>
+            </div>
+            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-horizontal--x-large">
+              <Framework:InputFields group="simpleEventBuilder" fieldType="lookup"  aura:id="communityGroup" label="Attach Event to Community Group" value="{!v.eventObj}" otherAttributes='{"type" : "PagesApi__Community_Group__c", "pluralLabel" : "Community Groups"}' helpText="{!$Label.EventApi.Community_Group_Tie_To_Event_Help_Text}"/>
+            </div>
+          </div>
+        </div>
+        <div class="slds-col slds-size--1-of-1">
+          <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-horizontal--x-large slds-p-vertical--large">
+              <EventApi:EventDuration durationObj="{!v.eventObj}" aura:id="duration"/>
+            </div>
+            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-horizontal--x-large slds-p-vertical--large">
+              <Framework:InputFields group="simpleEventVenue" fieldType="string" aura:id="venueName" label="Primary Venue / Location Name" value="{!v.eventObj.primaryVenue}"/>
+              <Framework:InputFields group="simpleEventVenue" fieldType="string" aura:id="street" label="Street" value="{!v.eventObj.primaryVenue}"/>
+              <Framework:InputFields group="simpleEventVenue" fieldType="string" aura:id="city" label="City" value="{!v.eventObj.primaryVenue}"/>
+              <Framework:InputFields group="simpleEventVenue" fieldType="string" aura:id="state" label="State / Province / Region" value="{!v.eventObj.primaryVenue}"/>
+              <Framework:InputFields group="simpleEventVenue" fieldType="string" aura:id="country" label="Country" value="{!v.eventObj.primaryVenue}"/>
+              <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size--1-of-2 slds-p-right--small">
+                  <Framework:InputFields group="simpleEventVenue" fieldType="string" aura:id="postalCode" label="Zip / Postal Code" value="{!v.eventObj.primaryVenue}"/>
+                </div>
+                <div class="slds-col slds-size--1-of-2 slds-p-left--small slds-p-top--x-large">
+                  <Framework:InputFields group="simpleEventVenue" fieldType="boolean" aura:id="displayMap" label="Display Map" value="{!v.eventObj.primaryVenue}"/>
+                </div>
+              </div>
+            </div>
+            <div class="slds-col slds-size--1-of-1 slds-p-horizontal--x-large slds-p-vertical--medium">
+              <Framework:InputFields group="simpleEventBuilder" fieldType="richtext" aura:id="eventOverview" label="Event Overview" value="{!v.eventObj}" />
+            </div>
+            <div class="slds-col slds-size--1-of-1 slds-p-horizontal--x-large slds-p-vertical--medium">
+              <Framework:InputFields group="simpleEventBuilder" fieldType="richtext" aura:id="registrationInstructions" label="Registration Instructions" value="{!v.eventObj}" />
+            </div>
+          </div>
+        </div>
+        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--x-large slds-p-vertical--medium">
+          <Framework:InputFields group="simpleEventBuilder" fieldType="fileUpload" aura:id="bannerImageUrl" label="Banner Image" value="{!v.eventObj}"/>
+          <Framework:InputFields group="simpleEventBuilder" fieldType="fileUpload" aura:id="thumbnailImageUrl" label="Thumbnail Image" value="{!v.eventObj}"/>
+          <Framework:InputFields group="simpleEventBuilder" fieldType="fileUpload" aura:id="venueImageUrl" label="Venue Image" value="{!v.eventObj.primaryVenue}"/>
+        </div>
+      </div>
+    </div>
+    <!-- @todo create as a component -->
+    <div class="modal fade slds-modal slds-fade-in-open" id="modalEventSelector">
+      <div class="modal-dialog slds-modal__container">
+        <div class="modal-content">
+          <div class="slds-modal__header">
+            <h2 class="slds-text-heading--medium" id="modal-heading-label">{!$Label.EventApi.Create_New_Event_Event_Builder} TESTING</h2>
+            <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal">
+              <Framework:SVG svgPath="/resource/EventApi__SLDS_Icons/icons/action-sprite/svg/symbols.svg#close" containerClass="slds-button__icon slds-button__icon--large" svgClass="slds-button__icon slds-button__icon--large" assistiveText="Close" />
+            </button><!-- /.slds-button -->
+          </div><!-- /.slds-modal__header -->
+          <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+            <div class="slds-grid slds-wrap">
+              <div class="slds-col slds-size--1-of-2 slds-p-around--small">
+                <Framework:InputFields group="eventModal" fieldType="picklist" isRequired="true" aura:id="registrationStyle" label="Registration Style" value="{!v.eventModalObj}" fireChangeEvent="true"/>
+                <Framework:InputFields group="eventModal" fieldType="picklist" isRequired="true" aura:id="eventCategoryId" label="Event Category" value="{!v.eventModalObj}" fireChangeEvent="true" helpText="{!$Label.EventApi.Event_Category_Tie_To_Event_Help_Text}"/>
+                <label class="slds-form-element__label helper-margin-right">
+                  Preview
+                </label>
+                <div class="slds-col slds-size--1-of-1 slds-p-around--small slds-theme--shade">
+                    <aura:if isTrue="{!v.isConference}">
+                        <img src="/resource/EventApi__Event_Builder/eventbuilder/preview-conference.jpg" />
+                    <aura:set attribute="else">
+                        <img src="/resource/EventApi__Event_Builder/eventbuilder/preview-simple.jpg" />
+                    </aura:set>
+                    </aura:if>
+                </div>
+              </div>
+              <div class="slds-col slds-size--1-of-2 slds-p-around--small">
+                <Framework:InputFields group="eventModal" fieldType="string" isRequired="true" aura:id="eventName" label="Event Name" value="{!v.eventModalObj}"/>
+                <label class="slds-form-element__label helper-margin-right">{!$Label.EventApi.Options_Event_Builder}</label>
+                <div class="slds-col slds-size--1-of-1 slds-p-around--small slds-theme--shade slds-object-height--min-quarter">
+                  <div class="slds-col slds-size--1-of-1">
+                      <div class="input-fields-span Framework8InputFields" data-aura-rendered-by="41:1;0">
+                          <div class="slds-form-element slds-m-bottom--medium display-element" data-aura-rendered-by="43:1;0">
+                              <label class="slds-checkbox" for="53:1;0" data-aura-rendered-by="44:1;0">
+                                  <Framework:SVG svgPath="/resource/EventApi__SLDS_Icons/icons/utility-sprite/svg/symbols.svg#check" containerClass="" svgClass="slds-icon slds-icon-text-default slds-icon--x-small" assistiveText="No Image"/>
+                                     <span class="slds-form-element__label helper-margin-right" data-aura-rendered-by="46:1;0">&nbsp;{!$Label.EventApi.Tickets_Event_Builder}</span>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+                    <div class="slds-col slds-size--1-of-1">
+                        <div class="input-fields-span Framework8InputFields" data-aura-rendered-by="41:1;0">
+                            <div class="slds-form-element slds-m-bottom--medium display-element" data-aura-rendered-by="43:1;0">
+                                <label class="slds-checkbox" for="53:1;0" data-aura-rendered-by="44:1;0">
+                                    <Framework:SVG svgPath="/resource/EventApi__SLDS_Icons/icons/utility-sprite/svg/symbols.svg#check" containerClass="" svgClass="slds-icon slds-icon-text-default slds-icon--x-small" assistiveText="No Image"/>
+                                    <span class="slds-form-element__label helper-margin-right" data-aura-rendered-by="46:1;0">&nbsp;{!$Label.EventApi.Venue_Event_Builder}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div><!-- /.slds-col -->
+          </div><!-- /.slds-modal__content -->
+          <div class="slds-modal__footer slds-text-align--right">
+            <button class="slds-button slds-button--neutral" data-dismiss="modal">{!$Label.EventApi.Cancel}</button>
+            <a onclick="{!c.saveCloseModal}" data-group="" href="#" class="slds-button slds-button--brand slds-m-left--xx-small">{!$Label.EventApi.Save_Continue_Event_Builder}</a>
+          </div><!-- /.slds-modal__footer -->
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog .slds-modal__container -->
+    </div><!-- /.modal .slds-modal -->
+  </div>
+</aura:component>

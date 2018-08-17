@@ -1,0 +1,22 @@
+.THIS .slds-dropdown-trigger--click {
+    cursor: pointer;
+}
+
+.THIS .slds-edit-lookup .slds-form-element__control,
+.THIS .slds-table--actions .slds-form-element__control,
+.THIS .slds-input--custom-field .slds-form-element__label {
+    margin: 0!important;
+}
+
+.THIS .slds-button--icon-border {
+    width: 1.5rem!important;
+    height: 1.5rem!important;
+}
+
+.THIS .slds-text--success {
+    color: #04844b;
+}
+
+.THIS .slds-text--danger {
+    color: #c23934;
+}

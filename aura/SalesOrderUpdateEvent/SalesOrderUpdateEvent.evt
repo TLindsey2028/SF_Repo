@@ -1,0 +1,7 @@
+<aura:event type="APPLICATION" description="SalesOrderUpdateEvent" access="global">
+  <aura:attribute name="salesOrder" type="Map" default="{}"/>
+  <aura:attribute name="refreshTax" type="Boolean" default="false"/>
+  <aura:attribute name="refreshShipping" type="Boolean" default="false"/>
+  <aura:attribute name="refreshShippingMethod" type="Boolean" default="false"/>
+  <aura:attribute name="refreshAddress" type="Boolean" default="false"/>
+</aura:event>

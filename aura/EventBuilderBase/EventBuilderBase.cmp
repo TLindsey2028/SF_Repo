@@ -1,0 +1,5 @@
+<aura:component description="EventBuilderBase" extensible="true" abstract="true" controller="EventApi.EventsBuilderController">
+	<aura:attribute name="eventBuilderBase" type="Object" access="global" default="Event Builder Base Helper Object" />
+	<ltng:require scripts="{!$Resource.PagesApi__FontevaHelper+'/FontevaHelper.js'}" afterScriptsLoaded="{!c.doInit}"/>
+	{!v.body}
+</aura:component>

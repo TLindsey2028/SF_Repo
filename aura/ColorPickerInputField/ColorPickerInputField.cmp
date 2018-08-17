@@ -1,0 +1,27 @@
+<aura:component description="ColorPickerInputField">
+    <aura:attribute name="value" type="String" description="The value" default=""/>
+    <aura:attribute name="pickerObj" type="Object"/>
+    <aura:attribute name="required" type="Boolean" default="false"/>
+    <aura:attribute name="uniqueId" type="String" access="private"/>
+    <aura:handler event="Framework:InputFieldClearErrorMessagesEvent" action="{!c.handleInputFieldClearErrorMessagesEvent}"/>
+    <aura:method name="setErrorMessages" action="{!c.setErrorMessages}"
+                 description="Error Message For Field">
+        <aura:attribute name="errorMessages" type="Array" default="[]" description="Error Message"/>
+    </aura:method>
+    <aura:method name="loadExistingValue" action="{!c.loadExistingValue}"
+                 description="Load Existing Value">
+    </aura:method>
+    <aura:method name="clearExistingValue" action="{!c.clearExistingValue}"
+                 description="Clear Existing Value">
+    </aura:method>
+    <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/jscolor.min.js'}" afterScriptsLoaded="{!c.initColorPicker}"/>
+    <style>
+        .colorpicker {
+            z-index: 1000000;
+        }
+    </style>
+    <div class="slds-form-element__control">
+        <ui:inputText value="{!v.value}" class="{!globalId+'_color slds-input js-color'}" aura:id="colorInput"/>
+        <Framework:ValidationErrorMessages aura:id="errorInput"/>
+    </div><!-- /.slds-form-element__control -->
+</aura:component>

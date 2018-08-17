@@ -1,0 +1,87 @@
+<aura:component controller="Framework.ApiResourceController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="apiService" type="String" description="base Object to set" default=""/>
+    <aura:attribute name="apiResource" type="String" description="base Object to set" default=""/>
+    <aura:attribute name="apiResourceObj" type="Map" description="base Object to set" default="{}"/>
+    <aura:attribute name="sObjects" type="List" description="base Object to set" default="[]"/>
+    <aura:registerEvent name="RefreshComponentEvent" type="Framework:RefreshComponentEvent"/>
+    <aura:registerEvent name="InputFieldValidationEvent" type="Framework:InputFieldValidationEvent"/>
+    <aura:attribute name="modalTitle" type="String" default="New API Resource"/>
+    <aura:method name="updateModalTitle" action="{!c.updateModalTitle}">
+        <aura:attribute name="modalTitle" type="String" default="New Api Resource"/>
+    </aura:method>
+    <div class="modal fade slds-modal slds-fade-in-open" id="modalNewAPIResource">
+		<div class="modal-dialog slds-modal__container">
+			<div class="modal-content">
+				<div class="slds-modal__header">
+					<h2 class="slds-text-heading--medium" id="api-resource-header">{!v.modalTitle}</h2>
+					<button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal">
+                        <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+					</button><!-- /.slds-button -->
+				</div><!-- /.slds-modal__header -->
+				<div class="tab-content" id="api-resource-content-modal">
+                    <div id="createNewResource" aura:id="createNewResource" class="slds-tabs__content tab-pane active" role="tabpanel">
+                        <div class="slds-tabs--default">
+                          <ul class="slds-tabs--default__nav" role="tablist">
+                            <li class="slds-tabs__item slds-text-heading--label slds-active" title="Item One" role="presentation">
+                              <a href="#createNewResource" role="tab" tabindex="0" aria-selected="true" aria-controls="createNewResource" data-toggle="tab">{!$Label.Framework.Setup_Object_API_Resource}</a>
+                            </li>
+                            <li class="slds-tabs__item slds-tabs__item--static slds-text-heading--label" title="Item Two" role="presentation">
+                              <a href="#createNewURIResource" role="tab" tabindex="-1" aria-selected="false" aria-controls="createNewURIResource" data-toggle="tab" class="disabled">{!$Label.Framework.URI_Mapping_API_Resource}</a>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="slds-modal__content p-l-0 p-r-0 slds-object-height--half slds-scrollable--y">
+
+                          <div class="slds-col slds-p-around--medium slds-size--1-of-1">
+
+                            <Framework:InputFields group="resource1" fieldType="string" aura:id="configId" label="{!$Label.Framework.API_Resource_Name}" isRequired="true" value='{!v.apiResourceObj}'/>
+                            <Framework:InputFields group="resource1" fieldType="picklist" aura:id="targetSObject" label="{!$Label.Framework.Target_SObject}" value='{!v.apiResourceObj}'/>
+                            <Framework:InputFields group="resource1" fieldType="string" aura:id="targetObjectKeyField" label="{!$Label.Framework.Target_SObject_Key_Field}" isRequired="true" value='{!v.apiResourceObj}'/>
+                            <Framework:InputFields group="resource1" fieldType="string" aura:id="apiObject" label="{!$Label.Framework.API_Object}" isRequired="true" value='{!v.apiResourceObj}'/>
+                            <Framework:InputFields group="resource1" fieldType="string" aura:id="apiObjectKeyField" label="{!$Label.Framework.API_Object_Key_Field}" isRequired="true" value='{!v.apiResourceObj}'/>
+                            <Framework:InputFields group="resource1" fieldType="boolean" aura:id="disablePostPutParse" label="Disable POST/PUT JSON Parse" value='{!v.apiResourceObj}' helpText="Disable the parsing of the response that results from a HTTP POST/PUT."/>
+                            </div>
+                          </div>
+                          <div class="slds-modal__footer slds-text-align--right">
+                            <a class="slds-button slds-button--neutral" data-dismiss="modal">{!$Label.Framework.Cancel}</a>
+                            <Framework:Button onClickAction="{!c.validateFields}" type="brand" additionalClasses="next-uri-tab slds-m-left--xx-small" label="Next" aura:id="step1Resource"/>
+                          </div>
+                    </div>
+                     <div id="createNewURIResource" aura:id="createNewURIResource" class="slds-tabs__content tab-pane" role="tabpanel">
+                         <div class="slds-tabs--default">
+                           <ul class="slds-tabs--default__nav" role="tablist">
+                             <li class="slds-tabs__item slds-text-heading--label" title="Item One" role="presentation">
+                               <a href="#createNewResource" role="tab" tabindex="0" aria-selected="true" aria-controls="createNewResource" data-toggle="tab">{!$Label.Framework.Setup_Object_API_Resource}</a>
+                             </li>
+                             <li class="slds-tabs__item slds-tabs__item--static slds-text-heading--label slds-active" title="Item Two" role="presentation">
+                               <a href="#createNewURIResource" role="tab" tabindex="-1" aria-selected="false" aria-controls="createNewURIResource" data-toggle="tab" class="disabled">{!$Label.Framework.URI_Mapping_API_Resource}</a>
+                             </li>
+                           </ul>
+                         </div>
+                         <div class="slds-modal__content p-l-0 p-r-0 slds-object-height--half slds-scrollable--y">
+
+                           <div class="slds-col slds-p-around--medium slds-size--1-of-1">
+
+                             <Framework:InputFields group="resource2" fieldType="string" aura:id="createURI" label="{!$Label.Framework.Create_URI}" value='{!v.apiResourceObj}'/>
+                             <Framework:InputFields group="resource2" fieldType="picklist" aura:id="createVerb" label="{!$Label.Framework.Create_URI_Verb}" value='{!v.apiResourceObj}'/>
+                             <Framework:InputFields group="resource2" fieldType="string" aura:id="readURI" label="{!$Label.Framework.Read_URI}" value='{!v.apiResourceObj}'/>
+                             <Framework:InputFields group="resource2" fieldType="picklist" aura:id="readVerb" label="{!$Label.Framework.Read_URI_Verb}" value='{!v.apiResourceObj}'/>
+                             <Framework:InputFields group="resource2" fieldType="string" aura:id="updateURI" label="{!$Label.Framework.Update_URI}" value='{!v.apiResourceObj}'/>
+                             <Framework:InputFields group="resource2" fieldType="picklist" aura:id="updateVerb" label="{!$Label.Framework.Update_URI_Verb}" value='{!v.apiResourceObj}'/>
+                             <Framework:InputFields group="resource2" fieldType="string" aura:id="deleteURI" label="{!$Label.Framework.Delete_URI}" value='{!v.apiResourceObj}'/>
+                             <Framework:InputFields group="resource2" fieldType="picklist" aura:id="deleteVerb" label="{!$Label.Framework.Delete_URI_Verb}" value='{!v.apiResourceObj}'/>
+
+                             </div>
+                           </div>
+                           <div class="slds-modal__footer slds-text-align--right">
+                             <a class="slds-button slds-button--neutral" data-dismiss="modal">{!$Label.Framework.Cancel}</a>
+                               <Framework:Button onClickAction="{!c.saveResource}" type="brand" additionalClasses="next-uri-tab slds-m-right--xx-small" label="{!$Label.Framework.Save}" aura:id="step2Resource"/>
+                           </div>
+                     </div>
+				</div><!-- /.tab-content -->
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog .slds-modal__container -->
+	</div><!-- /.modal .slds-modal -->
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

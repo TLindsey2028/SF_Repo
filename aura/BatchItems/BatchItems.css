@@ -1,0 +1,19 @@
+.THIS {
+    background-color: #fff;
+}
+.THIS.onTheRight {
+    position: absolute;
+    right: 0px;
+    padding: 10px;
+}
+.THIS.modal-dialog {
+    position: relative;
+    display: table;
+    overflow-y: auto;    
+    overflow-x: auto;
+    width: auto;
+    min-width: 700px;   
+}
+.THIS rightside {
+    text-align:right;
+}

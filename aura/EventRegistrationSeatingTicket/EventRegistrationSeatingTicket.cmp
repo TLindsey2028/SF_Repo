@@ -1,0 +1,18 @@
+<aura:component description="EventRegistrationSeatingTicket" access="global">
+    <aura:attribute name="ticket" type="Object" required="true"/>
+    <aura:registerEvent name="ViewSectionEvent" type="LTE:ViewSectionEvent"/>
+    <div class="slds-size--1-of-1 slds-medium-size--1-of-3 slds-p-around--small" onclick="{!c.viewSection}" data-id="{!v.ticket.id}">
+        <div class="{!v.ticket.remainingSeats == 0 ? 'slds-card slds-seating-card--container slds-p-vertical--xx-large slds-p-horizontal--medium slds-theme--success' : 'slds-card slds-seating-card--container slds-p-vertical--xx-large slds-p-horizontal--medium slds-theme--default'}" id="formContainer0">
+            <div class="slds-seating-card--overview" data-type="seating" data-target="#form0" data-container="#formContainer0">
+                <div class="slds-grid slds-grid--vertical slds-text-align--center">
+                    <div class="slds-seating-card--overview-title slds-truncate slds-p-horizontal--medium" onclick="{!c.viewSection}" data-id="{!v.ticket.id}">{!v.ticket.name}</div>
+                    <hr class="slds-m-bottom--xx-large slds-hr--thick"/>
+                    <div class="slds-grid slds-text-align--center slds-wrap">
+                        <div class="slds-text-title slds-size--1-of-1 slds-seating-card--overview-assigned">{!$Label.LTE.Seats_Assigned_Count}&nbsp;{!v.ticket.assignedSeats}</div>
+                        <div class="slds-text-title slds-size--1-of-1 slds-seating-card--overview-remaining">{!$Label.LTE.Seats_Remaining_Count}&nbsp;{!v.ticket.remainingSeats}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

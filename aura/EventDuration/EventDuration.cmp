@@ -1,0 +1,80 @@
+<aura:component controller="EventApi.EventsBuilderController">
+  <aura:attribute name="durationObj" type="Object" required="true"/>
+  <aura:attribute name="durationYears" type="String" default="" description="Event Duration"/>
+  <aura:attribute name="durationMonths" type="String" default="0 Months" description="Event Duration"/>
+  <aura:attribute name="durationDays" type="String" default="0 Days" description="Event Duration"/>
+  <aura:attribute name="durationHours" type="String" default="0 Hours" description="Event Duration"/>
+  <aura:attribute name="durationMins" type="String" default="0 Minutes" description="Event Duration"/>
+  <aura:attribute name="validated" type="Boolean" default="true" description="Is Validated"/>
+  <aura:attribute name="dateFormat" type="String"/>
+  <ltng:require scripts="{!join(',',$Resource.EventApi__moment+'/min/moment.min.js',$Resource.EventApi__moment+'/min/moment.timezones.min.js')}" afterScriptsLoaded="{!c.doInit}"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+  <aura:handler event="Framework:InputFieldValidationEvent" action="{!c.handleFieldValidationEvent}"/>
+  <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+  <aura:method name="validateDuration" action="{!c.validateDuration}" access="global" description="Validate Duration">
+  </aura:method>
+
+  <Framework:InputFields group="eventInformation" fieldType="boolean" aura:id="twentyFourHour" label="{!$Label.EventApi.Duration_24_Hour}" value="{!v.durationObj}" fireChangeEvent="true" qaData='{"type" : "input", "name": "twentyFourHour"}'/>
+  <div class="slds-size--3-of-4 slds-grid slds-wrap">
+    <div class="slds-size--1-of-3 slds-m-right--large">
+      <Framework:InputFields group="eventInformation" fieldType="date" isRequired="true" aura:id="startDate" label="{!$Label.EventApi.Duration_Start_Date}" value="{!v.durationObj}" fireChangeEvent="true" format="{!v.dateFormat}" qaData='{"type" : "input", "name": "startDate"}'/>
+    </div>
+    <div class="slds-col slds-grid slds-wrap slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-left--xx-small">
+      <div class="slds-col slds-size--1-of-3 slds-p-right--small slds-time--hour">
+        <Framework:InputFields group="eventInformation" fieldType="picklist" isRequired="true" aura:id="startHour" label="{!$Label.EventApi.Duration_Start_Time}" value="{!v.durationObj}" fireChangeEvent="true" qaData='{"type" : "input", "name": "startHour"}'/>
+      </div>
+      <div class="slds-col slds-size--1-of-3 slds-p-right--small">
+        <Framework:InputFields group="eventInformation" fieldType="picklist"  aura:id="startMin" label="&nbsp;" value="{!v.durationObj}" fireChangeEvent="true" qaData='{"type" : "input", "name": "startMin"}'/>
+      </div>
+      <div class="slds-col slds-size--1-of-3">
+        <div aura:id="start12hrContainer">
+          <Framework:InputFields group="eventInformation" fieldType="picklist"  aura:id="start12hr" label="&nbsp;" value="{!v.durationObj}" fireChangeEvent="true" qaData='{"type" : "input", "name": "start12hr"}'/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slds-size--3-of-4 slds-grid slds-wrap">
+    <div class="slds-size--1-of-3 slds-m-right--large">
+      <Framework:InputFields group="eventInformation" fieldType="date" isRequired="true" aura:id="endDate" label="{!$Label.EventApi.Duration_End_Date}" value="{!v.durationObj}" fireChangeEvent="true" format="{!v.dateFormat}" qaData='{"type" : "input", "name": "endDate"}'/>
+    </div>
+    <div class="slds-col slds-grid slds-wrap slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-left--xx-small">
+      <div class="slds-col slds-size--1-of-3 slds-p-right--small slds-time--hour">
+        <Framework:InputFields group="eventInformation" fieldType="picklist" isRequired="true" aura:id="endHour" label="{!$Label.EventApi.Duration_End_Time}" value="{!v.durationObj}" fireChangeEvent="true" qaData='{"type" : "input", "name": "endHour"}'/>
+      </div>
+      <div class="slds-col slds-size--1-of-3 slds-p-right--small">
+        <Framework:InputFields group="eventInformation" fieldType="picklist" aura:id="endMin" label="&nbsp;" value="{!v.durationObj}" fireChangeEvent="true" qaData='{"type" : "input", "name": "endMin"}'/>
+      </div>
+      <div class="slds-col slds-size--1-of-3">
+        <div aura:id="end12hrContainer">
+          <Framework:InputFields group="eventInformation" fieldType="picklist" aura:id="end12hr" label="&nbsp;" value="{!v.durationObj}" fireChangeEvent="true" qaData='{"type" : "input", "name": "end12hr"}'/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slds-size--1-of-2 slds-form-element">
+    <div class="slds-form-element__control" aura:id="displayDuration">
+      <span class="slds-form-element__label">
+        {!$Label.EventApi.Duration_Event_Builder}&nbsp;
+        <Framework:Tooltip helpText="{!$Label.EventApi.Event_Duration_Help_Text}"/>
+      </span>
+      <span class="slds-form-element__static">
+        <span aura:id="displayYears">{!v.durationYears}</span>
+        <span aura:id="displayMonths">{!v.durationMonths}</span>
+        <span aura:id="displayDays">{!v.durationDays}</span>
+        <span aura:id="displayHours">{!v.durationHours}</span>
+        <span aura:id="displayMins">{!v.durationMins}</span>
+      </span>
+    </div>
+    <ui:inputEmail aura:id="durationErrorInput" class="hidden"></ui:inputEmail>
+
+  </div>
+
+  <div class="slds-grid slds-wrap">
+    <div class="slds-size--1-of-1 slds-large-size--2-of-3">
+      <Framework:InputFields group="eventInformation" fieldType="picklist" isRequired="true" aura:id="timezone" label="{!$Label.EventApi.Duration_Time_Zone}" value="{!v.durationObj}" qaData='{"type" : "input", "name": "timezone"}'/>
+    </div>
+  </div>
+
+</aura:component>

@@ -1,0 +1,222 @@
+<aura:component controller="EventApi.EventsBuilderController" implements="EventApi:EventBuilderTabInterface">
+  <aura:attribute name="speakerIdToDelete" type="String"/>
+  <aura:attribute name="speakers" type='List' default="[]"/>
+  <aura:attribute name="eventId"  type='String' default=""/>
+  <aura:attribute name="organizationId" type="String" description="Organization Id"/>
+  <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+  <aura:registerEvent name="AddSelectorEvent" type="EventApi:AddSelectorEvent"/>
+  <aura:attribute name="modalState" type="String"/>
+  <aura:attribute name="customFields" type="List" default="[]"/>
+  <aura:attribute name="customFieldsFound" type="Boolean" default="false"/>
+  <aura:handler event="Framework:UIApiResponseEvent" action="{!c.handleUIApiResponseEvent}"/>
+  <aura:attribute name="additionalFields" type="Object[]" default="[]"/>
+  <aura:attribute name="additionalFieldsObject" type="Object" default="{}"/>
+  <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/Sortable.min.js'}" afterScriptsLoaded="{!c.doInit}"/>
+  <aura:handler event="Framework:RichTextInputFieldModalEvent" action="{!c.handleRichTextInputFieldModalEvent}"/>
+  <aura:handler event="aura:doneRendering" action="{!c.doneRendering}"/>
+  <aura:registerEvent name="ResetAgendaFilterCmpEvent" type="EventApi:ResetAgendaFilterCmpEvent"/>
+  <Framework:UIApi uniqueId="speakers" aura:id="fieldUIApi"/>
+
+  <!-- LOCAL ATTRIBUTES -->
+  <aura:attribute name="speakerObj" type="Object" default="{}"/>
+  <div class="" aura:id="loader">
+    <div class="slds-grid">
+      <div class="slds-col slds-text-align--center slds-align-middle">
+        <img src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+        <span class="slds-text-heading--medium">{!$Label.EventApi.Loading_Event_Builder}</span>
+      </div>
+    </div>
+  </div>
+  <div class="hidden" aura:id="mainBody">
+  <div class="slds-col slds-size--1-of-1">
+    <div class="slds-grid slds-grid--align-spread slds-p-bottom--medium slds-m-bottom--medium">
+      <div class="slds-col slds-align-middle">
+        <div class="slds-text-heading--small">{!$Label.EventApi.Speakers_Event_Builder}  ({!v.eventObj.speakers.length})</div>
+        <div class="slds-text-body--small">
+            {!$Label.EventApi.Speakers_Drag_Drop_Event_Builder}
+        </div>
+      </div>
+      <button class="slds-button slds-button--brand" onclick="{!c.addNewSpeaker}">
+        <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--x-small slds-button__icon--left" assistiveText="Save &amp; Close" />
+        {!$Label.EventApi.Add_Speaker_Event_Builder}
+      </button>
+    </div>
+  </div>
+
+  <div class="slds-col slds-size--1-of-1 slds-m-bottom--large">
+    <table class="slds-table slds-table--bordered slds-theme--shade slds-no-row-hover">
+      <aura:if isTrue="{!v.eventObj.speakers.length == 0}">
+        <tbody>
+          <tr>
+            <td class="slds-truncate">
+              {!$Label.EventApi.No_Speakers_Event_Builder}&nbsp;<a href="javascript:void(0);" onclick="{!c.addNewSpeaker}">{!$Label.EventApi.Add_New_Speaker_Event_Builder}</a>
+            </td>
+          </tr>
+        </tbody>
+        <aura:set attribute="else">
+          <thead>
+            <tr class="slds-text-heading--label">
+              <th></th>
+              <th></th>
+              <th>{!$Label.EventApi.Name_Event_Builder}</th>
+              <th>{!$Label.EventApi.Company_Event_Builder}</th>
+              <th>{!$Label.EventApi.Confirmed_Event_Builder}</th>
+              <th class="slds-truncate slds-text-align--right">{!$Label.EventApi.Actions_Event_Builder}</th>
+            </tr>
+          </thead>
+          <tbody id="step-container" aura:id="step-container">
+            <aura:iteration items="{!v.eventObj.speakers}" var="speaker">
+              <tr class="step-type" data-id="{!speaker.speakerId}" data-name="{!speaker.speakerName}">
+                <td class="slds-truncate" data-label="" style="width: 53px; height: 17px;">
+                  <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#threedots'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--x-small slds-icon-text-default threedots-vertical" assistiveText="Sort" class=" sort1"/>
+                  <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#threedots'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--x-small slds-icon-text-default threedots-vertical" assistiveText="Sort" class=" sort2"/>
+                </td>
+                <td class="slds-truncate" data-label="">
+                  <span class="{!speaker.photoUrl != null ? '' : 'hidden'}">
+                    <Framework:Img src="{!speaker.photoUrl}" width="35" />
+                  </span>
+                  <span class="{!speaker.photoUrl == null ? '' : 'hidden'}">
+                    <lightning:icon iconName="utility:image" class="slds-icon slds-icon--small slds-icon-text-shade__dark"/>
+                  </span>
+                </td>
+                <td class="{!speaker.status == 'Accepted' ? 'slds-truncate' :'hidden'}" data-label="Name"><strong>{!speaker.speakerName}</strong></td>
+                <td class="{!speaker.status == 'Accepted' ? 'slds-truncate' :'hidden'}" data-label="Address"><strong>{!speaker.companyName}</strong></td>
+                <td class="{!speaker.status != 'Accepted' ? 'slds-truncate' :'hidden'}" data-label="Name">{!speaker.speakerName}</td>
+                <td class="{!speaker.status != 'Accepted' ? 'slds-truncate' :'hidden'}" data-label="Address">{!speaker.companyName}</td>
+                <td class="slds-truncate" data-label="Confirmed">
+                  <span class="{!speaker.status == 'Accepted' ? '' : 'hidden'}">
+                    <lightning:icon iconName="utility:check" class="slds-icon slds-icon--x-small slds-icon-text-default" size="xx-small"/>
+                  </span>
+                  <span class="{!speaker.status != 'Accepted' ? 'hidden' : ''}">
+                    &nbsp;
+                  </span>
+                </td>
+                <td class="slds-truncate slds-text-align--right" data-label="Actions">
+                  <button class="slds-button slds-button--icon-border slds-action" data-id="{!speaker.speakerId}" onclick="{!c.editSpeaker}">
+                    <img class="slds-button__icon" src="{!$Resource.EventApi__SLDS_Icons+'/icons/utility/edit_60.png'}" width="16" height="34" data-id="{!speaker.speakerId}"/>
+                  </button>
+                  <button class="slds-button slds-button--icon-border slds-action" data-id="{!speaker.speakerId}" onclick="{!c.deleteSpeakerPrompt}">
+                    <img class="slds-button__icon" src="{!$Resource.EventApi__SLDS_Icons+'/icons/utility/delete_60.png'}" width="16" height="34" data-id="{!speaker.speakerId}"/>
+                  </button>
+                </td>
+              </tr>
+            </aura:iteration>
+          </tbody>
+        </aura:set>
+      </aura:if>
+    </table>
+  </div>
+
+    <aura:if isTrue="{!v.eventObj.style == 'Conference'}">
+      <div class="slds-col slds-size--1-of-1 slds-p-vertical--small">
+        <Framework:InputFields group="eventSpeaker" fieldType="richText" label="{!$Label.EventApi.Speakers_Overview_Event_Builder}" aura:id="speakerOverview" value="{!v.eventObj}" />
+      </div>
+    </aura:if>
+
+  <div class="slds-modal" aura:id="speakersModal">
+    <div class="slds-modal__container">
+      <div class="slds-modal__header">
+        <h2 class="slds-text-heading--medium" id="modal-heading-label">
+          {!v.modalState}
+        </h2>
+        <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+          <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+        </button><!-- /.slds-button -->
+      </div><!-- /.slds-modal__header -->
+
+      <div class="slds-modal__content slds-object-height--half slds-scrollable--y" id="speakerBody">
+        <div class="slds-grid slds-wrap slds-grid--pull-padded">
+          <div class="slds-col slds-size--1-of-1">
+            <div class="slds-grid slds-wrap">
+              <div class="slds-size--2-of-3 slds-col--padded">
+                <Framework:InputFields group="speakerEventBuilder" isRequired="true" fieldType="string" aura:id="speakerName" label="{!$Label.EventApi.Speaker_Name_Event_Builder}" value="{!v.speakerObj}" maxlength="80" />
+              </div>
+              <div class="slds-size--1-of-3 slds-col--padded">
+                <Framework:InputFields group="speakerEventBuilder" fieldType="picklist" aura:id="status" label="{!$Label.EventApi.Status_Event_Builder}" value="{!v.speakerObj}"  otherAttributes='{"objectName" : "EventApi__Speaker__c" , "field" : "EventApi__Status__c"}' helpText="{!$Label.EventApi.Event_Builder_Speaker_Status}"/>
+              </div>
+            </div>
+          </div>
+          <div class="slds-col slds-size--1-of-1">
+            <div class="slds-grid slds-wrap">
+              <div class="slds-size--2-of-3 slds-col--padded">
+                <Framework:InputFields group="speakerEventBuilder" fieldType="lookup" aura:id="contact" label="{!$Label.EventApi.Contact_Record_Event_Builder}" value="{!v.speakerObj}" otherAttributes='{"type" :"Contact"}' />
+              </div>
+              <div class="slds-size--1-of-3 slds-col--padded is-featured-checkbox">
+                <Framework:InputFields group="speakerEventBuilder" fieldType="boolean" aura:id="isFeatured" label="Is Featured" value="{!v.speakerObj}"/>
+              </div>
+            </div>
+          </div>
+          <div class="slds-col slds-size--1-of-1">
+            <div class="slds-grid slds-wrap">
+              <div class="slds-size--1-of-2 slds-col--padded">
+                <Framework:InputFields group="speakerEventBuilder" fieldType="string" aura:id="title" label="{!$Label.EventApi.Title_Event_Builder}" value="{!v.speakerObj}" />
+              </div>
+              <div class="slds-size--1-of-2 slds-col--padded">
+                <Framework:InputFields group="speakerEventBuilder" fieldType="string" aura:id="companyName" label="{!$Label.EventApi.Company_Name_Event_Builder}" value="{!v.speakerObj}" />
+              </div>
+            </div>
+          </div>
+          <div class="slds-size--1-of-1 slds-col--padded">
+            <Framework:InputFields group="speakerEventBuilder" fieldType="fileUpload" aura:id="photoUrl" label="{!$Label.EventApi.Speaker_Photo_Url_Event_Builder}" value="{!v.speakerObj}" otherAttributes='{maximumFileSize : 5242880,allowedMimeTypes:["image/png","image/jpeg","image/jpg","image/gif","image/bmp","image/tiff"]}'/>
+          </div>
+          <div class="slds-size--1-of-1 slds-col--padded">
+            <Framework:InputFields group="speakerEventBuilder" fieldType="richtext" aura:id="bio" label="{!$Label.EventApi.Speaker_Bio_Event_Builder}" value="{!v.speakerObj}" maxlength="32767"/>
+          </div>
+          <aura:if isTrue="{!and(v.additionalFields.length > 0, v.eventObj.style == 'Lightning Event')}">
+            <div class="slds-size--1-of-1">
+              <hr/>
+            </div>
+          </aura:if>
+          <aura:iteration items="{!v.additionalFields}" var="field">
+            <div class="slds-size--1-of-1 slds-col--padded">
+              <Framework:InputFields group="speakerEventBuilderDynamic"
+                                   label="{!field.label}"
+                                   helpText="{!field.helpText}"
+                                   fieldType="{!field.fieldType}"
+                                   useSecondaryId="true"
+                                   secondaryId="{!field.id}"
+                                   aura:id="additionalField"
+                                   value="{!v.additionalFieldsObject}"
+                                   selectOptions="{!field.selectOptions}"/>
+            </div>
+          </aura:iteration>
+          <aura:if isTrue="{!v.customFields.length > 0}">
+            <div class="slds-size--1-of-1 slds-col--padded slds-has-divider--top slds-m-top--small">
+              <div class="slds-m-top--small">
+                <div class="slds-m-bottom--x-small">
+                  <strong>{!$Label.EventApi.Event_Builder_Custom_Fields}</strong>
+                </div>
+                <aura:iteration items="{!v.customFields}" var="customField">
+                  <div class="slds-size--1-of-1">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "customfield"}' aura:id="customField" group="speakerBuilderCustomFields" value="{!v.speakerObj.customFieldValues}" sObjectName="{!customField.objectName}" fieldName="{!customField.apiName}" secondaryId="{!customField.apiName}" useSecondaryId="true"/>
+                  </div>
+                </aura:iteration>
+              </div>
+            </div>
+          </aura:if>
+        </div>
+      </div>
+
+      <div class="slds-modal__footer slds-text-align--right">
+        <button class="slds-button slds-button--neutral" onclick="{!c.closeModal}">{!$Label.EventApi.Cancel}</button>
+        <Framework:Button aura:id="speakerModalSaveButton"
+                          onClickAction="{!c.saveSpeaker}"
+                          type="brand"
+                          additionalClasses="slds-m-left--xx-small"
+                          label="{!$Label.EventApi.Save_Continue_Event_Builder}" />
+      </div><!-- /.slds-modal__footer -->
+    </div><!-- /.modal-dialog .slds-modal__container -->
+  </div><!-- /.modal .slds-modal -->
+    <Framework:Toast aura:id="toastMessages"/>
+  <Framework:MessagePrompt title="Delete Speaker"
+                           message="Delete this Speaker?"
+                           severity="clear"
+                           submitButtonLabel="{!$Label.EventApi.Delete_Ticket_Type_Event_Builder}"
+                           submitOnClickAction="{!c.deleteSpeaker}"
+                           cancelButtonLabel="{!$Label.EventApi.Cancel}"
+                           closeOnClickAction="{!c.closeModal}"
+                           aura:id="deleteModal"/>
+
+  <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+  </div>
+</aura:component>

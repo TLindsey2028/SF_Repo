@@ -1,0 +1,12 @@
+<aura:component description="MobilePassbook" controller="LTE.PassBookController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="showMobilePass" type="Boolean" default="false"/>
+    <aura:attribute name="mobilePassLink" type="String"/>
+    <aura:attribute name="attendee" type="String" required="true"/>
+    <aura:attribute name="event" type="String" required="true"/>
+    <aura:attribute name="width" type="Integer" default="150"/>
+    <aura:attribute name="height" type="Integer" default="60"/>
+    <aura:if isTrue="{!v.showMobilePass}">
+        <a href="{!v.mobilePassLink}" download="mkpass.pkpass"><img width="{!v.width}" height="{!v.height}" src="{!$Resource.LTE__SLDS_Lens+'/img/Add_to_Apple_Wallet_rgb_US-UK.svg'}"/></a>
+    </aura:if>
+</aura:component>

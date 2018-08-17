@@ -1,0 +1,28 @@
+.THIS .selected {
+  transition: all .25s ease-in-out;
+}
+
+.THIS .slds-sidebar-interaction .slds-list__item .selected {
+  transition: all .25s ease-in-out;
+}
+
+.THIS .slds-list__item .collapsed .icon-utility-chevrondown {
+  -moz-transform: rotate(-90deg)!important;
+}
+
+.THIS .slds-badge.slds-badge--wide {
+  min-width: 30px;
+  text-align: center;
+}
+
+
+.THIS .fonteva-button_reverse {
+  display: flex!important;
+  flex-direction: row-reverse
+}
+
+.THIS .slds-icon_x-small {
+  line-height: 1;
+  width: 1rem;
+  height: 1rem;
+}

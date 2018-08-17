@@ -1,0 +1,37 @@
+<aura:component controller="OrderApi.ProformaInvComposerController">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:attribute name="salesOrderId" type="String" description="Sales Order Id"/>
+  <aura:attribute name="proformaInvComposerObj" type="Object" default="{}" description="Proforma Invoice Composer Modal Object"/>
+  <aura:attribute name="hasSites" type="Boolean" default="false" description="Has Sites"/>
+  <aura:attribute name="isModal" type="Boolean" default="true"/>
+  <aura:registerEvent name="ComponentLoadedEvent" type="OrderApi:ComponentLoadedEvent"/>
+  <aura:method name="hideProformaInvFields" action="{!c.hideProformaInvFields}"/>
+  <aura:method name="validate" action="{!c.validate}"/>
+  <aura:attribute name="validated" type="Boolean" default="false"/>
+  <div class="slds hidden" aura:id="mainWrapperDiv">
+    <div class="hidden" aura:id="proformaInvoiceFields">
+      <Framework:InputFields styleClasses="" group="proInvComposer" fieldType="string"
+                             helpText="{!$Label.OrderApi.To_HelpText}" isRequired="true" aura:id="to"
+                             label="{!$Label.OrderApi.To_Address}" value="{!v.proformaInvComposerObj}" maxlength="255"/>
+      <Framework:InputFields styleClasses="" group="proInvComposer" fieldType="string"
+                             isRequired="true" aura:id="subject" label="{!$Label.OrderApi.Subject}"
+                             value="{!v.proformaInvComposerObj}" maxlength="240"/>
+      <aura:if isTrue="{!v.hasSites}">
+        <div class="slds-hide" aura:id="sitesDiv">
+        <Framework:InputFields styleClasses="" group="proInvComposer" fieldType="picklist"
+                               aura:id="sites" label="{!$Label.OrderApi.Select_A_Site}" value="{!v.proformaInvComposerObj}"/>
+        </div>
+      </aura:if>
+      <Framework:InputFields styleClasses="" group="proInvComposer" fieldType="richText"
+                             isRequired="true" aura:id="message" label="{!$Label.OrderApi.Message}"
+                             value="{!v.proformaInvComposerObj}" />
+
+      <div class="slds-text-align--center">
+        <aura:renderIf isTrue="{!v.isModal}">
+          <button class="slds-button slds-button--neutral" onclick="{!c.closeWindow}">{!$Label.OrderApi.Cancel}</button>
+        </aura:renderIf>
+      </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+  </div>
+</aura:component>

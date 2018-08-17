@@ -1,0 +1,8 @@
+<aura:event type="APPLICATION" description="UpdateButtonEvent">
+    <aura:attribute name="itemIds" type="List"/>
+    <aura:attribute name="contactId" type="String"/>
+    <aura:attribute name="disable" type="Boolean" default="false"/>
+    <aura:attribute name="itemCount" type="Integer" />
+    <aura:attribute name="isTicket" type="Boolean" default="false"/>
+    <aura:attribute name="salesOrderObj" type="Map"/>
+</aura:event>

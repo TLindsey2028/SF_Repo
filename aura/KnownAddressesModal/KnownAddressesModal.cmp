@@ -1,0 +1,70 @@
+<aura:component description="CheckoutAddressModal" access="global" controller="OrderApi.KnownAddressController">
+	<ltng:require scripts="{!$Resource.PagesApi__FontevaHelper+'/FontevaHelper.js'}"/>
+	<aura:method name="closeModal" action="{!c.closeModal}" access="global"
+	             description="Close Modal">
+	</aura:method>
+	<aura:method name="showModal" action="{!c.showModal}" access="global"
+	             description="Show Modal">
+		<aura:attribute name="isNew" type="Boolean" default="true"/>
+		<aura:attribute name="isFirst" type="Boolean" default="false"/>
+	</aura:method>
+	<aura:attribute name="uniqueId" type="String" default="" access="global"/>
+	<aura:attribute name="isNew" type="Boolean" default="true"/>
+	<aura:attribute name="value" type="Map" default="{}" access="global"/>
+	<aura:attribute name="contactId" type="String" required="true" access="global"/>
+	<aura:attribute name="createModalAddressHeader" type="String" default="New Address" access="global"/>
+	<aura:attribute name="editModalAddressHeader" type="String" default="Edit Address" access="global"/>
+	<aura:attribute name="saveAction" type="Aura.Action"/>
+	<aura:attribute name="useBackdrop" type="Boolean" default="true" access="global"/>
+	<aura:attribute name="modalAddressHeader" type="String"/>
+	<aura:attribute name="isThemed" type="Boolean" default="false" />
+	<aura:attribute name="isPortal" type="Boolean" default="false"/>
+	<aura:registerEvent name="SaveKnownAddressEvent" type="OrderApi:SaveKnownAddressEvent"/>
+	<aura:registerEvent name="KnownAddressModalEvent" type="OrderApi:KnownAddressModalEvent"/>
+	<style>
+		.noscroll {
+			overflow: hidden;
+			position: relative;
+		}
+	</style>
+	<div class="{!v.isThemed ? 'fonteva-portal' : ''}">
+		<div class="slds-modal slds-modal_medium" data-name="addressModalWrapper" aura:id="addressModalWrapper">
+			<div class="slds-modal__container">
+				<div class="modal-content">
+					<div class="slds-modal__header">
+						<h2 class="slds-text-heading--medium">{!v.modalAddressHeader}</h2>
+						<button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal" onclick="{!c.closeModal}">
+							<lightning:icon iconName="{!or(v.isThemed, v.isPortal) ? 'utility:clear' : 'utility:close'}" size="small" class="slds-button--icon-inverse"/>
+							<span class="slds-assistive-text">Close</span>
+						</button><!-- /.slds-button -->
+					</div>
+
+					<div class="slds-modal__content" data-name="ka_modalContent" aura:id="modalContent">
+						<div class="slds-grid slds-grid_vertical">
+						  	<div class="slds-m-bottom_small slds-p-horizontal_medium">
+						  		<Framework:InputFields fieldType="String" label="{!$Label.OrderApi.Known_Address_Name_Field}" isRequired="true" maxLength="255" qaData='{"type" : "input", "name": "name"}' aura:id="name" value="{!v.value}"/>
+						  	</div>
+							<div class="slds-m-bottom_small slds-p-horizontal_medium slds-grid slds-grid_pull-padded-x-small">
+							  	<div class="slds-col slds-p-horizontal_x-small fonteva-col_width-full">
+									<Framework:InputFields fieldType="address" label="{!$Label.OrderApi.Known_Address_Address_Field}" isRequired="true" maxLength="255" qaData='{"type" : "input", "name": "address"}' aura:id="address" value="{!v.value}" otherAttributes='{"allowManualAddress" : true}'/>
+								</div>
+							</div>
+							<div class="{!v.isPortal ? 'slds-m-bottom_small slds-p-horizontal_medium' : 'hidden'}">
+								<Framework:InputFields fieldType="boolean" label="{!$Label.OrderApi.Known_Address_Is_Default}"  qaData='{"type" : "input", "name": "ka_isDefault"}' aura:id="isDefault" value="{!v.value}"/>
+							</div>
+						  	<div class="slds-p-horizontal_medium">
+								<Framework:InputFields fieldType="textArea" label="{!$Label.OrderApi.Known_Address_Additional_Details}" qaData='{"type" : "input", "name": "additionalInformation"}' aura:id="additionalInformation" value="{!v.value}"/>
+							</div>
+						</div>
+					</div>
+				  	<div class="slds-modal__footer">
+						<Framework:Button qaData='{"type" : "button", "name": "ka_modal_cancel"}' type="neutral" enableProgressIndicator="false" label="{!$Label.OrderApi.Known_Address_Cancel_Modal_Button}" onClickAction="{!c.closeModal}"/>
+						<Framework:Button type="brand" label="{!$Label.OrderApi.Known_Address_Save_Modal_Button}" onClickAction="{!c.saveAddress}" qaData='{"type" : "button", "name": "ka_modal_save"}' aura:id="save"/>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="slds-backdrop" data-name="modalBackdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"/>
+	</div>
+	<Framework:Toast aura:id="toastMessages"/>
+</aura:component>

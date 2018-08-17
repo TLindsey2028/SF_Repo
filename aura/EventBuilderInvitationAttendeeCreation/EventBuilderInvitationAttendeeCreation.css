@@ -1,0 +1,17 @@
+.THIS .fonteva--no-records{
+  text-align: center;
+  color: #ccc;
+}
+
+.THIS .remove-table-margin .slds-m-bottom--small {
+    margin-bottom: 0!important;
+}
+
+.THIS .remove-table-margin .selectize-control,
+.THIS .remove-table-margin .attendee-lookup-input .slds-input-action-icon.slds-has-items {
+    top: 4px;
+}
+
+.THIS .custom-search-icon {
+    top: 60% !important;
+}

@@ -1,0 +1,36 @@
+<aura:component description="FeaturedEventSpeakers" controller="LTE.SpeakersController" access="global" implements="LTE:EventInterface">
+    <aura:attribute name="speakers" type="LTE.Speaker[]"/>
+    <aura:attribute name="uniqueId" type="String"/>
+	<ltng:require styles="{!join(',', $Resource.LTE__SLDS_Lens + '/css/lens.css', $Resource.LTE__SLDS_Lens + '/css/tiny-slider.css' , $Resource.LTE__SLDS_Lens+'/css/fa.css')}" scripts="{!join(',', $Resource.PagesApi__FontevaHelper+'/FontevaHelper.js', $Resource.LTE__SLDS_Lens + '/js/tiny-slider.js')}" afterScriptsLoaded="{!c.doInit}"/>
+    <div class="fonteva-event-component slds-p-around--medium">
+        <div class="slds-grid slds-grid--vertical">
+            <p class="slds-text-heading--medium slds-font-weight--semi-bold">
+                {!$Label.LTE.Event_Featured_Speakers}
+            </p>
+            <span class="hidden" aura:id="speakerList">
+
+                  <div class="{!v.uniqueId+'-fonteva-slider--featured-speakers'}" aura:id="currentSpeakers">
+                    <aura:iteration items="{!v.speakers}" var="speaker" indexVar="index">
+                        <div class="slds-size--1-of-1">
+                            <div class="slds-is-relative slds-m-bottom--small">
+                                <Framework:Img src="{!speaker.photoUrl}"/>
+                            </div>
+                            <div class="slds-size--1-of-1">
+                                <p class="slds-text-heading--small slds-font-weight--semi-bold">
+                                    {!speaker.name}
+                                </p>
+                                <p class="slds-text-body--regular">
+                                    {!speaker.companyName}
+                                    <span class="{!empty(speaker.title) ? 'slds-hide' : ''}">
+                                        <span class="{!empty(speaker.companyName) ? 'slds-hide' : 'slds-p-horizontal--xx-small' }">|</span>
+                                        {!speaker.title}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+            </span>
+        </div>
+    </div>
+</aura:component>

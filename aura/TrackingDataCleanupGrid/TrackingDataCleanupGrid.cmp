@@ -1,0 +1,367 @@
+<aura:component controller="et4ae5.TrackingDataCleanupGridController">
+<aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    <aura:handler name="change" value="{!v.recordCount}" action="{!c.handleRecordCountEvent}"/>
+    <!-- Grid specific attributes -->
+    <aura:attribute name="emailSends" type="Object"/>
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="sortedBy" type="String"/>
+    <aura:attribute name="sortedDirection" type="String"/>
+    <aura:attribute name="isRowSelected" type="Boolean"/>
+    <aura:attribute name="selectedRows" type="List"/>
+    <aura:attribute name="showGridSpinner" type="boolean" default="false" />
+
+    <!-- Lose selections warning modal attributes -->
+    <aura:attribute name="isSorting" type="Boolean" default="false"/>
+    <aura:attribute name="isPageSizeChanging" type="Boolean" default="false"/>
+    <aura:attribute name="desiredSortedBy" type="String"/>
+    <aura:attribute name="desiredSortedDirection" type="String"/>
+    <aura:attribute name="desiredPage" type="Integer"/>
+    <aura:attribute name="desiredPageSize" type="Integer"/>
+    
+    <!-- Pagination specific attributes -->
+    <aura:attribute name="currentPage" type="Integer" default="1"/>
+    <aura:attribute name="currentPages" type="List" default="[1]"/>
+    <aura:attribute name="recordCount" type="Integer"/>
+    <aura:attribute name="numPagesToShow" type="Integer" default="9"/>
+    <aura:attribute name="itemsPerPage" type="Integer" default="25"/>
+    <aura:attribute name="maxPage" type="Integer"/>
+
+    <!-- Labels -->
+    <aura:attribute name="gridTitleLabel" type="String"/>
+    <aura:attribute name="gridSubtitleLabel" type="String"/>
+    <aura:attribute name="gridDeleteSelectedLabel" type="String"/>
+    <aura:attribute name="gridDeleteAllLabel" type="String"/>
+    <aura:attribute name="modalTitleLabel" type="String"/>
+    <aura:attribute name="modalResortMessageLabel" type="String"/>
+    <aura:attribute name="modalNavigationMessageLabel" type="String"/>
+    <aura:attribute name="modalCancelLabel" type="String"/>
+    <aura:attribute name="modalCloseLabel" type="String"/>
+    <aura:attribute name="modalConfirmLabel" type="String"/>
+    <aura:attribute name="paginatePreviousLabel" type="String"/>
+    <aura:attribute name="paginateNextLabel" type="String"/>    
+    <aura:attribute name="noRecordsLabel" type="String"/>
+    <aura:attribute name="deleteModalTitleLabel" type="String"/>
+    <aura:attribute name="deleteModalDirectionLabel" type="String"/>
+    <aura:attribute name="learnMoreLabel" type="String"/>
+    <aura:attribute name="reviewErrorsLabel" type="String"/>
+    <aura:attribute name="errorTrackingLevelLabel" type="String"/>
+    <aura:attribute name="errorEmailLabel" type="String"/>
+    <aura:attribute name="errorEmailListSizeLabel" type="String"/>
+    <aura:attribute name="errorConfirmIntentLabel" type="String"/>
+    <aura:attribute name="emailSendDefinitionLabel" type="String"/>
+    <aura:attribute name="ierLabel" type="String"/>
+    <aura:attribute name="ildLabel" type="String"/>
+    <aura:attribute name="aldLabel" type="String"/>
+    <aura:attribute name="ierDeleteAllLabel" type="String"/>
+    <aura:attribute name="ierDeleteNotOpenedNotClickedLabel" type="String"/>
+    <aura:attribute name="ierDeleteNotOpenedLabel" type="String"/>
+    <aura:attribute name="ierDeleteNotClickedLabel" type="String"/>
+    <aura:attribute name="confirmEmailLabel" type="String"/>
+    <aura:attribute name="confirmEmailAddButtonLabel" type="String"/>
+    <aura:attribute name="confirmEmailDescriptionLabel" type="String"/>
+    <aura:attribute name="confirmIntentLabel" type="String"/>
+    <aura:attribute name="modalDeleteButtonLabel" type="String"/>
+    <aura:attribute name="batchJobInProgressLabel" type="String"/>
+    <aura:attribute name="ierCheckboxTooltip" type="String"/>
+    <aura:attribute name="aldCheckboxTooltip" type="String"/>
+
+    <!-- Delete Modal -->
+    <aura:attribute name="ierRadioOptionIDSelected" type="String" default="" />
+    <aura:attribute name="deleteButtonClicked" type="String" default="" />
+    <aura:attribute name="emailAddresses" type="String[]" default="[]"/>
+    <aura:attribute name="maxEmailAddresses" type="Integer" default="100"/>
+    <aura:attribute name="deleteTrackingDataServerError" type="String"/>
+    
+    <!-- Error Handling -->
+    <aura:attribute name="isUnknownError" type="Boolean"/>
+    <aura:attribute name="isMaxRecordsError" type="Boolean"/>
+    <aura:attribute name="errorMessageText" type="String"/>
+    <aura:attribute name="emptyRecords" type="Boolean"/>
+
+    <!-- Messaging -->
+    <aura:attribute name="isBatchJobRunning" type="Boolean"/>
+
+    <lightning:card >
+        <aura:set attribute="title">
+            <h1 title="{!v.gridTitleLabel}">{!v.gridTitleLabel}</h1>
+            <p class="slds-text-body_small ">{!v.gridSubtitleLabel}</p>
+        </aura:set>
+        <aura:set attribute="actions">
+            <aura:if isTrue="{! and(and(and(!v.isUnknownError, !v.isMaxRecordsError), !v.emptyRecords), !v.isBatchJobRunning)}">
+                <lightning:button aura:id="btnDeleteSelected" label="{!v.gridDeleteSelectedLabel}" variant="brand" onclick="{!c.handleDeleteRecords}" disabled="{! !v.isRowSelected}" />
+                <lightning:button aura:id="btnDeleteAll" label="{!v.gridDeleteAllLabel}"  variant="brand" onclick="{!c.handleDeleteRecords}" disabled="{! v.isRowSelected}" />
+            </aura:if>
+        </aura:set>
+
+        <!-- Display job in process notification -->
+        <aura:if isTrue="{!v.isBatchJobRunning}">
+            <lightning:layout aura:id="inProcessMessage" verticalAlign="center" class="slds-theme_alert-texture slds-theme_info slds-m-around_medium slds-p-vertical_small slds-p-horizontal_medium">
+                <lightning:layoutItem class="slds-p-left_none">
+                    <lightning:icon iconName="utility:info" size="medium" variant="inverse"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem class="slds-p-left--small">
+                    <h2>{!v.batchJobInProgressLabel}</h2>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </aura:if>
+
+        <!-- Display the error message if we encountered an unknown error -->
+        <aura:if isTrue="{!v.isUnknownError}">
+            <lightning:layout aura:id="errorMessage" verticalAlign="center" class="slds-p-bottom--medium slds-m-bottom_x-large">
+                <lightning:layoutItem class="slds-p-left--medium">
+                    <lightning:icon iconName="utility:error" size="small" variant="error"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem class="slds-p-left--small">
+                    <ui:outputText class="slds-text-color_error" value="{!v.errorMessageText}"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </aura:if>
+
+        <!-- Display the table header if there are no unknown errors and there are records and there is not batch job running-->
+        <aura:if isTrue="{! and(and(!v.isUnknownError, !v.emptyRecords), !v.isBatchJobRunning)}">
+            <div>
+                <lightning:datatable aura:id="tableExpiredRecords"
+                    data="{!v.emailSends}" 
+                    columns="{!v.columns}" 
+                    keyField="id"
+                    defaultSortDirection="asc"
+                    sortedBy="{!v.sortedBy}"  
+                    sortedDirection="{!v.sortedDirection}"
+                    selectedRows="{!v.selectedRows}"
+                    onrowselection="{!c.rowsSelected}"
+                    onsort="{!c.updateColumnSorting}"/>
+            </div>
+        </aura:if>
+
+        <!-- Empty records display -->
+        <aura:if isTrue="{!v.emptyRecords}">
+            <lightning:layout aura:id="emptyRecords" horizontalAlign="center" multipleRows="true">
+                <lightning:layoutItem size="12" class="slds-align_absolute-center slds-m-bottom_neg-xx-large">
+                    <img src="{!$Resource.et4ae5__desert_svg}"/>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="12" class="slds-align_absolute-center slds-m-bottom_xx-large">
+                    <ui:outputText class="slds-text-color_weak slds-text-heading_small" value="{!v.noRecordsLabel}"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </aura:if>
+
+        <!-- Exceeded max records display -->
+        <aura:if isTrue="{!v.isMaxRecordsError}">
+                <lightning:layout aura:id="maxRecordsErrorMessage" verticalAlign="center" class="slds-p-top--medium slds-p-bottom--medium slds-m-bottom_xx-large">
+                    <lightning:layoutItem class="slds-m-left--x-large">
+                        <lightning:icon iconName="utility:error" size="small" variant="error"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem class="slds-p-left--small">
+                        <ui:outputText class="slds-text-color_error" value="{!v.errorMessageText}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+        </aura:if>
+
+        <!-- Spinner -->
+        <aura:if isTrue="{!v.showGridSpinner}">
+            <div class="slds-spinner_container slds-is-fixed">
+                    <div role="status" class="slds-spinner slds-spinner_small slds-spinner_brand">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>  
+        </aura:if>
+        
+        <aura:set attribute="footer">
+            <!-- Only display footer information if there are no unexpected errors and there are records and there is no batch job running -->
+            <aura:if isTrue="{! and(and(!v.isUnknownError, !v.emptyRecords), !v.isBatchJobRunning)}">
+                <footer class="slds-grid slds-grid_align-spread">
+                    <div class="slds-col"></div>
+                    <div class="slds-col">
+                        <div class="slds-button-group" role="group">                        
+                            <lightning:buttonIcon iconName="utility:left" 
+                                variant="border" 
+                                alternativeText="Left" 
+                                iconClass="dark" 
+                                onclick="{!c.previousPage}"
+                                disabled="{!v.currentPage == 1}"/> 
+                                
+                            <lightning:button label="First"
+                                variant="neutral" 
+                                onclick="{!c.firstPage}"
+                                disabled="{!v.currentPage == 1}"/> 
+                            
+                            <aura:iteration items="{!v.currentPages}" var="pgn">
+                                <et4ae5:PageNumberButton page="{!pgn}" 
+                                    currentPage="{!v.currentPage}" 
+                                    onclick="{!c.changePage}"/>
+                            </aura:iteration>
+
+                            <lightning:button label="Last"
+                                variant="neutral" 
+                                onclick="{!c.lastPage}"
+                                disabled="{!v.currentPage == v.maxPage}"/> 
+                                    
+                            <lightning:buttonIcon iconName="utility:right" 
+                                variant="border" 
+                                alternativeText="Right" 
+                                iconClass="dark" 
+                                onclick="{!c.nextPage}" 
+                                disabled="{!v.currentPage == v.maxPage}"/>
+                        </div>
+                    </div>
+                    <div class="slds-col">
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                            <div class="slds-col slds-p-right_x-small"><lightning:formattedText value="Page Size "/></div>
+                            <div class="slds-col">
+                                <lightning:select aura:id="pageSizeSelector" name="pageSizeSelector" label="Select a Page Size"  variant="label-hidden" onchange="{!c.selectPageSize}">
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="200">200</option>
+                                </lightning:select>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </aura:if>
+        </aura:set>
+    </lightning:card>
+
+    <aura:if isTrue="{! !v.isBatchJobRunning}">
+        <div aura:id="modalBox" id="modalBox" role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="{!v.modalCloseLabel}" onclick="{!c.cancelSelectionModal}">
+                        <lightning:icon iconName="utility:close" size="medium" variant="inverse" alternativeText="{!v.modalCloseLabel}" />
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{!v.modalTitleLabel}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <aura:if isTrue="{!v.isSorting}">
+                        <ui:outputText value="{!v.modalResortMessageLabel}"/> 
+                    <aura:set attribute="else">
+                        <ui:outputText value="{!v.modalNavigationMessageLabel}"/> 
+                    </aura:set>
+                    </aura:if>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.cancelSelectionModal}">{!v.modalCancelLabel}</button>
+                    <button class="slds-button slds-button_brand" onclick="{!c.handleSelectionModalConfirmation}">{!v.modalConfirmLabel}</button>
+                </footer>
+            </div>
+        </div>
+    </aura:if>
+
+    <aura:if isTrue="{! !v.isBatchJobRunning}">
+        <div aura:id="modalDeleteSelection" id="modalDeleteSelection" role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button id="btnModalDeleteClose" class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="{!v.modalCloseLabel}" onclick="{!c.cancelDeleteSelectionModal}">
+                        <lightning:icon iconName="utility:close" size="medium" variant="inverse" alternativeText="{!v.modalCloseLabel}" />
+                    </button>
+                    <h2 id="modalDeleteTitle" class="slds-text-heading_medium slds-hyphenate">{!v.deleteModalTitleLabel}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <p>{!v.deleteModalDirectionLabel}</p>
+                </div>
+
+                <div aura:id="notificationDisplay" class="slds-modal__content slds-p-left_medium slds-p-top_x-small slds-p-bottom_x-small slds-p-right_medium slds-hide">
+                    <div class="slds-grid">
+                        <div class="slds-icon--small slds-m-right--small slds-col slds-no-flex">
+                            <lightning:icon iconName="utility:warning" variant="error" size="small" alternativeText="error" />
+                        </div>
+                        <div class="slds-col slds-align-middle slds-text-color_error">
+                            <p>{!v.reviewErrorsLabel}</p>
+                            <p aura:id="errorTrackingLevel" class="slds-hide">{!v.errorTrackingLevelLabel}</p>
+                            <p aura:id="errorEmail" class="slds-hide">{!v.errorEmailLabel}</p>
+                            <p aura:id="errorEmailListSize" class="slds-hide"> {!v.errorEmailListSizeLabel}</p>
+                            <p aura:id="errorConfirm" class="slds-hide">{!v.errorConfirmIntentLabel}</p>
+                            <p aura:id="errorServer" class="slds-hide">{!v.deleteTrackingDataServerError}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-modal__content slds-p-around_medium overflow-is-visible" id="modal-content-id-1">
+                    <lightning:input aura:id="chkSendDef" name="chkSendDef" class="slds-p-bottom_medium" type="checkbox" label="{!v.emailSendDefinitionLabel}" onchange="{!c.checkSendDef}" />
+                    <div class="slds-m-left_large">
+                        <div class="slds-show_inline-block">
+                            <lightning:input aura:id="chkIER" name="chkIER" class="slds-p-bottom_xx-small" type="checkbox" label="{!v.ierLabel}" onchange="{!c.checkIER}" />
+                        </div>
+                        <div class="slds-is-relative slds-show_inline-block">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__icon slds-align-middle" onmouseover="{!c.toggleTooltip}" onmouseout="{!c.toggleTooltip}" data-tooltipid="tooltipIER">
+                                    <button class="slds-button slds-button slds-button--icon" aria-describedby="tooltipIER">
+                                        <lightning:icon iconName="utility:info" size="xx-small" alternativeText="show tooltip with IER description"/>
+                                        <span class="slds-assistive-text">show tooltip with IER description</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div aura:id="tooltipIER" class="slds-popover slds-popover--tooltip slds-popover_small slds-nubbin_bottom-left slds-is-absolute data-type-tooltip slds-hide" role="tooltip" id="tooltipIER">
+                                <div class="slds-popover__body">{!v.ierCheckboxTooltip}</div>
+                            </div>
+                        </div>
+
+                        <fieldset class="slds-form-element slds-m-left_large slds-p-bottom_medium">
+                            <div class="slds-form-element__control">
+                                <span class="slds-radio slds-p-bottom_xxx-small">
+                                    <lightning:input aura:id="radioDeleteAll" type="radio" name="radioDeleteAll" label="{!v.ierDeleteAllLabel}" value="ALL" onchange="{!c.handleIEROptionSelect}" />
+                                </span>
+                                <span class="slds-radio slds-p-bottom_xxx-small">
+                                    <lightning:input aura:id="radioDeleteOnlyNotOpenedNotClicked" type="radio" name="radioDeleteOnlyNotOpenedNotClicked" label="{!v.ierDeleteNotOpenedNotClickedLabel}" value="NOT_OPENED_AND_NOT_CLICKED" onchange="{!c.handleIEROptionSelect}" />
+                                </span>
+                                <span class="slds-radio slds-p-bottom_xxx-small">
+                                    <lightning:input aura:id="radioDeleteOnlyNotOpened" type="radio" name="radioDeleteOnlyNotOpened" label="{!v.ierDeleteNotOpenedLabel}" value="NOT_OPENED" onchange="{!c.handleIEROptionSelect}" />
+                                </span>
+                                <span class="slds-radio slds-p-bottom_xxx-small">
+                                    <lightning:input aura:id="radioDeleteOnlyNotClicked" type="radio" name="radioDeleteOnlyNotClicked" label="{!v.ierDeleteNotClickedLabel}" value="NOT_CLICKED" onchange="{!c.handleIEROptionSelect}" />
+                                </span>
+                            </div>
+                        </fieldset>
+                        <lightning:input aura:id="chkILD" name="chkILD" class="slds-p-bottom_medium slds-m-left_large" type="checkbox" label="{!v.ildLabel}" onchange="{!c.checkILD}" />
+                    </div>
+
+                    <div class="slds-show_inline-block">
+                        <lightning:input aura:id="chkALD" name="chkALD" class="slds-p-bottom_x-large slds-m-left_large" type="checkbox" label="{!v.aldLabel}" onchange="{!c.checkALD}" />
+                    </div>
+                    <div class="slds-is-relative slds-show_inline-block">
+                        <div class="slds-form-element">
+                            <div class="slds-form-element__icon slds-align-middle" onmouseover="{!c.toggleTooltip}" onmouseout="{!c.toggleTooltip}" data-tooltipid="tooltipALD">
+                                <button class="slds-button slds-button slds-button--icon" aria-describedby="tooltipALD">
+                                    <lightning:icon iconName="utility:info" size="xx-small" alternativeText="show tooltip with ALD description"/>
+                                    <span class="slds-assistive-text">show tooltip with ALD description</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div aura:id="tooltipALD" class="slds-popover slds-popover--tooltip slds-popover_small slds-nubbin_bottom-left slds-is-absolute data-type-tooltip slds-hide" role="tooltip" id="tooltipALD">
+                            <div class="slds-popover__body">{!v.aldCheckboxTooltip}</div>
+                        </div>
+                    </div>
+
+                    <lightning:layout verticalAlign="end">
+                            <lightning:layoutItem flexibility="grow">
+                                <lightning:input aura:id="emailAddress" type="email" class="hide-error-message" label="{!v.confirmEmailLabel}" name="inputEmail" onblur="{!c.handleEmailBlur}" />
+                            </lightning:layoutItem>
+                            <lightning:layoutItem class="slds-p-left_x-small">
+                                <lightning:button name="btnAddEmail" variant="brand" label="{!v.confirmEmailAddButtonLabel}" onclick="{!c.addEmail}" />
+                            </lightning:layoutItem>
+                    </lightning:layout>
+                    
+                    <h3 class="slds-text-body--small">{!v.confirmEmailDescriptionLabel}</h3>
+                    
+                    <div>
+                        <aura:iteration var="email" items="{!v.emailAddresses}">
+                            <lightning:pill label="{!email}" onremove="{!c.removePill}" />
+                        </aura:iteration>
+                    </div>
+
+                    <lightning:input aura:id="chkConfirmDelete" class="slds-p-top_large" name="chkConfirmDelete" type="checkbox" label="{!v.confirmIntentLabel}" onchange="{!c.checkConfirm}" />
+                </div>
+                <footer class="slds-modal__footer">
+                    <button id="btnModalDeleteCancel" class="slds-button slds-button_neutral" onclick="{!c.cancelDeleteSelectionModal}">{!v.modalCancelLabel}</button>
+                    <button id="btnModalDeleteDelete" class="slds-button slds-button_brand" onclick="{!c.handleDeleteSelectionModalConfirmation}">{!v.modalDeleteButtonLabel}</button>
+                </footer>
+            </div>
+        </div>
+    </aura:if>
+
+    <aura:if isTrue="{! !v.isBatchJobRunning}">
+        <div aura:id="modalBackdrop" id="modalBackdrop" class="slds-backdrop"></div>
+    </aura:if>
+</aura:component>

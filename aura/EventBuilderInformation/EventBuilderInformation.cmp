@@ -1,0 +1,257 @@
+<aura:component controller="EventApi.EventsBuilderController" >
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:attribute name="eventObj" type="Object"/>
+  <aura:attribute name="validationObj" type="Map" default="{}"/>
+  <aura:attribute name="dateFormat" type="String"/>
+  <aura:attribute name="customFields" type="List" default="[]"/>
+  <aura:attribute name="customFieldsFound" type="Boolean" default="false"/>
+  <aura:attribute name="communityGroupId" type="String"/>
+  <aura:attribute name="organizationId" type="String" description="Organization Id"/>
+  <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+  <aura:handler event="Framework:FileUploadCropEvent" action="{!c.handleFileUploadCropEvent}"/>
+  <aura:handler event="Framework:RichTextInputFieldModalEvent" action="{!c.handleFileUploadCropEvent}"/>
+  <aura:attribute name="validated" type="Boolean" default="true" description="Is Validated"/>
+  <aura:method name="validationInfo" action="{!c.validationInfo}" description="Validate Info"/>
+  <aura:handler event="Framework:UIApiResponseEvent" action="{!c.handleUIApiResponseEvent}"/>
+  <aura:handler event="EventApi:reloadEventCapacity" action="{!c.handleReloadEventCapacity}"/>
+  <aura:attribute name="eventCapacity" default="" type="Integer"/>
+  <aura:attribute name="eventBuilderInformationGlobalId" type="string" default=""/>
+
+  <Framework:UIApi uniqueId="eventFields" aura:id="fieldUIApi"/>
+  <div data-name="loader" class="" aura:id="loader">
+    <div class="slds-grid">
+      <div class="slds-col slds-text-align--center slds-align-middle">
+        <img src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+        <span data-name="Loading_Event_Builder" class="slds-text-heading--medium">{!$Label.EventApi.Loading_Event_Builder}</span>
+      </div>
+    </div>
+  </div>
+  <div data-name="mainBody" class="slds-col slds-size--1-of-1 hidden" aura:id="mainBody">
+    <div class="slds-grid slds-wrap">
+      <div class="slds-size--5-of-6">
+        <div class="slds-grid slds-wrap slds-m-left--medium slds-p-left--xx-small">
+          <div class="slds-size--3-of-4">
+            <Framework:InputFields qaData='{"type" : "input", "name": "name"}' group="eventInformation" fieldType="string" isRequired="true" aura:id="name" label="{!$Label.EventApi.Event_Name_Event_Builder}" value="{!v.eventObj}" maxlength="80" helpText="{!$Label.EventApi.Event_Builder_Event_Name}"/>
+          </div>
+        </div>
+        <div class="slds-grid slds-wrap slds-m-left--medium slds-p-left--xx-small">
+          <div class="slds-size--3-of-4">
+            <Framework:InputFields qaData='{"type" : "input", "name": "displayName"}' group="eventInformation" fieldType="string" isRequired="true" aura:id="displayName" label="{!$Label.EventApi.Event_Display_Name_Event_Builder}" value="{!v.eventObj}" maxlength="255" helpText="{!$Label.EventApi.Event_Builder_Event_Display_Name}"/>
+          </div>
+        </div>
+        <div class="slds-size_1-of-1 slds-has-divider--top-space">
+          <div class="slds-grid slds-wrap slds-size_1-of-1">
+            <a href="javascript:void(0);" class="fonteva-icon_rotate slds-p-right--xx-small" onclick="{!c.toggleBody}" id="datesInfo">
+              <lightning:icon iconName="utility:down" size="x-small"/>
+            </a>
+            <div class="slds-grid slds-wrap slds-p-bottom--medium uiInputDefaultError">
+              <div class="slds-text-heading--small">
+                {!$Label.EventApi.Event_Builder_Information_Event_Dates}
+              </div>
+              <div class="slds-p-left--medium form-element__help">
+                <aura:if isTrue="{!!empty(v.validationObj.dateInfoFields)}">
+                  {!format($Label.EventApi.Event_Builder_Information_Validation_Message, v.validationObj.dateInfoFields)}
+                </aura:if>
+              </div>
+            </div>
+          </div>
+          <div data-name="duration" class="slds-grid slds-grid_vertical slds-size_1-of-1 slds-p-left--medium" aura:id="datesInfoFields">
+            <EventApi:EventDuration durationObj="{!v.eventObj}" aura:id="duration" dateFormat="{!v.dateFormat}"/>
+          </div>
+        </div>
+        <div class="slds-size_1-of-1 slds-has-divider--top-space">
+          <div class="slds-grid slds-wrap slds-size_1-of-1">
+            <a href="javascript:void(0);" class="fonteva-icon_rotate slds-p-right--xx-small" onclick="{!c.toggleBody}" id="eventInfo">
+              <lightning:icon iconName="utility:down" size="x-small"/>
+            </a>
+            <div class="slds-text-heading--small slds-p-bottom--medium">
+              {!$Label.EventApi.Event_Builder_Information_Event_Info_Details}
+            </div>
+          </div>
+          <div class="slds-grid slds-grid_vertical slds-size_1-of-1 slds-p-left--medium" aura:id="eventInfoFields">
+            <div class="slds-size--1-of-1">
+              <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+                <div>
+                  <Framework:InputFields qaData='{"type" : "input", "name": "enableEventDisplayNameAndDT"}' group="eventInformation" fieldType="boolean" aura:id="enableEventDisplayNameAndDT" label="Enable Event Display Name and Date/Time" value="{!v.eventObj}" helpText="{!$Label.EventApi.Event_Builder_Enable_DisplayName_And_DT_HelpText}"/>
+                </div>
+              <Framework:InputFields fieldType="textarea"
+                                     label="{!$Label.EventApi.Event_Builder_Location_And_Time}"
+                                     helpText="{!$Label.EventApi.Event_Builder_Location_And_Time_Help}"
+                                     maxlength="255"
+                                     aura:id="locationAndDate"
+                                     group="eventInformation"
+                                     value="{!v.eventObj}" qaData='{"type" : "input", "name": "locationAndDate"}'/>
+              </aura:if>
+            </div>
+            <div class="slds-size--1-of-1">
+              <Framework:InputFields qaData='{"type" : "input", "name": "eventOverview"}' group="eventInformationText" fieldType="richtext" aura:id="eventOverview" label="{!$Label.EventApi.Event_Overview_Event_Builder}" value="{!v.eventObj}" />
+            </div>
+            <div class="slds-size--1-of-1">
+              <Framework:InputFields qaData='{"type" : "input", "name": "description"}' group="eventInformation" fieldType="textarea"  aura:id="description" label="{!$Label.EventApi.Event_Description_Event_Builder}" value="{!v.eventObj}" helpText="{!$Label.EventApi.Event_Description_Help_Text}" fireChangeEvent="true" otherAttributes='{"rows" : 5}'/>
+            </div>
+            <div class="slds-size--1-of-3">
+              <div class="slds-m-bottom_x-small">
+                <div class="slds-form-element__label">
+                  {!$Label.EventApi.Agenda_Capacity_Ticket_Quantity}
+                </div>
+                <div class="slds-form-element_control">
+                  <aura:if isTrue="{!v.eventCapacity}">{!v.eventCapacity}<aura:set attribute="else">{!v.eventObj.ticketQuantity}</aura:set></aura:if>
+                </div>
+              </div>
+            </div>
+            <div class="slds-grid slds-wrap slds-p-vertical--x-small">
+              <div class="slds-size--1-of-3">
+                <Framework:InputFields qaData='{"type" : "input", "name": "autoSellOutEvent"}' group="eventInformation" fieldType="boolean" aura:id="autoSellOutEvent" label="Auto Sell Out" value="{!v.eventObj}" helpText="{!$Label.EventApi.Event_Builder_Auto_Sell_Out}"/>
+              </div>
+              <div class="slds-size--1-of-3">
+                <Framework:InputFields qaData='{"type" : "input", "name": "soldOut"}' group="eventInformation" fieldType="boolean" aura:id="soldOut" label="Sold Out" value="{!v.eventObj}" helpText="{!$Label.EventApi.Event_Builder_Sold_Out}"/>
+              </div>
+            </div>
+            <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+              <div class="slds-size--1-of-1">
+                <div class="slds-input-width--auto slds-grid">
+                  <Framework:InputFields isRequired="true" qaData='{"type" : "input", "name": "registrationTimer"}' group="eventInformation" fieldType="integer" aura:id="registrationTimer" format="0" label="{!$Label.EventApi.Registration_Timer}" value="{!v.eventObj}" otherAttributes='{min : 1 , max : 99}' minValueValidationMessage="Registration timer cannot be negative and must be greater than " maxValueValidationMessage="Registration timer cannot be greater than " helpText="The time allowed for purchasing an event registration."/>
+                </div>
+              </div>
+            </aura:if>
+          </div>
+        </div>
+        <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+        <div class="slds-size_1-of-1 slds-has-divider--top-space">
+          <div class="slds-grid slds-wrap slds-size_1-of-1">
+            <a href="javascript:void(0);" class="fonteva-icon_rotate slds-p-right--xx-small" onclick="{!c.toggleBody}" id="attendeeInfo">
+              <lightning:icon iconName="utility:down" size="x-small"/>
+            </a>
+            <div class="slds-text-heading--small slds-p-bottom--medium">
+              {!$Label.EventApi.Event_Builder_Information_Contact_Attendee_Settings}
+            </div>
+          </div>
+          <div class="slds-grid slds-grid_vertical slds-size_1-of-1 slds-p-left--medium" aura:id="attendeeInfoFields">
+            <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+              <div class="slds-size--1-of-1">
+                <div class="slds-grid slds-wrap">
+                  <div class="slds-size--2-of-4">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "disableAttendeeAssignment"}' group="eventInformation" fieldType="boolean" aura:id="disableAttendeeAssignment" label="{!$Label.EventApi.Event_Builder_Disable_Attendee_Assignment}" value="{!v.eventObj}" helpText="{!$Label.EventApi.Event_Builder_Disable_Attendee_Assignment_Helptext}" fireChangeEvent="true"/>
+                  </div>
+                </div>
+              </div>
+              <div class="slds-size--1-of-1">
+                <div class="slds-grid slds-wrap">
+                  <div class="slds-size--2-of-4">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "enableContactSearch"}' group="eventInformation" fieldType="boolean" aura:id="enableContactSearch" label="Enable Contact Search" value="{!v.eventObj}" helpText="{!$Label.EventApi.Event_Builder_Enable_Contact_Search}" disabled="{!v.eventObj.disableAttendeeAssignment}" fireChangeEvent="true"/>
+                  </div>
+                  <div class="slds-size--2-of-4">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "searchAllContacts"}' group="eventInformation" fieldType="boolean" aura:id="searchAllContacts" label="Search All Contacts" value="{!v.eventObj}" helpText="{!$Label.EventApi.Event_Builder_Search_All_Contacts}" disabled="{!v.eventObj.disableAttendeeAssignment}"/>
+                  </div>
+                </div>
+              </div>
+              <div class="slds-size--1-of-1">
+                <div class="slds-grid slds-wrap">
+                  <div class="slds-size--2-of-4">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "enableContactRestriction"}' group="eventInformation" fieldType="boolean" aura:id="enableContactRestriction" label="Enable Contact Restriction" value="{!v.eventObj}" helpText="{!$Label.EventApi.Event_Builder_Enable_Contact_Restriction}" disabled="{!v.eventObj.disableAttendeeAssignment}" fireChangeEvent="true"/>
+                  </div>
+                  <div class="slds-size--2-of-4">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "createContactsForAttendees"}' group="eventInformation" fieldType="boolean" aura:id="createContactsForAttendees" label="Create Contacts for Attendees" value="{!v.eventObj}" fireChangeEvent="true" disabled="{!v.eventObj.disableAttendeeAssignment}" helpText='Enables contact creation for that event. If "Enable Account Search" is not checked, contacts created will be added to the primary registrant&apos;s account or into an individual person account depending on if the "Enable Individual Accounts" setting is active.'/>
+                  </div>
+                </div>
+              </div>
+              <div class="slds-size--1-of-1">
+                <div class="slds-grid slds-wrap">
+                  <div class="slds-size--2-of-4">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "emailOptional"}' group="eventInformation" fieldType="boolean" aura:id="emailOptional" label="Guest Email Optional" disabled="{!v.eventObj.createContactsForAttendees}" value="{!v.eventObj}" helpText="When checked, guest attendees will not need an email to register." fireChangeEvent="true"/>
+                  </div>
+                </div>
+              </div>
+              <div class="slds-size--1-of-1 slds-p-top--x-small">
+                <Framework:InputFields qaData='{"type" : "input", "name": "contactSearchResultFieldsCSV"}' group="eventInformation" fieldType="textarea" aura:id="contactSearchResultFieldsCSV" label="Contact Search Result Fields CSV" value="{!v.eventObj}" otherAttributes='{"rows" : 5}' helpText="{!$Label.EventApi.Event_Builder_Contact_Search_Fields_CSV}" disabled="{!v.eventObj.disableAttendeeAssignment}"/>
+              </div>
+            </aura:if>
+          </div>
+        </div>
+        <div class="slds-size_1-of-1 slds-has-divider--top-space">
+          <div class="slds-grid slds-wrap slds-size_1-of-1">
+            <a href="javascript:void(0);" class="fonteva-icon_rotate slds-p-right--xx-small" onclick="{!c.toggleBody}" id="eventTypeInfo">
+              <lightning:icon iconName="utility:down" size="x-small"/>
+            </a>
+            <div class="slds-text-heading--small slds-p-bottom--medium">
+              {!$Label.EventApi.Event_Builder_Information_Optional_Event_Types}
+            </div>
+          </div>
+          <div class="slds-grid slds-grid_vertical slds-size_1-of-1 slds-p-left--medium" aura:id="eventTypeInfoFields">
+            <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+              <div class="slds-size--1-of-1">
+                <div class="slds-grid slds-wrap">
+                  <div class="slds-size--2-of-4">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "invitationOnlyEvent"}' group="eventInformation" fieldType="boolean" aura:id="invitationOnlyEvent" label="Invitation Only" value="{!v.eventObj}" disabled="{!v.eventObj.enableAssignedSeating}" fireChangeEvent="true" helpText="{!$Label.EventApi.Event_Builder_Invitation_Only}"/>
+                  </div>
+                  <div class="slds-size--2-of-4">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "enableAssignedSeating"}' group="eventInformation" fieldType="boolean" aura:id="enableAssignedSeating" label="Enable Assigned Seating" value="{!v.eventObj}" disabled="{!or(v.eventObj.invitationOnlyEvent,v.eventObj.attendeeCount > 0)}" fireChangeEvent="true" helpText="{!$Label.EventApi.Event_Builder_Enable_Assigned_Seating}"/>
+                  </div>
+                </div>
+              </div>
+            </aura:if>
+          </div>
+        </div>
+        </aura:if>
+        <div class="slds-size_1-of-1 slds-has-divider--top-space">
+          <div class="slds-grid slds-wrap slds-size_1-of-1">
+            <a href="javascript:void(0);" class="fonteva-icon_rotate slds-p-right--xx-small" onclick="{!c.toggleBody}" id="additionalInfo">
+              <lightning:icon iconName="utility:down" size="x-small"/>
+            </a>
+            <div class="slds-grid slds-wrap slds-p-bottom--medium uiInputDefaultError">
+              <div class="slds-text-heading--small">
+                {!$Label.EventApi.Event_Builder_Information_Additional_Information}
+              </div>
+              <div class="slds-p-left--medium form-element__help">
+                <aura:if isTrue="{!!empty(v.validationObj.additionalInfoFields)}">
+                  {!format($Label.EventApi.Event_Builder_Information_Validation_Message, v.validationObj.additionalInfoFields)}
+                </aura:if>
+              </div>
+            </div>
+          </div>
+          <div class="slds-grid slds-grid_vertical slds-size_1-of-1 slds-p-left--medium" aura:id="additionalInfoFields">
+            <div class="slds-size--3-of-4">
+              <Framework:InputFields qaData='{"type" : "input", "name": "eventCategoryId"}' group="eventInformation" fieldType="lookup" isRequired="true" aura:id="eventCategoryId" label="Event Category" value="{!v.eventObj}" fireChangeEvent="true" otherAttributes='{"type" : "EventApi__Event_Category__c"}'/>
+            </div>
+            <div class="slds-size--3-of-4">
+              <Framework:InputFields qaData='{"type" : "input", "name": "communityGroup"}' group="eventInformation" fieldType="lookup" aura:id="communityGroup" label="{!$Label.EventApi.Attach_Event_Community_Event_Builder}" value="{!v.eventObj}" otherAttributes='{"type" : "PagesApi__Community_Group__c"}' helpText="{!$Label.EventApi.Community_Group_Tie_To_Event_Help_Text}" fireChangeEvent="true"/>
+            </div>
+            <aura:if isTrue="{!v.eventObj.style != 'Conference'}">
+              <div class="slds-size--1-of-1">
+                <Framework:InputFields qaData='{"type" : "input", "name": "eventReminder"}' group="eventInformationText" fieldType="richtext" aura:id="eventReminder" label="{!$Label.EventApi.Calendar_Reminder_Text_Event_Builder}" value="{!v.eventObj}" helpText="Replaces Event: Description. When the customer clicks an &quot;Add to Calendar&quot; link on the event, this text is the body of the calendar item. By default, the Event Name, Start Time, End Time, and Venue information are included."/>
+              </div>
+              <aura:set attribute="else">
+                <div class="slds-size--1-of-1">
+                  <Framework:InputFields qaData='{"type" : "input", "name": "eventNotification"}' group="eventInformationText" fieldType="richtext" aura:id="eventNotification" label="{!$Label.EventApi.Email_Notification_Text_Event_Builder}" value="{!v.eventObj}" />
+                </div>
+              </aura:set>
+            </aura:if>
+          </div>
+        </div>
+        <aura:if isTrue="{!v.customFields.length > 0}">
+          <div class="slds-size_1-of-1 slds-has-divider--top-space">
+            <div class="slds-grid slds-wrap slds-size_1-of-1">
+              <a href="javascript:void(0);" class="fonteva-icon_rotate slds-p-right--xx-small" onclick="{!c.toggleBody}" id="eventCustom" aura:id="eventCustomCaret">
+                <lightning:icon iconName="utility:down" size="x-small"/>
+              </a>
+              <div class="slds-text-heading--small slds-p-bottom--medium">
+                {!$Label.EventApi.Event_Builder_Custom_Fields}
+              </div>
+            </div>
+            <div class="slds-grid slds-grid_vertical slds-size_1-of-1 slds-p-left--medium" aura:id="eventCustomFields">
+              <div class="slds-size--1-of-1 slds-col--padded">
+                  <aura:iteration items="{!v.customFields}" var="customField">
+                    <div class="slds-size--1-of-1">
+                      <Framework:InputFields qaData='{"type" : "input", "name": "customfield"}' aura:id="eventCustomField" group="eventBuilderCustomFields" value="{!v.eventObj.customFieldValues}" sObjectName="{!customField.objectName}" fieldName="{!customField.apiName}" secondaryId="{!customField.apiName}" useSecondaryId="true" fireChangeEvent="true"/>
+                    </div>
+                  </aura:iteration>
+              </div>
+            </div>
+          </div>
+        </aura:if>
+      </div>
+    </div>
+  </div>
+  <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

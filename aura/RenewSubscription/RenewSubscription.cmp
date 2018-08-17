@@ -1,0 +1,7 @@
+<aura:component description="RenewSubscription" implements="force:LightningQuickActionWithoutHeader,force:hasRecordId" access="global" controller="OrderApi.RenewSubscriptionsController">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <div class="slds-text-align--center slds-p-top--x-small">
+    <img src="{!$Resource.OrderApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+    <span class="slds-text-heading--medium">Loading...</span>
+  </div>
+</aura:component>

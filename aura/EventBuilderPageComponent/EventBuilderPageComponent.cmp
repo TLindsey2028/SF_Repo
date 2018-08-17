@@ -1,0 +1,47 @@
+<aura:component description="EventBuilderPageComponent">
+    <aura:attribute name="pageComponent" type="Map" required="true"/>
+    <aura:attribute name="globalId" type="String"/>
+    <aura:attribute name="autoExpand" type="Boolean" default="false"/>
+    <aura:attribute name="index" type="Integer" default="0"/>
+    <aura:attribute name="validated" type="Boolean" default="true"/>
+    <aura:attribute name="deleteComponent" type="Aura.Action" required="true"/>
+    <aura:attribute name="pageComponents" type="List" default="[]"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <div class="slds-card slds-col pageComponentDetail draggable-row" data-id="{!v.pageComponent.order}">
+        <div class="slds-card__body slds-p-horizontal--medium">
+            <div class="slds-grid">
+                <div class="slds-align-middle">
+                    <div class="slds-grid slds-grid_vertical fonteva-button_pagination">
+                        <div>
+                            <lightning:buttonIcon alternativeText="up" iconName="utility:up" variant="border" disabled="{!v.index == 0}" onclick="{!c.moveUp}" value="{!v.index}"/>
+                        </div>
+                        <div>
+                            <lightning:buttonIcon alternativeText="down" iconName="utility:down" variant="border" disabled="{!v.index == (v.pageComponents.length - 1)}" onclick="{!c.moveDown}" value="{!v.index}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-align-middle">
+                    <span class="slds-m-right--small slds-is-relative">
+                    </span>
+                    {!v.pageComponent.componentLabel}
+                    <aura:if isTrue="{!!v.validated}">
+                        &nbsp;&nbsp;<lightning:icon iconName="utility:warning" variant="error" size="x-small" aura:id="displayView_ValidationIcon"/> Required fields missing.
+                    </aura:if>
+                </div>
+                <div class="slds-col--bump-left">
+                    <button class="{!and(v.pageComponent.editComponentLabel != null,v.pageComponent.editComponentLabel != '') ? 'slds-button slds-button--icon-border' : 'hidden'}" onclick="{!c.saveAndCollapseCard}">
+                        <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#edit'}"
+                                       svgClass="slds-button__icon"
+                                       assistiveText="Edit" />
+                    </button>
+                    <button class="slds-button slds-button--icon-border" onclick="{!v.deleteComponent}" data-id="{!v.pageComponent.id}">
+                        <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#delete'}"
+                                       svgClass="slds-button__icon"
+                                       assistiveText="Delete" />
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</aura:component>

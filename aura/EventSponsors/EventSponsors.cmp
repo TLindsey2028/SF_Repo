@@ -1,0 +1,140 @@
+<aura:component description="EventSponsors" access="global" implements="LTE:EventInterface" controller="LTE.SponsorsController">
+    <aura:attribute name="sponsorPackages" type="Object[]"/>
+	<aura:attribute name="hasSponsors" type="Boolean"/>
+    <ltng:require styles="{!join(',', $Resource.LTE__SLDS_Lens + '/css/lens.css', $Resource.LTE__SLDS_Lens + '/css/tiny-slider.css' , $Resource.LTE__SLDS_Lens+'/css/fa.css')}" scripts="{!join(',', $Resource.PagesApi__FontevaHelper+'/FontevaHelper.js', $Resource.LTE__SLDS_Lens + '/js/tiny-slider.js')}" afterScriptsLoaded="{!c.doInit}"/>
+
+    <aura:if isTrue="{!v.hasSponsors}">
+        <div class="fonteva-event-component slds-p-horizontal--medium">
+            <div class="slds-grid slds-grid--vertical slds-p-top_medium">
+                <div>
+                    <p data-name="Event_Sponsors" class="slds-text-heading--medium slds-font-weight--semi-bold">
+                        {!$Label.LTE.Event_Sponsors}
+                    </p>
+                </div>
+                <div data-name="sponsorPackages" class="slds-grid slds-grid--vertical">
+                    <aura:iteration items="{!v.sponsorPackages}" var="sponsorPackage" indexVar="index">
+                        <aura:if isTrue="{!sponsorPackage.sponsors.length > 0}">
+                            <div data-name="sponsorPackage-displayName" class="slds-text-heading--medium slds-font-weight--semi-bold slds-m-bottom--small slds-m-top--large">
+                                {!sponsorPackage.displayName}
+                            </div>
+                            <hr class="slds-size--1-of-1 slds-m-vertical--x-small"/>
+                            <div data-name="sponsorPackage-details" class="slds-grid--pull-padded slds-grid slds-wrap">
+
+                                <aura:if isTrue="{!sponsorPackage.sponsors.length == 1}">
+                                    <aura:iteration items="{!sponsorPackage.sponsors}" var="sponsor" indexVar="index">
+                                        <aura:if isTrue="{!sponsor.imageURL != null}">
+                                            <div data-name="sponsorHyperlink" class="slds-p-around_small">
+                                                <aura:if isTrue="{!sponsor.sponsorHyperlink != null}">
+                                                    <a href="javascript:void(0);" onclick="{!c.takeMeToHyperLink}" data-id="{!sponsor.sponsorHyperlink}">
+                                                        <Framework:Img src="{!sponsor.imageURL}"/>
+                                                    </a>
+                                                    <aura:set attribute="else">
+                                                        <Framework:Img src="{!sponsor.imageURL}"/>
+                                                    </aura:set>
+                                                </aura:if>
+                                                <div>
+                                                    <p data-name="sponsor-name" class="slds-text-heading--small slds-font-weight--semi-bold slds-m-vertical_small">
+                                                        {!sponsor.name}
+                                                    </p>
+                                                    <span class="{!empty(sponsor.description) ? 'slds-hide' : ''}">
+                                                        <p data-name="sponsor-description" class="slds-text-body--regular">
+                                                            <ui:outputRichText value="{!sponsor.description}" linkify="true" class="event-rich-text"/>
+                                                        </p>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </aura:if>
+                                <aura:if isTrue="{!sponsorPackage.sponsors.length == 2}">
+                                    <aura:iteration items="{!sponsorPackage.sponsors}" var="sponsor" indexVar="index">
+                                        <aura:if isTrue="{!sponsor.imageURL != null}">
+                                            <div data-name="sponsorHyperlink" class="slds-size--1-of-1 slds-medium-size--1-of-3 slds-large-size--1-of-2 slds-p-around--small">
+                                                <aura:if isTrue="{!sponsor.sponsorHyperlink != null}">
+                                                    <a href="javascript:void(0);" onclick="{!c.takeMeToHyperLink}" data-id="{!sponsor.sponsorHyperlink}">
+                                                        <Framework:Img src="{!sponsor.imageURL}"/>
+                                                    </a>
+                                                    <aura:set attribute="else">
+                                                        <Framework:Img src="{!sponsor.imageURL}"/>
+                                                    </aura:set>
+                                                </aura:if>
+                                                <div class="slds-size--1-of-1">
+                                                    <div class="slds-size--1-of-1">
+                                                        <p data-name="sponsor-name" class="slds-text-heading--small slds-font-weight--semi-bold slds-m-vertical_small">
+                                                            {!sponsor.name}
+                                                        </p>
+                                                        <span class="{!empty(sponsor.description) ? 'slds-hide' : ''}">
+                                                            <p data-name="sponsor-description" class="slds-text-body--regular">
+                                                                <ui:outputRichText value="{!sponsor.description}" linkify="true" class="event-rich-text"/>
+                                                            </p>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </aura:if>
+                                <aura:if isTrue="{!sponsorPackage.sponsors.length == 3}">
+                                    <aura:iteration items="{!sponsorPackage.sponsors}" var="sponsor" indexVar="index">
+                                        <aura:if isTrue="{!sponsor.imageURL != null}">
+                                            <div data-name="takeMeToHyperLink" class="slds-size--1-of-1 slds-medium-size--1-of-3 slds-large-size--1-of-4 slds-p-horizontal--small slds-p-vertical_medium">
+                                                <aura:if isTrue="{!sponsor.sponsorHyperlink != null}">
+                                                    <a href="javascript:void(0);" onclick="{!c.takeMeToHyperLink}" data-id="{!sponsor.sponsorHyperlink}">
+                                                        <Framework:Img src="{!sponsor.imageURL}"/>
+                                                    </a>
+                                                    <aura:set attribute="else">
+                                                        <Framework:Img src="{!sponsor.imageURL}"/>
+                                                    </aura:set>
+                                                </aura:if>
+                                                <div class="slds-size--1-of-1">
+                                                    <div class="slds-size--1-of-1">
+                                                        <p data-name="sponsor-name" class="slds-text-heading--small slds-font-weight--semi-bold slds-m-vertical_small">
+                                                            {!sponsor.name}
+                                                        </p>
+                                                        <span class="{!empty(sponsor.description) ? 'slds-hide' : ''}">
+                                                            <p data-name="sponsor-descr" class="slds-text-body--regular">
+                                                                <ui:outputRichText value="{!sponsor.description}" linkify="true" class="event-rich-text"/>
+                                                            </p>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </aura:if>
+                                <aura:if isTrue="{!sponsorPackage.sponsors.length >= 4}">
+                                    <aura:iteration items="{!sponsorPackage.sponsors}" var="sponsor" indexVar="index">
+                                        <aura:if isTrue="{!sponsor.imageURL != null}">
+                                            <div data-name="takeMeToHyperLink" class="slds-size--1-of-1 slds-medium-size--1-of-3 slds-large-size--1-of-4 slds-p-horizontal--small slds-p-vertical_medium">
+                                                <aura:if isTrue="{!sponsor.sponsorHyperlink != null}">
+                                                    <a href="javascript:void(0);" onclick="{!c.takeMeToHyperLink}" data-id="{!sponsor.sponsorHyperlink}">
+                                                        <Framework:Img src="{!sponsor.imageURL}"/>
+                                                    </a>
+                                                    <aura:set attribute="else">
+                                                        <Framework:Img src="{!sponsor.imageURL}"/>
+                                                    </aura:set>
+                                                </aura:if>
+                                                <div class="slds-size--1-of-1">
+                                                    <div class="slds-size--1-of-1">
+                                                        <p data-name="sponsor-name" class="slds-text-heading--small slds-font-weight--semi-bold slds-m-vertical_small">
+                                                            {!sponsor.name}
+                                                        </p>
+                                                        <span class="{!empty(sponsor.description) ? 'slds-hide' : ''}">
+                                                            <p data-name="sponsor-descr" class="slds-text-body--regular">
+                                                                <ui:outputRichText value="{!sponsor.description}" linkify="true" class="event-rich-text"/>
+                                                            </p>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </aura:if>
+                            </div>
+                        </aura:if>
+                    </aura:iteration>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

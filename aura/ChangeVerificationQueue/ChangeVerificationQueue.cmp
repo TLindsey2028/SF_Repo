@@ -1,0 +1,258 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable" access="GLOBAL" controller="AQB.ChangeVerificationController">
+    
+    <aura:handler name="init" action="{!c.myAction}" value="{!this}" />
+    <aura:attribute name="access" type="String" access="GLOBAL" />   
+    <aura:attribute name="changes" type="AggregateResult[]" access="GLOBAL" />
+    <aura:attribute name="acId" type="String" access="GLOBAL" />   
+    <aura:attribute name="acName" type="String" access="GLOBAL" />   
+    <aura:attribute name="changeSummary" type="AggregateResult[]" access="GLOBAL" />   
+    <aura:attribute name="changeSet" type="AQB__SoftEdits__c[]" access="GLOBAL" />   
+    <aura:attribute name="totalChanges" type="Integer" access="GLOBAL" />  
+    <aura:attribute name="changeIndex" type="Integer" access="GLOBAL" />  
+    <aura:attribute name="currentChangeNumber" type="String" access="GLOBAL" />  
+    <aura:attribute name="objectName" type="String" access="GLOBAL" />  
+    <aura:attribute name="changeType" type="String" access="GLOBAL" />  
+    <aura:attribute name="changeOwner" type="String" access="GLOBAL" />  
+    <aura:attribute name="changeDate" type="Date" access="GLOBAL" />  
+    <aura:attribute name="moreChanges" type="String" access="GLOBAL" />  
+    <aura:attribute name="errorMessage" type="String" access="GLOBAL" />  
+        <aura:if isTrue="{!v.access == 'No'}">
+            <br /><br /><br />
+            <center>
+                <span class="slds-text-heading--label">You do not have the proper security to view the Change Verification Queue.</span>
+            </center>
+            <aura:set attribute="else">
+                <table>
+                    <tr style="height:100%">
+                        <td style="width:40%; vertical-align:top">
+                            <div class="slds-scrollable--y">
+                                <div style="height:500px;overflow:scroll;">
+                                    
+                                    <table class="slds-table slds-table--bordered slds-table--striped slds-table--cell-buffer">
+                                        <thead>
+                                            <tr class="slds-text-heading--label">
+                                                <th scope="col"><span class="slds-truncate">Account/Contact Name</span></th>
+                                                <th scope="col"><span class="slds-truncate">Changes</span></th>
+                                                <th scope="col"><span class="slds-truncate">Date</span></th>
+                                                <th scope="col"><span class="slds-truncate">Details</span></th> 
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <aura:iteration items="{!v.changes}" var="change">
+                                                <tr>
+                                                    <td>
+                                                        <aura:if isTrue="{!change.aName != null}"> 
+                                                            <span class="prospectname"><a href="{!'/' + change.id}" target="_blank">{!change.aName}</a></span>
+                                                            <aura:set attribute="else">
+                                                                <span class="prospectname"><a href="{!'/' + change.id}" target="_blank">{!change.cName}</a></span>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </td>
+                                                    <td>
+                                                        <span class="prospectname">{!change.cnum}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="prospectname">
+                                                            <ui:outputDateTime value="{!change.changedate}" />
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <aura:if isTrue="{!change.aName != null}"> 
+                                                            <button type="button" id="{!change.id + '^' + change.aName + '^'}" onclick="{!c.showDetails}">Details</button>
+                                                            <aura:set attribute="else">
+                                                                <button type="button" id="{!change.id + '^' + change.cName + '^'}" onclick="{!c.showDetails}">Details</button>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </td>
+                                                </tr>
+                                            </aura:iteration>
+                                        </tbody>
+                                        
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+                        
+                        <!-- Change Info Side -->
+                        
+                        <td style="width:60%; vertical-align:top">
+                            <div class="slds-scrollable--y">
+                                <div style="height:550px;overflow:scroll;">
+                                    
+                                    <aura:if isTrue="{!v.acId != null}"> 
+                                        <!--<h1 style="margin-left:20px;" class="pageType">{!v.objectName} Data Verification - </h1>-->
+                                        <span style="font-weight: bold; margin-left:20px;">{!v.objectName}&nbsp;{!v.changeType}</span>
+                                        by <span style="font-weight: bold;">{!v.changeOwner}</span>
+                                        on <span style="font-weight: bold;"><ui:outputDateTime value="{!v.changeDate}" /></span>
+                                        <br />    
+                                        <span style="font-size: 1.2rem; margin-left:20px;"><a href="{!'/' + v.acId}" target="_blank">{!v.acName}</a></span>
+                                        <hr style="margin-top: 1px; margin-bottom: 2px;"/>
+                                        <aura:if isTrue="{!v.changeIndex == -1}"> 
+                                            <br /><br /><br />
+                                            <center>No More Changes for this Record.</center>
+                                            <aura:set attribute="else">
+                                            <div>
+                                            <aura:if isTrue="{!v.changeType == 'Insert'}">
+                                                <button style="margin-left:20px;" type="button" id="{!v.changeIndex}" onclick="{!c.acceptChange}">Accept Insert</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <button type="button" id="{!v.changeIndex}" onclick="{!c.undoChange}">Undo Insert</button>
+                                            </aura:if>
+                                            <aura:if isTrue="{!v.changeType == 'Update'}">
+                                                <button style="margin-left:20px;" type="button" id="{!v.changeIndex}" onclick="{!c.acceptChange}">Accept All Data</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <button type="button" id="{!v.changeIndex}" onclick="{!c.undoChange}">Restore All Data</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <button type="button" id="{!v.changeIndex}" onclick="{!c.updateChange}">Restore Checked Data</button>
+                                            </aura:if>
+                                            <aura:if isTrue="{!v.changeType == 'Delete'}">
+                                                <button style="margin-left:20px;" type="button" id="{!v.changeIndex}" onclick="{!c.acceptChange}">Accept Delete</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <button type="button" id="{!v.changeIndex}" onclick="{!c.undoChange}">Undo Delete</button>
+                                            </aura:if>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;<button type="button" id="{!v.changeIndex}" onclick="{!c.skip}">Skip</button>
+                                            
+                                            <hr style="margin-top: 3px; margin-bottom: 0px;"/>
+                                            
+                                            
+                                            <!-- change info -->
+                                            <table class="slds-table slds-table--bordered slds-table--striped slds-table--cell-buffer">
+                                                <thead>
+                                                    <tr class="slds-text-heading--label">
+                                                        <th scope="col"><span class="slds-truncate" style="font-weight: bold;">Field</span></th>
+                                                        <aura:if isTrue="{!v.changeType != 'Insert'}">
+                                                            <th scope="col"><span class="slds-truncate" style="font-weight: bold;">Original Data</span></th>
+                                                        </aura:if>
+                                                        <aura:if isTrue="{!v.changeType != 'Delete'}">
+                                                            <th scope="col"><span class="slds-truncate" style="font-weight: bold;">New Data</span></th>
+                                                        </aura:if>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <aura:if isTrue="{!v.changeType == 'Update'}">
+                                                        
+                                                        <aura:iteration items="{!v.changeSet}" var="cs2">
+                                                            <tr>
+                                                                <td>
+                                                                    <span class="prospectname">{!cs2.AQB__FieldLabel__c}</span>
+                                                                </td>
+                                                                <td>
+                                                                    <label for="{!cs2.Id}" class="slds-checkbox">
+                                                                        <input type="checkbox" id="{!cs2.Id}" onchange="{!c.checkboxChange}"/>
+                                                                        <span class="slds-checkbox--faux"></span>
+                                                                        <aura:if isTrue="{!cs2.AQB__OriginalData__c == null}">
+                                                                            <span class="slds-form-element__label">&nbsp;&nbsp;(Blank)</span>
+                                                                            <aura:set attribute="else">
+                                                                                <span class="slds-form-element__label">&nbsp;&nbsp;{!cs2.AQB__OriginalData__c}</span>
+                                                                            </aura:set>
+                                                                        </aura:if>
+                                                                    </label>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="prospectname">
+                                                                        <aura:if isTrue="{!cs2.AQB__NewData__c == null}">
+                                                                            (Blank)
+                                                                            <aura:set attribute="else">
+                                                                                {!cs2.AQB__NewData__c}
+                                                                            </aura:set>
+                                                                        </aura:if>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        </aura:iteration>
+                                                        
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!v.changeType != 'Update'}">
+                                                        
+                                                        <aura:iteration items="{!v.changeSet}" var="cs1">
+                                                            <tr>
+                                                                <td>
+                                                                    <span class="prospectname">{!cs1.AQB__FieldLabel__c}</span>
+                                                                </td>
+                                                                <td>
+                                                                    <aura:if isTrue="{!v.changeType == 'Delete'}">
+                                                                        <aura:if isTrue="{!cs1.AQB__OriginalData__c == null}">
+                                                                            (Blank)
+                                                                            <aura:set attribute="else">
+                                                                                {!cs1.AQB__OriginalData__c}
+                                                                            </aura:set>
+                                                                        </aura:if>                                               
+                                                                        <aura:set attribute="else">
+                                                                            <aura:if isTrue="{!cs1.AQB__NewData__c == null}">
+                                                                                (Blank)
+                                                                                <aura:set attribute="else">
+                                                                                    {!cs1.AQB__NewData__c}
+                                                                                </aura:set>
+                                                                            </aura:if>
+                                                                        </aura:set>
+                                                                    </aura:if>
+                                                                </td>
+                                                            </tr>
+                                                        </aura:iteration>
+                                                        
+                                                    </aura:if>
+                                                </tbody>
+                                            </table>
+                                                </div>
+                                            </aura:set>
+                                        </aura:if>
+                                        
+                                        <aura:set attribute="else">
+                                            <br /><br /><br /><br /><br />
+                                            <center>Click a change to view details.</center>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </aura:set>
+        </aura:if>
+    
+    <div class="slds">
+        <div aria-hidden="true" role="dialog" class="slds-modal slds-modal--prompt slds-fade-in-hide" aura:id="modaldialog">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header slds-theme--info">
+                    <h2 class="slds-text-heading--medium">Warning</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <div>
+                        <legend class="slds-form-element__label slds-text-title--caps">
+                        	<aura:if isTrue="{!v.objectName == 'Account'}">
+                                You are about to delete an Account, all Contacts that are part of that Account and ALL data associated with the Account or its Contacts.
+								Please use EXTREME caution.
+                                <aura:set attribute="else">
+                                    You are about to delete a Contact and ALL data associated with the Contact.
+                                    Please use EXTREME caution.
+                                </aura:set>
+                            </aura:if>
+                        </legend>
+                        <br />
+                        <center>
+                            <ui:button label="Confirm" press="{!c.confirmDelete}" />
+                            <ui:button label="Cancel" press="{!c.cancelDelete}" />
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="slds">
+        <div aria-hidden="true" role="dialog" class="slds-modal slds-modal--prompt slds-fade-in-hide" aura:id="modalErrorMessage">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header slds-theme--info">
+                    <h2 class="slds-text-heading--medium">Error</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <div>
+                        <legend class="slds-form-element__label slds-text-title--caps">
+                        	{!v.errorMessage}
+                        </legend>
+                        <br />
+                        <center>
+                            <ui:button label="OK" press="{!c.confirmErrorMessage}" />
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</aura:component>

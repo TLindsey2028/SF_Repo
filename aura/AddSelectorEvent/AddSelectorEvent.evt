@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="Change Selector Event" access="public">
+  <aura:attribute name="operation" type="String" required='true'/>
+  <aura:attribute name="classes" type="String" required='true'/>
+  <aura:attribute name="idTarget" type="List"  required='true' />
+</aura:event>

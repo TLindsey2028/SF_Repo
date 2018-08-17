@@ -1,0 +1,17 @@
+.THIS{
+  position: relative;
+}
+
+.THIS .speaker-image-modal{
+  min-width: 54rem!important;
+  width: 100%!important;
+}
+
+.THIS .slds-modal__container {
+  max-width: 60rem!important;
+}
+
+.THIS .is-featured-checkbox {
+    margin: auto;
+    padding-top: 15px;
+}

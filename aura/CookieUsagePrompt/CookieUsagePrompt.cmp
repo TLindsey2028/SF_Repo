@@ -1,0 +1,20 @@
+<aura:component description="CookieUsagePrompt" controller="PagesApi.CookieUsagePromptsController" access="global">
+    <ltng:require scripts="{!$Resource.PagesApi__FontevaHelper + '/FontevaHelper.js'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute name="cookieObj" type="Map" default="{}"/>
+    <aura:attribute name="isGuest" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="site" type="String" access="global" required="true" description="Site to load to check if cookie prompt is required"/>
+    <aura:attribute name="contact" type="String" access="global" description="Contact to load to check if cookie prompt is already accepted or not"/>
+    <aura:attribute name="isThemed" type="Boolean" access="global" default="true" description="Boolean to toggle the community theme or not"/>
+    <div class="{!v.isThemed ? 'slds fonteva-portal' : 'slds'}">
+        <Framework:MessagePrompt
+                title="{!$Label.PagesApi.Site_Cookie_Prompt_Header}"
+                severity="info slds-theme--alert-texture"
+                message="{!$Label.PagesApi.Site_Cookie_Prompt_Body}"
+                cancelButtonLabel="{!$Label.PagesApi.Site_Cookie_Prompt_Decline}"
+                closeOnClickAction="{!c.redirect}"
+                submitButtonLabel="{!$Label.PagesApi.Site_Cookie_Prompt_Accept}"
+                submitOnClickAction="{!c.saveCookieResponse}"
+                aura:id="cookieUsagePrompt"/>
+    </div>
+    <Framework:Toast aura:id="toastMessages" />
+</aura:component>

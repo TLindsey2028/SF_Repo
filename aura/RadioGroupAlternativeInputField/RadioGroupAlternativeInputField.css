@@ -1,0 +1,7 @@
+.THIS .slds-button + .slds-button{
+    margin-left: 0!important;
+}
+
+.THIS .slds-radio--button [type=radio]:checked+.slds-radio--button__label {
+    display: table;
+}

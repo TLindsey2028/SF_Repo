@@ -1,0 +1,27 @@
+.THIS .fonteva-summary--items > .fonteva-summary--item:last-of-type {
+    margin-bottom: 0;
+}
+
+.THIS .fonteva-summary--item > div,
+.THIS .fonteva-summary_item-package > div {
+    margin-bottom: .75rem;
+}
+.THIS .fonteva-summary_item-package {
+    margin-left: 1.5rem;
+    position: relative;
+}
+
+.THIS .fonteva-summary_item-package:before {
+    position: absolute;
+    left: -.5rem;
+    font-weight: 600;
+}
+
+.THIS .fonteva-placeholder_custom {
+  width: 30px;
+}
+
+.THIS .fonteva-modal_container.slds-fade-in-open {
+    position: fixed!important;
+    -webkit-backface-visibility: hidden;
+}

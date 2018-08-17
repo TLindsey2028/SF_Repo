@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?><CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help><!-- This is the account ID for the campaign member contact.  This field is only loaded when it is associated with an Account campaign appeal, rather than a Contact campaign appeal. --></help>
+        <label><!-- Account Member --></label>
+        <name>AQB__AccountMember__c</name>
+        <relationshipLabel><!-- Campaign History --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Account --></label>
+        <name>AQB__Account__c</name>
+        <relationshipLabel><!-- Campaign Members --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Active --></label>
+        <name>AQB__Active__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is full mailing address for this Communications List. --></help>
+        <label><!-- Address --></label>
+        <name>AQB__Address__c</name>
+    </fields>
+    <fields>
+        <help><!-- Checkbox to indicate whether the campaign member was not originally associated with the campaign.  However, a subsequent transaction by the member was associated with campaign.  This field is only updated by the software and should be read-only field. --></help>
+        <label><!-- Affinaquest External Add --></label>
+        <name>AQB__AffinaquestExternalAdd__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the Alternate Channel for this Campaign. --></help>
+        <label><!-- Alternate Channel --></label>
+        <name>AQB__AlternateChannel__c</name>
+        <relationshipLabel><!-- Campaign Members (Alternate Channel) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Internal SalesforceID for Campaign Record Type. --></help>
+        <label><!-- Campaign Record Type Id --></label>
+        <name>AQB__CampaignRecordTypeId__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the city of the address for this Communications List. --></help>
+        <label><!-- City --></label>
+        <name>AQB__City__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the Account for this Communication List. --></help>
+        <label><!-- Communication Account --></label>
+        <name>AQB__CommunicationAccount__c</name>
+        <relationshipLabel><!-- Campaign Members (Communication Account) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- This is the Alternate Channel for this Communication List. --></help>
+        <label><!-- Communication Alternate Channel --></label>
+        <name>AQB__CommunicationAlternateChannel__c</name>
+        <relationshipLabel><!-- Campaign Members (Communication Alternate Channels) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- This is the Contact for this Communication List. --></help>
+        <label><!-- Communication Contact --></label>
+        <name>AQB__CommunicationContact__c</name>
+        <relationshipLabel><!-- Campaign Members (Communication Contact) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Describes which Communication Channel is used. --></help>
+        <label><!-- Communications Channel --></label>
+        <name>AQB__CommunicationsChannel__c</name>
+        <picklistValues>
+            <masterLabel>Account Email</masterLabel>
+            <translation><!-- Account Email --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Account Mailing Address</masterLabel>
+            <translation><!-- Account Mailing Address --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Account Matching Gift Address</masterLabel>
+            <translation><!-- Account Matching Gift Address --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Account Permanent Address</masterLabel>
+            <translation><!-- Account Permanent Address --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Account Permanent Address Phone</masterLabel>
+            <translation><!-- Account Permanent Address Phone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Account Phone</masterLabel>
+            <translation><!-- Account Phone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alternate Channel Address</masterLabel>
+            <translation><!-- Alternate Channel Address --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alternate Channel Email</masterLabel>
+            <translation><!-- Alternate Channel Email --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alternate Channel Facebook</masterLabel>
+            <translation><!-- Alternate Channel Facebook --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alternate Channel Instagram</masterLabel>
+            <translation><!-- Alternate Channel Instagram --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alternate Channel Phone</masterLabel>
+            <translation><!-- Alternate Channel Phone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alternate Channel SMS</masterLabel>
+            <translation><!-- Alternate Channel SMS --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alternate Channel Twitter</masterLabel>
+            <translation><!-- Alternate Channel Twitter --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact Assistant Phone</masterLabel>
+            <translation><!-- Contact Assistant Phone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact Business Address</masterLabel>
+            <translation><!-- Contact Business Address --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact Business Email</masterLabel>
+            <translation><!-- Contact Business Email --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact Business Phone</masterLabel>
+            <translation><!-- Contact Business Phone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact Email</masterLabel>
+            <translation><!-- Contact Email --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact Home Phone</masterLabel>
+            <translation><!-- Contact Home Phone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact Mobile Phone</masterLabel>
+            <translation><!-- Contact Mobile Phone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact Other Email</masterLabel>
+            <translation><!-- Contact Other Email --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact Other Phone</masterLabel>
+            <translation><!-- Contact Other Phone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact Personal Email</masterLabel>
+            <translation><!-- Contact Personal Email --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact Phone</masterLabel>
+            <translation><!-- Contact Phone --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- This is the Contact for this Campaign. --></help>
+        <label><!-- Contact --></label>
+        <name>AQB__Contact__c</name>
+        <relationshipLabel><!-- Campaign Members (Contact) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- This is the country of the address for this Communications List. --></help>
+        <label><!-- Country --></label>
+        <name>AQB__Country__c</name>
+    </fields>
+    <fields>
+        <help><!-- Will mark the record for deletion. For Affinaquest internal usage. Do not display on layout. --></help>
+        <label><!-- Delete --></label>
+        <name>AQB__Delete__c</name>
+    </fields>
+    <fields>
+        <help><!-- The email address for this communication. --></help>
+        <label><!-- Email --></label>
+        <name>AQB__Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Facebook address to use for this communication. --></help>
+        <label><!-- Facebook --></label>
+        <name>AQB__Facebook__c</name>
+    </fields>
+    <fields>
+        <label><!-- First Gift --></label>
+        <name>AQB__FirstGift__c</name>
+        <relationshipLabel><!-- Campaign Members --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Date of the first transaction for the account for the specified campaign. --></help>
+        <label><!-- First Transaction Date --></label>
+        <name>AQB__FirstTransactionDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- First Transaction --></label>
+        <name>AQB__FirstTransaction__c</name>
+        <relationshipLabel><!-- Campaign Members --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- This is the greeting to use in the communication. --></help>
+        <label><!-- Greeting --></label>
+        <name>AQB__Greeting__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the Instagram address to use for this Communication. --></help>
+        <label><!-- Instagram --></label>
+        <name>AQB__Instagram__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the name used in a mailing address. --></help>
+        <label><!-- Mailing Name --></label>
+        <name>AQB__MailingName__c</name>
+    </fields>
+    <fields>
+        <help><!-- The phone number for this communication. --></help>
+        <label><!-- Phone Number --></label>
+        <name>AQB__PhoneNumber__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the postal code of the address for this Communications List. --></help>
+        <label><!-- Postal Code --></label>
+        <name>AQB__PostalCode__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the Account for this Preference List. --></help>
+        <label><!-- Preference Account --></label>
+        <name>AQB__PreferenceAccount__c</name>
+        <relationshipLabel><!-- Campaign Members (Preference Account) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Points to the Alternate Channel that this Preference List uses. --></help>
+        <label><!-- Preference Alternate Channel --></label>
+        <name>AQB__PreferenceAlternateChannel__c</name>
+        <relationshipLabel><!-- Campaign Members --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- This is the Contact for this Preference List. --></help>
+        <label><!-- Preference Contact --></label>
+        <name>AQB__PreferenceContact__c</name>
+        <relationshipLabel><!-- Campaign Members --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- This describes the channel to use for this Communication Preference. --></help>
+        <label><!-- Preferred Channel --></label>
+        <name>AQB__PreferredChannel__c</name>
+        <picklistValues>
+            <masterLabel>Email Address</masterLabel>
+            <translation><!-- Email Address --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Facebook</masterLabel>
+            <translation><!-- Facebook --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Instagram</masterLabel>
+            <translation><!-- Instagram --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mailing Address</masterLabel>
+            <translation><!-- Mailing Address --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Phone Number</masterLabel>
+            <translation><!-- Phone Number --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SMS</masterLabel>
+            <translation><!-- SMS --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Twitter</masterLabel>
+            <translation><!-- Twitter --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The phone number to use for SMS for this communication. --></help>
+        <label><!-- SMS --></label>
+        <name>AQB__SMS__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the Start Date for this Preference. --></help>
+        <label><!-- Start Date --></label>
+        <name>AQB__StartDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the state of the address for this Communications List. --></help>
+        <label><!-- State Id --></label>
+        <name>AQB__StateId__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the state/province of the address for this Communications List. --></help>
+        <label><!-- State/Province --></label>
+        <name>AQB__StateProvince__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the Stop Date for this Preference. --></help>
+        <label><!-- Stop Date --></label>
+        <name>AQB__StopDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the first street line of the address for this Communications List. --></help>
+        <label><!-- Street Line One --></label>
+        <name>AQB__StreetLineOne__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the third street line of the address for this Communications List. --></help>
+        <label><!-- Street Line Three --></label>
+        <name>AQB__StreetLineThree__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the second street line of the address for this Communications List. --></help>
+        <label><!-- Street Line Two --></label>
+        <name>AQB__StreetLineTwo__c</name>
+    </fields>
+    <fields>
+        <label><!-- Target List Type --></label>
+        <name>AQB__TargetListType__c</name>
+    </fields>
+    <fields>
+        <help><!-- Determines if the list is for an Account or a Contact. --></help>
+        <label><!-- Target List Type --></label>
+        <name>AQB__TargetList_Type__c</name>
+        <picklistValues>
+            <masterLabel>Account</masterLabel>
+            <translation><!-- Account --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact</masterLabel>
+            <translation><!-- Contact --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The Twitter address to use for this communication. --></help>
+        <label><!-- Twitter --></label>
+        <name>AQB__Twitter__c</name>
+    </fields>
+    <fields>
+        <label><!-- Millennium Key --></label>
+        <name>Millennium_Key__c</name>
+    </fields>
+    <fields>
+        <label><!-- Activity --></label>
+        <name>et4ae5__Activity__c</name>
+        <picklistValues>
+            <masterLabel>Sent</masterLabel>
+            <translation>Gesendet</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unsubscribed</masterLabel>
+            <translation>Abbestellt</translation>
+        </picklistValues>
+    </fields>
+    <recordTypes>
+        <description><!-- AQB Custom --></description>
+        <label><!-- Appeal List --></label>
+        <name>Appeal_List</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Communication List --></label>
+        <name>CommunicationList</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- AQB Custom --></description>
+        <label><!-- Event Invitation --></label>
+        <name>Event_Invitation</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Preference List --></label>
+        <name>PreferenceList</name>
+    </recordTypes>
+</CustomObjectTranslation>

@@ -1,0 +1,25 @@
+.THIS .fonteva-nowrap_medium {
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+@media (min-width: 48rem){
+    .THIS .fonteva-nowrap_medium {
+        flex-wrap: nowrap;
+        align-items: stretch;
+        flex: 1 1 auto;
+    }
+}
+
+.THIS .mediumImage {
+    min-width: 100px;
+}
+
+.THIS .fonteva-card_height-custom {
+    height: 124px;
+}
+
+.THIS .fonteva-card_height-custom svg.slds-icon--large {
+    width: 100px;
+    height: 100px;
+}

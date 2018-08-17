@@ -1,0 +1,164 @@
+<aura:component description="EventRegistrationTicketSelection" implements="LTE:EventInterface" extends="LTE:EventBase" access="global" controller="LTE.EventRegistrationController">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:attribute name="tickets" type="LTE.Ticket[]"/>
+	<aura:attribute name="allTickets" type="LTE.Ticket[]"/>
+	<aura:attribute name="noTicketsFound" type="Boolean" default="false"/>
+	<aura:attribute name="ticketBlockTickets" type="Object[]"/>
+	<aura:attribute name="ticketPurchaseObj" type="Object"  access="global"/>
+	<aura:attribute name="showRegisterButton" type="Boolean" default="false" access="global"/>
+	<aura:attribute name="linesByTicket" type="List" access="global"/>
+	<aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+	<aura:registerEvent name="EventRegisterButtonToggleEvent" type="LTE:EventRegisterButtonToggleEvent"/>
+	<aura:registerEvent name="RegistrationProcessSetGlobalObjectsEvent" type="LTE:RegistrationProcessSetGlobalObjectsEvent"/>
+	<aura:registerEvent name="RegistrationProcessChangeEvent" type="LTE:RegistrationProcessChangeEvent"/>
+	<aura:registerEvent name="EventCancelRegistrationEvent" type="LTE:EventCancelRegistrationEvent"/>
+	<aura:registerEvent name="EventSummaryUpdateEvent" type="LTE:EventSummaryUpdateEvent"/>
+	<aura:attribute name="loadingRows" type="List" default="[1,2]"/>
+	<aura:attribute name="readOnly" type="Boolean" default="true"/>
+	<aura:handler event="LTE:UpdateButtonEvent" action="{!c.handleUpdateButtonEvent}"/>
+	<aura:handler event="LTE:SalesOrderLineDeletedEvent" action="{!c.handleSalesOrderLineDeletedEvent}"/>
+	<aura:registerEvent name="RegistrationToolbarUpdateEvent" type="LTE:RegistrationToolbarUpdateEvent" access="global"/>
+
+	<div class="slds-size--1-of-1 slds-event--panes fonteva-event-component" id="registrationContainer" aura:id="registrationContainer">
+		<aura:if isTrue="{!and(v.eventObj.isInvitationOnly,v.attendeeObj != null,!v.attendeeObj.isCancelled)}">
+			<div class="widgets-events">
+				<LTE:EventRegistrationInvitationOnly eventObj="{!v.eventObj}" siteObj="{!v.siteObj}" storeObj="{!v.storeObj}" attendeeObj="{!v.attendeeObj}" usr="{!v.usr}" isPreview="{!v.isPreview}"/>
+			</div>
+			<aura:set attribute="else">
+				<div id="selection" class="slds-event--pane slds-p-horizontal_large" data-type="pane">
+					<div class="slds-col slds-p-vertical_large slds-grid slds-grid_pull-padded-small">
+						<div class="slds-col slds-medium-size_2-of-3 slds-p-horizontal_small">
+              <aura:if isTrue="{!and(v.eventObj.registrationInstructions != null, v.eventObj.registrationInstructions != '')}">
+								<div class="slds-m-bottom_large">
+									<p>
+										<ui:outputRichText value="{!v.eventObj.registrationInstructions}" linkify="true" class="event-rich-text"/>
+									</p>
+								</div>
+              </aura:if>
+							<div class="slds-grid slds-col">
+								<div class="slds-grid slds-wrap slds-size_1-of-1">
+									<div aura:id="loading-span-stencil" class="slds-size_1-of-1">
+										<aura:iteration items="{!v.loadingRows}" var="object">
+											<div class="slds-size--1-of-1 slds-card slds-theme--default slds-p-around--medium slds-border-radius--none slds-wrap slds-grid">
+												<div class="slds-grid slds-size--1-of-1 slds-wrap">
+													<div class="slds-size--1-of-1 slds-medium-size--2-of-3">
+														<div class="slds-text-heading--medium slds-m-top--x-small slds-font-weight--regular">
+															<p><div class="slds-text-body--regular loading-span slds-m-bottom--xx-small" style="width: 10vw;height :2vw;">
+																&nbsp;
+															</div></p>
+														</div>
+													</div>
+													<div class="slds-size--1-of-1 slds-medium-size--1-of-3 slds-grid slds-wrap">
+														<div class="slds-size--1-of-1 slds-medium-size--1-of-2  slds-m-bottom--small">
+														</div>
+														<div class="slds-size--1-of-1 slds-medium-size--1-of-2 slds-text-align--right slds-m-top--x-small slds-text-align--left__small">
+															<div class="slds-text-body--regular loading-span slds-m-bottom--xx-small slds-float--right" style="width: 5vw;height :2vw;">
+																&nbsp;
+															</div>
+
+															<span class="slds-text-color--primary">
+                                                     <div class="slds-text-body--regular loading-span slds-m-bottom--xx-small slds-float--right" style="width: 10vw;">
+                                                    &nbsp;
+                                                    </div>
+                                                </span>
+														</div>
+													</div>
+												</div>
+												<div class="slds-size--1-of-1 slds-medium-size--3-of-4 slds-grid slds-wrap">
+													<div class="slds-text-body--regular loading-span slds-m-bottom--xx-small" style="width: 55vw;">
+														&nbsp;
+													</div>
+													<div class="slds-text-body--regular loading-span slds-m-bottom--xx-small" style="width: 50vw;">
+														&nbsp;
+													</div>
+												</div>
+											</div>
+										</aura:iteration>
+									</div>
+									<div aura:id="mainData" class="stencil-hidden slds-size--1-of-1">
+										<aura:if isTrue="{!v.noTicketsFound}">
+											<div class="slds-size--1-of-1 slds-card slds-theme--default slds-p-around--medium slds-border-radius--none slds-wrap slds-grid">
+												<div class="slds-grid slds-size--1-of-1 slds-col">
+													<div class="slds-size--1-of-1 fonteva-no-tickets-found slds-text-heading--medium slds-font-weight--semi-bold slds-align_absolute-center">
+														{!$Label.LTE.No_Tickets_For_Purchase}
+													</div>
+												</div>
+											</div>
+											<aura:set attribute="else">
+												<aura:iteration items="{!v.tickets}" var="ticket">
+													<LTE:EventRegistrationTicket ticket="{!ticket}" ticketPurchaseObj="{!v.ticketPurchaseObj}" usr="{!v.usr}" attendeeObj="{!v.attendeeObj}" eventObj="{!v.eventObj}" salesOrderObj="{!v.salesOrderObj}" isPreview="{!v.isPreview}" storeObj="{!v.storeObj}" siteObj="{!v.siteObj}" readOnly="{!v.readOnly}"/>
+												</aura:iteration>
+												<aura:iteration items="{!v.ticketBlockTickets}" var="block">
+													<div class="fonteva-card_group">
+															<div class="slds-size--1-of-1 slds-card slds-theme--default slds-p-around--medium slds-wrap slds-grid fonteva-reg--title">
+																<div class="slds-grid slds-size--1-of-1 slds-col">
+																	<div class="slds-size--1-of-1 slds-medium-size--1-of-1 slds-grid slds-wrap">
+																		<div class="slds-size--1-of-1 slds-medium-size--6-of-8 slds-text-align--left">
+																			<div class="slds-ticket-block--header fonteva-slds-header">{!block.blockName}</div>
+																		</div>
+																		<div class="slds-size--1-of-1 slds-medium-size--2-of-8 slds-text-align--right slds-text-align--left__small slds-p-right--x-small slds-align-middle">
+																			<a class="slds-type-focus">
+																				<aura:if isTrue="{!and(block.showTicketsRemaining,block.ticketsRemaining > 1)}">
+																					{!block.ticketsRemaining}&nbsp;{!$Label.LTE.Event_Tickets_Remaining}
+																				</aura:if>
+																				<aura:if isTrue="{!and(block.showTicketsRemaining,block.ticketsRemaining == 1)}">
+																					{!block.ticketsRemaining}&nbsp;{!$Label.LTE.Event_Ticket_Remaining}
+																				</aura:if>
+																				<aura:if isTrue="{!and(block.ticketsRemaining == 0,!block.waitlistEnabled)}">
+																					<span class="slds-text-color--error">
+																							{!$Label.LTE.Event_Sold_Out}
+																					</span>
+																				</aura:if>
+																				<aura:if isTrue="{!and(0 >= block.ticketsRemaining,block.waitlistEnabled)}">
+																					<span class="slds-text-color--error">
+																							{!$Label.LTE.Event_Add_To_Waitlist}
+																					</span>
+																				</aura:if>
+																			</a>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<aura:iteration items="{!block.tickets}" var="ticket">
+																<LTE:EventRegistrationTicket ticket="{!ticket}" ticketPurchaseObj="{!v.ticketPurchaseObj}" isTicketBlock="true" usr="{!v.usr}" attendeeObj="{!v.attendeeObj}" eventObj="{!v.eventObj}" salesOrderObj="{!v.salesOrderObj}" isPreview="{!v.isPreview}" storeObj="{!v.storeObj}" siteObj="{!v.siteObj}" readOnly="{!v.readOnly}"/>
+															</aura:iteration>
+													</div>
+												</aura:iteration>
+											</aura:set>
+										</aura:if>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="slds-col slds-medium-size_1-of-3 fonteva-medium-p-horizontal_small fonteva-event_summary">
+								<div class="slds-grid slds-grid_vertical">
+									<LTE:EventRegistrationSummary aura:id="eventRegistrationSummary" so="{!v.salesOrderObj}" eventObj="{!v.eventObj}" initialPurchase="{!v.initialPurchase}" displayDiscount="false" displayTotal="false" readOnly="true" siteObj="{!v.siteObj}" storeObj="{!v.storeObj}"/>
+										<aura:if isTrue="{!and(or(v.tickets.length > 0,v.ticketBlockTickets.length > 0),v.eventObj.allowReg)}">
+												<div class="slds-grid slds-wrap slds-p-bottom--large stencil-hidden" aura:id="buttons">
+														<div class="slds-size--1-of-1 slds-text-align--center slds-text-align--left__small fonteva-footer_actions">
+																<aura:if isTrue="{!!v.readOnly}">
+																		<LTE:EventActionButtons cancelAction="{!c.openCancelModal}" nextAction="{!c.nextStep}" aura:id="actionButtons" showPrevious="false" disableNext="{!not(and(v.salesOrderObj != null,or(v.salesOrderObj.lines.length > 0,v.salesOrderObj.waitlistEntries.length > 0)))}"/>
+																</aura:if>
+																<aura:if isTrue="{!and(v.showRegisterButton,!v.isPreview)}">
+																		<Framework:Button aura:id="registerBtn" label="{!$Label.LTE.Event_Register_Button}" onClickAction="{!c.register}" type="brand"/>
+																</aura:if>
+														</div>
+												</div>
+										</aura:if>
+								</div>
+						</div>
+					</div>
+				</div>
+			</aura:set>
+		</aura:if>
+	</div>
+	<div class="fonteva-prompt_severity">
+		<Framework:MessagePrompt title="{!$Label.LTE.Cancel_Registration_Header}"
+							 message="{!'&lt;div>'+$Label.LTE.Cancel_Reg_First+'&lt;/div>'+$Label.LTE.Cancel_Reg_Second}"
+							 severity="error"
+							 aura:id="cancelPrompt"
+							 cancelButtonLabel="{!$Label.LTE.Cancel_Reg_No}"
+							 submitButtonLabel="{!$Label.LTE.Cancel_Reg_Yes}"
+							 submitOnClickAction="{!c.fireCancelRegEvent}"/>
+	</div>
+</aura:component>

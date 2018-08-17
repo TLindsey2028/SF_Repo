@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8"?><CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayouts>
+        <fullName>Prospect_Rating</fullName>
+        <fields>Name</fields>
+        <fields>Start_Date__c</fields>
+        <fields>End_Date__c</fields>
+        <fields>Capacity_Rating__c</fields>
+        <fields>Campaign_Target__c</fields>
+        <fields>Rating_Level__c</fields>
+        <label>Prospect Rating</label>
+    </compactLayouts>
+    <fields>
+        <fullName>Account__c</fullName>
+        <externalId>false</externalId>
+        <label>Account</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Prospect Ratings</relationshipLabel>
+        <relationshipName>Prospect_Ratings</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Active__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>AQ_Custom</inlineHelpText>
+        <label>Active</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Campaign_Target_Detail__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>AQ_Custom</inlineHelpText>
+        <label>Campaign Target Detail</label>
+        <length>1000</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>4</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Campaign_Target__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>AQ_Custom</inlineHelpText>
+        <label>Campaign Target</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Capacity_Rating__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>AQ_Custom</inlineHelpText>
+        <label>Capacity Rating</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>$1,000-$4,999</fullName>
+                    <default>false</default>
+                    <label>$1,000-$4,999</label>
+                </value>
+                <value>
+                    <fullName>$10,000-$24,999</fullName>
+                    <default>false</default>
+                    <label>$10,000-$24,999</label>
+                </value>
+                <value>
+                    <fullName>$100,000-$249,999</fullName>
+                    <default>false</default>
+                    <label>$100,000-$249,999</label>
+                </value>
+                <value>
+                    <fullName>$100,000 - 249,999</fullName>
+                    <default>false</default>
+                    <label>$100,000 - 249,999</label>
+                </value>
+                <value>
+                    <fullName>$10 Million - $14.9 Million</fullName>
+                    <default>false</default>
+                    <label>$10 Million - $14.9 Million</label>
+                </value>
+                <value>
+                    <fullName>$15 Million - $29.9 Million</fullName>
+                    <default>false</default>
+                    <label>$15 Million - $29.9 Million</label>
+                </value>
+                <value>
+                    <fullName>$1 Million - $2.9 Million</fullName>
+                    <default>false</default>
+                    <label>$1 Million - $2.9 Million</label>
+                </value>
+                <value>
+                    <fullName>$25,000-$49,999</fullName>
+                    <default>false</default>
+                    <label>$25,000-$49,999</label>
+                </value>
+                <value>
+                    <fullName>$250,000-$499,999</fullName>
+                    <default>false</default>
+                    <label>$250,000-$499,999</label>
+                </value>
+                <value>
+                    <fullName>$30 Million +</fullName>
+                    <default>false</default>
+                    <label>$30 Million +</label>
+                </value>
+                <value>
+                    <fullName>$3 Million - $4.9 Million</fullName>
+                    <default>false</default>
+                    <label>$3 Million - $4.9 Million</label>
+                </value>
+                <value>
+                    <fullName>$5,000-$9,999</fullName>
+                    <default>false</default>
+                    <label>$5,000-$9,999</label>
+                </value>
+                <value>
+                    <fullName>$50,000-$99,999</fullName>
+                    <default>false</default>
+                    <label>$50,000-$99,999</label>
+                </value>
+                <value>
+                    <fullName>$500,000-$999,999</fullName>
+                    <default>false</default>
+                    <label>$500,000-$999,999</label>
+                </value>
+                <value>
+                    <fullName>$5 Million - $9.9 Million</fullName>
+                    <default>false</default>
+                    <label>$5 Million - $9.9 Million</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>End_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>AQ_Custom</inlineHelpText>
+        <label>End Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>External_Screening_Service__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>AQ_Custom</inlineHelpText>
+        <label>External Screening Service</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>GG&amp;A</fullName>
+                    <default>false</default>
+                    <label>GG&amp;A</label>
+                </value>
+                <value>
+                    <fullName>Wealth Engine</fullName>
+                    <default>false</default>
+                    <label>Wealth Engine</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Millennium_Key__c</fullName>
+        <description>AQB Custom</description>
+        <externalId>false</externalId>
+        <label>Millennium Key</label>
+        <length>30</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Planned_Gift_Potential__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>AQ_Custom Indicator for Planned Gift capacity</inlineHelpText>
+        <label>Planned Gift Potential</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Prospect_Rating_Detail__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>AQ_Custom</inlineHelpText>
+        <label>Prospect Rating Detail</label>
+        <length>1000</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>5</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Rating_Level__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>AQ_Custom</inlineHelpText>
+        <label>Rating Level</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Major Gift Prospect</fullName>
+                    <default>false</default>
+                    <label>Major Gift Prospect</label>
+                </value>
+                <value>
+                    <fullName>Planned Gift Prospect</fullName>
+                    <default>false</default>
+                    <label>Planned Gift Prospect</label>
+                </value>
+                <value>
+                    <fullName>Principal Gift Prospect</fullName>
+                    <default>false</default>
+                    <label>Principal Gift Prospect</label>
+                </value>
+                <value>
+                    <fullName>Special Gift Prospect</fullName>
+                    <default>false</default>
+                    <label>Special Gift Prospect</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Start_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>AQ_Custom</inlineHelpText>
+        <label>Start Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <allowInChatterGroups>true</allowInChatterGroups>
+    <compactLayoutAssignment>Prospect_Rating</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Prospect's Rating for major gift</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableChangeDataCapture>false</enableChangeDataCapture>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <label>Prospect Rating</label>
+    <nameField>
+        <displayFormat>A-{0000}</displayFormat>
+        <label>Prospect Rating</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Prospect Ratings</pluralLabel>
+    <recordTypeTrackHistory>false</recordTypeTrackHistory>
+    <searchLayouts />
+    <sharingModel>ControlledByParent</sharingModel>
+    <visibility>Public</visibility>
+    <recordTypes>
+        <fullName>Capacity_Rating</fullName>
+        <active>true</active>
+        <description>This Capacity Rating is the prospect's estimated charitable gift capacity over a five year period regardless of recipient organization or level of interest.</description>
+        <label>Capacity Rating</label>
+        <picklistValues>
+            <picklist>Capacity_Rating__c</picklist>
+            <values>
+                <fullName>%241 Million - %242%2E9 Million</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%241%2C000-%244%2C999</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%2410 Million - %2414%2E9 Million</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%2410%2C000-%2424%2C999</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%24100%2C000 - 249%2C999</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%24100%2C000-%24249%2C999</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%2415 Million - %2429%2E9 Million</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%2425%2C000-%2449%2C999</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%24250%2C000-%24499%2C999</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%243 Million - %244%2E9 Million</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%2430 Million %2B</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%245 Million - %249%2E9 Million</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%245%2C000-%249%2C999</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%2450%2C000-%2499%2C999</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>%24500%2C000-%24999%2C999</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>External_Screening_Service__c</picklist>
+            <values>
+                <fullName>GG%26A</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Wealth Engine</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Rating_Level__c</picklist>
+            <values>
+                <fullName>Major Gift Prospect</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Planned Gift Prospect</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Principal Gift Prospect</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Special Gift Prospect</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+</CustomObject>

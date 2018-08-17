@@ -1,0 +1,10 @@
+<aura:component >
+    <lightning:layout aura:id="noAccess" horizontalAlign="center" multipleRows="true">
+        <lightning:layoutItem size="12" class="slds-align_absolute-center slds-m-bottom_neg-xx-large">
+            <img src="{!$Resource.et4ae5__NoAccess2_svg}"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem size="12" class="slds-align_absolute-center slds-m-bottom_xx-large">
+            <ui:outputText class="slds-text-color_weak slds-text-heading_small" value="{!$Label.et4ae5.trackingDataNoAccess}"/>
+        </lightning:layoutItem>
+    </lightning:layout>
+</aura:component>

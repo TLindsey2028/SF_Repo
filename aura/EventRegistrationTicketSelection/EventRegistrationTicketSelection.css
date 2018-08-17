@@ -1,0 +1,55 @@
+.THIS .slds-ticket-block--header {
+    font-size: 18px;
+    font-weight: 500;
+}
+.THIS .fonteva-no-tickets-found {
+    height:100px;
+}
+
+.THIS .slds-type-focus {
+    pointer-events: none;
+}
+
+.THIS .slds-non-list-price{
+    text-decoration: line-through;
+}
+
+.THIS .mediumImage svg {
+    height: 100px!important;
+    width: 100px!important;
+}
+
+.THIS .custom-ticket-width {
+    width: 89.5%!important;
+}
+
+.THIS .slds-event--pane {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.THIS .fonteva-card_group > .slds-card:not(:first-child) {
+    border-top: none;
+    border-radius: 0;
+}
+
+.THIS .fonteva-card_group > .slds-card:first-child {
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.THIS .fonteva-card_group > .slds-card:nth-last-child(2){
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+}
+
+.THIS.fonteva-event-component {
+    margin: 0 auto;
+}
+.THIS .fonteva-reg--title{ max-width: 100%; }
+
+@media (min-width: 1200px) {
+    .THIS .fonteva-reg--title{ max-width: 1200px; }
+}

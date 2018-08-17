@@ -1,0 +1,58 @@
+<aura:component description="SiteWizardTemplate" controller="PagesApi.SiteWizardController" extends="Framework:BaseComponent" implements="lightning:actionOverride,force:hasRecordId">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <ltng:require scripts="{!$Resource.Framework__UrlUtil}" styles="{!$Resource.PagesApi__SLDS_Base+'/css/styles.css'}" />
+  <aura:attribute name="siteObj" type="Object" default="{}" />
+  <aura:attribute name="businessGroupId" type="String" default="" />
+  <aura:registerEvent name="ComponentLoadedEvent" type="PagesApi:ComponentLoadedEvent" />
+  <aura:registerEvent name="AnalyticsEvent" type="Framework:AnalyticsEvent" />
+  <aura:attribute name="sitePrefix" type="String" />
+  <div id="mainWrapperDiv" class="slds hidden" aura:id="mainWrapperDiv">
+    <div class="slds-grid slds-grid--align-center slds-wrap">
+      <div class="slds-size--1-of-1 slds-grid slds-wrap">
+        <div id="modalBackdrop" class="slds-backdrop" aura:id="modalBackdrop"></div>
+        <div class="slds-grid slds-wrap slds-size--1-of-1">
+          <div id="siteModal" class="slds-modal" aura:id="siteModal">
+            <div class="slds-modal__container">
+              <div class="slds-modal__header slds-text-align--center">
+                <h2 name="wizardTitle" class="slds-text-heading--medium" id="site-wizard-header">{!$Label.PagesApi.Site_Wizard_Title}</h2>
+                <button id="closeModal" class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+                  <lightning:icon iconName="utility:close" size="small" alternativeText="{!$Label.PagesApi.Close}" />
+                </button>
+              </div>
+              <div class="slds-modal__content slds-object-height--half slds-scrollable--y slds-grid slds-wrap ">
+                <div class="slds-size--1-of-1">
+                  <span class="slds-text-body--regular">
+                    {!$Label.PagesApi.Site_Wizard_Step_1_Instructions}
+                  </span>
+                  <div class="slds-size--1-of-1 slds-m-top--small">
+                    <Framework:InputFields group="siteModal" qaData='{"type" : "input", "name": "name"}' fieldType="string" isRequired="true"
+                      aura:id="name" label="{!$Label.PagesApi.Site_Name_Site_Wizard}" value="{!v.siteObj}" maxlength="80" />
+                  </div>
+                  <div class="slds-size--1-of-1">
+                    <Framework:InputFields group="siteModal" qaData='{"type" : "input", "name": "networkId"}' fieldType="picklist" aura:id="networkId"
+                      label="{!$Label.PagesApi.Site_Wizard_Step_1_Title}" value="{!v.siteObj}" isRequired="true" />
+                  </div>
+                  <div class="slds-size--1-of-1">
+                    <Framework:InputFields group="siteModal" qaData='{"type" : "input", "name": "templateId"}' fieldType="picklist" aura:id="templateId"
+                      label="{!$Label.PagesApi.Site_Wizard_Step_2_Title}" value="{!v.siteObj}" isRequired="true" />
+                  </div>
+                  <div class="slds-size--1-of-1">
+                    <Framework:InputFields group="siteModal" qaData='{"type" : "input", "name": "description"}' fieldType="textarea" aura:id="description"
+                      label="{!$Label.PagesApi.Site_Description_Site_Wizard}" value="{!v.siteObj}" />
+                  </div>
+                </div>
+              </div>
+              <div class="slds-modal__footer">
+                <Framework:Button qaData='{"type" : "button", "name": "closeModal"}' label="{!$Label.PagesApi.Cancel}" type="neutral" onClickAction="{!c.closeModal}"
+                  enableProgressIndicator="false" additionalClasses=" slds-m-right--x-small" />
+                <Framework:Button qaData='{"type" : "button", "name": "submitButton"}' label="{!$Label.PagesApi.Site_Create_Button_Site_Wizard}"
+                  type="brand" onClickAction="{!c.saveModal}" aura:id="submitButton" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages" />
+  </div>
+</aura:component>

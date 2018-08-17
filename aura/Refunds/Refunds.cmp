@@ -1,0 +1,16 @@
+<aura:component description="Refunds" controller="OrderApi.CreateRefundController" implements="force:LightningQuickActionWithoutHeader,force:hasRecordId" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <ltng:require scripts="{!$Resource.Framework__UrlUtil}" styles="{!$Resource.Framework__SLDS_BaseV2+'/css/styles.css'}"/>
+    <aura:attribute name="retURL" type="String"/>
+	<aura:attribute name="isCreating" type="Boolean" default="false"/>
+    <aura:attribute name="receiptId" type="String"/>
+    <aura:attribute name="refundId" type="String"/>
+    <aura:attribute name="isRefundAlreadyCreated" type="Boolean" default="false"/>
+    <aura:registerEvent name="ComponentLoadedEvent" type="OrderApi:ComponentLoadedEvent"/>
+    <div class="slds hidden" aura:id="mainWrapperDiv">
+        <Framework:MessagePrompt title="Refund Already Created" showCancelButton="true" severity="info slds-theme--alert-texture" message="{!$Label.OrderApi.RefundAlreadyCreatedError}" submitButtonLabel="{!$Label.OrderApi.Continue_Refund}" submitOnClickAction="{!c.continueRefund}" aura:id="refundAlreadyCreatedMessage" closeOnClickAction="{!c.goBack}"/>
+        <Framework:MessagePrompt title="New Refund Created" severity="info slds-theme--alert-texture" message="{!$Label.OrderApi.NewRefundCreated}" submitButtonLabel="{!$Label.OrderApi.View_Refund_Receipt}" submitOnClickAction="{!c.viewRefund}" aura:id="newRefundCreatedMessage" closeOnClickAction="{!c.goBack}"/>
+        <Framework:MessagePrompt title="Error Creating Refund" showSubmitButton="false" showCancelButton="true" severity="error slds-theme--alert-texture" message="" aura:id="refundErrorMessage" closeOnClickAction="{!c.goBack}"/>
+        <Framework:Toast aura:id="toastMessages"/>
+    </div>
+</aura:component>

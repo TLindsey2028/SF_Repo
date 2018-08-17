@@ -1,0 +1,31 @@
+<aura:component>
+
+  <aura:attribute name="fieldApiNames" type="Object[]" default="[{}]" />
+  <aura:attribute name="valueToFieldTypes" type="Object" default="{}" />
+  <aura:attribute name="filterCriteria" type="Object[]" default="[{}]" />
+  <aura:attribute name="statusObj" type="Object"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:handler event="EventApi:FilterCriteriaRowSet" action="{!c.createRow}"/>
+  <aura:handler event="EventApi:DeleteFilterRow" action="{!c.removeFilterRow}"/>
+
+  <div class="slds-size--1-of-2 slds-p-vertical--small">
+    <Framework:InputFields group="eventStatusObj" fieldType="string" aura:id="filterCondition" label="{!$Label.EventApi.Event_Status_Filter_Condition}" value="{!v.statusObj}" otherAttributes='{"placeholder":"(1 AND 2) OR 3 OR (4 AND 5)"}'/>
+  </div>
+  <div class="slds-grid slds-grid--pull-padded">
+    <div class="fonteva-table--numbering">
+
+    </div>
+    <div class="slds-col--padded slds-size--4-of-12 slds-p-bottom--small">
+      <strong>{!$Label.EventApi.Event_Status_Filter_Field}</strong>
+    </div>
+    <div class="slds-col--padded slds-size--2-of-12">
+      <strong>{!$Label.EventApi.Event_Status_Filter_Operator}</strong>
+    </div>
+    <div class="slds-col--padded slds-size--5-of-12">
+      <strong>{!$Label.EventApi.Event_Status_Filter_Value}</strong>
+    </div>
+    <div class="fonteva-table--numbering">
+    </div>
+  </div>
+  <span aura:id="filterRowPlaceholder"></span>
+</aura:component>

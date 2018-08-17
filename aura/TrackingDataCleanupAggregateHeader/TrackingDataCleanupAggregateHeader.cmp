@@ -1,0 +1,79 @@
+<aura:component controller="et4ae5.TrackingDataCleanupAggHeaderController">
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+
+    <aura:registerEvent name="TrackingDataCleanupRecordCountEvent" type="et4ae5:TrackingDataCleanupRecordCountEvent"/>
+    
+    <aura:attribute name="totalSendDefinitions" type="integer" />
+    <aura:attribute name="totalIndividualEmailResults" type="integer" />
+    <aura:attribute name="totalAggregateLinkDetails" type="integer" />
+    <aura:attribute name="totalIndividualLinkDetails" type="integer" />
+    <aura:attribute name="showSpinner" type="boolean" default="false" />
+
+    <aura:if isTrue="{!v.showSpinner}">
+        <div class="slds-spinner_container slds-is-fixed">
+                <div role="status" class="slds-spinner slds-spinner_small slds-spinner_brand">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>  
+    </aura:if>
+    <div id="aggregatePageHeader" class="slds-page-header slds-border_top slds-border_bottom slds-border_right slds-border_left">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-grow">
+                    <div class="slds-media__body">
+                        <nav role="navigation">
+                            <ol class="slds-breadcrumb slds-list_horizontal slds-wrap">
+                                <li id="send-et-email-link" class="slds-breadcrumb__item">
+                                    <a href="/apex/sendETEmail">{!$Label.et4ae5.trackingDataCleanupAggregateMCCLink}</a>
+                                </li>
+                                <li id="settings-link" class="slds-breadcrumb__item">
+                                    <a href="/apex/MarketingCloudSettings">{!$Label.et4ae5.trackingDataCleanupAggregateSettingsLink}</a>
+                                </li>
+                            </ol>
+                        </nav>
+                        <h1 class="slds-page-header__title slds-m-right_small slds-align-middle" title="{!$Label.et4ae5.trackingDataCleanupAggregateTitle}">
+                            {!$Label.et4ae5.trackingDataCleanupAggregateTitle}
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="aggregatePageHeaderChild" class="slds-grid slds-page-header__detail-row">
+            <div class="slds-col">
+                <p class="slds-text-title slds-truncate slds-m-bottom_xx-small">
+                    {!$Label.et4ae5.trackingDataCleanupAggregateTotalSendDefinitions}
+                </p>
+                <p id="total-send-definition-count" class="slds-text-body_regular">
+                    <ui:outputNumber value="{!v.totalSendDefinitions}" />
+                </p>
+            </div>
+            <div class="slds-col">
+                <p class="slds-text-title slds-truncate slds-m-bottom_xx-small">
+                    {!$Label.et4ae5.trackingDataCleanupAggregateTotalIndividualEmailResults}
+                </p>
+                <p id="total-individual-email-results-count" class="slds-text-body_regular">
+                    <ui:outputNumber value="{!v.totalIndividualEmailResults}" />
+                </p>
+            </div>
+            <div class="slds-col">
+                <p class="slds-text-title slds-truncate slds-m-bottom_xx-small">
+                    {!$Label.et4ae5.trackingDataCleanupAggregateTotalAggregateLinkDetails}
+                </p>
+                <p id="total-aggregate-link-count" class="slds-text-body_regular">
+                    <ui:outputNumber value="{!v.totalAggregateLinkDetails}" />
+                </p>
+            </div>
+            <div class="slds-col">
+                <p class="slds-text-title slds-truncate slds-m-bottom_xx-small">
+                    {!$Label.et4ae5.trackingDataCleanupAggregateTotalIndividualLinkDetails}
+                </p>
+                <p id="total-individual-link-count" class="slds-text-body_regular">
+                    <ui:outputNumber value="{!v.totalIndividualLinkDetails}" />
+                </p>
+            </div>
+        </div>
+    </div>
+
+</aura:component>

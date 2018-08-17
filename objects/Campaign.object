@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="utf-8"?><CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>AddCampaign</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>AdvancedSetup</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayouts>
+        <fullName>Appeal_Campaign_Compact_Layout_WMU</fullName>
+        <fields>Name</fields>
+        <fields>AQB__CampaignFund__c</fields>
+        <fields>RecordTypeId</fields>
+        <fields>Channel__c</fields>
+        <fields>AQB__TR__c</fields>
+        <fields>EndDate</fields>
+        <fields>StartDate</fields>
+        <label>Appeal Campaign Compact Layout WMU</label>
+    </compactLayouts>
+    <compactLayouts>
+        <fullName>Communications_Campaign_Compact_Layout_WMU</fullName>
+        <fields>Name</fields>
+        <fields>AQB__CampaignFund__c</fields>
+        <fields>RecordTypeId</fields>
+        <fields>AQB__StartDate__c</fields>
+        <fields>EndDate</fields>
+        <fields>IsActive</fields>
+        <fields>Channel__c</fields>
+        <label>Communications Campaign Compact Layout WMU</label>
+    </compactLayouts>
+    <compactLayouts>
+        <fullName>Preferences_Compact_Layout_WMU</fullName>
+        <fields>Name</fields>
+        <fields>AQB__CampaignFund__c</fields>
+        <fields>Channel__c</fields>
+        <label>Preferences Compact Layout WMU</label>
+    </compactLayouts>
+    <fields>
+        <fullName>ActualCost</fullName>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>AmountAllOpportunities</fullName>
+    </fields>
+    <fields>
+        <fullName>AmountWonOpportunities</fullName>
+    </fields>
+    <fields>
+        <fullName>BudgetedCost</fullName>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>CampaignMemberRecordTypeId</fullName>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Channel_Detail__c</fullName>
+        <description>AQ_Custom</description>
+        <externalId>false</externalId>
+        <label>Channel Detail</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Postcard</fullName>
+                    <default>false</default>
+                    <label>Postcard</label>
+                </value>
+                <value>
+                    <fullName>Magazine</fullName>
+                    <default>false</default>
+                    <label>Magazine</label>
+                </value>
+                <value>
+                    <fullName>Newsletter</fullName>
+                    <default>false</default>
+                    <label>Newsletter</label>
+                </value>
+                <value>
+                    <fullName>Video</fullName>
+                    <default>false</default>
+                    <label>Video</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Channel__c</fullName>
+        <externalId>false</externalId>
+        <label>Channel</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Mail</fullName>
+                    <default>false</default>
+                    <label>Mail</label>
+                </value>
+                <value>
+                    <fullName>Email</fullName>
+                    <default>false</default>
+                    <label>Email</label>
+                </value>
+                <value>
+                    <fullName>Phone</fullName>
+                    <default>false</default>
+                    <label>Phone</label>
+                </value>
+                <value>
+                    <fullName>Social Media</fullName>
+                    <default>false</default>
+                    <label>Social Media</label>
+                </value>
+                <value>
+                    <fullName>In-Person</fullName>
+                    <default>false</default>
+                    <label>In-Person</label>
+                </value>
+                <value>
+                    <fullName>In Person</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>In Person</label>
+                </value>
+                <value>
+                    <fullName>Letter</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Letter</label>
+                </value>
+                <value>
+                    <fullName>Mailing</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Mailing</label>
+                </value>
+                <value>
+                    <fullName>Publication</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Publication</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Departments__c</fullName>
+        <externalId>false</externalId>
+        <label>Departments</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetName>Departments</valueSetName>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Description</fullName>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>Division__c</fullName>
+        <externalId>false</externalId>
+        <label>Division</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetName>Divisions</valueSetName>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Donor_Behavior__c</fullName>
+        <description>AQ_Custom</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Identify the donor behavior you are including in this campaign.</inlineHelpText>
+        <label>Donor Behavior</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>MultiselectPicklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Lybunt</fullName>
+                    <default>false</default>
+                    <label>Lybunt</label>
+                </value>
+                <value>
+                    <fullName>Sybunt</fullName>
+                    <default>false</default>
+                    <label>Sybunt</label>
+                </value>
+                <value>
+                    <fullName>Futures</fullName>
+                    <default>false</default>
+                    <label>Futures</label>
+                </value>
+                <value>
+                    <fullName>Current</fullName>
+                    <default>false</default>
+                    <label>Current</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+        <visibleLines>4</visibleLines>
+    </fields>
+    <fields>
+        <fullName>EndDate</fullName>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>ExpectedResponse</fullName>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>ExpectedRevenue</fullName>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>HierarchyActualCost</fullName>
+    </fields>
+    <fields>
+        <fullName>HierarchyAmountAllOpportunities</fullName>
+    </fields>
+    <fields>
+        <fullName>HierarchyAmountWonOpportunities</fullName>
+    </fields>
+    <fields>
+        <fullName>HierarchyBudgetedCost</fullName>
+    </fields>
+    <fields>
+        <fullName>HierarchyExpectedRevenue</fullName>
+    </fields>
+    <fields>
+        <fullName>HierarchyNumberOfContacts</fullName>
+    </fields>
+    <fields>
+        <fullName>HierarchyNumberOfConvertedLeads</fullName>
+    </fields>
+    <fields>
+        <fullName>HierarchyNumberOfLeads</fullName>
+    </fields>
+    <fields>
+        <fullName>HierarchyNumberOfOpportunities</fullName>
+    </fields>
+    <fields>
+        <fullName>HierarchyNumberOfResponses</fullName>
+    </fields>
+    <fields>
+        <fullName>HierarchyNumberOfWonOpportunities</fullName>
+    </fields>
+    <fields>
+        <fullName>HierarchyNumberSent</fullName>
+    </fields>
+    <fields>
+        <fullName>IsActive</fullName>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>Name</fullName>
+        <trackHistory>true</trackHistory>
+    </fields>
+    <fields>
+        <fullName>NumberOfContacts</fullName>
+    </fields>
+    <fields>
+        <fullName>NumberOfConvertedLeads</fullName>
+    </fields>
+    <fields>
+        <fullName>NumberOfLeads</fullName>
+    </fields>
+    <fields>
+        <fullName>NumberOfOpportunities</fullName>
+    </fields>
+    <fields>
+        <fullName>NumberOfResponses</fullName>
+    </fields>
+    <fields>
+        <fullName>NumberOfWonOpportunities</fullName>
+    </fields>
+    <fields>
+        <fullName>NumberSent</fullName>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>OwnerId</fullName>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>ParentId</fullName>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Purpose__c</fullName>
+        <externalId>false</externalId>
+        <label>Purpose</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Property, Buildings</fullName>
+                    <default>false</default>
+                    <label>Property, Buildings</label>
+                </value>
+                <value>
+                    <fullName>Academic Division</fullName>
+                    <default>false</default>
+                    <label>Academic Division</label>
+                </value>
+                <value>
+                    <fullName>Athletics</fullName>
+                    <default>false</default>
+                    <label>Athletics</label>
+                </value>
+                <value>
+                    <fullName>Faculty and Staff</fullName>
+                    <default>false</default>
+                    <label>Faculty and Staff</label>
+                </value>
+                <value>
+                    <fullName>Faculty Compensation</fullName>
+                    <default>false</default>
+                    <label>Faculty Compensation</label>
+                </value>
+                <value>
+                    <fullName>Library</fullName>
+                    <default>false</default>
+                    <label>Library</label>
+                </value>
+                <value>
+                    <fullName>Other Restricted</fullName>
+                    <default>false</default>
+                    <label>Other Restricted</label>
+                </value>
+                <value>
+                    <fullName>Physical Plant</fullName>
+                    <default>false</default>
+                    <label>Physical Plant</label>
+                </value>
+                <value>
+                    <fullName>Research</fullName>
+                    <default>false</default>
+                    <label>Research</label>
+                </value>
+                <value>
+                    <fullName>Student Aid</fullName>
+                    <default>false</default>
+                    <label>Student Aid</label>
+                </value>
+                <value>
+                    <fullName>Engagement</fullName>
+                    <default>false</default>
+                    <label>Engagement</label>
+                </value>
+                <value>
+                    <fullName>Update</fullName>
+                    <default>false</default>
+                    <label>Update</label>
+                </value>
+                <value>
+                    <fullName>Marketing promotion</fullName>
+                    <default>false</default>
+                    <label>Marketing promotion</label>
+                </value>
+                <value>
+                    <fullName>Info Sharing</fullName>
+                    <default>false</default>
+                    <label>Info Sharing</label>
+                </value>
+                <value>
+                    <fullName>Unrestricted</fullName>
+                    <default>false</default>
+                    <label>Unrestricted</label>
+                </value>
+                <value>
+                    <fullName>Current Operations - Academic Divisions</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Current Operations - Academic Divisions</label>
+                </value>
+                <value>
+                    <fullName>Current Operations - Athletics</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Current Operations - Athletics</label>
+                </value>
+                <value>
+                    <fullName>Current Operations - Faculty Compensation</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Current Operations - Faculty Compensation</label>
+                </value>
+                <value>
+                    <fullName>Current Operations - Financial Aid</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Current Operations - Financial Aid</label>
+                </value>
+                <value>
+                    <fullName>Current Operations - Library</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Current Operations - Library</label>
+                </value>
+                <value>
+                    <fullName>Current Operations - Other Restricted</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Current Operations - Other Restricted</label>
+                </value>
+                <value>
+                    <fullName>Current Operations - Research</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Current Operations - Research</label>
+                </value>
+                <value>
+                    <fullName>Current Operations - Unrestricted</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Current Operations - Unrestricted</label>
+                </value>
+                <value>
+                    <fullName>Deferred Gifts - Endow, Restricted</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Deferred Gifts - Endow, Restricted</label>
+                </value>
+                <value>
+                    <fullName>Deferred Gifts - Other Purposes</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Deferred Gifts - Other Purposes</label>
+                </value>
+                <value>
+                    <fullName>Endow, Academic Divisions</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Endow, Academic Divisions</label>
+                </value>
+                <value>
+                    <fullName>Endow, Athletics</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Endow, Athletics</label>
+                </value>
+                <value>
+                    <fullName>Endow, Faculty and Staff</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Endow, Faculty and Staff</label>
+                </value>
+                <value>
+                    <fullName>Endow, Library</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Endow, Library</label>
+                </value>
+                <value>
+                    <fullName>Endow, Other</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Endow, Other</label>
+                </value>
+                <value>
+                    <fullName>Endow, Physical Plant</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Endow, Physical Plant</label>
+                </value>
+                <value>
+                    <fullName>Endow, Research</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Endow, Research</label>
+                </value>
+                <value>
+                    <fullName>Endow, Student Aid</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Endow, Student Aid</label>
+                </value>
+                <value>
+                    <fullName>Endow, Unrestricted</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Endow, Unrestricted</label>
+                </value>
+                <value>
+                    <fullName>Loan Funds</fullName>
+                    <default>false</default>
+                    <isActive>false</isActive>
+                    <label>Loan Funds</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Responsible_Contact__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Person managing the list</inlineHelpText>
+        <label>Responsible Contact</label>
+        <length>40</length>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>StartDate</fullName>
+        <trackHistory>false</trackHistory>
+    </fields>
+    <fields>
+        <fullName>Status</fullName>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Type</fullName>
+        <inlineHelpText>Channel Type</inlineHelpText>
+        <trackHistory>false</trackHistory>
+        <type>Picklist</type>
+    </fields>
+    <compactLayoutAssignment>AQB__Campaign</compactLayoutAssignment>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <recordTypeTrackHistory>false</recordTypeTrackHistory>
+    <searchLayouts>
+        <customTabListAdditionalFields>CAMPAIGN.NAME</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CAMPAIGN.STATUS</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CAMPAIGN.START_DATE</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>CAMPAIGN.NAME</lookupDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>CAMPAIGN.NAME</lookupPhoneDialogsAdditionalFields>
+        <searchResultsAdditionalFields>CAMPAIGN.NAME</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>AQB__CampaignFund__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CAMPAIGN.CAMPAIGN_TYPE</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>AQB__RevG__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CAMPAIGN.STATUS</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CAMPAIGN.START_DATE</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CAMPAIGN.END_DATE</searchResultsAdditionalFields>
+    </searchLayouts>
+    <sharingModel>FullAccess</sharingModel>
+    <listViews>
+        <fullName>AllActiveCampaigns</fullName>
+        <columns>CAMPAIGN.NAME</columns>
+        <columns>CAMPAIGN.START_DATE</columns>
+        <columns>CAMPAIGN.END_DATE</columns>
+        <columns>CAMPAIGN.CAMPAIGN_TYPE</columns>
+        <columns>CAMPAIGN.STATUS</columns>
+        <columns>CORE.USERS.FIRST_NAME</columns>
+        <columns>CORE.USERS.LAST_NAME</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CAMPAIGN.ACTIVE</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <label>All Active Campaigns</label>
+    </listViews>
+    <listViews>
+        <fullName>MyActiveCampaigns</fullName>
+        <columns>CAMPAIGN.NAME</columns>
+        <columns>CAMPAIGN.START_DATE</columns>
+        <columns>CAMPAIGN.END_DATE</columns>
+        <columns>CAMPAIGN.CAMPAIGN_TYPE</columns>
+        <columns>CAMPAIGN.STATUS</columns>
+        <filterScope>Mine</filterScope>
+        <filters>
+            <field>CAMPAIGN.ACTIVE</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <label>My Active Campaigns</label>
+    </listViews>
+    <listViews>
+        <fullName>Org_Campaign_Hierarchy</fullName>
+        <columns>CAMPAIGN.NAME</columns>
+        <columns>CAMPAIGN.CAMPAIGN_TYPE</columns>
+        <columns>CAMPAIGN.ACTIVE</columns>
+        <columns>CAMPAIGN.STATUS</columns>
+        <columns>CAMPAIGN.START_DATE</columns>
+        <columns>CAMPAIGN.END_DATE</columns>
+        <filterScope>Everything</filterScope>
+        <label>Org_Campaign_Hierarchy</label>
+    </listViews>
+    <webLinks>
+        <fullName>ViewAllCampaignMembers</fullName>
+        <availability>online</availability>
+        <displayType>link</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <hasMenubar>false</hasMenubar>
+        <hasScrollbars>true</hasScrollbars>
+        <hasToolbar>false</hasToolbar>
+        <height>500</height>
+        <isResizable>true</isResizable>
+        <linkType>url</linkType>
+        <masterLabel>View All Campaign Members</masterLabel>
+        <openType>newWindow</openType>
+        <position>none</position>
+        <protected>false</protected>
+        <showsLocation>false</showsLocation>
+        <showsStatus>false</showsStatus>
+        <url>/camp/rptcmpgncalldown.jsp?scope=1&amp;scopeid={!Campaign_Name}</url>
+        <width>500</width>
+    </webLinks>
+    <webLinks>
+        <fullName>ViewCampaignInfluenceReport</fullName>
+        <availability>online</availability>
+        <displayType>link</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <hasMenubar>false</hasMenubar>
+        <hasScrollbars>true</hasScrollbars>
+        <hasToolbar>false</hasToolbar>
+        <height>500</height>
+        <isResizable>true</isResizable>
+        <linkType>url</linkType>
+        <masterLabel>View Campaign Influence Report</masterLabel>
+        <openType>newWindow</openType>
+        <position>none</position>
+        <protected>false</protected>
+        <showsLocation>false</showsLocation>
+        <showsStatus>false</showsStatus>
+        <url>/00O?rt=117&amp;break0=CAN&amp;scope=1&amp;scopeid_lkid={!Campaign.Id}&amp;scopeid={!Campaign_Name}&amp;c=CAN&amp;c=MR&amp;c=PCS&amp;c=CFN&amp;c=RN&amp;c=ON&amp;c=OA&amp;c=OS&amp;c=OCD&amp;c=AN&amp;s=OA&amp;duel0=CAN%2CMR%2CCFN%2CRN%2CAN%2CON%2CPCS%2COS%2COCD%2COA&amp;details=yes&amp;format=t</url>
+        <width>500</width>
+    </webLinks>
+</CustomObject>

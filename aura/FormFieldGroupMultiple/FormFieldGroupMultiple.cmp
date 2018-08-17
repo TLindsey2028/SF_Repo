@@ -1,0 +1,67 @@
+<aura:component description="FormFieldGroupMultiple">
+  <aura:attribute name="value" type="Map" default="{}"/>
+  <aura:attribute name="multipleEntryValue" type="Map" default="{}"/>
+  <aura:attribute name="currentIndexEditing" type="Integer"/>
+  <aura:attribute name="formUniqueIdentifier" type="String"/>
+	<aura:attribute name="secondaryGroup" type="String"/>
+	<aura:attribute name="dependencies" type="List" default="[]"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+  <aura:registerEvent name="FormMultipleEntrySubmitEvent" type="LTE:FormMultipleEntrySubmitEvent"/>
+	<aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFormSubmittedEvent}"/>
+
+
+  <div class="slds-grid slds-wrap">
+    <div class="slds-size--1-of-1 slds-m-bottom--medium">
+      <div class="slds-card slds-card--darker">
+        <div class="slds-card__body slds-grid slds-wrap" aura:id="fields">
+
+        </div>
+        <div class="slds-size--1-of-1 slds-p-around--medium slds-text-align--center">
+          <Framework:Button onClickAction="{!c.addEntry}"
+                            type="brand"
+                            label="{!$Label.LTE.Form_Add_Entry}"
+                            aura:id="addMultipleEntry"/>
+        </div>
+      </div>
+    </div>
+    <span class="{!v.value.multipleEntries.length > 0 ? 'slds-size--1-of-1' : 'hidden'}">
+            <div class="slds-size--1-of-1 slds-m-bottom--small">
+                <div class="slds-text-heading--medium slds-m-bottom-small">
+                  {!$Label.LTE.Form_Entries}
+                </div>
+            </div>
+            <div class="slds-size--1-of-1">
+                <table class="slds-table slds-table--bordered slds-no-row-hover slds-table--review">
+                    <tbody>
+                    <aura:iteration items="{!v.value.multipleEntries}" var="item" indexVar="index">
+                        <tr>
+                            <td class="slds-cell-shrink">
+                                <aura:iteration items="{!item.fields}" var="field">
+                                    <div class="{!or(or(field.isHidden,field.fieldType == 'Section Header'),field.fieldType == 'Instructional Text') ? 'hidden' : 'slds-text-body--regular'}">{!field.name}</div>
+                                </aura:iteration>
+                            </td>
+                            <td class="">
+                                <aura:iteration items="{!item.fields}" var="field">
+                                    <div class="{!field.isHidden ? 'hidden' : 'slds-text-body--regular'}"><strong>{!field.value}</strong></div>
+                                </aura:iteration>
+                            </td>
+                            <td class="slds-cell-shrink">
+                                <div class="slds-button-group">
+                                    <button href="javascript:void(0)" class="slds-button slds-button--icon-border slds-action" data-id="{!index}" onclick="{!c.editEntry}">
+                                      <lightning:icon iconName="utility:edit" size="x-small" alternativeText="" class="slds-icon__container"/>
+                                    </button>
+                                    <button href="javascript:void(0)" class="slds-button slds-button--icon-border slds-action" data-id="{!index}" onclick="{!c.deleteEntry}">
+                                      <lightning:icon iconName="utility:delete" size="x-small" alternativeText="" class="slds-icon__container"/>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </aura:iteration>
+
+                    </tbody>
+                </table>
+            </div>
+        </span>
+  </div>
+</aura:component>

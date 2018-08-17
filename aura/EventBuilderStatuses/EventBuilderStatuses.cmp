@@ -1,0 +1,199 @@
+<aura:component description="EventBuilderStatuses" controller="EventApi.EventsBuilderController" implements="EventApi:EventBuilderTabInterface">
+    <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/Sortable.min.js'}"  afterScriptsLoaded="{!c.doInit}"/>
+    <aura:handler event="EventApi:StatusChangedEvent" action="{!c.handleStatusChangedEvent}"/>
+    <aura:registerEvent name="AddSelectorEvent" type="EventApi:AddSelectorEvent"/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:registerEvent name="StatusModifiedEvent" type="EventApi:StatusModifiedEvent"/>
+    <aura:attribute name="statusObj" type="Object"/>
+    <aura:attribute name="selFilterCriteria" type="String" default="" description="Selected filter criteria"/>
+    <aura:attribute name="filterObj" type="Object[]" default="[{}]" description="Filter Selection Object" />
+    <aura:attribute name="fieldApiNames" type="Object[]" default="[{}]" />
+    <aura:attribute name="fieldTypeMap" type="Object" default="{}" />
+    <aura:attribute name="modalHeader" type="String" default="{!$Label.EventApi.Create_Event_Status_Event_Builder}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+
+    <div class="slds-col slds-size--1-of-1">
+        <div class="slds-grid slds-grid--align-spread slds-p-bottom--medium slds-m-bottom--medium">
+            <div class="slds-col slds-align-middle">
+                <div class="slds-text-heading--small slds-m-bottom--small">{!$Label.EventApi.Event_Event_Builder}&nbsp;{!$Label.EventApi.Statuses_Event_Builder} ({!v.eventObj.availableStatuses.length})</div>
+                <div class="slds-text-body--regular">
+                    {!$Label.EventApi.Statuses_Description_Info_Event_Builder}<br />
+                    {!$Label.EventApi.Statuses_Drag_Drop_Event_Builder}
+                </div>
+            </div>
+            <div class="slds-align-bottom">
+                <button class="slds-button slds-button--brand" onclick="{!c.addNewStatus}">
+                    <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--x-small slds-button__icon--left" assistiveText="Save &amp; Close" />
+                    {!$Label.EventApi.New_Status_Event_Builder}
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="slds-col slds-size--1-of-1">
+        <table class="slds-table slds-table--bordered slds-no-row-hover" role="grid">
+            <aura:if isTrue="{!v.eventObj.availableStatuses.length == 0}">
+            <tr>
+                <td class="slds-grid slds-theme--shade">
+                    {!$Label.EventApi.No_Statuses_Event_Builder}&nbsp;<a href="javascript:void(0);" onclick="{!c.addNewStatus}">{!$Label.EventApi.Add_New_Statuses_Event_Builder}</a>
+                </td>
+            </tr>
+                <aura:set attribute="else">
+                    <thead>
+                    <tr class="slds-text-title--caps slds-grid slds-theme--shade">
+                        <th></th>
+                        <th scope="col" class="slds-col">
+                            <div class="slds-truncate" title="Name">{!$Label.EventApi.Name_Event_Builder}</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Actions">{!$Label.EventApi.Actions_Event_Builder}</div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="status-container">
+                        <aura:iteration items="{!v.eventObj.availableStatuses}" var="status">
+                            <tr class="slds-grid slds-theme--shade status-type" data-id="{!status.id}" data-name="{!status.name}">
+                                <td class="step-type" data-id="{!status.id}" data-name="{!status.name}">
+                                    <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#threedots'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--x-small slds-icon-text-default threedots-vertical" assistiveText="Sort" class=" sort1"/>
+                                    <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#threedots'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--x-small slds-icon-text-default threedots-vertical" assistiveText="Sort" class=" sort2"/>
+                                </td>
+                                <td data-label="Name" class="slds-col slds-grid">
+                                    <div class="slds-truncate slds-align-middle">{!status.name}&nbsp;<span class="{!status.isCurrentStatus ? '' : 'slds-hidden'}"><lightning:badge label="Current Status"/></span></div>
+                                </td>
+                                <td data-label="slds-truncate slds-text-align--right">
+                                    <a href="javascript:void(0);" class="slds-button slds-button--icon-border slds-action" data-id="{!status.id}" onclick="{!c.editStatus}">
+                                        <img class="slds-button__icon" src="{!$Resource.EventApi__SLDS_Icons+'/icons/utility/edit_60.png'}" width="16" height="34" data-id="{!status.id}"/>
+                                    </a>
+                                    <a href="javascript:void(0);" class="{!status.isCurrentStatus ? 'slds-hidden slds-button slds-button--icon-border slds-action' : 'slds-button slds-button--icon-border slds-action'}" data-id="{!status.id}" onclick="{!c.deleteStatus}">
+                                        <img class="slds-button__icon" src="{!$Resource.EventApi__SLDS_Icons+'/icons/utility/delete_60.png'}" width="16" height="34" data-id="{!status.id}"/>
+                                    </a>
+                                </td>
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                </aura:set>
+            </aura:if>
+        </table>
+    </div>
+    <div class="slds-modal" aura:id="statusesModal">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium">
+                    {!v.modalHeader}
+                </h2>
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+                    <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+                </button>
+            </div>
+
+            <div class="slds-modal__content slds-object-height--half slds-scrollable--y" id="statusesBody">
+                <div class="slds-grid slds-grid--vertical">
+                    <div class="slds-col">
+                        <Framework:InputFields fieldType="string"
+                                               label="{!$Label.EventApi.Event_Status_Name_Event_Builder}"
+                                               aura:id="name"
+                                               isRequired="true"
+                                               maxlength="80"
+                                               group="eventStatusObj"
+                                               value="{!v.statusObj}" />
+                    </div>
+                    <div class="slds-col">
+                        <Framework:InputFields fieldType="boolean"
+                                               label="{!$Label.EventApi.Is_Active_Status_Event_Builder}"
+                                               aura:id="isActive"
+                                               fireChangeEvent="true"
+                                               group="eventStatusObj"
+                                               value="{!v.statusObj}" />
+                    </div>
+                    <div class="slds-col">
+                        <Framework:InputFields fieldType="boolean"
+                                               label="{!$Label.EventApi.Is_Published_Status_Event_Builder}"
+                                               aura:id="isPublished"
+                                               fireChangeEvent="true"
+                                               group="eventStatusObj"
+                                               value="{!v.statusObj}" />
+                    </div>
+                    <div class="slds-col slds-hide" aura:id="closedStatusTextDiv">
+                        <Framework:InputFields fieldType="string"
+                                               label="{!$Label.EventApi.Event_Builder_Closed_Event_Status}"
+                                               helpText="{!$Label.EventApi.Event_Builder_Closed_Event_Status_Help}"
+                                               aura:id="closedStatusText"
+                                               group="eventStatusObj"
+                                               value="{!v.statusObj}"/>
+                    </div>
+                    <hr class="slds-m-top--none slds-m-bottom--x-small" />
+                    <div class="slds-col slds-m--custom slds-m-bottom--small">
+                        <span class="slds-text-body--small">
+                            {!$Label.EventApi.Transition_Criteria_Info_Event_Builder}
+                        </span>
+                        <div class="slds-size--1-of-1 slds-grid slds-wrap slds-m-top--small">
+                            <div class="slds-col slds-p-top--x-small">
+                                <Framework:InputFields fieldType="boolean"
+                                               label="{!$Label.EventApi.Enable_Transaction_Event_Builder}"
+                                               aura:id="enableTransitions"
+                                               group="eventStatusObj"
+                                               value="{!v.statusObj}" fireChangeEvent="true"/>
+                            </div>
+                            <div class="slds-col">
+                                <Framework:Button aura:id="filterModalBtn" enableProgressIndicator="false" onClickAction="{!c.openFilterCriteriaModal}" type="brand" label="{!$Label.EventApi.Event_Status_Transition_Criteria}"/>
+                            </div>
+                            <div class="slds-col slds-p-top--x-small">
+                                <Framework:InputFields fieldType="boolean"
+                                               label="{!$Label.EventApi.Event_Status_Is_Advanced}"
+                                               aura:id="isAdvanced"
+                                               group="eventStatusObj"
+                                               value="{!v.statusObj}" fireChangeEvent="true" helpText="{!$Label.EventApi.Event_Status_Is_Advanced_Help_Text}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="{!and(!empty(v.selFilterCriteria), !v.statusObj.isAdvanced) ? 'slds-col' : 'slds-hide'}">
+                        <p>{!$Label.EventApi.Event_Status_Selected_Filter_Criteria} :</p>
+                        <aura:unescapedHtml value="{!v.selFilterCriteria}" />
+                    </div>
+                    <div class="{!v.statusObj.isAdvanced ? 'slds-col slds-grid_align-end slds-float_right' : 'slds-hide'}">
+                        <Framework:InputFields fieldType="string"
+                                               label="{!$Label.EventApi.Status_Transition_Criteria_Event_Builder}"
+                                               aura:id="statusTransitionCriteria"
+                                               group="eventStatusObj"
+                                               value="{!v.statusObj}"
+                                               helpText="Status Transition Criteria must be a valid SOQL where the user indicates the API field name of a field on the event record, a comparison operator, and a valid entry for the API field.  &lt;a target='_blank' href='https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_fieldexpression.htm'&gt;Click here&lt;/a&gt; for more information."/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-modal__footer slds-text-align--right">
+                <Framework:Button enableProgressIndicator="false"
+                                  onClickAction="{!c.closeModal}"
+                                  type="neutral"
+                                  label="{!$Label.EventApi.Cancel}" />
+                <Framework:Button aura:id="saveStatus"
+                                  onClickAction="{!c.saveEventStatusRecord}"
+                                  type="brand"
+                                  additionalClasses="slds-m-left--xx-small"
+                                  label="{!$Label.EventApi.Save_Close_Event_Builder}" />
+            </div><!-- /.slds-modal__footer -->
+        </div><!-- /.modal-dialog .slds-modal__container -->
+    </div>
+    <div class="slds-modal slds-modal--medium" aura:id="filterCriteriaModal">
+        <div class="slds-modal__container fonteva-modal-medium__container">
+            <div class="slds-modal__header">
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal" onclick="{!c.closeFilterCriteriaModal}">
+                    <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+                </button>
+                <h2 class="slds-text-heading--medium" id="modal-heading-label">
+                  {!$Label.EventApi.Event_Status_Create_Filter}
+                </h2>
+            </div>
+            <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+                <span aura:id="filterPlaceholder"/>
+            </div>
+            <div class="slds-modal__footer slds-text-align--right">
+                <div class="slds-col slds-shrink-none">
+                    <Framework:Button aura:id="closeFilterModal" enableProgressIndicator="false" onClickAction="{!c.closeFilterCriteriaModal}" type="neutral" additionalClasses="slds-m-left--xx-small" label="{!$Label.EventApi.Cancel}" />
+                    <Framework:Button aura:id="saveFilterSelection" enableProgressIndicator="false" onClickAction="{!c.saveFilterSelection}" type="brand" additionalClasses="slds-m-left--xx-small" label="{!$Label.EventApi.Save_Filter_Criteria}" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+    <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+</aura:component>

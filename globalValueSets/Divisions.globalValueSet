@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Annual Fund</fullName>
+        <default>false</default>
+        <label>Annual Fund</label>
+    </customValue>
+    <customValue>
+        <fullName>Arts And Sciences</fullName>
+        <default>false</default>
+        <label>Arts And Sciences</label>
+    </customValue>
+    <customValue>
+        <fullName>Athletics</fullName>
+        <default>false</default>
+        <label>Athletics</label>
+    </customValue>
+    <customValue>
+        <fullName>Aviation</fullName>
+        <default>false</default>
+        <label>Aviation</label>
+    </customValue>
+    <customValue>
+        <fullName>Business</fullName>
+        <default>false</default>
+        <label>Business</label>
+    </customValue>
+    <customValue>
+        <fullName>Business &amp; Finance</fullName>
+        <default>false</default>
+        <label>Business &amp; Finance</label>
+    </customValue>
+    <customValue>
+        <fullName>DEV: Donor Relations</fullName>
+        <default>false</default>
+        <label>DEV: Donor Relations</label>
+    </customValue>
+    <customValue>
+        <fullName>DEV: Engagement</fullName>
+        <default>false</default>
+        <label>DEV: Engagement</label>
+    </customValue>
+    <customValue>
+        <fullName>Development &amp; Alumni Relations</fullName>
+        <default>false</default>
+        <label>Development &amp; Alumni Relations</label>
+    </customValue>
+    <customValue>
+        <fullName>Diversity and Inclusion</fullName>
+        <default>false</default>
+        <label>Diversity and Inclusion</label>
+    </customValue>
+    <customValue>
+        <fullName>Education</fullName>
+        <default>false</default>
+        <label>Education</label>
+    </customValue>
+    <customValue>
+        <fullName>Education and Human Development</fullName>
+        <default>false</default>
+        <label>Education and Human Development</label>
+    </customValue>
+    <customValue>
+        <fullName>Engineering and Applied Sciences</fullName>
+        <default>false</default>
+        <label>Engineering and Applied Sciences</label>
+    </customValue>
+    <customValue>
+        <fullName>Extended University Programs</fullName>
+        <default>false</default>
+        <label>Extended University Programs</label>
+    </customValue>
+    <customValue>
+        <fullName>Fine Arts</fullName>
+        <default>false</default>
+        <label>Fine Arts</label>
+    </customValue>
+    <customValue>
+        <fullName>General Studies</fullName>
+        <default>false</default>
+        <label>General Studies</label>
+    </customValue>
+    <customValue>
+        <fullName>Graduate College</fullName>
+        <default>false</default>
+        <label>Graduate College</label>
+    </customValue>
+    <customValue>
+        <fullName>Haenicke Institute</fullName>
+        <default>false</default>
+        <label>Haenicke Institute</label>
+    </customValue>
+    <customValue>
+        <fullName>Health And Human Services</fullName>
+        <default>false</default>
+        <label>Health And Human Services</label>
+    </customValue>
+    <customValue>
+        <fullName>Honors College</fullName>
+        <default>false</default>
+        <label>Honors College</label>
+    </customValue>
+    <customValue>
+        <fullName>Medallion</fullName>
+        <default>false</default>
+        <label>Medallion</label>
+    </customValue>
+    <customValue>
+        <fullName>Medical School</fullName>
+        <default>false</default>
+        <label>Medical School</label>
+    </customValue>
+    <customValue>
+        <fullName>MGAF</fullName>
+        <default>false</default>
+        <label>MGAF</label>
+    </customValue>
+    <customValue>
+        <fullName>Miller Auditorium</fullName>
+        <default>false</default>
+        <label>Miller Auditorium</label>
+    </customValue>
+    <customValue>
+        <fullName>Miscellaneous</fullName>
+        <default>false</default>
+        <label>Miscellaneous</label>
+    </customValue>
+    <customValue>
+        <fullName>Mulitple Divisions</fullName>
+        <default>false</default>
+        <label>Mulitple Divisions</label>
+    </customValue>
+    <customValue>
+        <fullName>Other Miscellaneous</fullName>
+        <default>false</default>
+        <label>Other Miscellaneous</label>
+    </customValue>
+    <customValue>
+        <fullName>Paper Technology Foundation</fullName>
+        <default>false</default>
+        <label>Paper Technology Foundation</label>
+    </customValue>
+    <customValue>
+        <fullName>Student Affairs</fullName>
+        <default>false</default>
+        <label>Student Affairs</label>
+    </customValue>
+    <customValue>
+        <fullName>Student Financial Aid</fullName>
+        <default>false</default>
+        <label>Student Financial Aid</label>
+    </customValue>
+    <customValue>
+        <fullName>University Libraries</fullName>
+        <default>false</default>
+        <label>University Libraries</label>
+    </customValue>
+    <customValue>
+        <fullName>University Relations</fullName>
+        <default>false</default>
+        <label>University Relations</label>
+    </customValue>
+    <customValue>
+        <fullName>Unknown</fullName>
+        <default>false</default>
+        <label>Unknown</label>
+    </customValue>
+    <customValue>
+        <fullName>Unrestricted</fullName>
+        <default>false</default>
+        <label>Unrestricted</label>
+    </customValue>
+    <customValue>
+        <fullName>WMUK-FM Radio Station</fullName>
+        <default>false</default>
+        <label>WMUK-FM Radio Station</label>
+    </customValue>
+    <description>Divisions at WMich</description>
+    <masterLabel>Divisions</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

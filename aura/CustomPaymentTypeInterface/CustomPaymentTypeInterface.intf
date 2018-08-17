@@ -1,0 +1,9 @@
+<aura:interface description="CustomPaymentTypeInterface" access="global">
+    <aura:attribute name="customPaymentTypeObj" type="Map" required="true" access="global"/>
+    <aura:attribute name="salesOrder" type="String" access="global"/>
+    <aura:attribute name="iFrameStyles" type="String" access="global"/>
+    <aura:attribute name="pathPrefix" type="String" access="global"/>
+    <aura:attribute name="epayment" type="String" access="global"/>
+    <aura:registerEvent name="CustomPaymentTypeActionEvent" type="OrderApi:CustomPaymentTypeActionEvent"/>
+	<aura:attribute name="renderAsTabs" type="Boolean" default="false"/>
+</aura:interface>

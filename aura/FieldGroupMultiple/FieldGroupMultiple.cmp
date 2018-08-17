@@ -1,0 +1,70 @@
+<aura:component description="FieldGroupMultiple">
+    <aura:attribute name="value" type="Map" default="{}"/>
+    <aura:attribute name="multipleEntryValue" type="Map" default="{}"/>
+    <aura:attribute name="currentIndexEditing" type="Integer"/>
+    <aura:attribute name="formUniqueIdentifier" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:registerEvent name="FormMultipleEntrySubmit" type="ROEApi:FormMultipleEntrySubmit"/>
+    <div class="slds-grid slds-wrap slds-p-around--medium">
+        <div class="slds-size--1-of-1 slds-m-bottom--small">
+            <div class="slds-text-heading--medium slds-m-bottom-small">
+                {!v.value.name}
+            </div>
+            <div class="slds-text-body--regular">
+                {!v.value.instructions}
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 slds-m-bottom--medium">
+            <div class="slds-card slds-card--darker">
+                <div class="slds-card__body slds-grid slds-wrap" aura:id="fields">
+
+                </div>
+                <div class="slds-size--1-of-1 slds-p-around--medium slds-text-align--center">
+                    <Framework:Button onClickAction="{!c.addEntry}"
+                                      type="brand"
+                                      label="{!$Label.ROEApi.Form_Add_Entry}"
+                                      aura:id="addMultipleEntry"/>
+                </div>
+            </div>
+        </div>
+        <span class="{!v.value.multipleEntries.length > 0 ? 'slds-size--1-of-1' : 'hidden'}">
+            <div class="slds-size--1-of-1 slds-m-bottom--small">
+                <div class="slds-text-heading--medium slds-m-bottom-small">
+                    {!$Label.ROEApi.Form_Entries}
+                </div>
+            </div>
+            <div class="slds-size--1-of-1">
+                <table class="slds-table slds-table--bordered slds-no-row-hover slds-table--review">
+                    <tbody>
+                    <aura:iteration items="{!v.value.multipleEntries}" var="item" indexVar="index">
+                        <tr>
+                            <td class="slds-cell-shrink slds-align-top">
+                                <aura:iteration items="{!item.fields}" var="field">
+                                    <div class="{!field.isHidden ? 'hidden' : 'slds-text-body--regular'}">{!field.name}</div>
+                                </aura:iteration>
+                            </td>
+                            <td class="slds-cell-wrap">
+                                <aura:iteration items="{!item.fields}" var="field">
+                                    <div class="{!field.isHidden ? 'hidden' : 'slds-text-body--regular'}"><strong>{!field.value}&nbsp;</strong></div>
+                                </aura:iteration>
+                            </td>
+                            <td class="slds-cell-shrink slds-align-top">
+                                <div class="slds-button-group">
+                                    <button href="javascript:void(0)" class="slds-button slds-button--icon-border slds-action" data-id="{!index}" onclick="{!c.editEntry}">
+                                        <img class="slds-button__icon" src="{!$Resource.ROEApi__SLDS_Icons + '/icons/utility/edit_60.png'}" width="16" height="34" data-id="{!index}"/>
+                                    </button>
+                                    <button href="javascript:void(0)" class="slds-button slds-button--icon-border slds-action" data-id="{!index}" onclick="{!c.deleteEntry}">
+                                        <img class="slds-button__icon" src="{!$Resource.ROEApi__SLDS_Icons + '/icons/utility/delete_60.png'}" width="16" height="34" data-id="{!index}"/>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </aura:iteration>
+
+                    </tbody>
+                </table>
+            </div>
+        </span>
+    </div>
+</aura:component>

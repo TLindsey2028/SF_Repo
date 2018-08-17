@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="GroupRegistrationAttendeeEvent">
+  <aura:attribute name="attendeeObj" type="Map" required="true"/>
+	<aura:attribute name="groupUniqueIdentifier" type="String" required="true"/>
+</aura:event>

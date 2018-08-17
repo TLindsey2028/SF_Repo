@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="CreditCardValidateEvent">
+    <aura:attribute name="isValidated" type="Boolean" default="true"/>
+</aura:event>

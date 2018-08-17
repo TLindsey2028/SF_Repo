@@ -1,0 +1,82 @@
+.THIS {
+    max-width: 1200px;
+}
+
+.THIS .fonteva-slds-schedule-item-header {
+    padding: 1rem .75rem
+}
+
+.THIS.slds-modal, .THIS.slds-backdrop {
+    max-width: 100%;
+}
+
+.THIS .slds-modal__footer {
+    border-top: none;
+    text-align: center;
+}
+
+.THIS span.slds-badge {
+    display: inline-block;
+}
+
+.THIS .slds-modal__content.slds-p-around_medium {
+    padding: 1rem;
+}
+
+.THIS .fonteva-scroll_x {
+    overflow: hidden;
+    overflow-x: scroll;
+}
+
+.THIS .fonteva-slider {
+    width: 0px !important;
+}
+
+.THIS .tns-controls button {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.THIS .tns-controls button:active {
+    border: none !important;
+}
+
+.THIS .tns-controls [disabled] {
+    visibility: hidden;
+}
+
+.THIS .itemClasses.slds-p-horizontal_small {
+    border-top: 1px;
+    padding-top: 10px;
+}
+
+.THIS .fake-image-class {
+    min-width: 160px;
+    min-height: 160px;
+}
+
+.THIS .bold-label{
+    font-weight: 700!important
+}
+
+.THIS .fonteva-word-break {
+    word-break: break-word;
+}
+
+.THIS .fonteva-slider {
+    display: flex;
+}
+.THIS .tns-item {
+    flex: 1;
+}
+.THIS .tns-item > div {
+    height: 100%;
+}
+
+.THIS .tns-item > div > div:last-of-type {
+    margin-top: auto;
+}
+
+.THIS .item-name {
+    word-break: break-word;
+}

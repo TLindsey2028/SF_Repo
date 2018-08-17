@@ -1,0 +1,84 @@
+<aura:component description="GroupRegistrationAddAttendee" controller="ROEApi.GroupRegistrationDetailsController">
+    <aura:attribute name="salesOrder" type="String"/>
+    <aura:attribute name="ticketTypes" type="List" default="[]"/>
+    <aura:attribute type="Aura.Action" name="removePerson" default="" />
+    <aura:attribute name="inviteObj" type="Map" default="{}"/>
+    <aura:attribute type="String" name="index" default="" />
+    <aura:attribute type="String" name="dataindex" default="" />
+    <aura:attribute type="Map" name="priceRuleObj" default="{}"/>
+    <aura:attribute type="String" name="contactLookupId"/>
+    <aura:attribute name="groupUniqueIdentifier" type="String" required="true"/>
+    <aura:attribute name="oldContactId" type="String" />
+    <aura:attribute name="contactPrefix" type="String" default=""/>
+    <aura:attribute name="activeClass" type="String" default="slds-attendee--active"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:registerEvent name="GroupRegistrationTotalUpdateEvent" type="ROEApi:GroupRegistrationTotalUpdateEvent"/>
+    <aura:registerEvent name="GroupRegistrationNameUpdateEvent" type="ROEApi:GroupRegistrationNameUpdateEvent"/>
+    <aura:registerEvent name="GroupRegistrationChangeAttendeeEvent" type="ROEApi:GroupRegistrationChangeAttendeeEvent"/>
+    <aura:registerEvent name="GroupRegistrationAttendeeEvent" type="ROEApi:GroupRegistrationAttendeeEvent"/>
+    <aura:registerEvent name="GroupRegistrationShowNewPriceEvent" type="ROEApi:GroupRegistrationShowNewPriceEvent"/>
+    <aura:registerEvent name="UpdateSimilarTTSOLsEvent" type="ROEApi:UpdateSimilarTTSOLsEvent"/>
+    <aura:handler event="OrderApi:ContactCreatedEvent" action="{!c.handleContactCreationEvent}"/>
+    <aura:handler event="ROEApi:GroupRegistrationAttendeeSwitchEvent" action="{!c.handleAttendeeSwitchEvent}"/>
+    <aura:handler event="OrderApi:CustomerLookupFilterUpdatedEvent" action="{!c.handleCustomerLookupFilterUpdateEvent}"/>
+    <aura:registerEvent name="ItemCardCompleteEvent" type="ROEApi:ItemCardCompleteEvent"/>
+    <aura:handler event="ROEApi:GroupRegistrationAttendeeEvent" action="{!c.handleAttendeeEvent}"/>
+    <aura:handler event="ROEApi:GroupRegistrationAttendeesUpdateEvent" action="{!c.handleGroupRegistrationAttendeesUpdateEvent}"/>
+    <aura:method name="copySettings" action="{!c.copySettings}">
+        <aura:attribute name="salesOrderLineItem" type="Map" required="true"/>
+    </aura:method>
+    <div class="slds-m-bottom--small slds-col--padded" onclick="{!c.switchPersonEvent}">
+        <div class="{!v.activeClass + ' slds-grid slds-grid--pull-padded'}">
+            <div class="slds-p-horizontal--small slds-align-middle slds-attendee__number">
+            {!v.index}.
+            </div>
+            <div class="slds-col--padded slds-p-top--small slds-size--1-of-4 slds-position--relative" aura:id="customerLookup">
+                <OrderApi:ContactPopover aura:id="assignmentPopOver" uniqueIdentifier="{!v.inviteObj.salesOrderLineItem.salesOrderLine}"/>
+            </div>
+            <div class="slds-col--padded slds-p-top--small slds-size--1-of-4">
+                <Framework:InputFields group="{!v.inviteObj.salesOrderLineItem.salesOrderLine}" fieldType="picklist" value="{!v.inviteObj}" label="" labelStyleClasses="slds-hide " isRequired="true" aura:id="ticketType" selectOptions="{!v.ticketTypes}" fireChangeEvent="true" disabled="{!v.inviteObj.disable}"/>
+            </div>
+            <div class="slds-col--padded slds-p-top--small slds-size--1-of-4 slds-hidden" aura:id="priceRule">
+                    <div><strong>{!v.priceRuleObj.name} - <Framework:CurrencyField value="{!v.priceRuleObj.price}" currencyISOCode="{!v.inviteObj.salesOrderLineItem.currencyISOCode}" isMultiCurrencyOrg="{!v.inviteObj.salesOrderLineItem.isMultiCurrencyOrg}"/></strong></div>
+                    <div class="slds-text-body--small">
+                        {!$Label.ROEApi.Override_Price_Payment_Page}
+                    </div>
+                    <div class="hidden">
+                        <Framework:InputFields fieldType="boolean" aura:id="priceOverride" value="{!v.inviteObj.salesOrderLineItem}" label="{!$Label.ROEApi.Override_Price}" fireChangeEvent="true" group="{!v.inviteObj.salesOrderLineItem.salesOrderLine}" disabled="{!v.inviteObj.disable}"/>
+                    </div>
+            </div>
+            <div class="slds-col--padded slds-p-top--small slds-size--1-of-4 slds-hidden hidden" aura:id="newPrice">
+                <Framework:InputFields fieldType="currency" otherAttributes='{"min" : 0,"max": 9999999}' aura:id="overriddenPrice" value="{!v.inviteObj.salesOrderLineItem}" label="" labelStyleClasses="slds-hide " isRequired="true" fireChangeEvent="true" group="{!v.inviteObj.salesOrderLineItem.salesOrderLine}" disabled="{!v.inviteObj.disable}" format="0.00" minValueValidationMessage="{!$Label.ROEApi.Min_Price_Validation_Message}" maxValueValidationMessage="{!$Label.ROEApi.Max_Price_Validation_Message}"/>
+            </div>
+            <div class="slds-col--padded slds-p-top--small slds-text-align--right slds-size--1-of-4">
+                <div class="slds-dropdown-trigger">
+                    <Framework:Button enableProgressIndicator="false"
+                                      onClickAction=""
+                                      type="neutral"
+                                      additionalClasses="slds-button--icon-border slds-p-around--none"
+                                      label=""
+                                      svgPath="{!$Resource.ROEApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#threedots'}"
+                                      svgContainerClass=""
+                                      svgClass="slds-button__icon"
+                                      svgAssistiveText="" />
+                    <div class="slds-dropdown slds-dropdown--right">
+                        <ul class="dropdown__list" role="menu">
+                            <li class="slds-dropdown__item">
+                                <a href="javascript:void(0);" role="menuitem" onclick="{!c.showItem}">
+                                    {!$Label.ROEApi.View_Item_in_Salesforce}
+                                </a>
+                            </li>
+                            <li class="{!v.index == 1 ? 'hidden' : 'slds-dropdown__item'}" aura:id="removeItemLink">
+                                <a href="javascript:void(0);" onclick="{!v.removePerson}" role="menuitem" data-index="{!v.dataindex}" data-salesorderline="{!v.inviteObj.salesOrderLineItem.salesOrderLine}">
+                                    {!$Label.ROEApi.Remove_from_Order}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

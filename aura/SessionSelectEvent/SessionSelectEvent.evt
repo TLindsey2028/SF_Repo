@@ -1,0 +1,11 @@
+<aura:event type="APPLICATION" description="SessionSelectEvent" access="global">
+  <aura:attribute name="sessionItem" type="string" description="Session Selected" required="true" access="global"/>
+  <aura:attribute name="session" type="string" description="Session Selected" required="true" access="global"/>
+  <aura:attribute name="sessionSelected" type="boolean" description="Session Selected or removed" required="true" access="global"/>
+  <aura:attribute name="waitlisted" type="boolean" description="Session Selected as waitlist" access="global" default="false"/>
+  <aura:attribute name="ticketTypes" type="List" description="ticketType sols selected for the session" access="global" default="[]"/>
+  <aura:attribute name="allowConflicts" type="boolean" description="Shows if selected session allow conflicts" access="global" default="false"/>
+  <aura:attribute name="fireServerCall" type="boolean" description="fire apex method to create session items" access="global" default="false"/>
+  <aura:attribute name="hasSOUpdated" type="boolean" default="false"/>
+  <aura:attribute name="so" type="Map" default="{}"/>
+</aura:event>

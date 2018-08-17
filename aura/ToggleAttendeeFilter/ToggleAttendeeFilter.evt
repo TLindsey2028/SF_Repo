@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="ToggleAttendeeFilter">
+    <aura:attribute name="attendeesToDisplay" type="Map"/>
+</aura:event>

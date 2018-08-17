@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="PayNowTabChangeEvent" access="global">
+    <aura:attribute name="currentTab" type="String" required="true" access="global"/>
+	<aura:attribute name="showCustomButton" type="Boolean" default="false" access="global"/>
+	<aura:attribute name="customTab" type="Boolean" default="false" access="global"/>
+</aura:event>

@@ -1,0 +1,35 @@
+<aura:component description="RichTextInputSourceEditor">
+    <aura:attribute name="localId" type="String"/>
+    <aura:registerEvent name="RichTextInputFieldModalEvent" type="Framework:RichTextInputFieldModalEvent"/>
+    <aura:attribute name="settingsObj" type="Map" default="{}"/>
+    <aura:attribute name="quill" type="Object"/>
+    <aura:method name="openModal" action="{!c.openModal}">
+        <aura:attribute name="quill" type="Object"/>
+    </aura:method>
+    <div class="slds-modal" aura:id="imageUpload">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium" id="modal-heading-label">{!$Label.Framework.Rich_Text_Source_Header}</h2>
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+                    <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+                </button><!-- /.slds-button -->
+            </div><!-- /.slds-modal__header -->
+            <div class="slds-modal__content slds-scrollable--y">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size--1-of-1">
+                        <Framework:InputFields aura:id="source"
+                                       label="{!$Label.Framework.Rich_Text_Upload_Image}"
+                                       isRequired="true"
+                                       value="{!v.settingsObj}"
+                                       fieldType="codeeditorfield"/>
+                    </div>
+                </div>
+            </div><!-- /.slds-modal__content -->
+            <div class="slds-modal__footer slds-text-align--right">
+                <Framework:Button enableProgressIndicator="false" type="neutral" label="{!$Label.Framework.Cancel}" onClickAction="{!c.closeModal}"/>
+                <Framework:Button aura:id="saveObject" onClickAction="{!c.saveObject}" type="brand" additionalClasses="slds-m-left--xx-small" label="{!$Label.Framework.Save}"/>
+            </div><!-- /.slds-modal__footer -->
+        </div><!-- /.modal-dialog .slds-modal__container -->
+    </div><!-- /.modal .slds-modal -->
+    <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+</aura:component>

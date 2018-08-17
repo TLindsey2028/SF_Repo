@@ -1,0 +1,9 @@
+.THIS .base-service-image {
+    height: 150px;
+    width: auto;
+}
+
+.THIS .breadcrumb-service-image {
+    width: 50px;
+    height: auto;
+}

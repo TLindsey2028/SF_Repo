@@ -1,0 +1,51 @@
+<aura:component description="EventRegistrationSeatingAssignment" implements="LTE:EventInterface" access="global" controller="LTE.EventRegistrationSeatingController">
+    <aura:attribute name="sections" type="LTE.Section[]"/>
+    <aura:handler event="LTE:SeatSelectedEvent" action="{!c.handleSeatSelectedEvent}"/>
+    <aura:attribute name="ticketsToAssign" type="Integer"/>
+    <aura:attribute name="seatsAssignedOtherTickets" type="Map"/>
+    <aura:attribute name="assignedSeats" type="Integer" default="0"/>
+    <aura:attribute name="ticket" type="Map"/>
+    <aura:attribute name="initialTicket" type="Map"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="ShowSeatingTicketsEvent" type="LTE:ShowSeatingTicketsEvent"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:registerEvent name="TicketSeatingFulfilledEvent" type="LTE:TicketSeatingFulfilledEvent"/>
+            <div class="slds-grid slds-wrap">
+                <div class="slds-size--1-of-1">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-grid slds-grid--vertical slds-navigation-list--vertical slds-navigation-list--vertical-inverse slds-size--1-of-1 slds-p-right--medium">
+                          <div class="slds-grid slds-grid--align-spread slds-p-bottom--small">
+                            <div class="slds-grid">
+
+                              <div class="slds-text-heading--large">
+                                  {!v.ticket.name}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="slds-text-heading--small">
+                            <div class="slds-text-title--caps">{!$Label.LTE.Seats_Assigned} : <strong>{!v.ticket.assignedSeats}</strong></div>
+                            <div class="slds-text-title--caps">{!$Label.LTE.Seats_To_Assign} : <strong>{!v.ticket.remainingSeats}</strong></div>
+                          </div>
+                            <h2 class="slds-p-top_medium" id="entity-header">{!$Label.LTE.Sections} : </h2>
+                            <div class="slds-scrollable_x">
+                                <ul class="slds-tabs_default__nav">
+                                    <aura:iteration items="{!v.sections}" var="section" indexVar="index">
+                                        <li aura:id="sectionListing" data-id="{!section.id}" class="slds-tabs_default__item">
+                                            <a href="javascript:void(0);" data-id="{!section.id}" onclick="{!c.showSection}" class="slds-tabs_default__link slds-text-link--reset">{!section.name}</a>
+                                        </li>
+                                    </aura:iteration>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="section0" class="slds-tabs--default__content slds-show slds-size--1-of-1" role="tabpanel" aria-labelledby="tab-default-1__item" aura:id="sectionBody"/>
+                    </div>
+                </div>
+                <div class="slds-size--1-of-1 slds-p-vertical--small slds-grid slds-grid--align-center">
+                    <div class="">
+                        <Framework:Button label="{!$Label.LTE.Event_Cancel_Button}" type="neutral" additionalClasses="slds-m-right--xx-small" onClickAction="{!c.cancelSeats}" aura:id="cancelSeats" enableProgressIndicator="false"/>
+                        <Framework:Button label="{!$Label.LTE.Event_Seating_Save_Button}" type="brand" onClickAction="{!c.saveSeats}" aura:id="saveSeats" disable="{!v.ticket.remainingSeats > 0}"/>
+                    </div>
+                </div>
+            </div>
+
+</aura:component>

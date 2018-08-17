@@ -1,0 +1,60 @@
+<aura:component description="SalesOrderSummary" controller="OrderApi.SalesOrderPaymentController">
+  <aura:attribute name="salesOrder" type="Object" default="{}"/>
+  <aura:attribute name="isCommunityView" type="Boolean" default="false"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:handler event="OrderApi:SalesOrderUpdateEvent" action="{!c.handleSalesOrderUpdate}"/>
+  <aura:registerEvent name="SalesOrderUpdateEvent" type="OrderApi:SalesOrderUpdateEvent"/>
+  <aura:handler event="OrderApi:DisableComponent" action="{!c.handleDisableComponentEvent}"/>
+  <aura:registerEvent name="DisableButtonEvent" type="OrderApi:DisableButtonEvent"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+  <aura:handler event="OrderApi:ProcessingChangesEvent" action="{!c.handleProcessingChangesEvent}"/>
+  <aura:dependency resource="OrderApi:SalesOrderSummaryLine"/>
+  <div class="slds-card">
+    <div class="slds-card__header slds-p-vertical--small slds-grid slds-p-left--large slds-m-bottom--none">
+      <div class="slds-media slds-media--center slds-has-flexi-truncate">
+        <div class="slds-media__body slds-truncate">
+          <span class="slds-text-heading--small slds-text-weight--regular">
+              {!$Label.OrderApi.Order_Total}:
+              <Framework:CurrencyField value="{!v.salesOrder.total}" currencyISOCode="{!v.salesOrder.currencyISOCode}" isMultiCurrencyOrg="{!v.salesOrder.isMultiCurrency}"/>
+          </span>
+          <span class="slds-float--right hidden" aura:id="processingChanges">
+            {!$Label.OrderApi.Processing_Changes_Payment}&nbsp;<img src="{!$Resource.Framework__SLDS_BaseV2+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" class="small-spinner" />
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="slds-card__body slds-p-vertical--small slds-theme--default slds-scrollable--x slds-m-bottom_none">
+      <table class="slds-table slds-no-row-hover slds-table-input--margin__none process-summary">
+        <thead>
+        <tr class="slds-text-heading--label">
+          <th>{!$Label.OrderApi.Shopping_Cart}</th>
+          <th class="quantity-width__small">{!$Label.OrderApi.QTY}</th>
+          <th></th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody aura:id="itemLineDiv">
+        </tbody>
+        <tbody aura:id="taxLineDiv">
+        </tbody>
+        <tbody aura:id="shipDiv">
+        </tbody>
+        <tbody>
+          <tr class="{!v.salesOrder.discountCodeEnabled ? 'slds-hint-parent slds-border--top ' : 'hidden'}">
+            <td colspan="4">
+              <div class="slds-grid slds-grid--pull-padded">
+                <div class="slds-col--padded">
+                  <Framework:InputFields group="summary" fieldType="string" aura:id="sourceCodeName" label="{!$Label.OrderApi.Discount_Code_Sales_Order}" value="{!v.salesOrder}" fireChangeEvent="true"/>
+                </div>
+                <div class="slds-col--padded slds-p-top--large slds-p-left--none">
+                  <Framework:Button type="brand" onClickAction="{!c.applyDiscount}" label="{!$Label.OrderApi.Apply_Sales_Order}" aura:id="discountButton" disable="true"/>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

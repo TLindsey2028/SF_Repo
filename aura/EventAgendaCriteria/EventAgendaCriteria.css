@@ -1,0 +1,40 @@
+.THIS .slds-button.fonteva-button_bare {
+    line-height: inherit;
+}
+
+.THIS .slds-button.fonteva-button_bare, .THIS .slds-button.fonteva-button_bare:focus {
+    box-shadow: none;
+}
+
+.THIS .slds-button_brand.slds-badge:hover {
+    cursor: pointer;
+}
+
+.THIS .slds-dropdown__item span.slds-text-body--regular.slds-col.slds-grid {
+    width: 100%!important;
+}
+
+.THIS .slds-dropdown__item span.slds-text-body--regular.slds-col.slds-grid > p {
+    overflow: hidden!important;
+    overflow-wrap: break-word!important;
+    width: 100%;
+    white-space: normal;
+}
+
+.THIS button.slds-button.slds-button-picklist.slds-picklist__label.slds-picklist-button {
+    padding-right: 40px!important;
+    width: auto!important;
+}
+
+@media (max-width: 48rem) {
+    .THIS .slds-grid.slds-col.slds-grid_pull-padded-xx-small.slds-wrap {
+        display: flex;
+        flex-direction: column;
+    }
+    .THIS .slds-grid.slds-col.slds-grid_pull-padded-xx-small.slds-wrap > div {
+        width: 100%!important;
+    }
+    .THIS button.slds-button.slds-button-picklist.slds-picklist__label.slds-picklist-button {
+        width: 100%!important;
+    }
+}

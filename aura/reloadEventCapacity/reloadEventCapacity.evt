@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="reloadEventCapacity">
+  <aura:attribute name="eventQuantity" type="Integer" default="0"/>
+</aura:event>

@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="RegistrationProcessSetGlobalObjectsEvent" access="global">
+	<aura:attribute name="salesOrderObj" type="Map" access="global"/>
+	<aura:attribute name="attendeeObj" type="Map" access="global"/>
+</aura:event>

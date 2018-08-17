@@ -1,0 +1,32 @@
+.THIS .slds-popover--panel.slds-nubbin--left-top:after,
+.THIS .slds-popover--panel.slds-nubbin--left-top:before,
+.THIS .slds-popover--panel.slds-nubbin--right-top:after,
+.THIS .slds-popover--panel.slds-nubbin--right-top:before,
+.THIS .slds-popover--panel.slds-nubbin--top-left:after,
+.THIS .slds-popover--panel.slds-nubbin--top-left:before,
+.THIS .slds-popover--panel.slds-nubbin--top-right:after,
+.THIS .slds-popover--panel.slds-nubbin--top-right:before {
+    background-color: white!important;
+}
+.THIS .slds-popover {
+    top: .75rem!important;
+    position: absolute!important;
+    z-index: 100001!important;
+}
+
+.THIS .FrameworkLookupInputField .slds-input-action-icon {
+    height: 36px!important;
+    width: 36px!important;
+}
+
+.THIS .slds-position--relative {
+    position: relative;
+}
+
+.THIS .selectize-dropdown.single {
+    width: 100%!important;
+}
+
+.THIS .selectize-input {
+    min-width: 224px;
+}

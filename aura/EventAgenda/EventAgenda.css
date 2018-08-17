@@ -1,0 +1,96 @@
+.THIS .slds-accordion,
+.THIS .slds-accordion *,
+.THIS .slds-collapse,
+.THIS .slds-collapse * {
+    box-sizing: border-box;
+}
+
+.THIS .slds-grid.slds-grid--pull-padded {
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+    margin: 0 auto;
+}
+
+.THIS .slds-accordion,
+.THIS .slds-collapse {
+  overflow: hidden;
+}
+
+.THIS .slds-accordion-section-title,
+.THIS .slds-collapse-section-title {
+  width: 100%;
+  padding: 1rem .75rem;
+  display: inline-block;
+  text-decoration: none !important;
+}
+.THIS .slds-accordion-section-title span,
+.THIS .slds-collapse-section-title span {
+    pointer-events: none;
+}
+.THIS .slds-accordion-section-title i,
+.THIS .slds-collapse-section-title i {
+    pointer-events: none;
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+    -webkit-transform-origin: center;
+            transform-origin: center;
+    -webkit-transition:-webkit-transform .125s ease-in-out;
+    transition:-webkit-transform .125s ease-in-out;
+    transition:transform .125s ease-in-out;
+    transition: transform .125s ease-in-out, -webkit-transform .125s ease-in-out;
+}
+.THIS .slds-accordion-section-title.active i,
+.THIS .slds-collapse-section-title.active i {
+    -webkit-transform: rotate(90deg);
+            transform: rotate(90deg);
+    -webkit-transform-origin: center;
+            transform-origin: center;
+    -webkit-transition:-webkit-transform .125s ease-in-out;
+    transition:-webkit-transform .125s ease-in-out;
+    transition:transform .125s ease-in-out;
+    transition: transform .125s ease-in-out, -webkit-transform .125s ease-in-out;
+}
+
+.THIS .slds-collapse-section-title.active, .THIS .slds-collapse-section-title:hover, .THIS .slds-collapse-section-title:focus, .THIS .slds-collapse-section-title:visited,
+.THIS .slds-accordion-section-title.active,
+.THIS .slds-accordion-section-title:hover,
+.THIS .slds-accordion-section-title:focus,
+.THIS .slds-accordion-section-title:visited {
+  background: #868686;
+  text-decoration: none;
+  color: white !important;
+}
+
+.THIS .slds-accordion-section:last-child .slds-accordion-section-title,
+.THIS .slds-collapse-section:last-child .slds-collapse-section-title {
+  border-bottom: none;
+}
+
+.THIS .slds-accordion-section-content,
+.THIS .slds-collapse-section-content {
+  padding: 1rem .75rem;
+  display: none;
+}
+
+.THIS button.slds-picklist__label {
+    height: 36px!important;
+    display: flex;
+}
+
+.THIS .multi-select-agenda-width {
+    min-width: 183px!important;
+}
+
+.THIS {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.THIS .fonteva-event-content:nth-of-type(even) {
+    max-width: 100%;
+}
+
+.THIS .fonteva-portal > div > div .slds-grid.slds-col.slds-grid_pull-padded-x-small {
+    flex-wrap: wrap;
+    align-items: flex-start;
+}

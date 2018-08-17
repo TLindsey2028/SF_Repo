@@ -1,0 +1,25 @@
+<aura:component description="EventCustomVideo" access="global" implements="LTE:EventInterface">
+    <aura:attribute name="showIframe" type="Boolean" default="false"/>
+    <aura:attribute name="renderVideo" type="Boolean" default="false"/>
+    <aura:attribute name="directUrl" type="String" access="private"/>
+    <aura:attribute name="width" type="String" default="100%"/>
+    <aura:attribute name="height" type="String" default="auto"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:if isTrue="{!and(v.componentObj != null,v.componentObj.config != null,v.componentObj.config.videoUrl != null,v.renderVideo)}">
+        <div data-name="EventCustomVideo" class="fonteva-event-component slds-p-around--medium">
+            <div class="slds-grid slds-grid--vertical">
+                <aura:if isTrue="{!not(empty(v.componentObj.config.html))}">
+                    <lightning:formattedRichText value="{!v.componentObj.config.html}" class="slds-m-bottom--medium"/>
+                </aura:if>
+                <aura:if isTrue="{!v.showIframe}">
+                    <iframe data-name="videoUrl" src="{!v.componentObj.config.videoUrl}" width="{!v.width}" height="{!v.height}" class="{!v.componentObj.config.customCSSClasses}" allowfullscreen="true"/>
+                    <aura:set attribute="else">
+                        <video width="{!v.width}" height="{!v.height}" controls="true" aura:id="videoTag" class="{!v.componentObj.config.customCSSClasses}">
+                            <source src="{!v.directUrl}" type="video/mp4"/>
+                        </video>
+                    </aura:set>
+                </aura:if>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

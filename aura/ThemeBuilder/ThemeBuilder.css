@@ -1,0 +1,48 @@
+.THIS  .slds-dropdown--trigger  .slds-dropdown--menu__hidden {
+    display: none;
+    z-index: 0;
+}
+
+.THIS  .slds-dropdown--trigger:hover  .slds-dropdown--menu__hidden,
+.THIS  .slds-dropdown--trigger:active  .slds-dropdown--menu__hidden {
+    display: block;
+    z-index: 100;
+}
+
+.THIS .slds-icon--xx-small {
+    line-height: 1;
+    width: .8rem!important;
+    height: 2.0rem!important;
+}
+
+.THIS .slds-button.slds-action {
+    line-height: 2.125rem;
+}
+.THIS .slds-button.slds-action:hover {
+    background-color: white;
+}
+
+.THIS .slds-dropdown {
+    padding: 0 0!important;
+}
+
+.THIS .slds-dropdown__item > button {
+    justify-content: center!important;
+}
+
+.THIS .slds-save-exit-button {
+    width : 107px!important;
+}
+
+.THIS .slds-side-save-button {
+    border-right-color: white!important;
+    border-right-width: 2px!important;
+}
+
+.THIS .white-dropdown-icon span svg use{
+    fill: white!important;
+}
+
+.THIS svg.slds-icon.slds-icon-text-default.slds-icon_xx-small {
+    fill: white!important;
+}

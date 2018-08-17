@@ -1,0 +1,31 @@
+<aura:component description="SavedPaymentMethods" controller="OrderApi.CreditCardPaymentsController" implements="OrderApi:CustomPaymentTypeInterface">
+  <aura:attribute name="value" type="Map" default="{}"/>
+  <aura:attribute name="contact" type="String" required="true"/>
+  <aura:attribute name="addresses" type="Map" default="{}"/>
+  <aura:attribute name="knownAddress" type="Map" default="{}"/>
+  <aura:attribute name="paymentMethodIdsToExclude" type="List"/>
+  <aura:attribute name="address" type="Map" default="{}"/>
+  <aura:attribute name="addressChanged" type="Boolean" default="false"/>
+  <aura:attribute name="label" type="String" default="Saved Payment Method"/>
+  <aura:attribute name="isRequired" type="Boolean" default="false"/>
+  <aura:attribute name="context" type="String" default="checkout"/>
+  <aura:attribute name="group" type="String"/>
+  <aura:attribute name="isFrontEnd" type="Boolean" default="true"/>
+  <aura:method name="getPaymentMethods" action="{!c.doInit}"/>
+  <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/lodash.min.js'}" afterScriptsLoaded="{!c.doInit}"/>
+  <aura:handler event="OrderApi:CreditCardContactUpdateEvent" action="{!c.handleCCContactUpdateEvent}"/>
+  <aura:registerEvent name="TogglePayNowOptions" type="OrderApi:TogglePayNowOptions"/>
+  <div class="slds-col slds-grid">
+    <aura:if isTrue="{!not(empty(v.customPaymentTypeObj.instructions))}">
+      <div data-name="instructions" class="slds-col">
+        <ui:outputRichText linkify="true" value="{!v.customPaymentTypeObj.instructions}" class="fonteva-paypal-label slds-m-bottom--x-large payment-rich-text"/>
+      </div>
+    </aura:if>
+  </div>
+  <div class="slds-col slds-grid">
+    <div class="slds-size--1-of-2 slds-m-bottom-x--small">
+      <Framework:InputFields qaData='{"type" : "input", "name": "paymentMethodToken"}' aura:id="paymentMethodToken" fieldType="picklist" label="{!v.label}" value="{!v.value}" isRequired="{!v.isRequired}" group="savedPaymentMethods"/>
+    </div>
+  </div>
+  <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

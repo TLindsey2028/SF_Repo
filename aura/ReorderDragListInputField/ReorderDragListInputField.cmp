@@ -1,0 +1,32 @@
+<aura:component>
+    <aura:attribute name="mainListName" type="String" default="First"/>
+    <aura:attribute name="value" type="List" description="The value" default="[]"/>
+    <aura:attribute name="resetValue" type="Boolean" default="false"/>
+    <aura:handler event="Framework:InputFieldClearErrorMessagesEvent" action="{!c.handleInputFieldClearErrorMessagesEvent}"/>
+    <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/Sortable.min.js'}" afterScriptsLoaded="{!c.initDD}"/>
+    <aura:method name="setErrorMessages" action="{!c.setErrorMessages}" description="Error Message For Field">
+      <aura:attribute name="errorMessages" type="Array" default="[]" description="Error Message"/>
+    </aura:method>
+    <aura:method name="reInitialize" action="{!c.initDD}" description="Re Initialize"/>
+  <aura:method name="loadExistingValue" action="{!c.loadExistingValue}" description="Load Existing Value"/>
+    <div class="slds-picklist--draggable slds-grid">
+        <div class="slds-form-element">
+            <span class="slds-form-element__label" aria-label="select-1">{!v.mainListName}</span>
+            <div class="slds-picklist slds-picklist--multi">
+                <ul class="slds-picklist__options slds-picklist__options--multi shown first-list-values" id="{!globalId+'_firstList'}" aura:id="firstList">
+                    <aura:iteration items="{!v.value}" var="availableValue">
+                        <li draggable="true" data-id="{!availableValue.value}" data-name="{!availableValue.label}" class="slds-picklist__item" aria-selected="false" tabindex="-1" role="option">
+                            <span class="slds-truncate">
+                                <aura:if isTrue="{!availableValue.image != null}">
+                                    <img src="{!availableValue.image}" class="drag-drop-image"/>
+                                </aura:if>
+                              <span>{!availableValue.label}</span>
+                            </span>
+                        </li>
+                    </aura:iteration>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <ui:inputText aura:id="errorInput" class="hidden"/>
+</aura:component>

@@ -1,0 +1,49 @@
+<aura:component description="ConferenceEvent" implements="PagesApi:FontevaBaseInterface" controller="LTE.EventRegistrationController" access="global">
+    <ltng:require scripts="{!join(',',$Resource.Framework__SLDS_BaseV2+'/js/lodash.min.js',$Resource.PagesApi__FontevaHelper+'/FontevaHelper.js')}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:handler event="Framework:ShowComponentEvent" action="{!c.handleSwitchComponent}"/>
+    <aura:handler event="LTE:LoginComponentEvent" action="{!c.handleLoginComponentEvent}"/>
+    <aura:handler event="LTE:EventToggleSideNavEvent" action="{!c.handleEventToggleSideNaveEvent}"/>
+
+    <aura:registerEvent name="EventChangePageEvent" type="LTE:EventChangePageEvent"/>
+        <div data-name="side-nav" class="slds-nav--slider fonteva-nav--slider fonteva-slds--navbar" aura:id="side-nav">
+            <aura:if isTrue="{!v.params.record.eventPages.length != 0}">
+                <aura:iteration items="{!v.params.record.eventPages}" var="eventPage" indexVar="index">
+                    <aura:if isTrue="{!index == 0}">
+                            <div class="slds-nav--link slds-nav-bordered active slds-tab-animate--top" data-type="{!eventPage.name}" onclick="{!c.showTab}" aura:id="linkPanel" data-name="linkPanel" data-title="{!eventPage.title}">
+                                <LTE:EventPageName pageName="{!eventPage.name}"/>
+                            </div>
+                        <aura:set attribute="else">
+                            <div class="slds-nav--link slds-nav-bordered slds-tab-animate--top" data-type="{!eventPage.name}" onclick="{!c.showTab}" aura:id="linkPanel" data-name="linkPanel" data-title="{!eventPage.title}">
+                                <LTE:EventPageName pageName="{!eventPage.name}"/>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                </aura:iteration>
+                <aura:if isTrue="{!!v.isPreview}">
+                    <aura:if isTrue="{!and(v.params.attendeeObj.hasAttendees,v.params.usr.isAuthenticated)}">
+                        <div class="slds-nav--link slds-nav-bordered" onclick="{!c.showMyRegistration}" aura:id="linkPanel" data-name="linkPanel" data-type="registration-panel">
+                            {!$Label.LTE.Manage_Registration_Tab_Name}
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!and(v.params.attendeeObj == null,!v.params.attendeeObj.hasAttendees)}">
+                        <div class="slds-nav--link slds-nav-bordered" onclick="{!c.showRegisterNow}" aura:id="linkPanel" data-name="linkPanel" data-type="registration-panel">
+                          {!$Label.LTE.Event_Register_Now_Button}
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!and(v.params.usr.contactId != null,v.params.usr.isAuthenticated,not(v.params.usr.isContactAuthenticated))}">
+                        <div class="slds-nav--link slds-nav-bordered" onclick="{!c.logout}" data-name="logout-panel" aura:id="logout-panel">
+                            {!$Label.LTE.Logout_Tab_Name}
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!and(!v.params.usr.isAuthenticated,!v.isPreview)}">
+                        <div class="slds-nav--link slds-nav-bordered" onclick="{!c.showLogin}" data-name="login-panel" aura:id="login-panel">
+                            {!$Label.LTE.Login_Tab_Name}
+                        </div>
+                    </aura:if>
+                </aura:if>
+            </aura:if>
+        </div>
+        <div data-name="slds-page" class="slds-page" aura:id="slds-page">
+           <div data-name="conference-event-wrapper" id="eventPage" aura:id="conference-event-wrapper"></div>
+        </div>
+</aura:component>

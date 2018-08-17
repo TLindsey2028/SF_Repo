@@ -1,0 +1,157 @@
+<aura:component description="EventPackageItems" implements="LTE:EventInterface" controller="LTE.EventRegistrationController">
+    <aura:attribute name="initialPurchase" required="false" type="Boolean" access="public"/>
+    <aura:attribute name="attendee" type="Map" default="{}"/>
+    <aura:attribute name="classIdItemMap" type="Map" default="{}"/>
+    <aura:attribute name="filteredItems" type="List"/>
+    <aura:attribute name="items" type="String[]"/>
+    <aura:attribute name="previousComponent" type="String"/>
+    <aura:attribute name="currentContact" type="String"/>
+    <aura:attribute name="subPlans" type="List"/>
+    <aura:attribute name="requiredItemClassErrorNames" type="List" description="List of Required Package items Names"/>
+    <aura:attribute name="renderPackageItems" type="Boolean" default="true"/>
+    <aura:attribute name="existingSOL" type="Map" description="existing salesorderline"/>
+    <aura:attribute name="purchaseButtonLabel" type="String" description="label for purchase button"/>
+    <aura:attribute name="lastNonBlankSOL" type="String" description="used to keep things on the screen - help us if the user sees a blank screen"/>
+    <aura:registerEvent type="LTE:EventSummaryUpdateEvent" name="EventSummaryUpdateEvent"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:registerEvent name="EventCancelRegistrationEvent" type="LTE:EventCancelRegistrationEvent"/>
+    <aura:handler event="LTE:SalesOrderLineDeletedEvent" action="{!c.handleSalesOrderLineDeletedEvent}"/>
+    <aura:handler event="LTE:RequiredPackageItemClassEvent" action="{!c.handleRequiredPackageItemClassEvent}"/>
+    <ltng:require
+            styles="{!join(',', $Resource.LTE__SLDS_Lens+'/css/tiny-slider.css', $Resource.LTE__SLDS_Lens+'/css/fa.css')}"
+            scripts="{!join(',',$Resource.LTE__SLDS_Lens+'/js/tiny-slider.js',$Resource.PagesApi__FontevaHelper+'/FontevaHelper.js')}"
+            afterScriptsLoaded="{!c.doInit}"/>
+
+    <div class="{!v.renderPackageItems ? 'slds-size--1-of-1 slds-event--panes fonteva-event-component' : 'slds-hide'}">
+        <div class="slds-event--pane slds-p-horizontal_large">
+            <div class="slds-col slds-p-vertical_large slds-grid slds-grid_pull-padded-small">
+                <div class="slds-col slds-medium-size_2-of-3 slds-p-horizontal_small fonteva-frame_body">
+                    <div class="slds-grid slds-grid_vertical">
+                        <aura:iteration items="{!v.requiredItemClassErrorNames}" var="requiredItemClassErrorName">
+                            <div class="slds-card slds-theme_warning slds-p-around_medium">
+                                {!$Label.LTE.Event_Required_Recommend_Message}&nbsp;<strong>{!requiredItemClassErrorName.Label}</strong>
+                                <ul class="slds-list_dotted">
+                                    <aura:iteration items="{!requiredItemClassErrorName.Contacts}" var="requiredConName">
+                                        <li><strong>{!requiredConName.attendeeName}</strong></li>
+                                    </aura:iteration>
+                                </ul>
+                            </div>
+                        </aura:iteration>
+                        <div class="fonteva-slds-schedule-search-bar slds-p-horizontal_small slds-p-vertical_medium slds-m-bottom_small slds-card fonteva-slds-text">
+                            <strong>{!$Label.LTE.Event_Recommend_Items_Description}</strong>
+                            <div aura:id="attendeePicklistDiv" class="slds-hide"/>
+                        </div>
+                        <aura:iteration items="{!v.filteredItems}" var="item">
+                            <div class="slds-m-bottom_medium">
+                                <div class="fonteva-slds-schedule-item-header slds-m-bottom_medium">
+                                    <div class="slds-text-heading_small">{!$Label.LTE.Event_Package_Because_Purchase}&nbsp;
+                                        <strong>{!item.itemName}</strong></div>
+                                </div>
+                                <div class=" slds-p-horizontal_small">
+                                    <div class="fonteva-slider">
+                                        <aura:iteration items="{!item.packagedItems}" var="pi" indexVar="i">
+                                            <div class="" id="{!i}" aura:id="testing">
+                                                <div class="slds-grid slds-grid_vertical">
+                                                    <div>
+                                                        <div class="slds-m-bottom_x-small fake-image-class">
+                                                            <Framework:Img src="{!pi.imageUrl}"/>
+                                                        </div>
+                                                        <div class="slds-m-bottom_x-small item-name fonteva-slds-text" title="{!pi.itemName}">
+                                                            {!pi.itemName}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+		                                                    <div class="slds-m-bottom_x-small fonteva-slds-header">
+				                                                    <strong><Framework:CurrencyField
+						                                                    value="{!pi.price}"
+						                                                    currencyISOCode="{!v.salesOrderObj.currencyISOCode}"
+						                                                    isMultiCurrencyOrg="{!v.salesOrderObj.isMultiCurrencyOrg}"
+						                                                    showFreeLabel="{!not(pi.isContribution)}"/></strong>
+		                                                    </div>
+                                                        <button
+                                                                class="fonteva-slds-button slds-button slds-button--brand"
+                                                                aria-haspopup="true"
+                                                                data-id="{!pi.id}"
+                                                                href="javascript:void(0);"
+                                                                onclick="{!c.addToCart}">
+                                                            {!pi.buttonLabel}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </aura:iteration>
+                                    </div>
+                                </div>
+                                <div class="slds-p-horizontal_small">
+                                    <aura:iteration items="{!item.classIdItemMap}" var="itemClass" indexVar="i">
+                                        <hr class="slds-m-vertical_medium" />
+                                        <div class="slds-text-heading_small slds-p-bottom_medium fonteva-word-break">
+                                            <strong>
+                                                {!itemClass.pic.displayLabel}
+                                            </strong>
+                                        </div>
+                                        <div class="fonteva-slider">
+                                            <aura:iteration items="{!itemClass.items}" var="pi">
+                                                <div class="" id="{!i}" aura:id="testing">
+                                                    <div class="slds-grid slds-grid_vertical">
+                                                        <div>
+                                                            <div class="slds-m-bottom_x-small fake-image-class">
+                                                                <Framework:Img src="{!pi.imageUrl}"/>
+                                                            </div>
+                                                            <div class="slds-m-bottom_x-small item-name fonteva-slds-text" title="{!pi.itemName}">
+                                                                {!pi.itemName}
+                                                            </div>
+                                                        </div>
+                                                        <div>
+		                                                        <div class="slds-m-bottom_x-small fonteva-slds-header">
+				                                                        <strong><Framework:CurrencyField
+						                                                        value="{!pi.price}"
+						                                                        currencyISOCode="{!v.salesOrderObj.currencyISOCode}"
+						                                                        isMultiCurrencyOrg="{!v.salesOrderObj.isMultiCurrencyOrg}"
+						                                                        showFreeLabel="{!not(pi.isContribution)}"/></strong>
+		                                                        </div>
+                                                            <button
+                                                                    class="fonteva-slds-button slds-button slds-button--brand"
+                                                                    aria-haspopup="true"
+                                                                    data-id="{!itemClass.pic.id}"
+                                                                    data-itemid="{!pi.packagedItemId}"
+                                                                    href="javascript:void(0);"
+                                                                    onclick="{!c.addToCart}">
+                                                                {!itemClass.pic.buttonLabel}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </aura:iteration>
+                                        </div>
+                                    </aura:iteration>
+                                </div>
+                            </div>
+                        </aura:iteration>
+
+                    </div>
+                </div>
+                <div class="slds-col slds-medium-size_1-of-3 fonteva-medium-p-horizontal_small fonteva-event_summary">
+                    <LTE:EventRegistrationSummary aura:id="eventRegistrationSummary" so="{!v.salesOrderObj}" eventObj="{!v.eventObj}"
+                                                displayDiscount="false" displayTotal="false" attendeeObj="{!v.attendeeObj}" siteObj="{!v.siteObj}" storeObj="{!v.storeObj}"/>
+                    <div class="slds-grid slds-grid_align-center">
+                        <LTE:EventActionButtons aura:id="actionButtons" cancelAction="{!c.openCancelModal}" nextAction="{!c.next}" previousAction="{!c.prev}"
+                                              showPrevious="{!'v.initialPurchase'}" disableNext="{!or(not(and(v.salesOrderObj != null,v.salesOrderObj.lines.length > 0)), v.requiredItemClassErrorNames.length > 0)}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <LTE:EventPackageItemModal aura:id="itemModal" currencyISOCode="{!v.salesOrderObj.currencyISOCode}" purchaseAction="{!c.purchase}"
+                             isMultiCurrencyOrg="{!v.salesOrderObj.isMultiCurrencyOrg}" purchaseButtonLabel="{!v.purchaseButtonLabel}"/>
+    <div class="fonteva-prompt_severity">
+        <Framework:MessagePrompt title="{!$Label.LTE.Cancel_Registration_Header}"
+                             message="{!'&lt;div>'+$Label.LTE.Cancel_Reg_First+'&lt;/div>'+$Label.LTE.Cancel_Reg_Second}"
+                             severity="error"
+                             aura:id="cancelPrompt"
+                             cancelButtonLabel="{!$Label.LTE.Cancel_Reg_No}"
+                             submitButtonLabel="{!$Label.LTE.Cancel_Reg_Yes}"
+
+                             submitOnClickAction="{!c.fireCancelRegEvent}"/>
+    </div>
+</aura:component>

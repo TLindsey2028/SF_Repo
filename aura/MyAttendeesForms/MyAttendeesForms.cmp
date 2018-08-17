@@ -1,0 +1,50 @@
+<aura:component description="MyAttendeesForms" implements="LTE:EventInterface" controller="LTE.ManageMyRegistrationController" access="global">
+    <aura:attribute name="attendees" type="Object[]"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+
+    <div class="active slds-col" id="manageReg">
+        <div class="slds-size--1-of-1">
+            <p data-name="Manage_Registration_Forms" class="slds-text-heading--large slds-font-weight--semi-bold slds-m-bottom--large">
+                {!$Label.LTE.Manage_Registration_Forms}
+            </p>
+        </div>
+        <div class="slds-size--1-of-1 slds-grid slds-wrap">
+            <div class="slds-size--1-of-1 slds-grid slds-wrap slds-col slds-p-vertical--x-small slds-col--rule-bottom slds-col--rule-dark">
+                <div data-name="Registration_Table_Attendee_Name" class="slds-size--1-of-1 slds-large-size--1-of-4">
+                    <strong>{!$Label.LTE.Registration_Table_Attendee_Name}</strong>
+                </div>
+                <div data-name="Registration_Table_Form_Name" class="slds-size--1-of-1 slds-large-size--1-of-4">
+                    <strong>{!$Label.LTE.Registration_Table_Form_Name}</strong>
+                </div>
+                <div data-name="Registration_Table_Ticket_Type" class="slds-size--1-of-1 slds-large-size--1-of-4">
+                    <strong>{!$Label.LTE.Registration_Table_Ticket_Type}</strong>
+                </div>
+                <div class="slds-size--1-of-1 slds-large-size--1-of-4">
+
+                </div>
+            </div>
+            <aura:iteration items="{!v.attendees}" var="attendee">
+                <aura:if isTrue="{!attendee.formResponseId != null}">
+                    <div class="slds-size--1-of-1 slds-grid slds-wrap slds-grid--vertical-align-center slds-col slds-p-vertical--x-small slds-col--rule-bottom slds-ticket-type--interaction">
+                        <div data-name="fullName" class="slds-size--1-of-1 slds-large-size--1-of-4">
+                            {!attendee.fullName}
+                        </div>
+                        <div data-name="formName" class="slds-size--1-of-1 slds-large-size--1-of-4">
+                            {!attendee.formName}
+                        </div>
+                        <div data-name="ticketTypeName" class="slds-size--1-of-1 slds-large-size--1-of-4">
+                            {!attendee.ticketTypeName}
+                        </div>
+                        <div class="slds-size--1-of-1 slds-large-size--1-of-4">
+                            <div class="slds-text-align--right slds-text-align--left__small">
+                                <button data-name="editForm" class="slds-button slds-button--icon-border" aria-haspopup="true" title="Show More" onclick="{!c.editForm}" data-id="{!attendee.id}">
+                                    <lightning:icon iconName="utility:edit" size="x-small"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+            </aura:iteration>
+        </div>
+    </div>
+</aura:component>

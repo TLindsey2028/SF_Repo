@@ -1,0 +1,88 @@
+.THIS.fonteva-portal .slds-table tbody tr > td {
+    padding: 13px .5rem!important;
+}
+
+.THIS.fonteva-portal label.slds-checkbox {
+    margin: 0;
+}
+
+@media (min-width: 48rem) {
+    .THIS.fonteva-portal label.slds-checkbox {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.THIS .slds-table.fonteva-table_theme-transparent,
+.THIS .slds-table.fonteva-table_theme-transparent thead th,
+.THIS .slds-table.fonteva-table_theme-transparent tbody td {
+    background-color: transparent;
+}
+
+.THIS.fonteva-portal .slds-table.fonteva-table_theme-transparent {
+    border-top: 0;
+}
+
+.THIS.fonteva-portal .slds-table.fonteva-table_theme-transparent .slds-button__icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.THIS .fonteva-layout_1 {
+    height: 100vh;
+}
+
+.THIS .fonteva-layout_1 > div:nth-of-type(2) {
+    height: calc(100vh - 65px);
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.THIS .fonteva-input_radio-spacing .slds-form-element.slds-m-bottom--small.display-element {
+    margin-bottom: 0!important;
+}
+
+.THIS .slds-hide {
+    display: none!important;
+}
+
+.THIS td.slds-text-align_center .slds-form-element.slds-m-bottom--small.display-element {
+    margin-bottom: 0!important;
+}
+
+.THIS table.table.table-default tr {
+    background-color: transparent!important;
+}
+
+.THIS .slds-table tbody td {
+    vertical-align: middle!important;
+}
+
+.THIS.fonteva-portal .selectize-input,
+.THIS.fonteva-portal .slds-input,
+.THIS.fonteva-portal .slds-select,
+.THIS.fonteva-portal input,
+.THIS.fonteva-portal textarea {
+    border-color: #eee!important
+}
+
+
+.THIS.fonteva-portal .slds-checkbox [type=checkbox]:checked+.slds-checkbox_faux:after,
+.THIS.fonteva-portal .slds-checkbox [type=checkbox]:checked+.slds-checkbox--faux:after,
+.THIS.fonteva-portal .slds-checkbox [type=checkbox]:checked~.slds-checkbox_faux:after,
+.THIS.fonteva-portal .slds-checkbox [type=checkbox]:checked~.slds-checkbox--faux:after,
+.THIS.fonteva-portal .slds-checkbox [type=checkbox]:checked+.slds-checkbox__label .slds-checkbox_faux:after,
+.THIS.fonteva-portal .slds-checkbox [type=checkbox]:checked+.slds-checkbox__label .slds-checkbox--faux:after {
+    height: .5rem;
+    width: .75rem;
+}
+
+.THIS.fonteva-portal .uiInputDefaultError .form-element__help {
+   font-size: 1.2rem;
+   margin-top: 0;
+}
+.THIS.fonteva-portal .slds-select_container select.slds-select {
+   padding-top: .75rem;
+   padding-bottom: .75rem;
+   height: 40px;
+}

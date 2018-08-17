@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PathAssistant xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <entityName>Opportunity</entityName>
+    <fieldName>StageName</fieldName>
+    <masterLabel>Default Opportunity Path</masterLabel>
+    <pathAssistantSteps>
+        <fieldNames>AQB__AccountRating__c</fieldNames>
+        <fieldNames>AQB__Readiness__c</fieldNames>
+        <fieldNames>AQB__Strategy__c</fieldNames>
+        <picklistValueName>Cultivation</picklistValueName>
+    </pathAssistantSteps>
+    <pathAssistantSteps>
+        <fieldNames>CloseDate</fieldNames>
+        <fieldNames>Ask_Amount__c</fieldNames>
+        <fieldNames>Ask_Date__c</fieldNames>
+        <fieldNames>AQB__Capacity__c</fieldNames>
+        <fieldNames>Name</fieldNames>
+        <info>&lt;strong&gt;Negotiate value and resolve objections.&lt;/strong&gt;
+
+&lt;ul&gt;&lt;li&gt;Have you confirmed all key decision makers are on board?&lt;/li&gt;&lt;li&gt;Have you focused enough on selling the value to negotiate the best price?&lt;/li&gt;&lt;/ul&gt;</info>
+        <picklistValueName>Negotiation</picklistValueName>
+    </pathAssistantSteps>
+    <pathAssistantSteps>
+        <fieldNames>AQB__Capacity__c</fieldNames>
+        <fieldNames>AQB__AccountRating__c</fieldNames>
+        <info>&lt;p class=&quot;p1&quot;&gt;&lt;strong&gt;&lt;span class=&quot;s1&quot;&gt;Qualify the opportunity and confirm budget.&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;&lt;li&gt;&lt;span class=&quot;s1&quot;&gt;What&amp;#39;s their business?&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span class=&quot;s1&quot;&gt;What problems are they trying to solve?&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span class=&quot;s1&quot;&gt;How does solving these problems help them?&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span class=&quot;s1&quot;&gt;Is the timing good for them?&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span class=&quot;s1&quot;&gt;What&amp;#39;s their budget?&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span class=&quot;s1&quot;&gt;What other solutions are they considering?&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;</info>
+        <picklistValueName>Qualification</picklistValueName>
+    </pathAssistantSteps>
+    <recordTypeName>__MASTER__</recordTypeName>
+</PathAssistant>

@@ -1,0 +1,130 @@
+<aura:component controller="Framework.FileController">
+    <aura:attribute name="value" type="String" description="The value" default=""/>
+    <aura:attribute name="linkUrl" type="String" description="URL for preview image" default=""/>
+    <aura:attribute name="bucket" type="String" default=""/>
+    <aura:attribute name="usePublicBucket" type="Boolean" default="false"/>
+    <aura:attribute name="country" type="String" default=""/>
+    <aura:attribute name="generatePrefix" type="Boolean" default="true"/>
+    <aura:attribute name="globalGeneratedId" type="String"/>
+    <aura:attribute name="allowCropping" type="Boolean" default="false"/>
+    <aura:attribute name="showPreview" type="Boolean" default="false"/>
+    <aura:attribute name="previewWidth" type="Integer" default="50"/>
+    <aura:attribute name="previewHeight" type="Integer"  default="50"/>
+    <aura:attribute name="croppieObj" type="Map"/>
+    <aura:attribute name="imageToCrop" type="String"/>
+    <aura:attribute name="disabled" type="Boolean" description="Disable Input" default="false"/>
+    <aura:attribute name="localId" type="String"/>
+    <aura:attribute name="additionalModalClass" type="String" default=""/>
+    <aura:handler event="Framework:InputFieldClearErrorMessagesEvent" action="{!c.handleInputFieldClearErrorMessagesEvent}"/>
+    <aura:attribute name="croppingParams" type="Map" default="{
+                enableExif : true,
+                viewport: {
+                    width: 200,
+                    height: 200,
+                    type: 'square'
+                },
+                boundary: {
+                    width: 500,
+                    height: 300
+                }
+            }"/>
+    <aura:attribute name="croppingResultParams" type="Map" default='{
+                    type: "blob",
+                    size: "original",
+                    format : "jpeg",
+                    circle : false
+                }'/>
+    <style>
+        .slds-cropper-image-content {
+            padding: 0!important;
+        }
+        .croppie-container .cr-slider-wrap {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .no-file-scroll {
+            overflow: hidden;
+            position: fixed;
+        }
+        .jslghtbx.jslghtbx-active {
+            z-index: 100000000000000000;
+        }
+    </style>
+    <aura:attribute name="organizationId" type="String"/>
+    <aura:attribute name="allowedMimeTypes" type="List" default="[]"/>
+    <aura:attribute name="requireHTTPS" type="Boolean" default="true"/>
+    <aura:attribute name="maximumFileSize" type="Integer"/>
+    <ltng:require scripts="{!join(',',$Resource.Framework__SLDS_BaseV2+'/js/croppie.min.js',$Resource.Framework__SLDS_BaseV2+'/js/lightbox.min.js',$Resource.Framework__UrlUtil)}" afterScriptsLoaded="{!c.doInit}"/>
+    <ltng:require styles="{!join(',',$Resource.Framework__SLDS_BaseV2+'/css/croppie.css',$Resource.Framework__SLDS_BaseV2+'/css/lightbox.min.css')}"/>
+    <!-- LOCAL ATTRIBUTES -->
+    <aura:attribute name="browse" default="{!$Label.Framework.Browse}" type="String"/>
+    <aura:attribute name="uploading" default="{!$Label.Framework.Uploading_File_Upload}" type="String"/>
+    <aura:attribute name="internalUpdate" type="Boolean" default="false"/>
+    <aura:attribute name="required" type="Boolean" default="false"/>
+    <aura:attribute name="uniqueId" type="String"/>
+    <aura:attribute name="iFrameUrl" type="String"/>
+    <aura:attribute name="useIframe" type="Boolean" default="true"/>
+    <aura:attribute name="isImageFile" type="Boolean" default="false" />
+    <aura:registerEvent name="FileUploadCropEvent" type="Framework:FileUploadCropEvent"/>
+    <aura:if isTrue="{!v.uniqueId != null}">
+        <iframe id="{!v.uniqueId}" src="{!v.iFrameUrl}"  frameborder="0" width="0px" height="0px" scrolling="no" class="hidden"/>
+    </aura:if>
+    <aura:method name="setErrorMessages" action="{!c.setErrorMessages}"
+      description="Error Message For Field">
+      <aura:attribute name="errorMessages" type="Array" default="[]" description="Error Message"/>
+    </aura:method>
+    <aura:method name="loadExistingValue" action="{!c.loadExistingValue}"
+                 description="Load Existing Value">
+    </aura:method>
+    <aura:method name="clearExistingValue" action="{!c.clearExistingValue}"
+                 description="Clear Existing Value">
+    </aura:method>
+    <div class="slds-grid">
+      <div class="slds-form-element slds-col file-input-wrapper">
+          <div class="slds-form-element__control slds-grid">
+            <ui:inputText class="{!globalId+'_file_label slds-input slds-border-radius--right__none '}" aura:id="file_label" change="{!c.saveUrl}" placeholder="{!$Label.Framework.File_Upload_Placeholder}"/>
+            <label for="file" onclick="{!c.uploadFile}" class="file-label slds-button slds-button--brand slds-border-radius--top-left__none slds-border-radius--bottom-left__none">
+              {!v.browse}
+            </label>
+            <input  type="file" class="file hidden" name="file" id="{!globalId+'_file'}" aura:id="file" style="display:none" onchange="{!c.uploadFileToServer}"/>
+          </div>
+          <Framework:ValidationErrorMessages aura:id="errorInput"/>
+          <div aura:id="uploading" class="notUploading hidden">
+            <span id="results"></span>
+            <img src="{!$Resource.Framework__SLDS_BaseV2+'/img/spinners/slds_spinner_brand.gif'}" alt="uploading" class="small-spinner" />&nbsp;{!v.uploading}
+         </div>
+    </div>
+        <aura:if isTrue="{!v.showPreview}">
+            <aura:if isTrue="{!v.value != null}">
+                <div class="slds-float_left slds-m-left--small">
+                    <Framework:Img id="preview-image" src="{!v.value}" width="{!v.previewWidth}" height="{!v.previewHeight}"
+                           class="preview-image" onclick="{!c.openLightBox}"
+                           extra="{!'data-jslghtbx='+v.value}" aura:id="imageComp"/>
+                </div>
+            </aura:if>
+        </aura:if>
+    </div>
+    <div class="slds-modal" id="cropImage" aura:id="cropImage">
+        <div class="{!v.additionalModalClass+' slds-modal__container'}">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium" id="modal-heading-label">Crop Image</h2>
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+                    <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+                </button><!-- /.slds-button -->
+            </div><!-- /.slds-modal__header -->
+
+                <div class="slds-modal__content slds-scrollable--y slds-cropper-image-content">
+                    <aura:if isTrue="{!v.imageToCrop != null}">
+                        <img aura:id="imageToCrop" id="{!v.imageToCrop}" src="#" alt="your image" />
+                    </aura:if>
+                </div><!-- /.slds-modal__content -->
+                <div class="slds-modal__footer slds-text-align--right">
+                    <Framework:Button type="neutral" enableProgressIndicator="false" label="{!$Label.Framework.Cancel}" onClickAction="{!c.closeModal}"/>
+                    <aura:if isTrue="{!v.globalGeneratedId != null}">
+                        <Framework:Button type="brand" aura:id="saveCroppedImage" label="{!$Label.Framework.Save}" onClickAction="{!c.saveCroppedFiled}" additionalClasses="{!' slds-m-left--x-small '+v.globalGeneratedId}"/>
+                    </aura:if>
+                </div><!-- /.slds-modal__footer -->
+        </div><!-- /.modal-dialog .slds-modal__container -->
+    </div><!-- /.modal .slds-modal -->
+    <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}" />
+</aura:component>

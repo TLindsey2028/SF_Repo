@@ -1,0 +1,25 @@
+<aura:component description="EventCategorySiteTableRow">
+    <aura:registerEvent name="EventCategorySiteDeleteEvent" type="EventApi:EventCategorySiteDeleteEvent"/>
+    <aura:attribute name="siteEventCategory" type="EventApi.SiteEventCategory" required="true"/>
+    <tr>
+        <td class="slds-truncate" data-label="">
+            <strong>{!v.siteEventCategory.siteName}</strong>
+            <span class="{!v.siteEventCategory.isPublished ? 'slds-m-left--small' :'hidden'}">
+                 <lightning:badge label="Published"/>
+            </span>
+        </td>
+        <td class="slds-truncate slds-text-align--center" data-label="">
+            <Framework:InputFields fieldType="radio"
+                                   otherAttributes='{"name" : "defaultSite"}'
+                                   value="{!v.siteEventCategory}"
+                                   styleClasses="slds-m--none"
+                                   aura:id="isDefault"
+                                   fireChangeEvent="true"
+                                   group="subscription"
+                                   labelStyleClasses="slds-hide"/>
+        </td>
+        <td class="slds-truncate slds-text-align--center" data-label="">
+            <lightning:buttonIcon iconName="utility:delete" class="slds-button slds-button--icon slds-float--right" variant="border" onclick="{!c.deleteSite}" alternativeText="Delete" />
+        </td>
+    </tr>
+</aura:component>

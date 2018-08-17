@@ -1,0 +1,109 @@
+<aura:component description="ROEScheduleItems" controller="ROEApi.ScheduleItemsController">
+    <aura:attribute name="salesOrder" type="String" required="true"/>
+    <aura:attribute name="parentSalesOrderLine" type="String"/>
+    <aura:attribute name="uniqueIdentifier" type="String"/>
+    <aura:attribute name="lookupFilter" type="String" />
+    <aura:attribute name="event" type="String" required="true"/>
+    <aura:attribute name="currencyISOCode" type="String" default="USD" />
+    <aura:attribute name="isMultiCurrencyOrg" type="Boolean" default="false"/>
+    <aura:attribute name="ticketsAvailable" type="Integer" />
+    <aura:attribute name="formCompletedObj" type="Map" default="{}"/>
+    <aura:attribute name="scheduleItem" type='Map' default="{}"/>
+    <aura:attribute name="salesOrderLines" type='List' default="[]"/>
+    <aura:attribute name="scheduleItemGlobalId" type='String' />
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:registerEvent name="ScheduleItemCompTotalUpdateEvent" type="ROEApi:ScheduleItemCompTotalUpdateEvent"/>
+    <aura:registerEvent name="ScheduleItemsCompletenessUpdateEvent" type="ROEApi:ScheduleItemsCompletenessUpdateEvent"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:handler event="ROEApi:ScheduleItemTotalUpdateEvent" action="{!c.handleTotalUpdateEvent}"/>
+    <aura:handler event="ROEApi:FormSubmittedEvent" action="{!c.handleFormSubmitEvent}"/>
+    <aura:handler event="ROEApi:ScheduleItemPriceHeadingEvent" action="{!c.handlePriceOverrideEvent}"/>
+    <auraStorage:init debugLoggingEnabled="false"
+                      name="{!globalId}"
+                      secure="true"
+                      persistent="false"
+                      clearStorageOnInit="true"
+                      defaultExpiration="50"
+                      defaultAutoRefreshInterval="60" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+        <div class="slds-size--1-of-1 slds-grid slds-wrap slds-p-around--medium">
+            <div class="slds-size--1-of-1 slds-grid slds-grid--align-spread slds-wrap slds-m-bottom--medium">
+                <div class="slds-col">
+                    <div class="slds-text-heading--small">
+                        {!$Label.ROEApi.Optional_Schedule_Items}
+                    </div>
+                </div>
+                <div class="slds-col">
+                    <div class="slds-text-heading--small">
+                        <Framework:CurrencyField value="0" currencyISOCode="{!v.currencyISOCode}" aura:id="total" isMultiCurrencyOrg="{!v.isMultiCurrencyOrg}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--1-of-1 slds-grid slds-wrap slds-p-bottom--medium">
+                <span class="slds-size--1-of-3 slds-edit-lookup" aura:id="scheduleItemLookup">
+                    <span aura:id="statusSCItem" class="slds-hidden">
+                        <span class="{!v.ticketsAvailable == 0 ? 'slds-text-body--small slds-text--danger' : 'hidden'}">
+                            {!$Label.ROEApi.Sold_Out}
+                        </span>
+                        <span class="{!v.ticketsAvailable > 0 ? 'slds-text-body--small' : 'hidden'}">
+                            {!v.ticketsAvailable}&nbsp;<span class="{!v.ticketsAvailable == 1 ? '' : 'hidden'}">&nbsp;{!$Label.ROEApi.Event_Ticket}</span><span class="{!v.ticketsAvailable > 1 ? '' : 'hidden'}"> {!$Label.ROEApi.Event_Tickets}</span>&nbsp;{!$Label.ROEApi.Tickets_Remaining}
+                        </span>
+                    </span>
+                </span>
+                <div class="slds-col--padded">
+                    <Framework:Button onClickAction="{!c.registerScheduleItem}"
+                                      type="brand"
+                                      disable="true"
+                                      label="{!$Label.ROEApi.Register_SC}"
+                                      aura:id="registerScheduleItemButton"/>
+                </div>
+            </div>
+            <div class="slds-size--1-of-1 slds-grid slds-wrap slds-m-top--medium">
+
+                <table class="slds-table slds-table--bordered slds-no-row-hover slds-table--actions">
+                    <thead>
+                    <tr class="slds-text-heading--label">
+                        <th class="slds-size--1-of-5">
+                            <div class="slds-truncate">{!$Label.ROEApi.Schedule_Item}</div>
+                        </th>
+                        <th class="slds-size--1-of-5">
+                            <div class="slds-truncate">{!$Label.ROEApi.Session_Date_Time}</div>
+                        </th>
+                        <th class="slds-size--1-of-5">
+                            <div class="slds-truncate">{!$Label.ROEApi.Price_Rule}</div>
+                        </th>
+                        <th class="slds-size--1-of-5"><span class="slds-hidden" aura:id="newPriceHeading">{!$Label.ROEApi.Schedule_Item_New_Price}</span></th>
+                        <th class="slds-size--1-of-5">
+                            <div class="slds-truncate">{!$Label.ROEApi.Form}</div>
+                        </th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <aura:if isTrue="{!v.salesOrderLines.length == 0}">
+                        <tbody>
+                        <tr>
+                            <td>{!$Label.ROEApi.No_Schedule_Items_Added}</td>
+                            <td class="slds-size--1-of-5"></td>
+                            <td class="slds-size--1-of-5"></td>
+                            <td class="slds-size--1-of-5"></td>
+                            <td class="slds-size--1-of-5"></td>
+                            <td class="slds-size--1-of-5"></td>
+                        </tr>
+                        </tbody>
+                        <aura:set attribute="else">
+                            <tbody aura:id="scheduleItemsComp">
+                                <aura:if isTrue="{!v.salesOrderLines.length > 0}">
+                                    <aura:iteration items="{!v.salesOrderLines}" var="item" indexVar="index">
+                                        <ROEApi:ScheduleItemRow showForm="{!c.showForm}" itemIndex="{!index}" removeItem="{!c.removeScheduleItem}" item="{!item}" currencyISOCode="{!v.currencyISOCode}" uniqueIdentifier="{!v.uniqueIdentifier}" isMultiCurrencyOrg="{!v.isMultiCurrencyOrg}"/>
+                                    </aura:iteration>
+                                </aura:if>
+                            </tbody>
+                        </aura:set>
+                    </aura:if>
+                </table>
+            </div>
+            <div class="slds-size--1-of-1 slds-m-top--medium" aura:id="form">
+            </div>
+        </div>
+        <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

@@ -1,0 +1,31 @@
+.THIS {
+}
+
+.THIS .slds-scrollable_y {
+    width: 100% !important;
+}
+
+.THIS .slds-table.slds-table--header-fixed.slds-table_bordered.slds-table_edit.slds-table_resizable-cols {
+    width: 100% !important;
+}
+
+.THIS .hide-error-message > .slds-form-element__help {
+    display: none;
+}
+
+.THIS .slds-m-bottom_neg-xx-large {
+    margin-bottom: -52px;
+}
+
+.THIS p {
+    white-space: normal;
+}
+
+.THIS .overflow-is-visible {
+    overflow: visible;
+}
+
+.THIS .data-type-tooltip {
+    bottom: 35px;
+    left: -16px;
+}

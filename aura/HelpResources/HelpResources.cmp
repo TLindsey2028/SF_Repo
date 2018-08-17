@@ -1,0 +1,83 @@
+<aura:component>
+  <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+  <style>
+      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+        .slds-ie-fix--width {
+          max-width: calc(100vw - 300px)!important;
+        }
+      }
+  </style>
+  <div class="slds-medium-size--3-of-4 slds-size--1-of-1 slds-grid slds-wrap slds-ie-fix--width">
+    <div class="slds-col slds-size--1-of-1">
+      <div class="slds-page-header">
+        <div class="slds-media slds-media--center">
+          <div class="slds-media__figure slds-ie-fix--width__icon">
+            <img src="//fonteva-cdn.s3.amazonaws.com/framework-admin/HelpSettings/HelpSettings.svg" style="height:50px;" alt="Placeholder" />
+          </div><!-- /.slds-media__figure -->
+          <div class="slds-media__body">
+            <nav role="navigation">
+              <p id="bread-crumb-label" class="slds-assistive-text">Dashboard:</p>
+              <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                  <li class="slds-list__item slds-text-heading--label">
+                      <a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.showComponent}" data-name="Framework:SparkAdminSidebar" >
+                         {!$Label.Framework.Dashboard}
+                      </a>
+                  </li>
+              </ol>
+            </nav>
+            <div class="slds-text-heading--medium">
+               {!$Label.Framework.Help}&nbsp;{!$Label.Framework.Resources}
+            </div>
+          </div><!-- /.slds-media__body -->
+        </div><!-- /.slds-media -->
+      </div><!-- /.slds-page-header -->
+      <div aura:id="mainBody" class="slds-object-height--full__nofooter slds-scrollable--y">
+        <div class="slds-col slds-size--1-of-1 slds-p-vertical--medium">
+          <div class="slds-col slds-p-horizontal--small slds-grid slds-wrap">
+
+            <div class="slds-medium-size--1-of-3 slds-small-size--1-of-1 slds-p-around--small">
+              <div class="slds-box slds-text-align--center slds-object-height--large">
+                <div class="slds-text-heading--small slds-m-bottom--small">
+                  <a href="http://fonteva.io" target="_blank">{!$Label.Framework.API_Documentation}</a>
+                </div><!-- /.slds-text-body-small -->
+
+                <img src="{!$Resource.Framework__SLDS_BaseV2+'/img/help/api-docs_thumb.jpg'}" height="150px" class="slds-m-bottom--small" />
+
+                <div class="slds-text-body--regular">
+                    {!$Label.Framework.API_Documentation_Description}
+                </div><!-- /.slds-text-body-regular -->
+              </div><!-- /.slds-box -->
+            </div><!-- /.slds-medium-size.slds-small-size -->
+
+            <div class="slds-medium-size--1-of-3 slds-small-size--1-of-1 slds-p-around--small">
+              <div class="slds-box slds-text-align--center slds-object-height--large">
+                <div class="slds-text-heading--small slds-m-bottom--small">
+                  <a href="http://docs.fonteva.com" target="_blank">{!$Label.Framework.Online_Help}</a>
+                </div>
+
+                <img src="{!$Resource.Framework__SLDS_BaseV2+'/img/help/help-docs_thumb.jpg'}" height="150px" class="slds-m-bottom--small" />
+
+                <div class="slds-text-body--regular">
+                    {!$Label.Framework.Online_Help_Description}
+                </div><!-- /.slds-text-body-regular -->
+              </div><!-- /.slds-box -->
+            </div><!-- /.slds-medium-size.slds-small-size -->
+
+            <div class="slds-medium-size--1-of-3 slds-small-size--1-of-1 slds-p-around--small">
+              <div class="slds-box slds-text-align--center slds-object-height--large">
+                <div class="slds-text-heading--small slds-m-bottom--small">
+                  <a href="http://fonteva.com" target="_blank">{!$Label.Framework.Fonteva_URL}</a>
+                </div>
+                <img src="{!$Resource.Framework__SLDS_BaseV2+'/img/help/fonteva_thumb.jpg'}" height="150px" class="slds-m-bottom--small" />
+                <div class="slds-text-body--regular">
+                    {!$Label.Framework.Fonteva_Description}
+                </div><!-- /.slds-text-body-regular -->
+              </div><!-- /.slds-box -->
+            </div><!-- /.slds-medium-size.slds-small-size -->
+          </div><!-- /.slds-grid -->
+        </div><!-- /.slds-col.size-1-of-1 -->
+      </div><!-- /aura#mainBody -->
+    </div><!-- /.slds-col -->
+  </div>
+
+</aura:component>

@@ -1,0 +1,7 @@
+<aura:event type="APPLICATION" description="UpdateSimilarTTSOLsEvent">
+    <aura:attribute name="solId" type="String" required="true"/>
+    <aura:attribute name="contactId" type="String" required="false"/>
+    <aura:attribute name="itemId" type="Map" required="true"/>
+    <aura:attribute name="action" type="String" required="false"/>
+    <aura:attribute name="groupUniqueIdentifier" type="String" required="true"/>
+</aura:event>

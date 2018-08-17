@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="EventCategorySiteDeleteEvent">
+    <aura:attribute name="siteToDelete" type="String" required="true"/>
+</aura:event>

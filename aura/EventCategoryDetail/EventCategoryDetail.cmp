@@ -1,0 +1,77 @@
+<aura:component description="EventCategoryDetail" controller="EventApi.EventCategoriesListingController">
+    <ltng:require scripts="{!$Resource.Framework__UrlUtil}"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:registerEvent name="EventCategoriesReload" type="EventApi:EventCategoriesReload"/>
+    <aura:attribute name="category" type="EventApi.EventCategory" required="true"/>
+    <div class="slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-around--small">
+        <div class="slds-box slds-theme--default slds-grid slds-grid--vertical">
+            <div class="slds-col slds-p-bottom--small">
+                <div class="slds-text-heading--medium slds-font-weight--semi-bold">
+                    <a href="javascript:void(0);" onclick="{!c.viewCategory}">{!v.category.name}</a>
+                </div>
+            </div>
+            <div class="slds-col slds-p-bottom--small slds-m-bottom--small slds-col--rule-bottom">
+                <div class="slds-text-heading--small slds-font-weight--light">
+                    {!v.category.businessGroupName}
+                </div>
+            </div>
+            <div class="slds-col slds-grid slds-grid--align-spread slds-wrap">
+                <div class="slds-grid slds-medium-size--2-of-3 slds-size--1-of-1 slds-grid--pull-padded slds-m-bottom--small">
+                    <div class="slds-p-horizontal--small">
+                                        <span class="slds-text-heading--small">
+                                            <strong>{!v.category.events}</strong>&nbsp;<span class="slds-font-weight--light">
+                                            <span class="{!v.category.events == 1 ? '' : 'hidden'}">
+                                                Event
+                                            </span>
+                                            <span class="{!v.category.events != 1 ? '' : 'hidden'}">
+                                                Events
+                                            </span>
+                                        </span>
+                                        </span>
+                    </div>
+                    <div>
+                        |
+                    </div>
+                    <div class="slds-p-horizontal--small">
+                                        <span class="slds-text-heading--small">
+                                            <strong>{!v.category.sites}</strong>&nbsp;<span class="slds-font-weight--light">
+                                            <span class="{!v.category.sites == 1 ? '' : 'hidden'}">
+                                                Site
+                                            </span>
+                                            <span class="{!v.category.sites != 1 ? '' : 'hidden'}">
+                                                Sites
+                                            </span>
+                                        </span>
+                                        </span>
+                    </div>
+                    <div class="{!v.category.defaultSiteName == null ? 'hidden' : ''}">
+                        |
+                    </div>
+                    <div class="slds-p-horizontal--small slds-truncate slds-size--1-of-2">
+                                        <span class="slds-text-heading--small">
+                                            <span class="slds-font-weight--light">{!v.category.defaultSiteName}</span>
+                                        </span>
+                    </div>
+                </div>
+                <div>
+                    <lightning:buttonIcon iconName="utility:edit" class="slds-button slds-button--icon slds-m-right--small" variant="bare" onclick="{!c.editCategory}" alternativeText="Edit" />
+                    <lightning:buttonIcon iconName="utility:delete" class="slds-button slds-button--icon" variant="bare" onclick="{!c.showDeleteCategoryPrompt}" alternativeText="Delete" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+    <Framework:MessagePrompt title="Delete Event Category"
+                             message=""
+                             severity="clear"
+                             submitButtonLabel="Delete"
+                             submitOnClickAction="{!c.deleteCategory}"
+                             cancelButtonLabel="{!$Label.EventApi.Cancel}"
+                             aura:id="deleteCategoryNoEvents"/>
+    <Framework:MessagePrompt title="Cannot Delete Event Category"
+                             message=""
+                             severity="clear"
+                             showSubmitButton="false"
+                             cancelButtonLabel="{!$Label.EventApi.Cancel}"
+                             aura:id="deleteCategoryWithEvents"/>
+</aura:component>

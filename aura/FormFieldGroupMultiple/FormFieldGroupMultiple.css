@@ -1,0 +1,15 @@
+.THIS .slds-table--review tr > th,
+.THIS .slds-table--review tr > td {
+    color: rgb(22, 50, 92)!important;
+}
+.THIS .slds-table--review tr > th:first-child,
+.THIS .slds-table--review tr > td:first-child {
+    padding-left: 1rem!important;
+}
+.THIS .slds-table--review tr > th:last-child,
+.THIS .slds-table--review tr > td:last-child {
+    padding-right: 1rem!important;
+}
+.THIS .slds-card--darker {
+    background-color: #E5E9EC!important
+}

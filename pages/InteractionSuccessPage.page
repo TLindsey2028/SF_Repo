@@ -1,0 +1,4 @@
+<apex:page >
+    <style> body { font-family: 'Arial Unicode MS'; } </style>
+    <h1>Congratulations Your Interaction Report Was Submitted!</h1>
+</apex:page>

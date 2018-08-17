@@ -1,0 +1,31 @@
+<aura:component description="EventStatusPicker" controller="EventApi.EventsBuilderController" extends="EventApi:EventBuilderBase">
+    <aura:attribute name="eventObj" type="EventApi.Event" required="true"/>
+    <aura:registerEvent name="StatusChangedEvent" type="EventApi:StatusChangedEvent"/>
+    <aura:handler event="EventApi:StatusModifiedEvent" action="{!c.handleStatusModifiedEvent}"/>
+    <div class="slds-align-middle slds-col-padded slds-size--1-of-3">
+        <div class="slds-grid slds-grid--align-center">
+            <span>
+                  <div class="slds-button slds-button--brand slds-dropdown--trigger">
+                    {!$Label.EventApi.Status_Label_Event_Builder}&nbsp;
+                    <span>
+                         {!v.eventObj.currentEventStatus.name}
+                    </span>
+                    &nbsp;
+                    <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#down'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--xx-small" assistiveText="Status" />
+                    <div class="slds-dropdown slds-dropdown slds-dropdown--right slds-dropdown--menu slds-dropdown--menu__hidden slds-size--1-of-1" aura:id="saveAndClose">
+                      <ul class="slds-dropdown__list" role="menu">
+                          <aura:iteration items="{!v.eventObj.availableStatuses}" var="status">
+                              <span class="{!status.isCurrentStatus ? 'hidden' : ''}">
+                                  <li class="slds-dropdown__item" data-id="{!status.id}" onclick="{!c.changeStatus}">
+                                    <a href="javascript:void(0);" data-id="{!status.id}" class="slds-event-status-link">{!status.name}</a>
+                                  </li>
+                              </span>
+                          </aura:iteration>
+                      </ul>
+                    </div>
+                  </div>
+            </span>
+        </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

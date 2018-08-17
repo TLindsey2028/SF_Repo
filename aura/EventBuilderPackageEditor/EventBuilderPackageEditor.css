@@ -1,0 +1,51 @@
+.THIS .strong {
+    font-weight: 500;
+}
+
+.THIS .slds-modal__content,
+.THIS.slds-modal__content {
+    padding: 0 !important;
+}
+
+.THIS .pad {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+}
+
+.THIS .padTop {
+    padding-top: 1.5rem !important;
+}
+
+.THIS #addPackageRow {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.THIS #itemGridHeader {
+    background-color: #ffffff;
+}
+.THIS #itemTable {
+    border-top: 1px rgb(216, 221, 230);
+}
+
+.THIS #noPackageItems {
+    margin-top: 24px;
+}
+
+.THIS .requiredCol {
+    width: 80px;
+}
+
+.THIS .actionCol {
+    width: 100px;
+    padding-left: 24px !important;
+}
+
+.THIS .bottomElement .slds-form-element__control.slds-m-bottom--small {
+    margin-bottom: 0;
+}
+
+.THIS .item-lookup {
+    padding-left: 0px!important;
+    padding-right: 0px!important;
+}

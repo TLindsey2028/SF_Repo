@@ -1,0 +1,33 @@
+.THIS .remove-label label.slds-form-element__label.helper-margin-right {
+    display: none;
+}
+
+.THIS .remove-label .slds-form-element__control.slds-m-bottom--medium,
+.THIS .remove-label .slds-form-element.slds-m-bottom--medium {
+    margin-bottom: 0!important;
+}
+
+.THIS .slds-icon-text-default {
+    fill: #0070d2!important;
+}
+
+.THIS .slds-backdrop.slds-backdrop--dark {
+  background: rgba(126, 140, 153, 0.99);
+}
+
+.THIS .stencil-visible {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 1.0s linear;
+}
+
+.THIS .stencil-hidden {
+    visibility: hidden;
+    opacity: 0;
+    height: 0;
+    transition: visibility 0s 1.0s, opacity 1.0s linear, height 1.0s;
+}
+
+.THIS .loading-span {
+    background-color: #c7c7c7!important;
+}

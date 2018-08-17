@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="SectionItemEvent">
+    <aura:attribute name="itemIds" type="List"/>
+    <aura:attribute name="conflictItemIds" type="List"/>
+    <aura:attribute name="toggleConfictsDetectedLabel" type="Boolean" default="false"/>
+</aura:event>

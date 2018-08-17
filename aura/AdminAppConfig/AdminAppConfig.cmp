@@ -1,0 +1,323 @@
+<aura:component controller="OrderApi.AdminAppConfigController" access="global">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:attribute name="appConfigObj" type="Object" access="global"/>
+  <aura:attribute name="newAppConfigObj" type="Object" access="global"/>
+  <aura:attribute name="settingObjs" type="List" default="[]" access="global"/>
+  <aura:attribute name="isMock" type="boolean" default="true"/>
+  <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+
+  <div class="slds-col slds-medium-size--3-of-4 slds-border--left" id="update_app_config_settings">
+    <div class="slds-col slds-size--1-of-1">
+      <div class="slds-page-header">
+        <div class="slds-media slds-media--center">
+          <div class="slds-media__body">
+            <nav role="navigation">
+              <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
+              <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+
+              </ol>
+            </nav>
+            <div class="slds-text-heading--medium">
+
+              <!-- @todo title -->
+              eBusiness User/Profile Preferences
+
+            </div>
+          </div><!-- /.slds-media__body -->
+
+            <!-- @todo button -->
+
+        </div><!-- /.slds-media -->
+      </div><!-- /.slds-page-header -->
+    </div><!-- /.slds-size-1-of-1 -->
+
+    <div class="slds-grid slds-wrap slds-size--1-of-1 slds-medium-object-height--full__footer slds-scrollable--y">
+      <div class="slds-col slds-size--1-of-1 slds-p-bottom--medium">
+        <div class="slds-col slds-grid">
+          <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-p-vertical--medium">
+            <div class="slds-text-heading--small">
+              Organization Default Account &amp; Contact Preferences
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slds-col slds-size--1-of-2 slds-grid slds-wrap slds-m-bottom--medium">
+
+        <div class="slds-col slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefsBoolean" fieldType="boolean" label="Enable Individual Accounts" aura:id="enableIndividualAccounts" value="{!v.appConfigObj}"/>
+        </div>
+
+        <div class="slds-col slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefsBoolean" fieldType="boolean" label="Enable Billing Address Sync Bypass" aura:id="enableBillingSyncBypass" value="{!v.appConfigObj}" helpText="{!$Label.OrderApi.Bypass_Address_Sync_HelpText}"/>
+        </div>
+
+        <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefs" label="Individual Account Name Extension" fieldType="string" aura:id="individualAccountNameExtension" value="{!v.appConfigObj}"/>
+        </div><!-- /.slds-col -->
+
+      </div>
+
+      <div class="slds-col slds-size--1-of-2 slds-grid slds-wrap slds-m-bottom--medium">
+        <div class="slds-col slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefsBoolean" fieldType="boolean" label="{!$Label.OrderApi.Disable_Save_Payment_Method}" aura:id="disableSavePymntMethodOptn" value="{!v.appConfigObj}"/>
+        </div>
+      </div>
+
+      <div class="slds-col slds-size--1-of-2 slds-grid slds-wrap slds-form-element">
+
+        <div class="slds-col slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefsBoolean" fieldType="boolean" label="Update Contact Standard Phone Field" aura:id="updateContactStandardPhoneField" value="{!v.appConfigObj}"/>
+        </div>
+        <div class="slds-col slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefsBoolean" fieldType="boolean" label="Update Contact Standard Email Field" aura:id="updateContactStandardEmailField" value="{!v.appConfigObj}"/>
+        </div>
+
+      </div>
+
+      <div class="slds-col slds-size--1-of-1 slds-p-bottom--medium">
+        <div class="slds-col slds-grid">
+          <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-p-vertical--medium">
+            <div class="slds-text-heading--small">
+              Organization Default Accounting Preferences
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slds-size--1-of-2 slds-p-bottom--medium slds-m-bottom--medium">
+
+        <div class="slds-m-bottom--small slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefs" label="Business Group" fieldType="lookup" aura:id="businessGroup" value="{!v.appConfigObj}" otherAttributes='{"type" : "OrderApi__Business_Group__c", "pluralLabel" : "Business Groups"}'/>
+        </div>
+
+        <div class="slds-m-bottom--small slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefs" label="Payment Terms" fieldType="lookup" aura:id="paymentTerms" value="{!v.appConfigObj}" otherAttributes='{"type" : "OrderApi__Payment_Terms__c", "pluralLabel" : "Payment Terms"}'/>
+        </div>
+
+        <div class="slds-m-bottom--small slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefs" label="Income Account" fieldType="lookup" aura:id="incomeAccount" value="{!v.appConfigObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c", "pluralLabel" : "Income Accounts"}'/>
+        </div>
+
+        <div class="slds-m-bottom--small slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefs" label="A/R Account" fieldType="lookup" aura:id="arAccount" value="{!v.appConfigObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c", "pluralLabel" : "A/R Accounts"}'/>
+        </div>
+
+        <div class="slds-m-bottom--small slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefs" label="Exception Account" fieldType="lookup" aura:id="exceptionAccount" value="{!v.appConfigObj}" otherAttributes='{"type" : "Account", "pluralLabel" : "Exception Accounts"}'/>
+        </div>
+
+        <div class="slds-m-bottom--small slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefs" label="Exception Contact" fieldType="lookup" aura:id="exceptionContact" value="{!v.appConfigObj}" otherAttributes='{"type" : "Contact", "pluralLabel" : "Exception Contacts"}'/>
+        </div>
+
+        <div class="slds-m-bottom--small slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefs" label="Item Weight UOM" fieldType="string" aura:id="itemWeightUOM" value="{!v.appConfigObj}"/>
+        </div>
+
+
+      </div>
+
+      <div class="slds-size--1-of-2 slds-p-bottom--medium">
+
+        <div class="slds-m-bottom--small slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefs" label="Adjustment Account" fieldType="lookup" aura:id="adjustmentAccount" value="{!v.appConfigObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c", "pluralLabel" : "Adjustment Accounts"}'/>
+        </div>
+
+        <div class="slds-m-bottom--small slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefs" label="Discount Account" fieldType="lookup" aura:id="discountAccount" value="{!v.appConfigObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c", "pluralLabel" : "Discount Accounts"}'/>
+        </div>
+
+        <div class="slds-m-bottom--small slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefs" label="Refund Account" fieldType="lookup" aura:id="refundAccount" value="{!v.appConfigObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c", "pluralLabel" : "Refund Accounts"}'/>
+        </div>
+
+        <div class="slds-m-bottom--small slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefs" label="Deposit Account" fieldType="lookup" aura:id="depositAccount" value="{!v.appConfigObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c", "pluralLabel" : "Deposit Accounts"}'/>
+        </div>
+
+
+        <div class="slds-m-bottom--small slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefs" label="Tax Account" fieldType="lookup" aura:id="taxAccount" value="{!v.appConfigObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c", "pluralLabel" : "Tax Accounts"}'/>
+        </div>
+
+        <div class="slds-m-bottom--small slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefs" label="Tax Locale" fieldType="lookup" aura:id="taxLocale" value="{!v.appConfigObj}" otherAttributes='{"type" : "OrderApi__Tax_Locale__c", "pluralLabel" : "Tax Locales"}'/>
+        </div>
+
+
+        <div class="slds-p-horizontal--small">
+          <Framework:InputFields group="orgDefaultAcctPrefsBoolean" fieldType="boolean" label="Calculate Sales Tax" aura:id="calculateSalesTax" value="{!v.appConfigObj}"/>
+        </div>
+
+      </div>
+    </div>
+    <div class="slds-col slds-grid slds-grid--align-center slds-size--1-of-1 slds-p-around--large slds-theme--shade slds-border--top">
+      <div class="slds-col">
+        <a href="#" type="button" data-type="new" onclick="{!c.showModal}" class="slds-button slds-button--neutral">Create New User/Profile Preference</a>
+        <a href="#" type="button" data-group="orgDefaultAcctPrefs" data-form="update_app_config_settings" class="slds-button slds-button--brand" onclick="{!c.saveOrgDefaultValues}">Update Organization Wide Default Preferences</a>
+      </div>
+    </div>
+
+    <div class="slds-grid slds-wrap slds-size--1-of-1 slds-scrollable--y">
+      <div class="slds-col slds-size--1-of-1 slds-p-bottom--medium">
+        <div class="slds-col slds-grid">
+          <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-p-vertical--medium">
+            <div class="slds-text-heading--small">
+              <strong>Settings</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slds-col slds-size--1-of-2 slds-grid slds-wrap slds-m-bottom--medium">
+          <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+          <thead class="slds-col-rule--bottom">
+          <tr class="slds-text-heading--label">
+            <th scope="col">
+              <span class="slds-truncate">User</span>
+            </th>
+            <th scope="col">
+              <span class="slds-truncate">Profile</span>
+            </th>
+            <th scope="col">
+              <span class="slds-truncate">Actions</span>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+            <aura:iteration items="{!v.settingObjs}" var="settingObj">
+              <tr>
+                <td>{!settingObj.userName}</td>
+                <td>{!settingObj.profileName}</td>
+                <td>
+                  <a href="#" data-id="{!settingObj.configId}" data-type="edit" onclick="{!c.showModal}">{!$Label.OrderApi.Edit}</a>&nbsp;|&nbsp;
+                  <a href="#" data-id="{!settingObj.configId}" onclick="{!c.deleteObject}">{!$Label.OrderApi.Remove}</a>
+                </td>
+              </tr>
+            </aura:iteration>
+          </tbody>
+          </table>
+      </div>
+    </div>
+  </div>
+  <!-- MODAL NEW SETTINGS -->
+  <div class="slds-modal" id="newprofileSettings" aura:id="newprofileSettings">
+    <div class="modal-dialog slds-modal__container">
+      <div class="modal-content">
+
+
+        <div class="slds-modal__header">
+          <h2 class="slds-text-heading--medium">New Settings</h2>
+          <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal" onclick="{!c.hideModal}">
+            <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+            <span class="slds-assistive-text">Close</span>
+          </button><!-- /.slds-button -->
+        </div>
+
+        <form id="new_app_config_settings">
+          <div class="slds-modal__content slds-object-height--two-thirds slds-scrollable--y">
+            <div class="slds-col slds-grid slds-wrap slds-size--1-of-1">
+                  <div class="slds-m-bottom--small slds-size--1-of-1">
+                    <Framework:InputFields group="newSettings" label="Setup Owner Type" isRequired="true" fieldType="picklist" aura:id="newSetupOwnerType" value="{!v.newAppConfigObj}" selectOptions='[{"label" : "User","value" : "User"},{"label" : "Profile","value" : "Profile"}]'/>
+                  </div>
+                  <div class="slds-m-bottom--small slds-size--1-of-1">
+                    <Framework:InputFields group="newSettings" label="Profile" fieldType="picklist" aura:id="newProfile" value="{!v.newAppConfigObj}"/>
+                  </div>
+                  <div class="slds-m-bottom--small slds-col slds-size--1-of-1">
+                    <Framework:InputFields group="newSettings" label="User" fieldType="lookup" aura:id="newUser" value="{!v.newAppConfigObj}" otherAttributes='{"type" : "User","pluralLabel" : "Users"}'/>
+                  </div>
+
+              <div class="slds-col slds-size--1-of-1 slds-m-bottom--medium">
+                <div class="slds-text-heading--small">
+                  Account &amp; Contact Preferences
+                </div>
+              </div>
+
+              <div class="slds-grid slds-wrap slds-size--1-of-1 slds-m-bottom--medium">
+
+                <div class="slds-size--1-of-1">
+                  <Framework:InputFields group="newSettings" fieldType="boolean" label="Update Contact Standard Phone Field" aura:id="newUpdateContactStandardPhoneField" value="{!v.newAppConfigObj}"/>
+                </div>
+                <div class="slds-size--1-of-1">
+                  <Framework:InputFields group="newSettings" fieldType="boolean" label="Update Contact Standard Email Field" aura:id="newUpdateContactStandardEmailField" value="{!v.newAppConfigObj}"/>
+                </div>
+                <div class="slds-size--1-of-1">
+                  <Framework:InputFields group="newSettings" fieldType="boolean" label="Enable Individual Accounts" aura:id="newEnableIndividualAccounts" value="{!v.newAppConfigObj}"/>
+                </div>
+                <div class="slds-size--1-of-1">
+                    <Framework:InputFields group="newSettings" fieldType="boolean" label="Enable Billing Address Sync Bypass" aura:id="newEnableBillingSyncBypass" value="{!v.newAppConfigObj}" helpText="{!$Label.OrderApi.Bypass_Address_Sync_HelpText}"/>
+                </div>
+                <div class="slds-size--1-of-1">
+                  <Framework:InputFields group="newSettings" fieldType="boolean" label="{!$Label.OrderApi.Disable_Save_Payment_Method}" aura:id="newDisableSavePymntMethodOptn" value="{!v.newAppConfigObj}"/>
+                </div>
+                <div class="slds-col slds-size--1-of-1 slds-m-bottom--small">
+                  <Framework:InputFields group="newSettings" label="Individual Account Name Extension" fieldType="string" aura:id="newIndAcctNmExt" value="{!v.newAppConfigObj}" />
+                </div><!-- /.slds-col -->
+
+              </div>
+
+              <div class="slds-col slds-size--1-of-1 slds-m-bottom--medium">
+                <div class="slds-text-heading--small">
+                  Account Preferences
+                </div>
+              </div>
+
+              <div class="slds-m-bottom--small slds-col slds-size--1-of-1">
+                <Framework:InputFields group="newSettings" label="Business Group" fieldType="lookup" aura:id="newBusinessGroup" value="{!v.newAppConfigObj}" otherAttributes='{"type" : "OrderApi__Business_Group__c","pluralLabel" : "Business Groups"}'/>
+              </div>
+
+              <div class="slds-m-bottom--small slds-col slds-size--1-of-1">
+                <Framework:InputFields group="newSettings" label="Payment Terms" fieldType="lookup" aura:id="newPaymentTerms" value="{!v.newAppConfigObj}" otherAttributes='{"type" : "OrderApi__Payment_Terms__c","pluralLabel" : "Payment Terms"}'/>
+              </div>
+
+              <div class="slds-m-bottom--small slds-col slds-size--1-of-1">
+                <Framework:InputFields group="newSettings" label="Income Account" fieldType="lookup" aura:id="newIncomeAccount" value="{!v.newAppConfigObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c","pluralLabel" : "Income Accounts"}'/>
+              </div>
+
+              <div class="slds-m-bottom--small slds-col slds-size--1-of-1">
+                <Framework:InputFields group="newSettings" label="A/R Account" fieldType="lookup" aura:id="newARAccount" value="{!v.newAppConfigObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c","pluralLabel" : "A/R Accounts"}'/>
+              </div>
+
+              <div class="slds-m-bottom--small slds-col slds-size--1-of-1">
+                <Framework:InputFields group="newSettings" label="Adjustment Account" fieldType="lookup" aura:id="newAdjustmentAccount" value="{!v.newAppConfigObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c","pluralLabel" : "Adjustment Accounts"}'/>
+              </div>
+
+              <div class="slds-m-bottom--small slds-col slds-size--1-of-1">
+                <Framework:InputFields group="newSettings" label="Discount Account" fieldType="lookup" aura:id="newDiscountAccount" value="{!v.newAppConfigObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c","pluralLabel" : "Discount Accounts"}'/>
+              </div>
+
+              <div class="slds-m-bottom--small slds-col slds-size--1-of-1">
+                <Framework:InputFields group="newSettings" label="Deposit Account" fieldType="lookup" aura:id="newDepositAccount" value="{!v.newAppConfigObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c","pluralLabel" : "Deposit Accounts"}'/>
+              </div>
+
+              <div class="slds-m-bottom--small slds-col slds-size--1-of-1">
+                <Framework:InputFields group="newSettings" label="Refund Account" fieldType="lookup" aura:id="newRefundAccount" value="{!v.newAppConfigObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c","pluralLabel" : "Refund Accounts"}'/>
+              </div>
+              <div class="slds-m-bottom--small slds-col slds-size--1-of-1">
+                <Framework:InputFields group="newSettings" label="Tax Account" fieldType="lookup" aura:id="newTaxAccount" value="{!v.newAppConfigObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c", "pluralLabel" : "Tax Accounts"}'/>
+              </div>
+
+              <div class="slds-m-bottom--small slds-col slds-size--1-of-1">
+                <Framework:InputFields group="newSettings" label="Tax Locale" fieldType="lookup" aura:id="newTaxLocale" value="{!v.newAppConfigObj}" otherAttributes='{"type" : "OrderApi__Tax_Locale__c", "pluralLabel" : "Tax Locales"}'/>
+              </div>
+
+              <div class="slds-p-horizontal--small">
+                <Framework:InputFields group="newSettings" fieldType="boolean" label="Calculate Sales Tax" aura:id="newCalculateSalesTax" value="{!v.newAppConfigObj}"/>
+              </div>
+
+            </div>
+          </div>
+          <div class="slds-modal__footer">
+            <div class="slds-x-small-buttons--horizontal">
+              <a type="button" data-group="newSettings" data-form="new_app_config_settings" class="slds-button slds-button--brand" onclick="{!c.saveNewAppConfigSettings}">Save</a>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+  <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+  <Framework:MessagePrompt severity="success" title="Success" message="Settings Saved Successfully" showSubmitButton="false" aura:id="successModal"/>
+</aura:component>

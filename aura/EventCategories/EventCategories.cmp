@@ -1,0 +1,90 @@
+<aura:component description="EventCategories" controller="EventApi.EventCategoriesListingController" implements="flexipage:availableForAllPageTypes" access="global">
+    <ltng:require scripts="{!join(',',$Resource.Framework__SLDS_BaseV2+'/js/scripts.min.js',$Resource.Framework__UrlUtil)}" styles="{!$Resource.EventApi__SLDS_Base+'/css/styles.css'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:handler event="EventApi:EventCategoriesReload" action="{!c.handleEventCategoriesReloadEvent}"/>
+    <!--See http://salesforce.stackexchange.com/a/135487/43062 for more info on aura:dependency-->
+    <aura:dependency resource="markup://EventApi:EventCategoryDetail"/>
+    <aura:attribute name="scrollCheckIntervalId"
+                    type="String"
+                    description="In the renderer.js, the interval id for periodically checking scroll position. Used when unrendering component to cancel interval check."
+                    access="private"/>
+    <aura:attribute name="searchValue" type="String"/>
+    <aura:attribute name="categories" type="EventApi.EventCategory[]"/>
+    <aura:attribute name="categoriesToDisplay" type="EventApi.EventCategory[]"/>
+    <aura:registerEvent name="AnalyticsEvent" type="Framework:AnalyticsEvent"/>
+    <aura:registerEvent name="ComponentLoadedEvent" type="EventApi:ComponentLoadedEvent"/>
+        <div class="hidden" aura:id="categoryWrapper">
+            <div class="slds-page-header">
+                <div class="slds-media slds-media--center">
+                    <div class="slds-media__body">
+                        <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
+                            Event Category
+                        </h1>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-wrap slds-object-height--full__header slds-scrollable--y slds-theme--shade slds-grid--vertical-align-start slds-p-around--small">
+                <div class="slds-size--1-of-1 slds-grid slds-wrap">
+                    <div class="slds-size--1-of-1 slds-medium-size--1-of-2">
+                        <div class="slds-grid slds-wrap slds-p-around--small">
+                            <div class="slds-form-element slds-lookup">
+                                <label class="slds-form-element__label">Search</label>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-input-has-icon slds-input-has-icon--right">
+                                        <aura:if isTrue="{!or(v.searchValue == null,v.searchValue.length == 0)}">
+                                            <lightning:icon iconName="utility:search" class="slds-input__icon slds-search--icon" size="x-small"/>
+                                            <aura:set attribute="else">
+                                                <lightning:buttonIcon iconName="utility:clear" class="slds-input__icon" variant="bare" alternativeText="Clear" onclick="{!c.clearSearch}"/>
+                                            </aura:set>
+                                        </aura:if>
+                                        <ui:inputText value="{!v.searchValue}" aura:id="eventCategorySearch" class="slds-lookup__search-input slds-input" placeholder="Event Category Name" updateOn="keyup" keyup="{!c.filterCategories}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-size--1-of-1 slds-medium-size--1-of-2">
+                    </div>
+                </div>
+                <div class="slds-size--1-of-1 slds-grid slds-grid--align-spread slds-grid--vertical-align-center slds-p-around--small">
+                    <div>
+                        <div class="slds-text-body--regular">
+                            <aura:if isTrue="{!v.categoriesToDisplay.length > 1}">
+                                {!v.categoriesToDisplay.length} Event Categories found
+                            </aura:if>
+                            <aura:if isTrue="{!v.categoriesToDisplay.length == 1}">
+                                {!v.categoriesToDisplay.length} Event Category found
+                            </aura:if>
+                            <aura:if isTrue="{!v.categoriesToDisplay.length == 0}">
+                                No Event Categories found
+                            </aura:if>
+                        </div>
+                    </div>
+                    <div>
+
+                        <Framework:Button enableProgressIndicator="false"
+                                          onClickAction="{!c.newEventCategory}"
+                                          type="brand"
+                                          label="New Event Category"
+                                          additionalClasses="fonteva-button_reverse new-routing-rule slds-m-left--xx-small"
+                                          svgContainerClass="slds-button__icon_left"
+                                          lightningIcon="utility:add"
+                                          lightningIconSize="x-small"
+                                          lightningIconVariant="inverse"/>
+                    </div>
+                </div>
+                <div class="slds-size--1-of-1">
+                    <hr class="slds-m-vertical--small"/>
+                </div>
+                <div class="slds-size--1-of-1 slds-grid slds-wrap" aura:id="categoriesToDisplay">
+                </div>
+                <div class="slds-size--1-of-1 slds-grid slds-modal__footer hidden" aura:id="lazyLoadCategories" id="lazyLoadCategories">
+                    <div class="slds-size--1-of-1 slds-text-align--center slds-align-content-center" >
+                        <img src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+                        <span class="slds-text-heading--medium">{!$Label.EventApi.Loading_Text}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

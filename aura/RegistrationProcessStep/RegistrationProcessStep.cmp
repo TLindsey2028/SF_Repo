@@ -1,0 +1,18 @@
+<aura:component description="RegistrationProcessStep" implements="LTE:EventInterface">
+    <aura:attribute name="step" type="Object" required="true"/>
+    <aura:attribute name="steps" type="List" required="true"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:registerEvent name="RegistrationProcessChangeEvent" type="LTE:RegistrationProcessChangeEvent"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="LTE:RegistrationProcessSalesOrderUpdateEvent" action="{!c.handleRegistrationProcessSalesOrderUpdateEvent}"/>
+	  <aura:handler event="LTE:ChangeStepEvent" action="{!c.handleChangeStep}"/>
+    <li class="slds-progress__item fonteva-slds-process-bar-text" aura:id="stepItem" onclick="{!c.changeStep}">
+        <div class="slds-progress__marker slds-progress__marker--icon" aria-describedby="step-1-tooltip" title="{!v.step.name}" aura:id="stepButton">
+            <lightning:buttonIcon variant="inverse" alternativeText="{!v.step.name}" iconName="utility:check" size="x-small" class="{!v.step.isCompleted ? 'fonteva-slds-process-icon fonteva-process-completed-icon fonteva-button_clear' : 'hidden'}"/>
+            <span class="slds-assistive-text">Step {!v.step.number} - Completed</span>
+        </div>
+        <p aura:id="description" class="{!(v.step.isCompleted ? 'slds-step-description--hoverable ' : '') + (or(v.step.isCompleted,v.step.isCurrentStep) ? ' slds-text-body--regular slds-step-description ' : 'fonteva-slds-step-not-complete slds-step-description slds-text-body--regular')}">
+            {!v.step.name}
+        </p>
+    </li>
+</aura:component>

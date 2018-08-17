@@ -1,0 +1,72 @@
+<aura:component description="ECheckPayment" controller="OrderApi.CreditCardPaymentsController" implements="OrderApi:CustomPaymentTypeInterface">
+  <aura:attribute name="paymentGateway" type="Object"/>
+  <aura:attribute name="contactName" type="String"/>
+  <aura:attribute name="recordId" type="String"/>
+  <aura:attribute name="pathPrefix" type="String" default=""/>
+  <aura:attribute name="paymentSuccessReturnObj" type="Map"/>
+  <aura:attribute name="first" type="Boolean" default="true"/>
+  <aura:attribute name="isSalesOrder" type="Boolean" default="true"/>
+  <aura:attribute name="environmentKey" type="String" required="true"/>
+  <aura:attribute name="redirectUrl" type="String" required="true"/>
+  <aura:attribute name="successRedirectUrl" type="String"/>
+  <aura:attribute name="eCheckRedirectUrl" type="String"/>
+  <aura:attribute name="verifyAndSave" type="Boolean" default="false"/>
+  <aura:attribute name="validated" type="Boolean"/>
+  <aura:attribute name="uniqueId" type="String"/>
+  <aura:attribute name="showIframe" type="Boolean" default="true"/>
+  <aura:attribute name="iFrameUrl" type="String"/>
+  <aura:method name="updatePaymentGateway" action="{!c.updateGateway}"/>
+  <aura:method name="tokenizeEcheck" action="{!c.tokenizeEcheck}"/>
+  <aura:attribute name="displaySavePaymentMethod" type="Boolean" default="true"/>
+  <aura:attribute name="forceSavePayment" type="Boolean" default="false"/>
+  <aura:attribute name="eCheckPaymentObj" type="Map" default="{}"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+  <aura:registerEvent name="ButtonToggleIndicatorEvent" type="Framework:ButtonToggleIndicatorEvent"/>
+  <ltng:require scripts="{!$Resource.Framework__UrlUtil}" afterScriptsLoaded="{!c.doInit}"/>
+
+  <aura:if isTrue="{!not(empty(v.customPaymentTypeObj.instructions))}">
+    <div data-name="instructions" class="slds-col">
+      <ui:outputRichText linkify="true" value="{!v.customPaymentTypeObj.instructions}" class="slds-m-left--large fonteva-paypal-label slds-m-bottom--x-large payment-rich-text"/>
+    </div>
+  </aura:if>
+
+  <div class="slds-col slds-grid">
+    <div class="slds-col slds-size--1-of-1  slds-m-bottom-x--small">
+      <Framework:InputFields fieldType="string" label="{!$Label.OrderApi.Account_Holder_Name}" isRequired="true" value="{!v.eCheckPaymentObj}" aura:id="fullName"/>
+    </div>
+  </div>
+  <div class="slds-col slds-grid">
+    <div class="slds-col slds-size--1-of-1  slds-m-bottom-x--small">
+      <Framework:InputFields fieldType="string" label="Bank Name" isRequired="true" value="{!v.eCheckPaymentObj}" aura:id="bankName"/>
+    </div>
+  </div>
+  <div class="slds-col slds-grid">
+    <div class="slds-col slds-size--1-of-1  slds-m-bottom-x--small">
+      <Framework:InputFields fieldType="string" label="Bank Routing Number" isRequired="true" value="{!v.eCheckPaymentObj}" otherAttributes='{min : 0}' aura:id="bankRoutingNumber"/>
+    </div>
+  </div>
+  <div class="slds-col slds-grid">
+    <div class="slds-col slds-size--1-of-1  slds-m-bottom-x--small">
+      <Framework:InputFields fieldType="string" label="Bank Account Number" isRequired="true" value="{!v.eCheckPaymentObj}" otherAttributes='{min : 0}' aura:id="bankAccountNumber" />
+    </div>
+  </div>
+  <div class="slds-col slds-grid">
+    <div class="slds-size--1-of-3  slds-m-bottom-x--small">
+      <Framework:InputFields fieldType="picklist" label="Bank Account Type" isRequired="true" value="{!v.eCheckPaymentObj}" aura:id="bankAccountType"/>
+    </div>
+  </div>
+  <div class="slds-col slds-grid">
+    <div class="slds-size--1-of-3  slds-m-bottom-x--small">
+      <Framework:InputFields fieldType="picklist" label="Bank Account Holder Type" isRequired="true" value="{!v.eCheckPaymentObj}" aura:id="bankAccountHolderType"/>
+    </div>
+  </div>
+
+  <div class="{!v.displaySavePaymentMethod ? 'slds-col slds-grid' :'hidden'}">
+    <div class="slds-col slds-size--1-of-1  slds-align-middle">
+      <Framework:InputFields aura:id="savePaymentMethod" fieldType="boolean" label="{!$Label.OrderApi.Save_Payment_Method_Checkbox_Label}" value="{!v.eCheckPaymentObj}" fireChangeEvent="true"/>
+    </div>
+  </div>
+  <iframe id="{!v.uniqueId}" src="{!v.iFrameUrl}"  frameborder="0" width="0px" height="0px" scrolling="no">
+  </iframe>
+  <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

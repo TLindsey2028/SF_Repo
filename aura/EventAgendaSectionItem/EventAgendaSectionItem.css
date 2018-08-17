@@ -1,0 +1,33 @@
+.THIS.slds-session--container {
+    border-bottom: 1px solid #f2f2f2;
+    margin-bottom: 1rem
+}
+
+.THIS.slds-session--container:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.THIS .slds-badge.slds-theme--company-primary {
+    color: white;
+}
+
+.THIS .slds-font-weight--semi-bold {
+    font-weight: 500;
+}
+
+.THIS .slds-custom--word-space {
+    word-spacing: 100vw;
+}
+
+.THIS .fonteva-input_select {
+    font-size: 13px;
+}
+
+.THIS .slds-badge + .slds-badge {
+    margin-left: 0!important;
+}
+
+.THIS .slds-badge {
+    margin-right: .5rem;
+}

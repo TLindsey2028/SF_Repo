@@ -1,0 +1,77 @@
+<aura:component description="MultiGroupDragListInputField">
+	<ltng:require scripts="{!join(',', $Resource.Framework__SLDS_BaseV2+'/js/scripts.min.js', $Resource.Framework__SLDS_BaseV2+'/js/Sortable.min.js', $Resource.Framework__SLDS_BaseV2 + '/js/lodash.min.js')}" afterScriptsLoaded="{!c.init}"/>
+	<aura:attribute name="required" type="Boolean" description="If the field is required" default="false"/>
+	<aura:attribute name="displayAsterisk" type="Boolean" description="add asterisk symbol before first list name header" default="false"/>
+	<aura:attribute name="firstListName" type="String" default="First" access="global"/>
+	<aura:attribute name="secondListName" type="String" default="Second" access="global"/>
+	<aura:attribute name="value" type="Map[]" description="The value" default="[]" access="global"/>
+	<aura:attribute name="groupData" type="Map[]" description="Configuration and Group Data" default="[]" access="global"/>
+	<aura:attribute name="errors" type="List[]" default="[]" access="global"/>
+	<aura:attribute name="showSearchField" type="Boolean" default="true" access="global"/>
+	<aura:attribute name="searchPlaceholder" type="String" default="Search" access="global"/>
+	<aura:handler event="Framework:InputFieldClearErrorMessagesEvent" action="{!c.handleInputFieldClearErrorMessagesEvent}"/>
+	<aura:dependency resource="Framework:MultiGroupDragPane"/>
+	<aura:method name="setErrorMessages" action="{!c.setErrorMessages}"
+	             description="Error Message For Field">
+		<aura:attribute name="errorMessages" type="Array" default="[]" description="Error Message"/>
+	</aura:method>
+	<aura:method name="loadExistingValue" action="{!c.loadExistingValue}"
+	             description="Load Existing Value">
+	</aura:method>
+	<aura:method name="reInitialize" action="{!c.reInitialize}"
+	             description="Re Initialize">
+	</aura:method>
+	<aura:method name="validate" action="{!c.validate}"
+	             description="Validate Field">
+	</aura:method>
+  <!-- Private -->
+	<aura:attribute name="groupDataSource" type="Map[]" default="[]"/>
+	<aura:attribute name="groupDataDestination" type="Map[]" default="[]"/>
+
+
+	<div class="slds-picklist--draggable slds-grid">
+		<div class="slds-form-element">
+			<span class="slds-form-element__label" aria-label="select-1">
+				<abbr class="{!v.displayAsterisk ? 'slds-required' : 'slds-hide'}" title="required">*</abbr>
+				{!v.firstListName}
+			</span>
+			<div class="slds-picklist--multi">
+				<span class="{!v.showSearchField ? 'fonteva-filter-input-drag-drop' : 'hidden'}">
+					<span aura:id="lookupIcon" id="{!globalId+'_icon'}" onclick="{!c.removeValue}">
+						<img id="{!globalId+'_search_icon'}" src="{!$Resource.Framework__SLDS_Icons+'/icons/utility/search_60.png'}" class="fonteva-input-action-icon" aura:id="searchIcon"/>
+						<img id="{!globalId+'_clear_icon'}" src="{!$Resource.Framework__SLDS_Icons+'/icons/utility/clear_60.png'}" class="fonteva-input-action-icon slds-hide slds-has-items" aura:id="removeIcon"/>
+					</span>
+					<ui:inputText keyup="{!c.filterFields}" placeholder="{!v.searchPlaceholder}" class="{!v.showSearchField ? 'slds-input fonteva-filter-input-drag-drop fonteva-filter-search-bar' : 'hidden'}" aura:id="filterFieldsInput" value="" updateOn="keyup"/>
+				</span>
+				<div class="slds-picklist__options fonteva-picklist__options--multi fonteva-picklist__options--source js-available-options">
+					<aura:iteration items="{!v.groupDataSource}" var="groupItem">
+						<Framework:MultiGroupDragPane
+									groupHeader="{!groupItem.groupHeader}"
+									groupId="{!groupItem.groupId}"
+									data="{!groupItem.data}"
+									value="{!v.value}"/>
+					</aura:iteration>
+				</div>
+		  </div>
+		</div>
+		<div class="slds-grid slds-grid--vertical slds-m-around--small">
+		</div>
+		<div class="slds-form-element">
+			<span class="{!v.showSearchField ? 'fonteva-filter-input-drag-drop fonteva-filter-input-drag-drop--spacer' : 'hidden'}" />
+			<span class="slds-form-element__label" aria-label="select-2">{!v.secondListName}</span>
+  		<div class="slds-picklist--multi slds-picklist__options fonteva-picklist__options--multi">
+        <aura:iteration items="{!v.groupDataDestination}" var="groupItem">
+          <Framework:MultiGroupDragPane
+              groupHeader="{!groupItem.groupHeader}"
+              groupId="{!groupItem.groupId}"
+              isDestination="true"
+              maxAvailable="{!groupItem.maxAvailable}"
+              data="{!groupItem.data}"
+              value="{!v.value}"/>
+        </aura:iteration>
+			</div>
+		</div>
+	</div>
+	<Framework:ValidationErrorMessages aura:id="errorInput"/>
+
+</aura:component>

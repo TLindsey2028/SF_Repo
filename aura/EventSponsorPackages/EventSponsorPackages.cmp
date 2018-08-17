@@ -1,0 +1,46 @@
+<aura:component description="EventSponsorPackages" access="global" implements="LTE:EventInterface" controller="LTE.SponsorsController">
+    <aura:attribute name="sponsorPackages" type="Object[]"/>
+    <ltng:require styles="{!join(',', $Resource.LTE__SLDS_Lens + '/css/lens.css', $Resource.LTE__SLDS_Lens + '/css/tiny-slider.css' , $Resource.LTE__SLDS_Lens+'/css/fa.css')}" scripts="{!join(',', $Resource.PagesApi__FontevaHelper+'/FontevaHelper.js', $Resource.LTE__SLDS_Lens + '/js/tiny-slider.js')}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:if isTrue="{!v.sponsorPackages.length > 0}">
+        <div class="fonteva-event-component slds-p-horizontal--medium">
+            <div class="slds-grid slds-grid--vertical slds-p-top_medium">
+                <div>
+                    <p class="slds-text-heading--medium slds-font-weight--semi-bold">
+                        {!$Label.LTE.Event_Sponsor_Package}
+                    </p>
+                </div>
+                <div id="selection" class="slds-event--pane animated slds-p-bottom--medium slds-p-top--medium" data-type="pane">
+                    <div class="slds-grid slds-wrap">
+                        <aura:iteration items="{!v.sponsorPackages}" var="sponsorPackage" indexVar="index">
+
+                            <div class="slds-size--1-of-1 slds-card slds-theme--default slds-p-around--xxx-small slds-border-radius--none fonteva-nowrap_medium slds-grid">
+                                <div class="slds-p-around--small slds-grid fonteva-card_height-custom">
+                                    <aura:if isTrue="{!and(sponsorPackage.imageURL != null,sponsorPackage.imageURL != '')}">
+                                        <Framework:Img src="{!sponsorPackage.imageURL}" class="mediumImage" height="100" width="100"/>
+                                        <aura:set attribute="else">
+                                            <lightning:icon iconName="utility:image" class="mediumImage slds-align-middle slds-grid slds-grid_align-center" size="large"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                                <div class="slds-grid slds-grid--vertical slds-col slds-p-vertical--x-small slds-p-horizontal--small fonteva-min-width--0">
+                                    <div class="slds-grid slds-size--1-of-1 slds-wrap">
+                                        <div class="slds-size--1-of-1 slds-medium-size--2-of-3">
+                                            <div class="slds-text-heading--medium slds-m-bottom--small">
+                                                <div class="slds-font-weight--regular">{!sponsorPackage.displayName}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-size--1-of-1 slds-medium-size--3-of-4 slds-grid slds-wrap">
+                                        <p>
+                                            {!sponsorPackage.lineDescription}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </aura:iteration>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,22 @@
+<aura:component description="SalesOrderShippingLine" controller="OrderApi.SalesOrderPaymentController">
+  <aura:attribute name="shipLine" type="Map" default="{}"/>
+  <aura:attribute name="shipOptions" default="[]" type="List"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+  <aura:registerEvent name="SalesOrderUpdateEvent" type="OrderApi:SalesOrderUpdateEvent"/>
+  <aura:handler event="OrderApi:DisableComponent" action="{!c.handleDisableComponentEvent}"/>
+  <tr class="slds-hint-parent">
+    <td>
+      <strong>{!v.shipLine.parentLine.itemName}</strong><br/>
+                <span class="slds-text-body--small">
+                {!$Label.OrderApi.Quantity_Sales_Order}: {!v.shipLine.parentLine.quantity}
+                </span>
+    </td>
+    <td class="remove-label" aura:id="itemDiv">
+      <Framework:InputFields value="{!v.shipLine.shippingLine}" fieldType="picklist" aura:id="item" label=""
+                             selectOptions="{!v.shipOptions}" fireChangeEvent="true"
+                             group="{!v.shipLine.parentLine.salesOrderLineId}"/>
+    </td>
+  </tr>
+  <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

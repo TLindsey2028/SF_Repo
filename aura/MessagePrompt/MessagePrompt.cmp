@@ -1,0 +1,80 @@
+<aura:component access="global">
+    <aura:attribute name="id" type="String" default="" access="global"/>
+    <aura:attribute name="title" type="String" required="true" access="global"/>
+    <aura:attribute name="message" type="String" required="true" access="global"/>
+    <aura:attribute name="severity" type="String" default="info" access="global"/>
+    <aura:attribute name="cancelButtonLabel" type="String" default="Close" access="global"/>
+    <aura:attribute name="showCancelButton" type="Boolean" default="true" access="global"/>
+    <aura:attribute name="showSubmitButton" type="Boolean" default="true" access="global"/>
+    <aura:attribute name="submitButtonLabel" type="String" default="Submit" access="global"/>
+    <aura:attribute name="enableSubmitButtonProgressIndicator" type="Boolean" default="true" access="global"/>
+    <aura:attribute name="preFormatText" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="submitOnClickAction" default="{!c.hideModal}" type="Aura.Action" access="global" description="This allows handling onClick events"/>
+    <aura:attribute name="closeOnClickAction" default="{!c.hideModal}" type="Aura.Action" access="global" description="This allows handling onClick events"/>
+    <aura:method name="showModal" action="{!c.showModal}" access="global"
+                 description="Show Modal">
+    </aura:method>
+    <aura:method name="stopIndicator" action="{!c.stopIndicator}" access="global"
+                 description="Stop Indicator">
+    </aura:method>
+    <aura:method name="hideModal" action="{!c.hideModal}" access="global"
+                 description="Modal Modal">
+    </aura:method>
+    <aura:method name="updateTitle" action="{!c.updateTitle}" access="global"
+                 description="Update Title">
+        <aura:attribute name="title" type="String" required="true"/>
+    </aura:method>
+    <aura:method name="updateMessage" action="{!c.updateMessage}" access="global"
+                 description="Update Message">
+        <aura:attribute name="message" type="String" required="true"/>
+    </aura:method>
+    <div id="{!v.id}">
+        <div aura:id="dynamic-modal" id="{!globalId+'_modal'}" class="slds-modal prompt-modal" role="dialog" data-name="dynamic-modal">
+            <div class="slds-modal__container">
+                <aura:if isTrue="{!v.severity == 'clear'}">
+                    <div class="slds-modal__header">
+                        <aura:if isTrue="{!not(empty(v.title))}">
+                            <p class="slds-text-heading--medium" id="modal-heading-label">{!v.title}</p>
+                        </aura:if>
+                        <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!v.closeOnClickAction}">
+                            <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                    </div><!-- /.slds-modal__header -->
+                    <aura:set attribute="else">
+                        <div class="{!'slds-modal__header slds-theme--'+v.severity}">
+                            <p class="slds-text-heading--medium" id="modal-heading-label">{!v.title}</p>
+                            <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!v.closeOnClickAction}">
+                                <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div><!-- /.slds-modal__header -->
+                    </aura:set>
+                </aura:if>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-size--1-of-1 slds-p-vertical--medium slds-text-align--center" data-name="promptMessage">
+                              <pre class="{!v.preFormatText ? 'slds-pre--formatted slds-text-body--regular' : 'hidden'}">
+                                {!v.message}
+                              </pre>
+                              <p class="{!!v.preFormatText ? '' : 'hidden'}" >
+                                  <ui:outputRichText value="{!v.message}" linkify="true"/>
+                              </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <aura:if isTrue="{!v.showCancelButton}">
+                        <Framework:Button type="neutral" onClickAction="{!v.closeOnClickAction}" label="{!v.cancelButtonLabel}" enableProgressIndicator="false" qaData='{"type" : "button", "name": "cancelButton"}'/>
+                    </aura:if>
+                    <aura:if isTrue="{!v.showSubmitButton}">
+                        <Framework:Button additionalClasses=" slds-m-left--xx-small" aura:id="submitPromptButton" type="brand" onClickAction="{!v.submitOnClickAction}" label="{!v.submitButtonLabel}" enableProgressIndicator="{!v.enableSubmitButtonProgressIndicator}" qaData='{"type" : "button", "name": "submitButton"}'/>
+                    </aura:if>
+                </div><!-- /.slds-modal__footer -->
+            </div>
+        </div>
+        <div class="slds-backdrop" aura:id="modalBackdrop"></div>
+
+    </div>
+
+</aura:component>

@@ -1,0 +1,38 @@
+<aura:component description="EventVenue" extends="LTE:EventBase">
+  <aura:attribute name="venue" type="Map" default="{}" />
+  <aura:attribute name="fullAddress" type="String" default="" />
+  <aura:handler name="change" value="{!v.venue}" action="{!c.venueChanged}"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+  <div class="slds-grid--pull-padded slds-grid slds-wrap">
+    <aura:if isTrue="{!v.venue.imageURL != null}">
+      <div class="slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-top--small slds-p-horizontal_small">
+        <div class="slds-image__crop slds-image__crop--16-by-9 venue-image">
+          <Framework:Img src="{!v.venue.imageURL}"/>
+        </div>
+      </div>
+    </aura:if>
+
+    <div class="slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-top--small slds-grid slds-wrap slds-grid_vertical slds-p-horizontal_small">
+      <div class="slds-size--1-of-1 slds-text-heading--medium slds-m-bottom--small">
+        {!v.venue.name}
+      </div>
+      <div class="slds-text-body--regular slds-m-bottom--small">
+        <aura:if isTrue="{!v.fullAddress != null}">
+          <p>{!v.fullAddress}</p>
+        </aura:if>
+        <aura:if isTrue="{!v.venue.phoneNumber != null}">
+          <p>{!v.venue.phoneNumber}</p>
+        </aura:if>
+        <aura:if isTrue="{!v.venue.websiteURL != null}">
+          <a href="{!v.venue.websiteURL}">{!v.venue.websiteURL}</a>
+        </aura:if>
+      </div>
+      <aura:if isTrue="{!v.venue.description != null}">
+        <div class="slds-text-body--regular">
+          <ui:outputRichText value="{!v.venue.description}" linkify="true" class="event-rich-text"/>
+        </div>
+      </aura:if>
+    </div>
+  </div>
+</aura:component>

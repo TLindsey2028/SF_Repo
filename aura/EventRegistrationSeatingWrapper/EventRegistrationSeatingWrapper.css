@@ -1,0 +1,234 @@
+.THIS .fonteva-event-component {
+    margin: 0 auto;
+    max-width: 1200px;
+    position: relative;
+}
+.THIS .slds-seating-card--overview {
+    z-index: 1000;
+    width: 100%;
+}
+
+.THIS #seatingContainer.active {
+    position: relative;
+    overflow: hidden;
+}
+.THIS .slds-seating-card--container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    position: relative;
+    height: 250px;
+}
+.THIS .slds-seating-card--container .slds-seating-card--overview .slds-hr--thick {
+    -webkit-transform-origin: left;
+    transform-origin: left;
+    -webkit-transform: scaleX(1);
+    transform: scaleX(1);
+    -webkit-transition: -webkit-transform .25s ease-in-out 1s;
+    transition: -webkit-transform .25s ease-in-out 1s;
+    transition: transform .25s ease-in-out 1s;
+    transition: transform .25s ease-in-out 1s, -webkit-transform .25s ease-in-out 1s;
+}
+.THIS .slds-seating-card--container .slds-seating-card--overview-title {
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 1.25rem;
+    line-height: 1.25;
+    cursor: pointer;
+    -webkit-transition: opacity .2s ease-in-out 1.125s, -webkit-transform .3s ease-in-out 1.125s;
+    transition: opacity .2s ease-in-out 1.125s, -webkit-transform .3s ease-in-out 1.125s;
+    transition: transform .3s ease-in-out 1.125s, opacity .2s ease-in-out 1.125s;
+    transition: transform .3s ease-in-out 1.125s, opacity .2s ease-in-out 1.125s, -webkit-transform .3s ease-in-out 1.125s;
+}
+.THIS .slds-seating-card--container .slds-seating-card--overview-assigned {
+    -webkit-transition: opacity .25s ease-in-out 1.35s, -webkit-transform .25s ease-in-out 1.35s;
+    transition: opacity .25s ease-in-out 1.35s, -webkit-transform .25s ease-in-out 1.35s;
+    transition: transform .25s ease-in-out 1.35s, opacity .25s ease-in-out 1.35s;
+    transition: transform .25s ease-in-out 1.35s, opacity .25s ease-in-out 1.35s, -webkit-transform .25s ease-in-out 1.35s;
+}
+.THIS .slds-seating-card--container .slds-seating-card--overview-remaining {
+    -webkit-transition: opacity .25s ease-in-out 1.25s, -webkit-transform .3s ease-in-out 1.25s;
+    transition: opacity .25s ease-in-out 1.25s, -webkit-transform .3s ease-in-out 1.25s;
+    transition: transform .3s ease-in-out 1.25s, opacity .25s ease-in-out 1.25s;
+    transition: transform .3s ease-in-out 1.25s, opacity .25s ease-in-out 1.25s, -webkit-transform .3s ease-in-out 1.25s;
+}
+.THIS .slds-seating-card--container .slds-seating-card--overview-title,
+.THIS .slds-seating-card--container .slds-seating-card--overview-assigned,
+.THIS .slds-seating-card--container .slds-seating-card--overview-remaining {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+}
+.THIS .slds-seating-card--container.activating .slds-seating-card--overview .slds-hr--thick {
+    -webkit-transform: scaleX(0);
+    transform: scaleX(0);
+    -webkit-transition: -webkit-transform .25s ease-in-out .25s;
+    transition: -webkit-transform .25s ease-in-out .25s;
+    transition: transform .25s ease-in-out .25s;
+    transition: transform .25s ease-in-out .25s, -webkit-transform .25s ease-in-out .25s;
+}
+.THIS .slds-seating-card--container.activating .slds-seating-card--overview-title {
+    -webkit-transition: opacity .2s ease-in-out .125s, -webkit-transform .2s ease-in-out .125s;
+    transition: opacity .2s ease-in-out .125s, -webkit-transform .2s ease-in-out .125s;
+    transition: transform .2s ease-in-out .125s, opacity .2s ease-in-out .125s;
+    transition: transform .2s ease-in-out .125s, opacity .2s ease-in-out .125s, -webkit-transform .2s ease-in-out .125s;
+}
+.THIS .slds-seating-card--container.activating .slds-seating-card--overview-assigned {
+    -webkit-transition: opacity .2s ease-in-out .1s, -webkit-transform .25s ease-in-out .1s;
+    transition: opacity .2s ease-in-out .1s, -webkit-transform .25s ease-in-out .1s;
+    transition: transform .25s ease-in-out .1s, opacity .2s ease-in-out .1s;
+    transition: transform .25s ease-in-out .1s, opacity .2s ease-in-out .1s, -webkit-transform .25s ease-in-out .1s;
+}
+.THIS .slds-seating-card--container.activating .slds-seating-card--overview-remaining {
+    -webkit-transition: opacity .2s ease-in-out .15s, -webkit-transform .3s ease-in-out .15s;
+    transition: opacity .2s ease-in-out .15s, -webkit-transform .3s ease-in-out .15s;
+    transition: transform .3s ease-in-out .15s, opacity .2s ease-in-out .15s;
+    transition: transform .3s ease-in-out .15s, opacity .2s ease-in-out .15s, -webkit-transform .3s ease-in-out .15s;
+}
+.THIS .slds-seating-card--container.activating .slds-seating-card--overview-title,
+.THIS .slds-seating-card--container.activating .slds-seating-card--overview-assigned,
+.THIS .slds-seating-card--container.activating .slds-seating-card--overview-remaining {
+    opacity: 0;
+    -webkit-transform: translateY(-15px);
+    transform: translateY(-15px);
+}
+.THIS .slds-seating-card--container.active {
+    position: static;
+    pointer-events: none;
+}
+.THIS .slds-seating-card--container.active .slds-seating-card--overview .slds-hr--thick {
+    -webkit-transform: scaleX(0);
+    transform: scaleX(0);
+    -webkit-transition: -webkit-transform .25s ease-in-out .25s;
+    transition: -webkit-transform .25s ease-in-out .25s;
+    transition: transform .25s ease-in-out .25s;
+    transition: transform .25s ease-in-out .25s, -webkit-transform .25s ease-in-out .25s;
+}
+.THIS .slds-seating-card--container.active .slds-seating-card--overview-title,
+.THIS .slds-seating-card--container.active .slds-seating-card--overview-assigned,
+.THIS .slds-seating-card--container.active .slds-seating-card--overview-remaining {
+    opacity: 0;
+    -webkit-transform: translateY(-15px);
+    transform: translateY(-15px);
+}
+.THIS .slds-seating-card--close {
+    cursor: pointer;
+}
+.THIS .slds-seating-card--form-container {
+    -webkit-transform-origin: center center;
+    transform-origin: center center;
+    background-color: white;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    pointer-events: none;
+    z-index: 999;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+.THIS .slds-seating-card--form-container.closing {
+    z-index: 1001;
+    -webkit-transform: scale(10);
+    transform: scale(10);
+}
+.THIS .slds-seating-card--form-container.closing .slds-seating-card--form-content {
+    opacity: 0;
+}
+.THIS .slds-seating-card--form-container .slds-seating-card--form-content {
+    opacity: 0;
+    width: 100%;
+    overflow: hidden;
+}
+.THIS .slds-seating-card--form-container .slds-seating-card--form-content .slds-tabs--default__content,
+.THIS .slds-seating-card--form-container .slds-seating-card--form-content .slds-navigation-list--vertical {
+    height: calc(100vh - 260px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.THIS .slds-seating-card--form-container.activating {
+    -webkit-transform: scale(10);
+    transform: scale(10);
+    z-index: 1001;
+}
+.THIS .slds-seating-card--form-container.activating .slds-seating-card--form-content {
+    opacity: 0;
+}
+.THIS .slds-seating-card--form-container.active {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    z-index: 1001;
+    background-color: #f4f6f9;
+}
+.THIS .slds-seating-card--form-container.active .slds-seating-card--form-content {
+    overflow: hidden;
+    z-index: 1001;
+    opacity: 1;
+    pointer-events: auto;
+}
+.THIS .slds-seating-card--form-container {
+    -webkit-transition: background-color 0s ease-in-out, z-index 0s ease-in-out 1s, -webkit-transform .5s ease-in-out;
+    transition: background-color 0s ease-in-out, z-index 0s ease-in-out 1s, -webkit-transform .5s ease-in-out;
+    transition: background-color 0s ease-in-out, z-index 0s ease-in-out 1s, transform .5s ease-in-out;
+    transition: background-color 0s ease-in-out, z-index 0s ease-in-out 1s, transform .5s ease-in-out, -webkit-transform .5s ease-in-out;
+}
+.THIS .slds-seating-card--form-container .slds-seating-card--form-content {
+    -webkit-transition: opacity 0s ease-in-out;
+    transition: opacity 0s ease-in-out;
+}
+.THIS .slds-seating-card--form-container.closing {
+    -webkit-transition: z-index 0s ease-in-out 1s, -webkit-transform 0s ease-in-out .125s;
+    transition: z-index 0s ease-in-out 1s, -webkit-transform 0s ease-in-out .125s;
+    transition: z-index 0s ease-in-out 1s, transform 0s ease-in-out .125s;
+    transition: z-index 0s ease-in-out 1s, transform 0s ease-in-out .125s, -webkit-transform 0s ease-in-out .125s;
+}
+.THIS .slds-seating-card--form-container.closing .slds-seating-card--form-content {
+    -webkit-transition: opacity .125s ease-in-out;
+    transition: opacity .125s ease-in-out;
+}
+.THIS .slds-seating-card--form-container.activating {
+    -webkit-transition: background-color .25s ease-in-out, z-index 0s ease-in-out .8s, -webkit-transform .25s ease-in-out .8s;
+    transition: background-color .25s ease-in-out, z-index 0s ease-in-out .8s, -webkit-transform .25s ease-in-out .8s;
+    transition: background-color .25s ease-in-out, transform .25s ease-in-out .8s, z-index 0s ease-in-out .8s;
+    transition: background-color .25s ease-in-out, transform .25s ease-in-out .8s, z-index 0s ease-in-out .8s, -webkit-transform .25s ease-in-out .8s;
+}
+.THIS .slds-seating-card--form-container.active {
+    -webkit-transition: background-color .25s ease-in-out, z-index 0s ease-in-out;
+    transition: background-color .25s ease-in-out, z-index 0s ease-in-out;
+}
+.THIS .slds-seating-card--form-container.active .slds-seating-card--form-content {
+    -webkit-transition: opacity .5s ease-in-out;
+    transition: opacity .5s ease-in-out;
+}
+
+.THIS .slds-checkbox--add-button-small {
+    -webkit-transform: scale(0.75);
+    transform: scale(0.75);
+    top: -0.3125rem;
+    left: 0.25rem; }
+.THIS .slds-checkbox--add-button-small .slds-checkbox--faux {
+    top: -0.3125rem; }
+.THIS .slds-checkbox--add-button-small .slds-checkbox--faux:after,
+.THIS .slds-checkbox--add-button-small .slds-checkbox--faux:before {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1); }
+.THIS .slds-checkbox--add-button input[disabled] + .slds-checkbox--faux {
+    cursor: not-allowed; }
+
+.THIS .slds-theme--success .slds-text-title {
+    color: white!important;
+}
+
+.THIS .slds-theme--success {
+    color: white!important;
+}

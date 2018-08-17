@@ -1,0 +1,249 @@
+<aura:component description="EventRegistrationAttendeeSelection" access="global" implements="LTE:EventInterface" controller="LTE.EventRegistrationController">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:attribute name="linesByTicket" type="List"/>
+	<aura:attribute name="tickets" type="List" default="[]"/>
+  <aura:attribute name="initialPurchase" type="Boolean" access="global" default="true"/>
+	<aura:attribute name="addTicketPickValue" type="Map" default="{}"/>
+	<aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+  <aura:registerEvent name="EventSummaryUpdateEvent" type="LTE:EventSummaryUpdateEvent"/>
+	<aura:registerEvent name="RegistrationToolbarUpdateEvent" type="LTE:RegistrationToolbarUpdateEvent" access="global"/>
+	<aura:attribute name="previousComponent" type="String" access="global"/>
+	<aura:attribute name="loadingRows" type="List" default="[1]"/>
+	<aura:attribute name="removeInProgress" type="Boolean" default="false"/>
+	<aura:registerEvent name="RegistrationProcessChangeEvent" type="LTE:RegistrationProcessChangeEvent"/>
+  <aura:handler event="LTE:SalesOrderLineDeletedEvent" action="{!c.handleSOLDeletedEvent}"/>
+  <aura:handler event="LTE:EventRegistrationAttendeeUpdateEvent" action="{!c.handleEventRegistrationAttendeeUpdateEvent}"/>
+  <aura:handler event="LTE:EventRegAttendeeChangeEvent" action="{!c.handleEventRegAttendeeChangeEvent}"/>
+
+  <div id="attendee" class="animated slds-p-bottom--medium" data-type="pane">
+    <!--@todo here-->
+    <div class="slds-event--pane fonteva-component slds-p-horizontal_medium">
+      <div class="slds-col slds-p-vertical_large slds-grid fonteva-receipt">
+        <div class="slds-size_1-of-1 slds-medium-size_2-of-3 slds-p-top--large fonteva-frame_body">
+          <div class="slds-grid slds-grid--vertical">
+            <div class="slds-col slds-p-bottom_large slds-text-align--left slds-grid--start fonteva-info-header">
+                <strong>{!$Label.LTE.Event_Registration_Selection_Header}</strong>
+            </div>
+            <div class="slds-col slds-p-vertical--large slds-text-align--left slds-grid--start">
+        <ui:outputRichText value="{!v.eventObj.eventAttendeeSelInstructions}" linkify="true" class="event-rich-text"/>
+      </div>
+      <div aura:id="loading-span-stencil">
+        <aura:iteration items="{!v.loadingRows}" var="object">
+          <div class="slds-p-vertical--large">
+            <div class="slds-size--1-of-1 slds-grid slds-wrap">
+              <div class="slds-text-heading--medium slds-size--1-of-1 slds-medium-size--1-of-2">
+                <div class="slds-text-body--regular loading-span slds-m-bottom--xx-small" style="width: 20vw;">
+                  &nbsp;
+                </div>
+              </div>
+              <div class="slds-text-heading--medium slds-size--1-of-1 slds-medium-size--1-of-2 slds-text-align--right slds-text-align--left__small slds-font-weight--semi-bold">
+                <div class="slds-text-body--regular loading-span slds-m-bottom--xx-small slds-float--right" style="width: 10vw;">
+                  &nbsp;
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="slds-p-vertical--large">
+          </div>
+          <div class="slds-col slds-p-vertical--large">
+            <div class="slds-grid slds-col">
+              <div class="slds-size--1-of-12"></div>
+              <div class="slds-size--10-of-12 slds-grid slds-wrap">
+                <div class="slds-grid slds-grid--vertical slds-grid--pull-padded">
+                  <div class="slds-p-horizontal--small">
+                    <label class="slds-form-element__label">
+                      <div class="slds-text-body--regular loading-span slds-m-bottom--xx-small" style="width: 5vw;">
+                        &nbsp;
+                      </div>
+                    </label>
+                  </div>
+                  <div class="slds-grid slds-wrap slds-p-horizontal--small">
+                    <div class="slds-text-body--regular loading-span slds-m-bottom--xx-small" style="width: 20vw;">
+                      &nbsp;
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aura:iteration>
+      </div>
+      <div aura:id="mainData" class="stencil-hidden slds-size_1-of-1">
+        <aura:iteration items="{!v.linesByTicket}" var="ticket">
+          <aura:if isTrue="{!ticket.isGroupTicket}">
+            <div>
+              <aura:iteration items="{!ticket.lines}" var="line">
+                <div class="slds-col slds-grid slds-wrap slds-grid--vertical-align-center slds-size--1-of-1 animated">
+                        <div class="slds-p-vertical--large slds-size--1-of-1">
+                    <div class="slds-size--1-of-1 slds-grid slds-wrap">
+                      <aura:if isTrue="{!ticket.imagePath}">
+                        <div class="slds-size--1-of-1 slds-medium-size--1-of-6-custom">
+                          <Framework:Img src="{!ticket.imagePath}" class="fonteva-ticket-image"/>
+                        </div>
+                      </aura:if>
+                            <div class="{!ticket.imagePath ? '': '' + ' slds-size--1-of-1 slds-medium-size--5-of-6-custom  slds-grid slds-grid--vertical'}">
+                        <div class="slds-m-bottom--x-small">
+                          <span class="slds-text-heading--medium slds-font-weight--semi-bold slds-m-bottom--x-small">
+                            {!ticket.name}
+                          </span>
+                          <aura:if isTrue="{!!v.removeInProgress}">
+                            <a class="slds-m-left--xx-large slds-text-body--medium" href="javascript:void(0);" onclick="{!c.removeTicket}" data-id="{!line.id}" data-itemid="{!line.itemId}" data-contactid="{!line.contactId}" data-group="yes">{!$Label.LTE.Event_Attendee_Remove_Ticket}</a>
+                          </aura:if>
+                        </div>
+                        <div>
+                          <p class="slds-text-body--regular">{!ticket.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="slds-col slds-p-top--large">
+                          <div class="slds-grid slds-grid--vertical slds-grid--pull-padded slds-size--1-of-1">
+                      <div class="slds-p-left--small">
+                              <label class="slds-form-element__label">Testing2
+                        </label>
+                      </div>
+                      <div class="slds-grid slds-wrap">
+                        <aura:iteration items="{!line.assignments}" var="assignment">
+                          <LTE:EventRegistrationAttendee
+                                  aura:id="attendeeComp"
+                                  line="{!assignment}"
+                                  accountId="{!line.accountId}"
+                                  isSalesOrderLine="false"
+                                  isAuthenticated="{!v.usr.isAuthenticated}"
+                                  isGuest="{!v.usr.isGuest}"
+                                  eventObj="{!v.eventObj}"
+                                  storeObj="{!v.storeObj}"
+                                  salesOrderId="{!v.salesOrderObj.id}"
+                                  disableRemove="true"
+                                  onRemove="{!c.removeAttendee}"/>
+                        </aura:iteration>
+                      </div>
+                      <div class="slds-p-top--medium">
+                        <hr class="slds-m-vertical--none" />
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                </aura:iteration>
+	            <aura:if isTrue="{! !empty(ticket.waitlist)}">
+		            <div class="slds-grid slds-wrap">
+			            <aura:iteration items="{!ticket.waitlist}" var="line">
+				            <LTE:EventRegistrationAttendee
+                                    aura:id="attendeeComp"
+						            line="{!line}"
+                                    accountId="{!line.accountId}"
+						            storeObj="{!v.storeObj}"
+						            isAuthenticated="{!v.usr.isAuthenticated}"
+						            isGuest="{!v.usr.isGuest}"
+						            eventObj="{!v.eventObj}"
+                                    salesOrderId="{!v.salesOrderObj.id}"
+						            isSalesOrderLine="false"
+						            isWaitlist="true"
+			                  disableRemove="{!v.removeInProgress}"
+						            onRemove="{!c.removeAttendee}"/>
+			            </aura:iteration>
+		            </div>
+	            </aura:if>
+
+            </div>
+            <aura:set attribute="else">
+              <div class="animated">
+                      <div class="slds-p-vertical--large slds-size--1-of-1">
+                  <div class="slds-size--1-of-1 slds-grid slds-wrap">
+                    <aura:if isTrue="{!ticket.imagePath}">
+                      <div class="slds-size--1-of-1 slds-medium-size--1-of-6-custom">
+                        <Framework:Img src="{!ticket.imagePath}" class="fonteva-ticket-image"/>
+                      </div>
+                    </aura:if>
+                          <div class="{!ticket.imagePath ? '': '' + ' slds-size--1-of-1 slds-medium-size--5-of-6-custom  slds-grid slds-grid--vertical'}">
+                      <div class="slds-m-bottom--x-small">
+                        <span class="slds-text-heading--medium slds-font-weight--semi-bold slds-m-bottom--x-small">
+                                  {!ticket.name}
+                        </span>
+                      </div>
+                      <div>
+                        <p class="slds-text-body--regular">{!ticket.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                      <aura:if isTrue="{!or(!empty(ticket.waitlist), !empty(ticket.lines))}">
+                <div class="slds-p-top--large">
+                          <div class="slds-grid slds-grid--vertical slds-grid--pull-padded slds-size--1-of-1">
+                    <div class="slds-p-left--small">
+                      <label class="slds-form-element__label">{!$Label.LTE.Attendee_Selector_Label}</label>
+                    </div>
+                            <div class="slds-grid slds-wrap tetsing2">
+                      <aura:iteration items="{!ticket.lines}" var="line" indexVar="index">
+                        <LTE:EventRegistrationAttendee
+                                aura:id="attendeeComp"
+                                line="{!line}"
+                                accountId="{!line.accountId}"
+                                quantity="{!ticket.lines.length}"
+                                index="{!index}"
+                                storeObj="{!v.storeObj}"
+                                isAuthenticated="{!v.usr.isAuthenticated}"
+                                isGuest="{!v.usr.isGuest}"
+                                eventObj="{!v.eventObj}"
+                                salesOrderId="{!v.salesOrderObj.id}"
+                                disableRemove="{!or(or(!empty(ticket.waitlist), ticket.minTicketsReached), v.removeInProgress)}"
+                                onRemove="{!c.removeAttendee}"/>
+                      </aura:iteration>
+                    </div>
+                    <aura:if isTrue="{!!empty(ticket.waitlist)}">
+                      <div class="slds-grid slds-wrap">
+                        <aura:iteration items="{!ticket.waitlist}" var="line">
+                          <LTE:EventRegistrationAttendee
+                                  aura:id="attendeeComp"
+                              line="{!line}"
+                              accountId="{!line.accountId}"
+                              storeObj="{!v.storeObj}"
+                              isAuthenticated="{!v.usr.isAuthenticated}"
+                              isGuest="{!v.usr.isGuest}"
+                              eventObj="{!v.eventObj}"
+                              isSalesOrderLine="false"
+                              isWaitlist="true"
+                              salesOrderId="{!v.salesOrderObj.id}"
+                              disableRemove="{!v.removeInProgress}"
+                              onRemove="{!c.removeAttendee}"/>
+                        </aura:iteration>
+                      </div>
+                    </aura:if>
+                    <div class="slds-p-top--medium">
+                      <hr class="slds-m-vertical--none" />
+                    </div>
+                  </div>
+                </div>
+                      </aura:if>
+              </div>
+            </aura:set>
+          </aura:if>
+        </aura:iteration>
+      </div>
+            <div class="slds-grid slds-grid--vertical slds-m-top--x-large slds-p-bottom--small slds-p-top--large">
+        <div class="slds-m-bottom--x-small">
+          <strong>{!$Label.LTE.Event_Attendee_Selection_Ticket_Select}</strong>
+        </div>
+        <div class="slds-grid slds-grid--pull-padded">
+          <div class="slds-medium-size--1-of-3 slds-size--1-of-2 slds-p-horizontal--small">
+            <Framework:InputFields fieldType="picklist" isRequired="true" disabled="{!v.eventObj.isInvitationOnly}" aura:id="addTicketPickList" value="{!v.addTicketPickValue}" label="" labelStyleClasses=" hidden"/>
+          </div>
+          <div class="slds-align-bottom slds-p-bottom--small">
+	          <Framework:Button enableProgressIndicator="true" aura:id="addTicketButton" onClickAction="{!c.addTicket}" type="brand"
+	                            label="{!$Label.LTE.Event_Attendee_AddTicket_Button}" disable="{!!v.addTicketPickValue.addTicketPickList}" />
+          </div>
+        </div>
+      </div>
+
+      </div>
+	</div>
+        <div class="slds-size_1-of-1 slds-medium-size_1-of-3 slds-p-horizontal_x-small slds-col slds-p-top_large fonteva-frame_summary">
+          <LTE:EventRegistrationSummary aura:id="eventRegistrationSummary" so="{!v.salesOrderObj}" eventObj="{!v.eventObj}" initialPurchase="{!v.initialPurchase}" displayDiscount="false" displayTotal="false" readOnly="true" siteObj="{!v.siteObj}" storeObj="{!v.storeObj}"/>
+          <div class="slds-grid slds-grid_align-center fonteva-footer_actions" aura:id="buttons">
+            <LTE:EventActionButtons nextAction="{!c.nextStep}" aura:id="actionButtons" showPrevious=""/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</aura:component>

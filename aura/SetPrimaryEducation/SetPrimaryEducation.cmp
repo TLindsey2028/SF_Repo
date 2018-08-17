@@ -1,0 +1,17 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="AQB.ToggleController">
+    
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="educationInfo" type="AQB__Education__c" access="GLOBAL" default="{'sobjectType': 'AQB__Education__c'}" />
+    <aura:attribute name="isPrimary" type="Boolean" access="GLOBAL" />
+    <aura:handler name="init" action="{!c.myAction}" value="{!this}" />
+
+    <div style="margin-left:5px; color: #ff0000; font-weight: bold;">
+        <aura:if isTrue="{!v.isPrimary == false}">
+        	<ui:button label="Set as Primary Education" press="{!c.setPrimary}" />
+            <aura:set attribute="else">
+                <ui:button label="Set as Primary Education" disabled="true" /> 
+            </aura:set>
+        </aura:if>
+    </div>
+		
+</aura:component>

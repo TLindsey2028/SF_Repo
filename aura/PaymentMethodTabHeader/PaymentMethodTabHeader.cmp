@@ -1,0 +1,15 @@
+<aura:component description="PaymentMethodTabHeader">
+    <aura:registerEvent type="PaymentMethodChangeEvent" name="changeEvent"/>
+    <aura:attribute name="paymentTypes" type="List" default="[]"/>
+    <aura:attribute name="salesOrderId" type="String"/>
+    <aura:method name="openDefaultTab" action="{!c.doInit}"/>
+    <aura:iteration items="{!v.paymentTypes}" var="paymentType" indexVar="index">
+        <li class="slds-tabs__item slds-text-heading--label fonteva-slds-payment-tab--item"
+            title="{!paymentType.label}" role="presentation" aura:id="paymentMethodTabLabel">
+            <a href="#" class="slds-tabs--default__link" data-index="{!index}" data-tab="{!paymentType.customPaymentId}" data-comp="{!paymentType.lightningComponent}" onclick="{!c.changeTab}">
+                    {!paymentType.label}
+            </a>
+        </li>
+    </aura:iteration>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+</aura:component>

@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="ToggleCheckoutPanelsEvent">
+		<aura:attribute name="panelToActUpon" type="String"/>
+		<aura:attribute name="action" type="String" required="true"/>
+	  <aura:attribute name="uniqueId" type="String" required="true"/>
+</aura:event>

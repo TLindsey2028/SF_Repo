@@ -1,0 +1,94 @@
+.THIS {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.THIS .fonteva-attendee-info > div {
+    margin-bottom: .25rem;
+}
+
+.THIS .fonteva-attendee-info > div:last-of-type {
+    margin-bottom: 0;
+}
+
+.THIS .fonteva-icon-size--xx-large .slds-icon--large.slds-icon {
+    width: 6rem;
+    height: 6rem;
+    padding: 0.5rem;
+}
+
+.THIS a.slds-tabs--default__link {
+    color: black!important;
+    font-size: 13px;
+}
+
+.THIS .slds-card__header {
+      background-color: #f8f8f8!important;
+      padding: 1rem 1.5rem!important;
+      margin-bottom: 0 important;
+}
+
+.THIS .fonteva-slds-payment-nav > li {
+    order: 6;
+}
+
+.THIS .slds-tabs--default > .slds-tabs__content {
+  padding: 1rem 0 0!important;
+}
+
+.THIS label.slds-form-element__label  {
+    font-weight: 700!important;
+}
+
+.THIS *.slds-form-element__label {
+    color: black!important;
+}
+
+.THIS .fonteva-input--discount .slds-form-element__control.slds-m-bottom--small {
+    margin-bottom: 0!important;
+}
+
+.THIS .slds-checkbox {
+    margin-top: .75rem!important;
+}
+
+.THIS .slds-size_1-of-5 .slds-checkbox {
+    margin-top: .35rem!important;
+}
+
+.THIS .small-spinner {
+    height: 18px;
+    width: 18px;
+}
+
+.THIS .paypal-button {
+    max-width: 45%!important;
+}
+
+.THIS .fonteva-apply-discount {
+    white-space: nowrap;
+}
+
+.THIS .fonteva-apply-discount > img {
+    margin-left: .5rem;
+}
+
+@media (max-width:48rem){
+    .THIS .slds-tabs--default > .slds-tabs__content {
+        padding:0!important
+    }
+    .THIS .slds-tabs--default > .slds-tabs__content .slds-size--1-of-2,
+    .THIS .slds-tabs--default > .slds-tabs__content .slds-size--1-of-3 {
+        width:100%!important
+    }
+    .THIS .slds-tabs--default > .slds-tabs__content [data-name=spreedly-payment-form] {
+        overflow-x:hidden
+    }
+    .THIS .slds-tabs--default > .slds-tabs__content [data-name=spreedly-payment-form] iframe {
+        width: 100%
+    }
+}
+
+.THIS .slds-col.slds-medium-size_2-of-3.slds-p-horizontal_small {
+    overflow-x: hidden;
+}

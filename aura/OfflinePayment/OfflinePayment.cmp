@@ -1,0 +1,53 @@
+<aura:component description="OfflinePayment" controller="OrderApi.OfflinePaymentController">
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:handler event="OrderApi:PaymentPriceUpdateEvent" action="{!c.handlePriceUpdateEvent}"/>
+  <aura:attribute name="paymentObj" type="Object"/>
+  <aura:attribute name="recordId" type="String"/>
+  <aura:attribute name="showBatch" type="Boolean" default="true"/>
+  <aura:attribute name="dateFormat" type="String" required="true"/>
+  <aura:attribute name="paymentSuccessReturnObj" type="Map"/>
+  <aura:attribute name="offlinePaymentObj" type="Object" default="{}" description="Offline Payment Form Object"/>
+  <aura:attribute name="validated" type="Boolean" default="false"/>
+  <aura:method name="validate" action="{!c.validate}"></aura:method>
+  <aura:method name="processPayment" action="{!c.processPayment}"></aura:method>
+  <aura:registerEvent name="ButtonToggleIndicatorEvent" type="Framework:ButtonToggleIndicatorEvent"/>
+  <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+  <aura:registerEvent name="ChangeTextEvent" type="OrderApi:ChangeTextEvent"/>
+  <ltng:require scripts="{!$Resource.Framework__UrlUtil}"/>
+  <div aura:id="offline-payment-form">
+    <div class="slds-col slds-grid">
+      <div class="slds-size--1-of-1 slds-medium-size--1-of-3 slds-m-bottom-x--small">
+        <Framework:InputFields group="offlinePaymentForm" fieldType="picklist" aura:id="paymentType" isRequired="true" label="{!$Label.OrderApi.Payment_Method_Offline_Payment}" value="{!v.offlinePaymentObj}" fireChangeEvent="true"/>
+      </div>
+    </div>
+    <aura:if isTrue="{!v.showBatch}">
+      <div class="slds-col slds-grid">
+        <div class=" slds-size--1-of-1 slds-medium-size--1-of-3 slds-m-bottom-x--small">
+          <Framework:InputFields group="offlinePaymentForm" fieldType="lookup" aura:id="batch" label="{!$Label.OrderApi.Batch_Invoice_Payment}" value="{!v.offlinePaymentObj}" otherAttributes='{"type" :"OrderApi__Batch__c"}'/>
+        </div>
+      </div>
+    </aura:if>
+    <div class="slds-col slds-grid">
+      <div class=" slds-size--1-of-1 slds-m-bottom-x--small">
+        <Framework:InputFields group="offlinePaymentForm" fieldType="string" isRequired="true" aura:id="referenceNumber" label="{!$Label.OrderApi.Offline_Payment_Reference_Number}" value="{!v.offlinePaymentObj}" maxlength="255"/>
+      </div>
+    </div>
+    <div class="slds-col slds-grid">
+      <div class="slds-size--1-of-1 slds-medium-size--1-of-3 slds-m-bottom-x--small">
+        <Framework:InputFields group="offlinePaymentForm" fieldType="date" isRequired="true" aura:id="paymentDate" label="{!$Label.OrderApi.Payment_Date}" value="{!v.offlinePaymentObj}" format="{!v.dateFormat}" otherAttributes='{"min" : "2010-01-01"}'/>
+      </div>
+    </div>
+    <div class="slds-col slds-grid">
+      <div class="slds-size--1-of-1 slds-medium-size--1-of-3 slds-m-bottom-x--small">
+        <Framework:InputFields group="offlinePaymentForm" fieldType="date" isRequired="true" aura:id="depositDate" label="{!$Label.OrderApi.Deposit_Date}" value="{!v.offlinePaymentObj}" format="{!v.dateFormat}" otherAttributes='{"min" : "2010-01-01"}'/>
+      </div>
+    </div>
+    <div class="slds-col slds-grid">
+      <div class="slds-size--1-of-1 slds-m-bottom-x--small">
+        <Framework:InputFields group="offlinePaymentForm" fieldType="string" isRequired="true" aura:id="receiptMemo" label="Receipt Memo" value="{!v.offlinePaymentObj}" maxlength="255"/>
+      </div>
+    </div>
+  </div>
+  <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

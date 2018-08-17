@@ -1,0 +1,74 @@
+.THIS .slds-box--collapse__frame {
+  margin-left: -1rem;
+  margin-right: -1rem;
+}
+
+.THIS .slds-box--collapse {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.THIS .slds-frame--expand {
+  max-height: 0vh;
+  overflow: hidden;
+  transition: max-height .25s ease-in-out;
+}
+
+.THIS .slds-frame--expanded {
+  max-height: 100vh;
+  overflow: visible!important;
+}
+
+.THIS .slds-rotate {
+    cursor: pointer;
+    transform: rotate(0deg);
+    transition: transform .25s ease-in-out;
+}
+
+.THIS .slds-rotate__180 {
+    cursor: pointer;
+    transform: rotate(-180deg);
+    transition: transform .25s ease-in-out;
+}
+
+.THIS .currencyInputSpan {
+    white-space: nowrap!important;
+}
+
+.THIS .slds-lookup-input {
+    max-width: 33.33333%;
+    min-width: 33.33333%
+}
+
+.THIS .slds-input--custom-field {
+    min-width: 11em;
+}
+
+.THIS .slds-input--custom-field .slds-form-element__control {
+    margin-bottom: 0!important;
+}
+
+.THIS .slds-text--success {
+    color: #04844b!important;
+}
+
+.THIS .slds-text--danger {
+    color: #c23934!important;
+}
+
+.THIS .slds-lookup-input .slds-form-element__control {
+    margin: 0!important;
+}
+
+.THIS .slds-theme--shade__dark {
+    background-color: #e0e5ed
+}
+
+.THIS .slds-animate--m-remove {
+    margin-bottom: 0!important;
+    transition: margin .3s ease-in-out;
+}
+
+.THIS .fon-slds-p-top--xx-small {
+    padding-top: 0.4rem;
+}

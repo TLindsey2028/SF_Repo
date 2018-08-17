@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="Event template" access="global">
+    <aura:attribute name="values" type="object" default="" description="object values for input"/>
+</aura:event>

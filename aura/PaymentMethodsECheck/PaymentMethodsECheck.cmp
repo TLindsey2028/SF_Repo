@@ -1,0 +1,101 @@
+<aura:component description="PaymentMethodsECheck" controller="OrderApi.PaymentMethodController" implements="OrderApi:PaymentMethodsInterface">
+    <aura:attribute name="globalECheckComp" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!-- credit markup -->
+
+    <div class="slds-grid slds-grid_vertical slds-p-bottom--medium">
+        <div class="slds-grid slds-p-horizontal--large slds-p-bottom_medium">
+            <div class="slds-grid slds-grid_vertical slds-col">
+                <div class="slds-text-heading_medium">
+                    <strong>{!$Label.OrderApi.ECheck_Methods}</strong>
+                </div>
+                <div>
+                    {!$Label.OrderApi.ECheck_Manage_Methods}
+                </div>
+            </div>
+        </div>
+        <div class="fonteva-table--container">
+            <table class="slds-table slds-table_bordered slds-no-row-hover">
+                <thead class="slds-theme_shade">
+                <tr class="slds-text-title_caps">
+                    <th class="slds-hide_medium"></th>
+                    <th style="padding-left: 1.5rem;">
+                        {!$Label.OrderApi.ECheck_Bank_Name}
+                    </th>
+                    <th>
+                        {!$Label.OrderApi.ECheck_Bank_Number}
+                    </th>
+                    <th>
+                        {!$Label.OrderApi.Payment_Method_Full_Name}
+                    </th>
+                    <th style="width: 35%">
+                        {!$Label.OrderApi.Payment_Method_Billing_Address}
+                    </th>
+                    <th style="width: calc(64px + 3rem);" class="slds-show_medium">
+
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <aura:iteration items="{!v.paymentMethods}" var="paymentMethod">
+                    <tr>
+                        <td class="slds-hide_medium">
+                            <lightning:buttonIcon iconName="utility:threedots"  alternativeText="More Options" iconClass="slds-button__icon"/>
+                            <div class="slds-dropdown slds-dropdown--right">
+                                <ul class="dropdown__list" role="menu">
+                                    <li class="slds-dropdown__item">
+                                        <a href="javascript:void(0);" onclick="{!c.delPayMethod}" data-id="{!paymentMethod.paymentMethodId}" role="menuitem">
+                                            {!$Label.OrderApi.Manage_Payment_Methods_Delete}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td style="padding-left: 1.5rem;">
+                            <strong>
+                                {!paymentMethod.bankName}
+                            </strong>
+                        </td>
+                        <td>
+                            <strong>
+                                {!paymentMethod.lastFour}
+                            </strong>
+                        </td>
+                        <td>
+                            <strong>
+                                {!paymentMethod.fullName}
+                            </strong>
+                        </td>
+                        <td>
+                            <strong>
+                                 <span class="{!empty(paymentMethod.address.street_number) ? 'hidden' : ''}">
+                                        {!paymentMethod.address.street_number}&nbsp;
+                                </span>
+                                <span class="{!empty(paymentMethod.address.street_name) ? 'hidden' : ''}">
+                                    {!paymentMethod.address.street_name},&nbsp;
+                                </span>
+                                <span class="{!empty(paymentMethod.address.city) ? 'hidden' : ''}">
+                                    {!paymentMethod.address.city},&nbsp;
+                                </span>
+                                <span class="{!empty(paymentMethod.address.province) ? 'hidden' : ''}">
+                                    {!paymentMethod.address.province}&nbsp;
+                                </span>
+                                <span class="{!empty(paymentMethod.address.postal_code) ? 'hidden' : ''}">
+                                    {!paymentMethod.address.postal_code},&nbsp;
+                                </span>
+                                {!paymentMethod.address.country}
+                            </strong>
+                        </td>
+                        <td class="slds-show_medium">
+                            <lightning:buttonIcon iconName="utility:edit" alternativeText="{!$Label.OrderApi.Manage_Payment_Methods_Edit}" class="slds-theme--shade slds-hidden" onclick="{!c.editPayMethod}" value="{!paymentMethod.paymentMethodId}" />
+                            <lightning:buttonIcon iconName="utility:delete" alternativeText="{!$Label.OrderApi.Manage_Payment_Methods_Delete}" class="slds-theme--shade" onclick="{!c.delPayMethod}"  value="{!paymentMethod.paymentMethodId}"/>
+                        </td>
+                    </tr>
+                </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

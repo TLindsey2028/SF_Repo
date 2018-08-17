@@ -1,0 +1,44 @@
+<aura:component description="SubscriptionAssignmentRow" controller="ROEApi.SubscriptionItemDetailsController">
+    <aura:attribute name="item" type="Map" required="true"/>
+    <aura:attribute name="index" type="String"/>
+    <aura:attribute name="itemIndex" type="String" required="true"/>
+    <aura:attribute name="uniqueIdentifier" type="String" required="true"/>
+    <aura:attribute name="removeItem" type="Aura.Action" required="true"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <tr>
+        <td class="slds-cell-shrink">
+            <strong>{!v.itemIndex}.</strong>
+        </td>
+        <td class="slds-size--1-of-3">
+            {!v.item.fullName}
+        </td>
+        <td class="slds-size--1-of-3">
+            {!v.item.email}
+        </td>
+        <td class="slds-size--1-of-4">
+            <Framework:InputFields group="{!v.item.assignmentId}" fieldType="picklist" aura:id="role" value="{!v.item}" label="" selectOptions="{!v.item.assignmentRoles}" fireChangeEvent="true"/>
+        </td>
+        <td class="slds-cell-shrink">
+            <div class="slds-dropdown-trigger">
+                <Framework:Button enableProgressIndicator="false"
+                                  onClickAction=""
+                                  type="neutral"
+                                  additionalClasses="slds-button--icon-border slds-p-around--none"
+                                  label=""
+                                  svgPath="{!$Resource.ROEApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#threedots'}"
+                                  svgContainerClass=""
+                                  svgClass="slds-button__icon"
+                                  svgAssistiveText="Label.ROEApi.More_Options" />
+                <div class="slds-dropdown slds-dropdown--right">
+                    <ul class="dropdown__list" role="menu">
+                        <li class="slds-dropdown__item">
+                            <a href="javascript:void(0);" onclick="{!v.removeItem}" role="menuitem" data-index="{!v.index}" data-assignmentid="{!v.item.assignmentId}">
+                                Remove from Subscription
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </td>
+    </tr>
+</aura:component>

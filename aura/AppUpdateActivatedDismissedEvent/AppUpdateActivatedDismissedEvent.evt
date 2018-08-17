@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="AppUpdateActivatedDismissedEvent">
+    <aura:attribute name="activeApp" required="true" type="String"/>
+</aura:event>

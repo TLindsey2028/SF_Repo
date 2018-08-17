@@ -1,0 +1,93 @@
+<aura:component description="EventBuilderManageBadgeTypes" controller="EventApi.EventBuilderBadgeTypeController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:method name="showModal" action="{!c.showModal}"/>
+    <aura:attribute name="badgeTypesWrapperObj" type="Object"/>
+    <aura:attribute name="ticketTypeName" type="String"/>
+    <aura:attribute name="uiApiUniqueId" type="String"/>
+    <aura:attribute name="customFields" type="List" default="[]"/>
+    <aura:attribute name="customFieldsFound" type="Boolean" default="false"/>
+    <aura:attribute name="ticketTypeId" type="String"/>
+    <aura:attribute name="existingBadges" type="Boolean" default="true"/>
+    <aura:attribute name="existingBadgesObj" type="Map" default="{}"/>
+    <aura:attribute name="badgeTypeObj" type="Map" default="{}"/>
+    <aura:attribute name="organizationId" type="String"/>
+    <aura:attribute name="badgeTypeSections" type="Map"/>
+    <aura:attribute name="sessionId" type="String"/>
+    <aura:handler event="Framework:UIApiResponseEvent" action="{!c.handleUIApiResponseEvent}"/>
+    <aura:registerEvent name="AddSelectorEvent" type="EventApi:AddSelectorEvent"/>
+    <Framework:UIApi uniqueId="{!v.uiApiUniqueId}" aura:id="badgesApi"/>
+    <div data-name="modalBackdrop" class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+    <div data-name="manageBadgeTypesModal" class="slds-modal" aura:id="manageBadgeTypesModal">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium" id="modal-heading-label1">
+                    <aura:if isTrue="{!v.existingBadges}">
+                        Manage Badges for <strong>{!v.ticketTypeName}</strong>
+                        <aura:set attribute="else">
+                            New Badge
+                        </aura:set>
+                    </aura:if>
+                </h2>
+                <button data-name="closeModal" class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+                    <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+                </button><!-- /.slds-button -->
+            </div><!-- /.slds-modal__header -->
+            <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+                <aura:if isTrue="{!v.existingBadges}">
+                    <div class="slds-grid slds-grid_vertical">
+                        <div class="slds-grid">
+                            <div data-name="new_badge_tip" class="slds-col slds-p-right_small">
+                                Create new badges by clicking the “+ New Badge” button.<br/>
+                                To make a badge selected for this ticket type, drag and drop a badge to the “Selected Badge” section.
+                            </div>
+                            <div class="slds-shrink-none">
+                                <button data-name="addNewBadge" class="slds-button slds-button--brand" onclick="{!c.addNewBadge}">
+                                    <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--x-small slds-button__icon--left" assistiveText="Save &amp; Close" />
+                                    New Badge
+                                </button>
+                            </div>
+                        </div>
+                        <div data-name="manageBadgesDiv" class="slds-col" aura:id="manageBadgesDiv"/>
+                    </div>
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!v.customFields.length > 0}">
+                            <div data-name="badgeTypeSection" class="slds-col slds-size--1-of-1">
+                                <aura:iteration items="{!v.customFields}" var="customField">
+                                    <div class="slds-size--1-of-1">
+                                        <Framework:InputFields qaData='{"type" : "input", "name": "customfield"}' aura:id="customField" group="badgeTypeFields" value="{!v.badgeTypeObj}" sObjectName="{!customField.objectName}" fieldName="{!customField.apiName}" secondaryId="{!customField.apiName}" useSecondaryId="true"/>
+                                    </div>
+                                </aura:iteration>
+                            </div>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+            </div><!-- /.tab-content -->
+            <div class="slds-modal__footer slds-text-align--right">
+                <aura:if isTrue="{!v.existingBadges}">
+                    <Framework:Button qaData='{"type" : "button", "name": "closeModal"}' enableProgressIndicator="false"
+                                      onClickAction="{!c.closeModal}"
+                                      type="neutral"
+                                      label="{!$Label.EventApi.Cancel}" />
+                    <Framework:Button qaData='{"type" : "button", "name": "createBadgeWorkflowsBtn"}' aura:id="createBadgeWorkflowsBtn"
+                                      onClickAction="{!c.createBadgeWorkflows}"
+                                      type="brand"
+                                      additionalClasses="slds-m-left--xx-small"
+                                      label="Save &amp; Close" />
+                    <aura:set attribute="else">
+                        <Framework:Button qaData='{"type" : "button", "name": "Cancel"}' enableProgressIndicator="false"
+                                          onClickAction="{!c.backToBadges}"
+                                          type="neutral"
+                                          label="{!$Label.EventApi.Cancel}" />
+                        <Framework:Button qaData='{"type" : "button", "name": "saveBadgeTypeBtn"}' aura:id="saveBadgeTypeBtn"
+                                          onClickAction="{!c.saveBadgeType}"
+                                          type="brand"
+                                          additionalClasses="slds-m-left--xx-small"
+                                          label="Save" />
+                    </aura:set>
+                </aura:if>
+
+            </div><!-- /.slds-modal__footer -->
+        </div><!-- /.modal-dialog .slds-modal__container -->
+    </div><!-- /.modal .slds-modal -->
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

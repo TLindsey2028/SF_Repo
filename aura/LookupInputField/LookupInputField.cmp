@@ -1,0 +1,52 @@
+<aura:component controller="Framework.LookupInputFieldsController">
+    <aura:attribute name="lookupObject" type="Object"/>
+    <aura:attribute name="type" type="String" description="SObject that you would like lookup on"/>
+    <aura:attribute name="objectName" type="String" description="SObject that has the lookup"/>
+    <aura:attribute name="advanced" type="Boolean" default="false" description="advancedLookup"/>
+    <aura:attribute name="clearExisting" type="Boolean" default="false" description="Clear Existing"/>
+    <aura:attribute name="concatenateLabel" type="Boolean" default="false" description="Concatenate Label"/>
+    <aura:attribute name="types" type="Object"  description="Multiple Types"/>
+    <aura:attribute name="enforceSharingRules" type="Boolean" default="true" description="Enforce Sharing Rules"/>
+    <aura:attribute name="field" type="String" description="Field that is the lookup"/>
+    <aura:attribute name="idField" type="String"  description="SObject that you would like lookup on" default="Id"/>
+    <aura:attribute name="lookupClass" type="String"  description="Class to Add" access="private"/>
+    <aura:attribute name="displayField" type="String" description="The Field to display for search results" default="Name"/>
+    <aura:attribute name="required" type="Boolean" description="If the field is required" default="false"/>
+    <aura:attribute name="value" type="String" description="The value"/>
+    <aura:attribute name="oldValue" type="String" description="The value"/>
+    <aura:attribute name="preloadObj" type="Map"/>
+    <aura:attribute name="loadBaseValues" type="Boolean" description="Load Base Values On Initialization" default="true"/>
+    <aura:attribute name="soqlLimit" type="Integer" description="The limit of records to return" default="50"/>
+    <aura:attribute name="filter" type="String" description="Filter For Lookup" default=""/>
+    <aura:attribute name="disabled" type="Boolean" description="Disable Input" default="false"/>
+    <aura:attribute name="otherMethods" type="Object" description="Other Methods" default='{}'/>
+    <aura:handler name="change" value="{!v.disabled}" action="{!c.activateDeactivateField}"/>
+    <aura:handler name="change" value="{!v.filter}" action="{!c.updateFilter}"/>
+    <aura:handler name="change" value="{!v.types}" action="{!c.updateFilter}"/>
+    <aura:handler name="change" value="{!v.loadBaseValues}" action="{!c.loadBaseValuesOnChange}"/>
+    <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/scripts.min.js'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:handler event="Framework:InputFieldClearErrorMessagesEvent" action="{!c.handleInputFieldClearErrorMessagesEvent}"/>
+    <aura:method name="setErrorMessages" action="{!c.setErrorMessages}"
+      description="Error Message For Field">
+      <aura:attribute name="errorMessages" type="Array" default="[]" description="Error Message"/>
+    </aura:method>
+    <aura:method name="loadExistingValue" action="{!c.loadExistingValue}"
+                 description="Load Existing Value">
+    </aura:method>
+    <aura:method name="clearExistingValue" action="{!c.clearExistingValue}"
+                 description="Clear Existing Value">
+    </aura:method>
+    <aura:method name="reInitializeComponent" action="{!c.reInitialize}"
+                 description="reInitialize">
+    </aura:method>
+  <aura:method name="clearOptions" action="{!c.clearOptions}" description="Clear Options available for the input"/>
+    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+        <span aura:id="lookupIcon" id="{!globalId+'_icon'}" onclick="{!c.removeValue}">
+            <img id="{!globalId+'_search_icon'}" src="{!$Resource.Framework__SLDS_Icons+'/icons/utility/search_60.png'}" class="slds-input-action-icon" aura:id="searchIcon"/>
+            <img id="{!globalId+'_clear_icon'}" src="{!$Resource.Framework__SLDS_Icons+'/icons/utility/clear_60.png'}" class="slds-input-action-icon slds-hide slds-has-items" aura:id="removeIcon"/>
+            <img id="{!globalId+'_searching_icon'}" src="{!$Resource.Framework__SLDS_Icons+'/icons/fonteva/icons/spinner.gif'}" class="slds-input-action-icon slds-hide slds-has-items" aura:id="searchingIcon"/>
+        </span>
+        <select class="{!v.lookupClass}" aura:id="lookupSelect"/>
+        <Framework:ValidationErrorMessages aura:id="errorInput"/>
+    </div>
+</aura:component>

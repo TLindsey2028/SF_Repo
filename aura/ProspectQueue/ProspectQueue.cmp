@@ -1,0 +1,308 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable" access="GLOBAL" controller="AQB.ProspectQueueController">
+    
+    <aura:handler name="init" action="{!c.myAction}" value="{!this}" />
+    <aura:attribute name="username" type="String" access="GLOBAL" />
+    <aura:attribute name="owners" type="String[]" />
+    <aura:attribute name="PMs" type="String[]" />
+    <aura:attribute name="PMgroups" type="String[]" />
+    <aura:attribute name="initialStatus" type="String" />
+    <aura:attribute name="prospects" type="AQB__ProspectQueue__c[]" access="GLOBAL" />
+    <aura:attribute name="declinedProspects" type="AQB__ProspectManagementRecomendations__c[]" access="GLOBAL" />
+    <aura:attribute name="prospectname" type="String" access="GLOBAL" />
+    <aura:attribute name="prospectinfo" type="Object" access="GLOBAL" />   
+    <aura:attribute name="accountinfo" type="Object" access="GLOBAL" />
+    <aura:attribute name="accountid" type="String" access="GLOBAL" />   
+    <aura:attribute name="pmRole" type="String" />
+    <aura:attribute name="isResearcher" type="Boolean" />
+    <aura:attribute name="isManager" type="Boolean" />
+    <aura:attribute name="isRecommended" type="String" />
+    <aura:attribute name="reason" type="String" />
+    <aura:attribute name="status" type="String" />
+    
+    <table>
+        <tr style="height:100%">
+            <td style="width:50%; vertical-align:top">
+                <table style="width:80%;">
+                    <tr>
+                        <td style="padding:5px">Status:</td>
+                        <td style="padding:5px">
+                            <ui:inputSelect aura:id="status" change="{!c.updateProspectList}">
+                                <!--<ui:inputSelectOption text="- -None- -"/>-->
+                                <ui:inputSelectOption text="Needs Research"/>
+                                <ui:inputSelectOption text="Research in Progress"/>
+                                <ui:inputSelectOption text="Recommended"/>
+                                <ui:inputSelectOption text="Declined Recommendations"/>
+                                <ui:inputSelectOption text="Needs Manager"/>
+                                <ui:inputSelectOption text="Managed"/>
+                                <ui:inputSelectOption text="Disqualified"/>
+                            </ui:inputSelect>
+                        </td>
+                        <td style="padding:5px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Owner:</td>
+                        <td style="padding:5px">
+                            <ui:inputSelect aura:id="owner" change="{!c.updateProspectList2}">
+                                <aura:iteration items="{!v.owners}" var="o">
+                                    <ui:inputSelectOption text="{!o}" label="{!o}"/>
+                                </aura:iteration>
+                            </ui:inputSelect>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <div class="slds-scrollable--y">
+                    <div style="height:500px;overflow:scroll;">
+                        
+                        <aura:if isTrue="{!v.status == 'Declined Recommendations'}">
+                            <table class="slds-table slds-table--bordered slds-table--striped slds-table--cell-buffer">
+                                <thead>
+                                    <tr class="slds-text-heading--label">
+                                        <th scope="col"><span class="slds-truncate">Prospect</span></th>
+                                        <th scope="col"><span class="slds-truncate">Researcher</span></th>
+                                        <th scope="col"><span class="slds-truncate">Propect Manager</span></th>
+                                        <th scope="col"><span class="slds-truncate">PM Group</span></th>
+                                        <th scope="col"><span class="slds-truncate">Date</span></th> 
+                                       	<th scope="col"><span class="slds-truncate">Details</span></th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <aura:iteration items="{!v.declinedProspects}" var="declined">
+                                        <tr>
+                                            <td><span class="prospectname"><a href="{!'/' + declined.AQB__Account__c}" target="_blank">{!declined.AQB__Account__r.Name}</a></span></td>
+                                            <td><span class="prospectname">{!declined.AQB__Researcher__r.Name}</span></td>
+                                            <td><span class="prospectname">{!declined.AQB__ProspectManager__r.Name}</span></td>
+                                            <td><span class="prospectname">{!declined.AQB__ProspectManagementGroup__c}</span></td>
+                                            <td><span class="prospectname"><ui:outputDate value="{!declined.LastModifiedDate}"></ui:outputDate></span></td>
+                                            <td><button type="button" id="{!declined.AQB__Account__c}" onclick="{!c.showDetails}">Details</button></td>
+                                        </tr>
+                                    </aura:iteration>
+                                </tbody>
+                            </table>
+                            
+                        <aura:set attribute="else">                  
+                            <table class="slds-table slds-table--bordered slds-table--striped slds-table--cell-buffer">
+                                <thead>
+                                    <tr class="slds-text-heading--label">
+                                        <th scope="col"><span class="slds-truncate">Prospect</span></th>
+                                        <th scope="col"><span class="slds-truncate">Status</span></th>
+                                        <th scope="col"><span class="slds-truncate">Last Move Date</span></th>
+                                        <th scope="col"><span class="slds-truncate">Owner</span></th>
+                                        <th scope="col"><span class="slds-truncate">Details</span></th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <aura:iteration items="{!v.prospects}" var="prospect">
+                                        <tr>
+                                            <td><span class="prospectname"><a href="{!'/' + prospect.AQB__Account__c}" target="_blank">{!prospect.AQB__Account__r.Name}</a></span></td>
+                                            <td><span class="prospectname">{!prospect.AQB__Stage__c}</span></td>
+                                            <td>
+                                                <aura:if isTrue="{!prospect.AQB__DateAssigned__c != null}">
+                                                    <span class="prospectname">{!prospect.AQB__DateAssigned__c}</span>
+                                                </aura:if>
+                                                <aura:if isTrue="{!and(prospect.AQB__DateAssigned__c == null, prospect.AQB__ResearchCompletedDate__c != null)}">
+                                                    <span class="prospectname">{!prospect.ResearchCompletedDate__c}</span>
+                                                </aura:if>
+                                                <aura:if isTrue="{!and(prospect.AQB__ResearchCompletedDate__c == null, prospect.AQB__ResearchStartDate__c != null)}">
+                                                    <span class="prospectname">{!prospect.AQB__ResearchStartDate__c}</span>
+                                                </aura:if>
+                                                <aura:if isTrue="{!and(prospect.AQB__ResearchStartDate__c == null, prospect.AQB__DateAdded__c != null)}">
+                                                    <span class="prospectname">{!prospect.AQB__DateAdded__c}</span>
+                                                </aura:if>
+                                            </td>
+                                            <td>
+                                                <aura:if isTrue="{!and(prospect.AQB__Researcher__r.Name != null, prospect.AQB__ProspectOwner__r.Name == null)}">
+                                                    <span class="prospectname">{!prospect.AQB__Researcher__r.Name}</span>
+                                                </aura:if>
+                                                <aura:if isTrue="{!prospect.AQB__ProspectOwner__r.Name != null}">
+                                                    <span class="prospectname">{!prospect.AQB__ProspectOwner__r.Name}</span>
+                                                </aura:if>
+                                                <aura:if isTrue="{!and(prospect.AQB__CreatedBy.Name == null, prospect.AQB__Researcher__r.Name == null)}">
+                                                    <span class="prospectname">{!prospect.CreatedBy.Name}</span>
+                                                </aura:if>
+                                            </td>
+                                            <!--<td><c:button class="slds-button slds-button-                    -neutral" label=""
+                                                          svgXlinkHref="/resource/SLDS214/assets/icons/standard-sprite/svg/symbols.svg#account"
+                                                          svgClass="slds-icon slds-icon-text-default" onclick="{!c.showDetails}"
+                                                          data="{!prospect.AQB__Account__c}" /></td>-->
+                                            <td><button type="button" id="{!prospect.AQB__Account__c}" onclick="{!c.showDetails}">Details</button></td>
+                                        </tr>
+                                    </aura:iteration>
+                                </tbody>
+                                
+                            </table>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                </div>
+            </td>
+            
+            <!-- Prospect Info Side -->
+            
+            <td style="width:50%; vertical-align:top">
+                <div class="slds-scrollable--y">
+                    <div style="height:550px;overflow:scroll;">
+                        
+                        <aura:if isTrue="{!v.accountid != null}"> 
+                            <span style="font-size: 1.2rem; margin-left:20px;"><a href="{!'/' + v.accountid}" target="_blank">{!v.prospectinfo.AQB__Account__r.Name}</a></span>
+                            <!-- alerts -->
+                            <!--<div class="header" style="font-size: 1.0rem; margin-left:20px;">ACCOUNT ALERTS</div>-->
+                            <aura:if isTrue="{!v.accountinfo.AQB__DoNotContact__c == true}">
+                                <img style="margin-left:25px; margin-bottom:8px; margin-top:4px;" src="/resource/DoNotContactIcon" title="Do Not Contact" />
+                            </aura:if>
+                            <aura:if isTrue="{!v.accountinfo.AQB__DoNotSolicit__c == true}">
+                                <img style="margin-left:25px; margin-bottom:8px; margin-top:4px;" src="/resource/DoNotSolicitIcon" title="Do Not Solicit" />
+                            </aura:if>
+                            <aura:if isTrue="{!v.accountinfo.AQB__AccountDefaultStatus__c == 'Lost'}">
+    						    <img style="margin-left:25px; margin-bottom:8px; margin-top:4px;" src="/resource/LostIcon" title="Permanent Address is Lost" />
+                            </aura:if>
+                            
+                            <div class="blu" style="color: #ff0000; font-weight: bold; margin-left:25px;">{!v.accountinfo.AQB__Alert__c}</div>
+                            
+                        		<!-- AQB__Capacity__c, AQB__Readiness__c <img style="margin-right:12px; margin-left:18px; margin-bottom:8px; margin-top:8px;" src="/resource/GraphicsPack/32/tangodesktopproject/theme/face-angel.png" title="The contact is deceased." />
+                                <img style="margin-right:12px; margin-bottom:8px; margin-top:8px;" src="/resource/GraphicsPack/32/tangodesktopproject/theme/dialog-error.png" title="Do NOT contact!" />
+                                <img style="margin-right:12px; margin-bottom:8px; margin-top:8px;" src="/resource/GraphicsPack/32/tangodesktopproject/theme/emblem-important.png" title="Do not solicit." />
+                                <img style="margin-right:12px; margin-bottom:8px; margin-top:8px;" src="/resource/GraphicsPack/32/fatcow/farmfresh/information.png" title="Changes are Pending, Click to see the changes." />-->
+
+                            <!-- prospect info -->
+                            <div class="header" style="font-size: 1.0rem; margin-left:20px; margin-top:10px;">PROSPECT INFORMATION</div> 
+                            <aura:if isTrue="{!v.prospectinfo.AQB__Stage__c == null}">
+                                <div style="margin-left:25px; color: #ff0000; font-weight: bold;"><ui:button label="Add to the Prospect Queue" press="{!c.ActionAddProspect}" />
+                                </div>
+                                <aura:set attribute="else">
+                                    <div class="blu" style="color: #0000ff; font-weight: bold; margin-left:25px;">{!v.prospectinfo.AQB__Stage__c}</div>
+                                    
+                                    <aura:if isTrue="{!and(v.prospectinfo.AQB__Stage__c == 'Needs Research', v.isResearcher == true)}">
+                                        <div style="margin-left:25px; color: #ff0000; font-weight: bold;">
+                                            <ui:button label="Claim for Research" press="{!c.ActionClaim4Research}" />
+                                        </div>
+                                        <aura:set attribute="else">
+                                            
+                                            <aura:if isTrue="{!and(v.prospectinfo.AQB__Stage__c == 'Research in Progress', v.isResearcher == true)}">
+                                                <div style="margin-left:25px; color: #ff0000; font-weight: bold;">
+                                                    <ui:button label="Research Complete" press="{!c.ActionResearchComplete}" />
+                                                    <ui:button label="Disqualified" press="{!c.ActionDisqualified}" />
+                                                </div>
+                                            </aura:if>
+                                            <aura:if isTrue="{!and(v.prospectinfo.AQB__Stage__c == 'Needs Manager', v.isManager == true)}">
+                                                <div style="margin-left:25px; color: #ff0000; font-weight: bold;">
+                                                    <ui:button label="Claim Prospect" press="{!c.ActionClaimProspect}" />
+                                                    <aura:if isTrue="{!v.isRecommended == 'Yes'}">
+                                                        <ui:button label="Decline Recommendation" press="{!c.DeclineRecommendation}" />
+                                                    </aura:if>
+                                                </div>
+                                            </aura:if>
+                                            
+                                            <table style="width:55%; margin-left:25px;">
+                                                <aura:if isTrue="{!and(v.prospectinfo.AQB__ResearchStartDate__c != null, v.prospectinfo.AQB__Stage__c != 'Assigned')}">
+                                                    <tr><td>Research Started On:</td><td>{!v.prospectinfo.AQB__ResearchStartDate__c}</td></tr>
+                                                    <tr><td>Research Finished On:</td><td>{!v.prospectinfo.AQB__ResearchCompletedDate__c}</td></tr>
+                                                </aura:if>
+                                                <aura:if isTrue="{!v.prospectinfo.AQB__Stage__c != 'Assigned'}">
+                                                    <tr><td>Researcher:</td><td>{!v.prospectinfo.AQB__Researcher__r.Name}</td></tr>
+                                                </aura:if>
+                                                <aura:if isTrue="{!v.prospectinfo.AQB__ProspectOwner__r.Name != null}">
+                                                    <tr><td>Assigned To:</td><td>{!v.prospectinfo.AQB__ProspectOwner__r.Name}</td></tr>
+                                                </aura:if>
+                                            </table>
+                                            
+                                        </aura:set>
+                                    </aura:if>
+                                    <br />
+                                </aura:set>
+                                
+                            </aura:if>
+                            
+                            <hr style="margin-top: 1px; margin-bottom: 1px;"/>
+                            
+                            <div aura:id="container" style="margin-left:20px;">
+                                <force:recordView recordId="{!v.accountid}" type="FULL"/>
+                            </div>
+                            <aura:set attribute="else">
+                                <br /><br /><br /><br /><br />
+                                <center>Click a prospect to view details.</center>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    
+    <div class="slds">
+        <div aria-hidden="true" role="dialog" class="slds-modal slds-modal--prompt slds-fade-in-hide" aura:id="modaldialog">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header slds-theme--info">
+                    <button class="slds-button slds-button--icon-inverse slds-notify__close" onclick="{!c.hidePopup}" style="float:right">
+                        <AQB:svg class="slds-button__icon slds-button__icon--large" xlinkHref="/resource/SLDS214/assets/icons/action-sprite/svg/symbols.svg#close">
+                        </AQB:svg>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 class="slds-text-heading--medium">Recommendations</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <div>
+                        <legend class="slds-form-element__label slds-text-title--caps">
+                            Select the Prospect Managers(s) and/or Prospect Management Group(s) to which you would like to recommend {!v.prospectinfo.AQB__Account__r.Name}.
+                        </legend>
+                        <br />
+                        <table style="width:80%;">
+                    		<tr>
+                                <td><label class="slds-form-element__label" for="pmselect">Prospect Managers</label></td>
+                                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                <td><label class="slds-form-element__label" for="groupselect">Prospect Management Groups</label></td>
+                    		</tr>
+                            <tr>
+                            	<td>
+                                    <div class="slds-select_container">
+                                    	<select id="pmselect" multiple="true" size="6" class="slds-select"></select>
+                                    </div>
+                                </td>
+                                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                <td> 
+                                    <div class="slds-select_container">
+                                    	<select id="groupselect" multiple="true" size="6" class="slds-select"></select>
+                                    </div>
+                                </td>
+                            </tr>
+                		</table>
+                        <br />
+                        <ui:button label="OK" press="{!c.savePopup}" />
+                        <ui:button label="Cancel" press="{!c.hidePopup}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slds">
+        <div aria-hidden="true" role="dialog" class="slds-modal slds-modal--prompt slds-fade-in-hide" aura:id="disqualifieddialog">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header slds-theme--info">
+                    <button class="slds-button slds-button--icon-inverse slds-notify__close" onclick="{!c.hideDisqualifedPopup}" style="float:right">
+                        <AQB:svg class="slds-button__icon slds-button__icon--large" xlinkHref="/resource/SLDS214/assets/icons/action-sprite/svg/symbols.svg#close">
+                        </AQB:svg>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 class="slds-text-heading--medium">Disqualify</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <div>
+                        <legend class="slds-form-element__label slds-text-title--caps">
+                            Enter the reason for disqualifing {!v.prospectinfo.AQB__Account__r.Name}.
+                        </legend>
+                        <br />
+                        <table style="width:80%;">
+                    		<tr>
+                                <td> 
+                                    <ui:inputTextArea aura:id="reason" value="{!v.reason}" rows="5"/>
+                                </td>
+                            </tr>
+                		</table>
+                        <br />
+                        <ui:button label="OK" press="{!c.saveDisqualified}" />
+                        <ui:button label="Cancel" press="{!c.hideDisqualifedPopup}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+    
+</aura:component>

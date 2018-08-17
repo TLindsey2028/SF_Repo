@@ -1,0 +1,81 @@
+.THIS .slds-datepicker {
+    width : 100%;
+}
+
+.THIS .uiInputTimePicker {
+    z-index: 100000000!important;
+}
+
+.THIS .multiple-select {
+    height: 100%!important;
+}
+
+.THIS .helper-margin-right {
+    margin-right: 0.25rem!important;
+}
+
+.THIS .slds-textarea--vertical {
+  resize: vertical;
+}
+
+.THIS .uiInputDateTime .dateTime-inputTime {
+  position: relative!important;
+}
+
+.THIS .uiInputDateTime .dateTime-inputDate {
+  position: relative!important;
+}
+
+.THIS .slds-datepicker {
+    font-size: .875rem!important;
+}
+
+.THIS .slds-datepicker::-ms-clear {
+    display: none;
+}
+
+.THIS .slds-form-element__custom_label {
+    display: inline-block;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    margin-right: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+.THIS .slds-picklist-button, .THIS .slds-form-element__control, .THIS .slds-picklist-drop-down {
+    width: 100%!important;
+    max-width: 100%!important;
+}
+
+.THIS .slds-picklist-drop-down {
+    margin-top: 0!important;
+}
+
+.THIS .multi-picklist-field.disabled {
+    cursor: not-allowed!important;
+    opacity: 0.5!important;
+}
+
+.THIS .slds-picklist-button, .THIS .slds-form-element__control {
+    width: 100%;
+}
+
+.THIS .slds-button-picklist {
+    padding-left: 1rem!important;
+    padding-right: 1rem!important;
+    vertical-align: middle!important;
+    border: 1px solid #d8dde6!important;
+    background-color: white!important;
+    height: 36px!important;
+}
+
+.THIS .slds-picklist {
+    height: 36px!important;
+}
+
+@media (max-width: 48em) {
+    .THIS .address-label {
+        position: relative;
+        bottom: -1.85rem;
+    }
+}

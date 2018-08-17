@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="StatusChangedEvent">
+    <aura:attribute name="currentStatus" type="String" required="true"/>
+</aura:event>

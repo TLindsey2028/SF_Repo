@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="PaymentMethodChangeEvent" access="global">
+    <aura:attribute name="methodId" type="String" required="true"/>
+    <aura:attribute name="lightningComponent" type="String"/>
+    <aura:attribute name="showCustomButton" type="Boolean" default="false"/>
+</aura:event>

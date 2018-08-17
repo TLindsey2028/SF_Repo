@@ -1,0 +1,85 @@
+<aura:component description="EventData" controller="OneClick.DataCreationController" extends="Framework:BaseComponent">
+    <aura:registerEvent name="ComponentLoadedEvent" type="OneClick:ComponentLoadedEvent"/>
+    <aura:method name="loadedPage" action="{!c.loadedPage}"/>
+    <style>
+        .noSidebarCell { padding: 0!important; }
+        .slds-table thead th, .slds-table {
+	        background-color: rgb(250, 250, 249)!important;
+        }
+        .slds-grid.slds-grid_vertical {
+            padding-top: 3%;
+        }
+    </style>
+    <div class="slds-container_medium slds-container_center">
+        <div class="slds-grid slds-grid_vertical">
+            <div class="slds-grid slds-grid_vertical slds-m-bottom_large">
+                <div class="slds-text-heading_medium slds-m-bottom_large">
+                    <strong>Before running the script please make sure;</strong>
+                </div>
+                <ul class="slds-list_dotted">
+                    <li>Org has <b>Community</b> setup. At least one community is required for setup.</li>
+                    <li>Install Scripts run successfully for Fonteva Packages, all the Objects are registered, Routing Rules are created etc</li>
+                    <li>Charge <b>App Preferences</b> are populated with default values (eBusiness User/Profile Preferences)</li>
+                    <li>FLS (Field Level Security) is set for all Fonteva Packages (Including OneClick)</li>
+                </ul>
+            </div>
+            <div class="slds-grid slds-grid_vertical slds-m-bottom_large">
+                <div class="slds-text-heading_medium slds-m-bottom_large">
+                    <strong>Following records will be created;</strong>
+                </div>
+                <ul class="slds-list_dotted">
+                    <li>Store, Site, Theme, Business Group, Payment Gateway</li>
+                    <li>Event Categories, Events, Event Site Categories</li>
+                    <li>Event Statuses and Pages (with Components)</li>
+                    <li>Ticket Types</li>
+                    <li>Schedule Items</li>
+                    <li>Speakers</li>
+                    <li>Venues</li>
+                    <li>Sponsor Packages, Sponsors</li>
+                    <li>Sections, Seats</li>
+                </ul>
+            </div>
+            <div class="slds-p-around_small slds-text-align_center">
+                <Framework:Button onClickAction="{!c.createData}"
+                                  type="brand"
+                                  label="Create Data"
+                                  aura:id="createDataBtn"/>
+
+                <lightning:button variant="destructive" onclick="{!c.openModal}">Clear</lightning:button>
+            </div>
+        </div>
+
+        <!-- MODAL -->
+        <div class="slds-modal" aura:id="modal">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <button class="slds-button slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.closeModal}">
+                        <lightning:icon iconName="utility:close" size="medium"/>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 class="slds-text-heading_medium slds-hyphenate">Are You Sure?</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <h3 class="slds-text-heading_medium slds-hyphenate" style="font:page-header-title-font-weight;">
+                        This will delete all the test data created including setup objects</h3>
+                        <b>Store, Site, Business Group, Theme , Payment Gateway </b>
+                        , Event Categories, Events, Ticket Types, Schedule Items, Venues, Speakers, Sponsors, Sponsor Packages
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.closeModal}">Cancel</button>
+
+                    <Framework:Button onClickAction="{!c.cleanData}"
+                                      type="destructive"
+                                      label="Yes, Delete All Test Data!"
+                                      aura:id="cleanDataBtn"/>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL -->
+
+        <div class="slds-backdrop slds-backdrop" aura:id="backdrop"></div>
+
+        <Framework:Toast aura:id="toastMessages"/>
+    </div>
+
+</aura:component>

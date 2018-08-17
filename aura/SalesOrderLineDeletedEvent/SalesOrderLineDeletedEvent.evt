@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="SalesOrderLineDeletedEvent" access="global">
+  <aura:attribute name="solId" type="String" access="global" description="sol to be deleted"/>
+  <aura:attribute name="so" type="Map" access="global" description="updated salesorder obj"/>
+</aura:event>

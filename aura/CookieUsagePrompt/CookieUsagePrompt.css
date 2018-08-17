@@ -1,0 +1,12 @@
+.THIS.fonteva-portal .slds-button {
+    height: 38px;
+    width: 150px;
+}
+
+.THIS .slds-modal__close {
+    display: none!important;
+}
+
+.THIS.fonteva-portal button.slds-button {
+    padding: 0px 24px;
+}

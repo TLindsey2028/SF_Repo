@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="FormSubmittedEvent">
+  <aura:attribute name="formIdentifier" type="String" required="true"/>
+  <aura:attribute name="formResponseId" type="String"/>
+  <aura:attribute name="formComplete" type="Boolean" default="false"/>
+</aura:event>

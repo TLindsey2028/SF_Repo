@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="HashChangingEvent">
+    <aura:attribute access="public" name="hash" type="String"/>
+</aura:event>

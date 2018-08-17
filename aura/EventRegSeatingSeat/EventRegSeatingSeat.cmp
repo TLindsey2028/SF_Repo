@@ -1,0 +1,32 @@
+<aura:component description="EventRegSeatingSeat" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="seat" type="Object" required="true"/>
+    <aura:attribute name="seatsAssignedOtherTickets" type="Map"/>
+    <aura:attribute name="seatPurchased" type="Boolean" default="false"/>
+    <aura:attribute name="ticket" type="Object" required="true"/>
+    <aura:attribute name="ticketsToAssign" type="Integer"/>
+    <aura:registerEvent name="SeatSelectedEvent" type="LTE:SeatSelectedEvent"/>
+    <aura:handler event="LTE:TicketSeatingFulfilledEvent" action="{!c.handleTicketSeatingFulfillmentEvent}"/>
+    <div class="slds-size--1-of-1 slds-medium-size--1-of-3 slds-large-size--1-of-4 slds-p-around--small">
+        <div class="{!or(v.seat.isAssigned,v.seat.isDisabled) ? 'slds-box slds-box--small slds-theme--shade' : 'slds-box slds-box--small slds-theme--default'}">
+            <div class="slds-grid slds-grid--vertical">
+                <div class="slds-grid slds-grid--align-spread">
+                    <div class="slds-grid slds-grid--vertical slds-grid--vertical-align-stretch">
+                        <div class="slds-m-bottom--xx-small">{!v.ticket.name}</div>
+                        <div>{!v.seat.name}</div>
+                    </div>
+                    <div>
+                        <div>
+                            <div class="slds-checkbox--add-button slds-checkbox--add-button-small">
+                                <input aura:id="seatId" type="checkbox" class="slds-assistive-text" id="{!v.seat.id}" onchange="{!c.seatAssignChanged}"/>
+                                <label for="{!v.seat.id}" class="slds-checkbox--faux">
+                                    <span class="slds-assistive-text">Add Seat</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

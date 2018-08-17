@@ -1,0 +1,115 @@
+<aura:component controller="Framework.RollUpIssueIdentifier">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:attribute name="healthCheckObjBadRsfs" type="Object" default="{}" description="Health Check Object"/>
+	<aura:attribute name="healthCheckObjhalfBadRsfs" type="Object" default="{}" description="Health Check Object"/>
+	<aura:attribute name="healthCheckObjduplicateRsfs" type="Object" default="{}" description="Health Check Object"/>
+	<aura:attribute name="healthCheckObjbadChildObjects" type="Object" default="{}" description="Health Check Object"/>
+	<aura:registerEvent name="ComponentLoadedEvent" type="Framework:ComponentLoadedEvent"/>
+	<div class="fonteva-pulse--wrapper">
+
+        <div class="slds-card slds-col slds-theme--default">
+            <div class="slds-card__body slds-p-horizontal--medium">
+				<div class="slds-grid slds-grid--vertical">
+                    <div class="slds-grid slds-m-bottom--small">
+                        <div class="slds-m-right--small">
+                            <a href="javascript:void(0)" class="slds-text-link--reset" onclick="{!c.collapseList}" id="dataTableDownBtn">
+                                <lightning:icon iconName="utility:down" size="x-small"/>
+                            </a>
+                            <a href="javascript:void(0)" class="slds-text-link--reset hide" onclick="{!c.collapseList}" id="dataTableRightBtn">
+                                <lightning:icon iconName="utility:right" size="x-small"/>
+                            </a>
+                        </div>
+                        <div class="slds-col">
+                            <div class="slds-text-heading--small">
+                                Roll Up Summary Data
+                                <div class="slds-col slds-size--2-of-2">
+                                    <div class="slds-text-body--small">
+                                        <div>
+                                            &nbsp;
+                                            <p></p>
+                                            Your values in these settings provides the standards for rollup summary data.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fonteva-object--custom"></div>
+					<div class="slds-grid">
+                        <div class="fonteva-object--custom"></div>
+                        <div id="dataTable" class="slds-grid slds-grid--vertical">
+							<div>
+								<span class="{!v.healthCheckObjBadRsfs != 0 ? 'slds-grid' : 'slds-hide'}">
+									<div class="slds-m-right--small">
+										<a href="javascript:void(0)" class="slds-text-link--reset">
+											<lightning:icon iconName="utility:warning" size="x-small"/>
+										</a>
+									</div>
+									<div class="slds-col">
+										<strong>Rollup Summaries that cause Framework: Too many query rows:50001:</strong>
+										&nbsp;{!v.healthCheckObjBadRsfs}
+									</div>
+								</span>
+                                <span class="{!v.healthCheckObjBadRsfs == 0 ? 'slds-grid' : 'slds-hide'}">
+									<div class="slds-m-right--small">
+										<a href="javascript:void(0)" class="slds-text-link--reset">
+											<lightning:icon iconName="utility:like" size="x-small"/>
+										</a>
+									</div>
+									<div class="slds-col">
+										<strong>Rollup Summaries that cause Framework: Too many query rows:50001:</strong>&nbsp;{!v.healthCheckObjBadRsfs}
+									</div>
+								</span>
+							</div>
+                            <div>
+								<span class="{!v.healthCheckObjduplicateRsfs != 0 ? 'slds-grid' : 'hidden'}">
+									<div class="slds-col">
+										<strong>Duplicate Rollup Summaries:</strong>
+										{!v.healthCheckObjduplicateRsfs}
+									</div>
+								</span>
+                                <span class="{!v.healthCheckObjduplicateRsfs == 0 ? 'slds-grid' : 'hidden'}">
+									<div class="slds-m-right--small">
+										<a href="javascript:void(0)" class="slds-text-link--reset">
+											<lightning:icon iconName="utility:like" size="x-small"/>
+										</a>
+									</div>
+									<div class="slds-col">
+										<strong>Duplicate Rollup Summaries:</strong>&nbsp;
+										{!v.healthCheckObjduplicateRsfs}
+									</div>
+								</span>
+                            </div>
+                            <div>
+								<span class="{!v.healthCheckObjbadChildObjects != '[]' ? 'slds-grid' : 'hidden'}">
+									<div class="slds-m-right--small">
+										<a href="javascript:void(0)" class="slds-text-link--reset">
+											<lightning:icon iconName="utility:warning" size="x-small"/>
+										</a>
+									</div>
+									<div class="slds-col">
+										<strong>Rollups with reference to Child Objects that have too many query rows error:</strong>
+										{!v.healthCheckObjbadChildObjects}
+									</div>
+								</span>
+                                <span class="{!v.healthCheckObjbadChildObjects[0] == null ? 'slds-grid' : 'hidden'}">
+									<div class="slds-m-right--small">
+										<a href="javascript:void(0)" class="slds-text-link--reset">
+											<lightning:icon iconName="utility:like" size="x-small"/>
+										</a>
+									</div>
+									<div class="slds-col">
+										<strong>Rollups with reference to Child Objects that have too many query rows error:</strong>&nbsp;
+										{!v.healthCheckObjbadChildObjects}
+									</div>
+								</span>
+                            </div>
+
+                        </div>
+					</div>
+				</div>
+            </div>
+        </div>
+		<Framework:Toast aura:id="toastMessages"/>
+	</div>
+</aura:component>

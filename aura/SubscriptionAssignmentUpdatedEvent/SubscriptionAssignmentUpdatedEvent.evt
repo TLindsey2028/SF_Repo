@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="SubscriptionAssignmentUpdatedEvent">
+    <aura:attribute name="salesOrderLine" type="String" required="true"/>
+    <aura:attribute name="assignmentsComplete" type="Boolean" required="true"/>
+</aura:event>

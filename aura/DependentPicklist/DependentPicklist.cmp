@@ -1,0 +1,51 @@
+<aura:component description="DependentPicklist" controller="Framework.DependentPicklistInputController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="value" default="{}" type="Object"/>
+    <aura:attribute name="required" type="Boolean" default="false"/>
+    <aura:attribute name="objectName" type="String"/>
+    <aura:attribute name="controllingField" type="String"/>
+    <aura:attribute name="dependentField" type="String"/>
+    <aura:attribute name="dependentFieldLabel" type="String" default=""/>
+    <aura:attribute name="isDependentDisable" type="Boolean" default="true"/>
+    <aura:attribute name="dependentFieldRequired" type="Boolean" default="false"/>
+    <aura:attribute name="picklistOptions" type="Object" description="Picklist options where the key is the controlling field"/>
+    <aura:handler name="change" value="{!v.picklistOptions}" action="{!c.picklistChangeEvent}"/>
+    <aura:method name="setErrorMessages" action="{!c.setErrorMessages}"
+                 description="Error Message For Field">
+        <aura:attribute name="errorMessages" type="Array" default="[]" description="Error Message"/>
+    </aura:method>
+    <aura:method name="clearErrorMessages" action="{!c.clearErrorMessages}"
+                 description="Error Message For Field">
+    </aura:method>
+    <aura:method name="loadExistingValue" action="{!c.loadExistingValue}"
+                 description="Load Existing Value">
+    </aura:method>
+    <aura:method name="clearExistingValue" action="{!c.clearExistingValue}"
+                 description="Clear Existing Value">
+    </aura:method>
+    <aura:method name="reInitializeComponent" action="{!c.reInitialize}"
+                 description="reInitialize">
+    </aura:method>
+    <div class="slds-col slds-grid slds-m-bottom--medium" aura:id="codeEditorInput">
+        <div class="slds-col slds-size--1-of-1">
+            <!--Controller Field-->
+            <div class="slds-form-element slds-m-bottom--small">
+                <div class="slds-select_container">
+                    <ui:inputSelect aura:id="primary" class="slds-select" change="{!c.onControllerFieldChange}" />
+                </div>
+                <Framework:ValidationErrorMessages aura:id="errorInput"/>
+            </div>
+
+            <!--Dependent Field-->
+            <label class="slds-form-element__label" for="select-01">
+                <aura:if isTrue="{!v.dependentFieldRequired}">
+                    <abbr class="slds-required" title="required" aura:id="drag-required-asterisk">*</abbr>
+                </aura:if>
+                {!v.dependentFieldLabel}
+            </label>
+            <div class="slds-select_container">
+                <ui:inputSelect aura:id="dependent" disabled="{!v.isDependentDisable}" class="slds-select" change="{!c.onDependentFieldChange}" />
+            </div>
+        </div>
+    </div><!-- /.slds-col -->
+</aura:component>

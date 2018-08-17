@@ -1,0 +1,35 @@
+.THIS .speaker-chevron svg use{
+    fill : #aeaeae;
+    transition: fill .25s ease-in-out;
+}
+
+.THIS .speaker-add svg use{
+    fill : white
+}
+
+.THIS .speaker-content {
+    padding-bottom: 20px;
+    padding-top: 30px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+.THIS .slds-modal__header--empty {
+    padding: 0!important;
+    border-bottom: none!important;
+}
+
+.THIS .slds-grid--align-space-between {
+    height: 100%;
+    align-content: space-between!important;
+}
+
+.THIS .slds-modal__content:focus {
+    outline: none;
+}
+
+.THIS .fonteva-img_speaker {
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}

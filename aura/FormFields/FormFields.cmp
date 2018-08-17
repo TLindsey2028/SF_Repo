@@ -1,0 +1,50 @@
+<aura:component description="FormFields">
+	<ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2 + '/js/lodash.min.js'}"/>
+	<aura:attribute name="fields" type="Map[]" default="[]" />
+  <aura:attribute name="values" type="Map" default="{}"/>
+  <aura:attribute name="fireChangeEvent" default="true" type="Boolean"/>
+  <aura:attribute name="secondaryGroup" type="String"/>
+  <aura:attribute name="isValidated" type="Boolean" default="false"/>
+	<aura:attribute name="dependenciesMap" type="Map" default="{}"/>
+  <aura:method name="validate" action="{!c.validate}"/>
+	<aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdatedEvent}"/>
+
+  <aura:iteration items="{!v.fields}" var="field">
+    <aura:if isTrue="{!and(field.fieldType != 'Instructional Text', field.fieldType != 'Section Header')}">
+      <div class="{!field.isHidden ? 'hidden' : ('slds-form--item ' + field.fieldSize)}">
+          <Framework:InputFields aura:id="value"
+                                  fieldType="{!field.fieldType}"
+                                  label="{!field.name}"
+                                  suppressValidationMessages="false"
+                                  isRequired="{!field.isRequired}"
+                                  helpText="{!field.helpText}"
+                                  fireChangeEvent="{!v.fireChangeEvent}"
+                                  group="{!field.fieldGroup}"
+                                  secondaryGroup="{!v.secondaryGroup}"
+                                  value="{!v.values}"
+                                  selectOptions="{!field.selectOptions}"
+                                  otherAttributes="{!field.otherAttributes}"
+                                  secondaryId="{!field.fieldId}"
+                                  styleClasses="{!field.additionalClasses}"
+                                  useSecondaryId="true"/>
+        </div>
+    </aura:if>
+    <aura:if isTrue="{!field.fieldType == 'Section Header'}">
+      <div data-secondary-id="{!field.fieldId}"
+           id="secondaryFieldId"
+           data-secondary-group="{!v.secondaryGroup}"
+           class="{!(field.isHidden ? 'hidden' : '') + ' slds-form--item slds-text-heading--medium slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-bottom--x-small slds-col--rule-bottom slds-col--rule-dark'}">
+        <span class="slds-font-weight--bold slds-text-color--company-primary"> <ui:outputRichText value="{!field.name}"/></span>
+      </div>
+    </aura:if>
+	  <aura:if isTrue="{!field.fieldType == 'Instructional Text'}">
+		  <div data-secondary-id="{!field.fieldId}"
+               id="secondaryFieldId"
+		       data-secondary-group="{!v.secondaryGroup}"
+		       class="{!(field.isHidden ? 'hidden' : '') + ' slds-form--item slds-col slds-size--1-of-1 slds-medium-size--1-of-2 slds-p-bottom--x-small'}">
+		    <h2 class="slds-font-weight--bold slds-p-bottom--small'"><ui:outputRichText value="{!field.name}"/></h2>
+        <p><ui:outputRichText value="{!field.options}"/></p>
+		  </div>
+	  </aura:if>
+  </aura:iteration>
+</aura:component>

@@ -1,0 +1,148 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable" access="GLOBAL" controller="AQB.BatchPledgeWriteOffController">
+    <aura:handler name="init" action="{!c.myAction}" value="{!this}" />
+    <aura:handler event="force:showToast" action="{!c.Refresh}" />
+    <aura:dependency resource="markup://force:editRecord" type="EVENT" />
+    
+    <aura:attribute name="items" type="AQB__BatchPledgeWriteOff__c[]" access="GLOBAL" />
+    <aura:attribute name="currentSort" type="String" access="GLOBAL" />  
+    <aura:attribute name="currentOrder" type="String" access="GLOBAL" />  
+    <aura:attribute name="refresh" type="Boolean" access="GLOBAL" />  
+    <aura:attribute name="currentItemId" type="String" access="GLOBAL" />   
+    <aura:attribute name="currentItemCount" type="Integer" access="GLOBAL" />   
+    <aura:attribute name="currentAccountName" type="String" access="GLOBAL" />   
+    <aura:attribute name="newTrans" type="AQB__Transaction__c" default="{'sobjectType': 'AQB__Transaction__c'}" access="GLOBAL" />
+    <aura:attribute name="status" type="String" access="GLOBAL" />  
+	<aura:attribute name="errorMessage" type="String" access="GLOBAL" />  
+
+	<!-- Command Buttons -->
+    <div style="position: absolute; right: 15px; display: inline; top: 18px" id="deToggle">
+        <aura:if isTrue="{!and(v.status == '', v.currentItemCount != 0)}"> 
+            <ui:button label="Verify Write Offs" aura:id="verifyButton" press="{!c.verify}" />
+        </aura:if>
+        <aura:if isTrue="{!v.status == 'Verifying'}"> 
+            <ui:button label="Verifing..." disabled="true" />
+        </aura:if>
+        <aura:if isTrue="{!v.status == 'Verified'}"> 
+        	<ui:button label="Process Write Offs" aura:id="processButton" press="{!c.process}" />
+        </aura:if>
+    </div>
+    
+    <div class="slds-card">
+        <aura:if isTrue="{!v.status == 'Processing'}"> 
+    	<span style="font-weight: bold;"><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Write Off process has been started.&nbsp;&nbsp;You will receive an email when the process is complete.<br /><br /></span>
+  		<aura:set attribute="else">
+                <table class="slds-table slds-table--bordered slds-table--striped slds-table--cell-buffer">
+                    <thead>
+                        <tr class="slds-text-heading--label">
+                            <th scope="col"><span class="slds-truncate">Action</span></th>
+                            <th scope="col"><span class="slds-truncate"><a href="" id="Account" style="color: blue" onclick="{!c.sortItems}">Account</a></span></th>
+                            <th scope="col"><span class="slds-truncate"><a href="" id="Pledge" style="color: blue" onclick="{!c.sortItems}">Pledge</a></span></th> 
+                            <th scope="col"><span class="slds-truncate"><a href="" id="Transaction" style="color: blue" onclick="{!c.sortItems}">Transaction</a></span></th>
+                            <th scope="col"><span class="slds-truncate"><a href="" id="Error" style="color: blue" onclick="{!c.sortItems}">Error</a></span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <aura:iteration items="{!v.items}" var="item">
+                            <tr>
+                                <td>
+                                    <a href="{!'/' + item.Id}" target="_blank" style="color: blue">View</a>&nbsp;|&nbsp;
+                                    <a href="" id="{!item.Id}" style="color: blue" onclick="{!c.editItem}">Edit</a>&nbsp;|&nbsp;
+                                    <a href="" id="{!item.Id + '^' + item.AQB__Account__r.Name}" style="color: blue" onclick="{!c.confirmDeleteItem}">Delete</a>
+                                </td>
+                                <td>
+                                    <a href="{!'/' + item.AQB__Account__c}" target="_blank">{!item.AQB__Account__r.Name}</a>
+                                </td>
+                                <td>
+                                    <a href="{!'/' + item.AQB__PledgeId__c}" target="_blank">{!item.AQB__PledgeId__r.Name}</a>
+                                </td>
+                                <td>
+                                    <aura:if isTrue="{!item.AQB__TransactionId__c == null}"> 
+                                        <span style="color: green; font-weight: bold;" >All Outstandng Transactions</span>
+                                        <aura:set attribute="else">
+                                            <a href="{!'/' + item.AQB__TransactionId__c}" target="_blank">{!item.AQB__TransactionId__r.Name}</a>
+                                        </aura:set>
+                                    </aura:if>
+                                </td>
+                                <td>
+                                    <span style="color: Crimson; font-weight: bold;">{!item.AQB__ErrorMessage__c}</span>
+                                </td>
+                            </tr>
+                        </aura:iteration>
+                    </tbody>        
+                </table>
+            </aura:set>
+        </aura:if>
+    </div>
+    
+    <!-- Process Verification -->
+    <div class="slds">
+        <div aria-hidden="true" role="dialog" class="slds-modal slds-modal--prompt slds-fade-in-hide;" aura:id="confirmStartDialog">
+            <div id="ex8" class="slds-modal__container">
+                <div class="slds-modal__header slds-theme--info">
+                    <h2 class="slds-text-heading--medium">Process Write Offs</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <center>
+                        <span style="font-weight: bold;">
+                            You are about to begin the Write Off process.<br />
+                        	<span style="color: red;">You cannot stop the process once it has started.</span><br /><br />
+                    	</span>
+                        <legend class="slds-form-element__label">
+                        	<span style="font-weight: bold;">Please enter the following options for the write offs.</span>
+                    	</legend>
+                        <div class="slds-form-element slds-input slds-p-around_medium is-required lightningInput" data-aura-class="lightningInput">
+                            <div style="width: 210px">
+                                <span style="font-weight: bold; color: red">*</span><span class="slds-form-element__label">Write Off Notation:</span>
+                                <force:inputField value="{!v.newTrans.AQB__PledgeWriteOffNotation__c}" required="true" />
+                                <span style="font-weight: bold; color: red">*</span><span class="slds-form-element__label">Batch Date:</span>
+                                <force:inputField value="{!v.newTrans.AQB__DonorDate__c}" required="true" />
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <ui:button label="Process Write Offs" press="{!c.processWriteOffs}" />
+                        <ui:button label="Cancel" press="{!c.hideConfirmStartPopup}" />
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>    
+    
+    <!-- Delete Verification -->
+    <div class="slds">
+        <div aria-hidden="true" role="dialog" class="slds-modal slds-modal--prompt slds-fade-in-hide;" aura:id="confirmDeleteDialog">
+            <div id="ex8" class="slds-modal__container">
+                <div class="slds-modal__header slds-theme--info">
+                    <h2 class="slds-text-heading--medium">Delete Write Off</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <center>
+                        Are you sure you want to delete this Write Off for {!v.currentAccountName}?
+                        <br /><br />
+                        <ui:button label="Yes" press="{!c.deleteItem}" />
+                        <ui:button label="No" press="{!c.hideConfirmDeletePopup}" />
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>    
+    
+    <!-- Error Notification -->
+    <div class="slds">
+        <div aria-hidden="true" role="dialog" class="slds-modal slds-modal--prompt slds-fade-in-hide;" aura:id="errorDialog">
+            <div id="err1" class="slds-modal__container">
+                <div class="slds-modal__header slds-theme--info">
+                    <h2 class="slds-text-heading--medium"><span style="font-weight: bold;">Error</span></h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <center>
+                        <span style="font-weight: bold; font-size: larger;">{!v.errorMessage}</span>
+                        <br /><br />
+                        <ui:button label="OK" press="{!c.hideErrorPopup}" />
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+</aura:component>

@@ -1,0 +1,393 @@
+<aura:component controller="Framework.AdminRollupsController">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:registerEvent name="InputFieldValidationEvent" type="Framework:InputFieldValidationEvent"/>
+	<aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+	<aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+
+	<!-- LOCAL ATTRIBUTES -->
+	<aura:attribute name="rollupToDelete" type="String" default=""/>
+	<aura:attribute name="operations" type="List" default="[]" description="List of Operations"/>
+	<aura:attribute name="allObjects" type="List" default="[]" description="All Objects" />
+	<aura:attribute name="rollups" type="List" default="[]" description="List of Rollups"/>
+	<aura:attribute name="childObjects" type="List" default="[]" description="Child Objects"/>
+	<aura:attribute name="parentFields" type="List" default="[]" description="Parent Fields"/>
+	<aura:attribute name="childRelationshipFields" type="List" default="[]" description="Child Relationship Fields"/>
+	<aura:attribute name="childFields" type="List" default="[]" description="Child Fields"/>
+	<aura:attribute name="removeLabel" type="String" default="{!$Label.Framework.Remove}" description="Remove Label"/>
+	<aura:attribute name="modalHeader" type="String" default="" description="Modal Header"/>
+	<aura:attribute name="loading" type="Boolean" default="true" description="Modal header"/>
+	<aura:attribute name="loadingRows" type="List" default="[1,2,3,4,5]" description="Modal header"/>
+	<aura:attribute name="rollupToEditId" type="String"/>
+
+
+	<div class="slds-medium-size--3-of-4 slds-size--1-of-1 slds-grid slds-wrap">
+		<div class="slds-col slds-size--1-of-1">
+			<div class="slds-page-header">
+				<div class="slds-media slds-media--center">
+					<div class="slds-media__figure slds-ie-fix--width__icon">
+						<img src="//fonteva-cdn.s3.amazonaws.com/framework-admin/RollupSummaryFields/RollupSummaryFields.svg" style="height:50px;" alt="Placeholder" />
+					</div>
+					<!-- /.slds-media__figure -->
+					<div class="slds-media__body">
+						<nav role="navigation">
+							<p id="bread-crumb-label" class="slds-assistive-text">Dashboard:</p>
+							<ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+								<li class="slds-list__item slds-text-heading--label">
+									<a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.showComponent}" data-name="Framework:SparkAdminSidebar" >
+						  {!$Label.Framework.Dashboard}
+									</a>
+								</li>
+							</ol>
+						</nav>
+						<div class="slds-text-heading--medium">
+					{!$Label.Framework.Rollup_Summary_Fields}
+						</div>
+					</div>
+					<Framework:Button onClickAction="{!c.createNewRollup}"
+										aura:id="newRollupBtn"
+										type="brand"
+										label="New Rollup Summary Field"
+										additionalClasses="fonteva-button_reverse new-rollup-summary"
+										svgContainerClass="slds-button__icon_left"
+										lightningIcon="utility:add"
+										lightningIconSize="x-small"
+										lightningIconVariant="inverse"
+										svgAssistiveText="{!$Label.Framework.New_Rollup_Summary_Fields}" />
+					<!-- /.slds-media__body -->
+				</div>
+				<!-- /.slds-media -->
+			</div>
+			<!-- /.slds-page-header -->
+			<!-- <apex:insert name="main"/> -->
+			<div aura:id="mainBody" class="slds-object-height--full__nofooter slds-scrollable--y">
+				<div class="slds-grid slds-wrap">
+          <span class="slds-object--full__width">
+            <table class="slds-table slds-table--bordered">
+              <thead class="slds-col-rule--bottom">
+                <tr class="slds-text-heading--label">
+                  <th scope="col">
+                    <span class="slds-truncate">{!$Label.Framework.Enabled}</span>
+                  </th>
+                  <th scope="col">
+                    <span class="slds-truncate">{!$Label.Framework.Batched}</span>
+                  </th>
+                  <th scope="col">
+                    <span class="slds-truncate">{!$Label.Framework.Name}</span>
+                  </th>
+                  <th scope="col">
+                    <span class="slds-truncate">{!$Label.Framework.Admin_Rollups_Description}</span>
+                  </th>
+                  <th scope="col">
+                    <span class="slds-truncate">{!$Label.Framework.Actions}</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                  <aura:if isTrue="{!v.loading}">
+                  <aura:iteration items="{!v.loadingRows}" var="object">
+                      <tr class="row-loading-span">
+                      <td>
+                          <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                      </td>
+                      <td>
+                          <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                      </td>
+                      <td>
+                          <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                      </td>
+                      <td>
+                          <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                      </td>
+                      <td>
+                          <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                      </td>
+                  </tr>
+              </aura:iteration>
+                  <aura:set attribute="else">
+                <aura:iteration items="{!v.rollups}" var="r">
+                  <tr class="slds-hint-parent">
+                    <td data-label="enabled" class="slds-truncate">
+                      <aura:if isTrue="{!r.isEnabled}">
+                        <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                        <aura:set attribute="else">
+                          <lightning:icon iconName="utility:warning" size="x-small" alternativeText="Disabled"/>
+                        </aura:set>
+                      </aura:if>
+                    </td>
+                    <td data-label="batched" class="slds-truncate">
+                      <aura:if isTrue="{!r.enableBatching}">
+                        <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                        <aura:set attribute="else">
+                          <lightning:icon iconName="utility:warning" size="x-small" alternativeText="Disabled"/>
+                        </aura:set>
+                      </aura:if>
+                    </td>
+                    <td data-label="name">
+                      <div class="slds-truncate">
+                        <p class="{!r.isEnabled}">  {!r.parentSObject} ({!r.parentField})</p>
+                      </div>
+                    </td>
+                    <td data-label="description" class="slds-truncate">
+                      Calculated from the <strong>{!r.operation}</strong> of the {!r.childFieldName} field on the {!r.childSObjectName} object.
+                    </td>
+                    <td data-label="">
+                      <span class="slds-truncate">
+                        <div class="slds-dropdown-trigger">
+                          <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" aria-haspopup="true">
+                            <lightning:icon iconName="utility:down" size="x-small" alternativeText="Enabled"/>
+                          </button>
+                          <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+                            <ul class="slds-dropdown__list" role="menu">
+                              <li class="slds-dropdown__item">
+                                <a href="javascript:void(0)" data-id="{!r.configId}" onclick="{!c.runRollups}">{!$Label.Framework.Admin_Rollups_Run}</a>
+                              </li>
+                              <li class="slds-dropdown__item">
+                                <a href="javascript:void(0)" data-id="{!r.configId}" onclick="{!c.showModal}" data-type="edit">{!$Label.Framework.Edit}</a>
+                              </li>
+                              <li class="slds-dropdown__item" role="menu">
+                                <a href="javascript:void(0)" data-id="{!r.configId}" onclick="{!c.deleteRollupModal}">{!v.removeLabel}</a>
+                              </li>
+                            </ul>
+                          </div>
+													<!-- /.slds-dropdown -->
+                        </div>
+												<!-- /.slds-dropdown-trigger -->
+                      </span>
+                    </td>
+                  </tr>
+                </aura:iteration>
+            </aura:set>
+            </aura:if>
+              </tbody>
+            </table>
+          </span>
+				</div>
+			</div>
+		</div>
+		<!-- /.slds-col -->
+	</div>
+	<!-- /.slds-medium-size__3-of-4 -->
+	<div class="slds-modal" aura:id="modalRollupSummaryField">
+		<div class="slds-modal__container">
+			<div class="modal-content">
+				<div class="slds-modal__header">
+					<h2 class="slds-text-heading--medium" id="modal-heading-label">{!v.modalHeader}</h2>
+					<button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+						<lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+					</button><!-- /.slds-button -->
+				</div><!-- /.slds-modal__header -->
+				<form id="newConfigForm" onsubmit="{!c.saveRollup}">
+					<div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+						<div class="slds-col slds-size--1-of-1">
+							<div class="slds-form">
+
+								<!-- Parent SObject -->
+
+								<div class="slds-form-element slds-m-bottom--medium">
+									<div id="parent_sobject">
+										<label class="slds-form-element__label" for="parent_sobject__c">
+							{!$Label.Framework.Parent_SObject}
+										</label>
+										<div class="slds-form-element__control">
+											<div class="col-md-6">
+												<ui:inputSelect class="slds-select" aura:id="parentSObject" change="{!c.getParentDependentOptions}">
+													<aura:iteration items="{!v.allObjects}" var="obj">
+														<ui:inputSelectOption text="{!obj}" label="{!obj}"/>
+													</aura:iteration>
+												</ui:inputSelect>
+											</div>
+										</div><!-- /.slds-form-element__control -->
+									</div>
+								</div><!-- /.slds-form-element -->
+
+								<!-- /Parent SObject -->
+
+								<!-- Parent Field -->
+
+								<div class="slds-form-element slds-m-bottom--medium">
+									<div id="parent_field">
+										<label class="slds-form-element__label" for="parent_field__c">
+							{!$Label.Framework.Parent_Field}
+										</label>
+										<div class="slds-form-element__control">
+											<div class="col-md-6">
+												<ui:inputSelect class="slds-select" aura:id="parentField">
+													<aura:iteration items="{!v.parentFields}" var="obj">
+														<ui:inputSelectOption text="{!obj}" label="{!obj}"/>
+													</aura:iteration>
+												</ui:inputSelect>
+											</div>
+										</div><!-- /.slds-form-element__control -->
+									</div>
+								</div><!-- /.slds-form-element -->
+
+								<!-- /Parent Field -->
+
+								<!-- Child SObject -->
+
+								<div class="slds-form-element slds-m-bottom--medium">
+									<div id="child_sobject">
+										<label class="slds-form-element__label" for="child_sobject__c">
+							{!$Label.Framework.Child_SObject}
+										</label>
+										<div class="slds-form-element__control">
+											<div class="col-md-6">
+												<ui:inputSelect class="slds-select" aura:id="childSObject" change="{!c.getChildDependentOptions}">
+													<aura:iteration items="{!v.childObjects}" var="obj">
+														<ui:inputSelectOption text="{!obj}" label="{!obj}"/>
+													</aura:iteration>
+												</ui:inputSelect>
+											</div>
+										</div><!-- /.slds-form-element__control -->
+									</div>
+								</div><!-- /.slds-form-element -->
+
+								<!-- /Child SObject -->
+
+								<!-- Relationship Field -->
+
+								<div class="slds-form-element slds-m-bottom--medium">
+									<div id="relationship_field">
+										<label class="slds-form-element__label" for="relationship_field__c">
+							{!$Label.Framework.Relationship_Field}
+										</label>
+										<div class="slds-form-element__control">
+											<div class="col-md-6">
+												<ui:inputSelect class="slds-select" aura:id="relationshipField">
+													<aura:iteration items="{!v.childRelationshipFields}" var="obj">
+														<ui:inputSelectOption text="{!obj}" label="{!obj}"/>
+													</aura:iteration>
+												</ui:inputSelect>
+											</div>
+										</div><!-- /.slds-form-element__control -->
+									</div>
+								</div><!-- /.slds-form-element -->
+
+								<!-- /Relationship Field -->
+
+								<!-- Child Field -->
+
+								<div class="slds-form-element slds-m-bottom--medium">
+									<div id="child_field">
+										<label class="slds-form-element__label" for="child_field__c">
+							{!$Label.Framework.Child_Field}
+										</label>
+										<div class="slds-form-element__control">
+											<div class="col-md-6">
+												<ui:inputSelect class="slds-select" aura:id="childField">
+													<aura:iteration items="{!v.childFields}" var="obj">
+														<ui:inputSelectOption text="{!obj}" label="{!obj}"/>
+													</aura:iteration>
+												</ui:inputSelect>
+											</div>
+										</div><!-- /.slds-form-element__control -->
+									</div>
+								</div><!-- /.slds-form-element -->
+
+								<!-- /Child Field -->
+								<!-- Operation -->
+
+								<div class="slds-form-element slds-m-bottom--medium">
+									<div id="operation">
+										<label class="slds-form-element__label" for="operation__c">
+							{!$Label.Framework.Operation}
+										</label>
+										<div class="slds-form-element__control">
+											<div class="col-md-6">
+												<ui:inputSelect class="slds-select" aura:id="operation">
+													<aura:iteration items="{!v.operations}" var="obj">
+														<ui:inputSelectOption text="{!obj}" label="{!obj}"/>
+													</aura:iteration>
+												</ui:inputSelect>
+											</div>
+										</div><!-- /.slds-form-element__control -->
+									</div>
+								</div><!-- /.slds-form-element -->
+
+								<!-- /Operation -->
+								<!-- Filter -->
+
+								<div class="slds-form-element slds-m-bottom--medium">
+									<label class="slds-form-element__label" for="filter__c">
+						  {!$Label.Framework.Filter}
+									</label>
+									<div class="slds-form-element__control slds-m-bottom--medium">
+										<ui:inputText aura:id="filter" class="slds-input"/>
+									</div>
+								</div><!-- /.slds-form-element -->
+
+								<!-- /Filter -->
+
+								<!-- Enabled -->
+								<div id="is_trigger_enabled" class="slds-form-element slds-m-bottom--medium">
+									<label for="{!$Component.rules_table.is_enabled__c}" class="slds-checkbox">
+										<ui:inputCheckbox aura:id="isEnabled"  />
+										<span class="slds-checkbox--faux"></span>
+										<span class="slds-form-element__label">
+							{!$Label.Framework.Is_Enabled}
+										</span>
+									</label>
+								</div>
+								<!-- /Enabled -->
+
+								<!-- Enable Trigger -->
+								<div id="enable_trigger" class="slds-form-element slds-m-bottom--medium">
+									<label for="{!$Component.rules_table.is_enabled__c}" class="slds-checkbox">
+										<ui:inputCheckbox aura:id="enableTrigger"  />
+										<span class="slds-checkbox--faux"></span>
+										<span class="slds-form-element__label">Enable Trigger
+										</span>
+									</label>
+								</div>
+								<!-- /Enabled -->
+
+								<!-- Batching -->
+								<div id="is_batch_enabled" class="slds-form-element slds-m-bottom--medium">
+									<label for="{!$Component.rules_table.enable_batching__c}"  class="slds-checkbox">
+										<ui:inputCheckbox aura:id="enableBatching" />
+										<span class="slds-checkbox--faux"></span>
+										<span class="slds-form-element__label">
+							{!$Label.Framework.Enable_Batching}
+										</span>
+									</label>
+								</div>
+								<!-- /Batching -->
+
+								<!-- Parent Batch Size-->
+								<div class="slds-form-element slds-m-bottom--medium">
+									<label class="slds-form-element__label" for="Parent_Batch_Scope__c">
+						  {!$Label.Framework.Parent_Batch_Scope}
+									</label>
+									<div lass="slds-form-element__control slds-m-bottom--medium">
+										<ui:inputNumber aura:id="parentBatchScope" class="slds-input"/>
+									</div>
+								</div>
+								<!-- /Parent Batch Size-->
+
+								<!-- Batch Size-->
+								<div class="slds-form-element slds-m-bottom--medium">
+									<label class="slds-form-element__label" for="Parent_Batch_Scope__c">
+						  {!$Label.Framework.Child_Batch_Scope}
+									</label>
+									<div lass="slds-form-element__control slds-m-bottom--medium">
+										<ui:inputNumber aura:id="childBatchScope" class="slds-input"/>
+									</div>
+								</div>
+								<!-- /Batch Size-->
+
+							</div><!-- /.slds-form -->
+						</div><!-- /.slds-col -->
+					</div><!-- /.slds-modal__content -->
+					<div class="slds-modal__footer slds-text-align--right">
+						<a class="slds-button slds-button--neutral" onclick="{!c.closeModal}">{!$Label.Framework.Cancel}</a>
+						<button type="submit" href="javascript:void(0)" data-form="objects_table" class="slds-button slds-button--brand slds-m-left--xx-small">{!$Label.Framework.Save}</button>
+					</div><!-- /.slds-modal__footer -->
+				</form>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog .slds-modal__container -->
+	</div><!-- /.modal .slds-modal -->
+	<Framework:MessagePrompt title="Success" severity="success slds-theme--alert-texture" message="Rollup Summary has been successfully queued." showCancelButton="false" submitButtonLabel="Close" aura:id="queuedRollupMessage"/>
+	<Framework:MessagePrompt title="Delete?" severity="error slds-theme--alert-texture" message="Are you sure you want to delete?" cancelButtonLabel="Cancel" submitButtonLabel="Delete" submitOnClickAction="{!c.deleteRollups}" aura:id="deleteRollupMessage"/>
+	<div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+	<Framework:Toast aura:id="toastMessages"/>
+</aura:component>

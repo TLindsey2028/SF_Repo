@@ -1,0 +1,33 @@
+<aura:component description="PaymentMethodTab" implements="OrderApi:PaymentMethodTabInterface">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="OrderApi:PayNowTabChangeEvent" action="{!c.handlePayNowTabChangeEvent}"/>
+    <aura:handler event="OrderApi:ProcessingChangesEvent" action="{!c.handleProcessingChangesEvent}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+
+    <aura:attribute name="suppressOffsiteButtons" type="Boolean" default="true" description="Used by LTE - form is submitted via event"/>
+    <aura:attribute name="payObj" type="Map" default="{}"/>
+    <aura:attribute name="showPayment" type="Boolean" default="false"/>
+
+    <aura:method name="submit" access="public" action="{!c.handleSubmit}"/>
+    <div class="slds-col slds-size--1-of-1 slds-text-align--center slds-m-top--medium slds-hide">
+        <aura:if isTrue="{!v.paymentTabConfigObj.link != ''}">
+            <Framework:Button type="brand" aura:id="linkRedirect" onClickAction="{!c.linkRedirectAction}" label="{!v.paymentTabConfigObj.button_label}"/>
+            <aura:set attribute="else">
+                <div class="{!v.renderAsTabs ? 'slds-tabs__content tab-pane fonteva-slds-payment-tab--content' :'slds-col'}" role="tabpanel">
+                    <form accept-charset="UTF-8" action="https://core.spreedly.com/v1/payment_methods" method="POST">
+                        <input name="redirect_url" type="hidden" value="{!v.paymentTabConfigObj.callbackUrl}"/>
+                        <input name="environment_key" type="hidden" value="{!v.paymentTabConfigObj.environmentKey}"/>
+                        <div class="{!v.paymentTabConfigObj.displaySavePaymentMethod ? 'slds-col slds-grid' :'hidden'}">
+                            <div class="slds-col slds-size--1-of-1 slds-align-middle">
+                                <Framework:InputFields aura:id="savePaymentMethodCustom" fieldType="boolean" label="{!$Label.OrderApi.Save_Payment_Method_Checkbox_Label}" value="{!v.payObj}" fireChangeEvent="true" group="{!v.paymentTabConfigObj.customPaymentId}"/>
+                            </div>
+                        </div>
+                        <span class="{!and(v.showPayment, !v.suppressOffsiteButtons) ? '' : 'hidden'}">
+                            <Framework:Button type="brand" name="payment_method_type" value="{!v.paymentTabConfigObj.gatewayType}" aura:id="payOffsitePaymentBtn" onClickAction="{!c.payOffsitePayment}" label="{!v.paymentTabConfigObj.button_label}"/>
+                        </span>
+                    </form>
+                </div>
+            </aura:set>
+        </aura:if>
+    </div>
+</aura:component>

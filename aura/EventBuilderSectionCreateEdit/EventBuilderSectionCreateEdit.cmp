@@ -1,0 +1,89 @@
+<aura:component description="EventBuilderSectionCreateEdit" controller="EventApi.EventsBuilderSectionController">
+    <aura:attribute name="section" type="Map" default="{}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="identifier" type="String"/>
+    <aura:attribute name="timeout" type="String"/>
+    <aura:attribute name="eventQuantity" type="Integer"/>
+    <aura:attribute name="sectionTotal" type="Integer"/>
+	  <aura:attribute name="eventObj" type="Map" required="true"/>
+    <aura:handler event="Framework:FileUploadCropEvent" action="{!c.handleFileUploadCropEvent}"/>
+    <aura:handler event="Framework:RichTextInputFieldModalEvent" action="{!c.handleFileUploadCropEvent}"/>
+	  <aura:handler event="EventApi:StatusChangedEvent" action="{!c.handleStatusChangedEvent}"/>
+    <aura:registerEvent name="AddSelectorEvent" type="EventApi:AddSelectorEvent"/>
+    <aura:registerEvent name="ReloadSectionListing" type="EventApi:ReloadSectionListing"/>
+    <aura:method name="openModal" action="{!c.openModal}"/>
+    <aura:method name="hideModal" action="{!c.closeModal}"/>
+    <div class="slds-modal" aura:id="sectionsCreateEdit">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <h2 class="slds-text-heading--medium" id="modal-heading-label1">
+	                <aura:if isTrue="{!v.eventObj.currentEventStatus.isActive}">
+		                <div class="slds-text-heading--small">View <strong>{!v.section.name}</strong></div>
+		                <aura:set attribute="else">
+                            <aura:if isTrue="{!v.section.id == null}">
+                                <div class="slds-text-heading--small">Create Section</div>
+                                <aura:set attribute="else">
+                                    <div class="slds-text-heading--small">Edit <strong>{!v.section.name}</strong></div>
+                                </aura:set>
+                            </aura:if>
+                        </aura:set>
+	                </aura:if>
+                </h2>
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+                    <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+                </button><!-- /.slds-button -->
+            </div><!-- /.slds-modal__header -->
+            <div class="slds-modal__content">
+            <div class="slds-grid slds-wrap" id="section-create-edit-screen">
+                <div class="slds-col slds-size--2-of-3 slds-grid--vertical-stretch slds-border--right slds-border--right-custom slds-p-right--small">
+                    <div class="slds-grid slds-wrap slds-p-top--small slds-has-divider--bottom">
+                        <div class="slds-col slds-size--1-of-1">
+                            <Framework:InputFields fieldType="string" group="editor" isRequired="true" label="Name" aura:id="name" value="{!v.section}" helpText="Give a unique name for this section." maxlength="80"/>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-wrap slds-p-top--small slds-has-divider--bottom">
+                        <div class="slds-size--1-of-4">
+                            <Framework:InputFields fieldType="integer" group="editor" isRequired="true" label="Seats in Section" aura:id="seats" value="{!v.section}" helpText="The total number of seats in all sections cannot exceed the event's capacity." otherAttributes='{"min" : 1}' format="0"/>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-wrap slds-p-top--small">
+                        <div class="slds-col slds-size--1-of-1">
+                            <Framework:InputFields fieldType="fileUpload" group="editor" label="Image" aura:id="image" value="{!v.section}" helpText="Browse and select an image for this section. This image will be cropped down to the dimensions of 300px by 600px and viewable in the related event's registration flow."/>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-wrap slds-p-top--small">
+                        <div class="slds-col slds-size--1-of-1">
+                            <Framework:InputFields fieldType="richText" group="editor" label="Description" aura:id="description" value="{!v.section}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size--1-of-4">
+                    <div class="slds-grid slds-wrap slds-p-left--small slds-p-bottom--small">
+                        <div class="slds-col slds-size--1-of-1">
+                    Select a ticket type you would like to make available for sale
+                        </div>
+                    </div>
+                    <aura:iteration items="{!v.section.sectionTickets}" var="sectionTicket">
+                        <div class="slds-grid slds-wrap slds-p-left--small slds-p-bottom--xx-small">
+                            <div class="slds-col slds-size--1-of-1 slds-box slds-theme--default slds-box-tickets-custom">
+                                <Framework:InputFields group="editor" fieldType="boolean" disabled="{!v.eventObj.currentEventStatus.isActive}" label="{!sectionTicket.ticketTypeName}" aura:id="isEnabled" value="{!sectionTicket}"/>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+            </div>
+        </div>
+            <div class="slds-modal__footer slds-text-align--right">
+	            <aura:if isTrue="{!v.eventObj.currentEventStatus.isActive}">
+		            <Framework:Button type="neutral" label="Close" onClickAction="{!c.backToSections}" enableProgressIndicator="false"/>
+                    <aura:set attribute="else">
+	                    <Framework:Button type="neutral" label="Cancel" onClickAction="{!c.backToSections}" enableProgressIndicator="false"/>
+	                    <Framework:Button type="brand" label="Save" aura:id="saveClose" additionalClasses="slds-m-left--xx-small" onClickAction="{!c.saveSection}"/>
+                    </aura:set>
+                </aura:if>
+            </div><!-- /.slds-modal__footer -->
+        </div>
+    </div>
+    <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

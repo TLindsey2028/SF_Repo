@@ -1,0 +1,59 @@
+<aura:component description="MultiPicklistInputField">
+    <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/lodash.min.js'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute name="value" type="String" description="The value"/>
+    <aura:attribute name="optionSelected" type="String" description="" default="No Options Selected"/>
+    <aura:attribute name="minAllowed" type="Integer"/>
+    <aura:attribute name="maxAllowed" type="Integer"/>
+    <aura:attribute name="options" type="List"/>
+    <aura:attribute name="disabled" type="Boolean" description="Disable Input" default="false"/>
+    <aura:attribute name="noOptionsText" type="String" default="No Options Available"/>
+    <aura:attribute name="optionsText" type="String" default="Options Selected"/>
+    <aura:attribute name="optionText" type="String" default="Option Selected"/>
+    <aura:attribute name="optionsProvided" type="Boolean" default="true"/>
+    <aura:attribute name="required" type="Boolean" description="If the field is required" default="false"/>
+    <aura:attribute name="field" type="String"/>
+    <aura:attribute name="objectName" type="String"/>
+    <aura:attribute name="errors" type="List[]" default="[]"/>
+    <aura:handler event="Framework:InputFieldClearErrorMessagesEvent" action="{!c.handleInputFieldClearErrorMessagesEvent}"/>
+    <aura:method name="setErrorMessages" action="{!c.setErrorMessages}"
+                 description="Error Message For Field">
+        <aura:attribute name="errorMessages" type="Array" default="[]" description="Error Message"/>
+    </aura:method>
+    <aura:method name="loadExistingValue" action="{!c.loadExistingValue}"
+                 description="Load Existing Value">
+    </aura:method>
+    <aura:method name="clearExistingValue" action="{!c.clearExistingValue}"
+                 description="Clear Existing Value">
+    </aura:method>
+    <aura:method name="setSelectOptions" action="{!c.setSelectOptions}"
+                 description="Set Select Options">
+        <aura:attribute name="selectOptions" type="Array" default="[]" description="Select Options"/>
+    </aura:method>
+    <aura:method name="validate" action="{!c.validate}"
+                 description="Validate Field">
+    </aura:method>
+    <div class="slds-form-element__control slds-picklist slds-dropdown-trigger slds-dropdown-trigger--click" aura:id="downDownSelectList" onmouseover="{!c.openDropDown}" onmouseleave="{!c.hideDropDown}">
+        <button class="slds-button slds-button-picklist slds-picklist__label slds-picklist-button" aria-haspopup="true" onmouseover="{!c.openDropDown}" onmouseleave="{!c.hideDropDown}">
+            <span class="slds-truncate">{!v.optionSelected}</span>
+            <lightning:icon iconName="utility:down" size="xx-small"/>
+        </button>
+        <div class="slds-dropdown slds-dropdown--left slds-picklist-drop-down" onmouseover="{!c.openDropDown}" onmouseleave="{!c.hideDropDown}">
+            <ul class="slds-dropdown__list slds-dropdown--length-5" role="menu" onmouseover="{!c.openDropDown}" onmouseleave="{!c.hideDropDown}">
+                <aura:iteration items="{!v.options}" var="option">
+                    <li class="slds-dropdown__item slds-is-selected" role="presentation">
+                        <a class="{!option.isDisabled ? 'multi-picklist-field disabled' : ''}" href="javascript:void(0);" role="menuitemcheckbox" aria-checked="true" tabindex="0" onclick="{!c.toggleOption}" data-value="{!option.value}">
+                            <span class="slds-truncate slds-text-body--regular slds-col slds-grid ">
+                                <lightning:icon iconName="utility:check" size="x-small" class="{!option.isSelected ? '' : 'slds-hidden'}"/>
+                                <p class="slds-m-left--xx-small">
+                                    {!option.label}
+                                </p>
+                            </span>
+                        </a>
+                    </li>
+                </aura:iteration>
+            </ul>
+        </div>
+        <div class="fonteva-dropdown_close" onmousedown="{!c.hideDropDown}"></div>
+    </div>
+    <Framework:ValidationErrorMessages aura:id="errorInput"/>
+</aura:component>

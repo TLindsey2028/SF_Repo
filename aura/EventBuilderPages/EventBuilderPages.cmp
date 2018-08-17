@@ -1,0 +1,305 @@
+<aura:component description="EventBuilderPages" controller="EventApi.EventsBuilderController" implements="EventApi:EventBuilderTabInterface">
+    <aura:registerEvent name="AddSelectorEvent" type="EventApi:AddSelectorEvent"/>
+    <aura:handler event="EventApi:StatusChangedEvent" action="{!c.handleStatusChangedEvent}"/>
+    <aura:attribute name="pageSelectObj" type="Map" default="{}"/>
+    <aura:attribute name="accessPageSelectObj" type="Map" default="{}"/>
+    <aura:attribute name="selectedPageToEdit" type="String"/>
+    <aura:attribute name="availableBadges" type="List"/>
+    <aura:attribute name="statusPageId" type="String" access="private"/>
+    <aura:attribute name="statusPageIdToUpdate" type="String" access="private"/>
+    <aura:attribute name="currentStatusId" type="String" access="private"/>
+    <aura:attribute name="pageId" type="String" access="private"/>
+    <aura:attribute name="eventPageName" type="String" access="private"/>
+    <aura:attribute name="deleteMessage" type="String" access="private" default="Delete?"/>
+    <aura:attribute name="pageComponents" type="List" default="[]"/>
+    <aura:attribute name="pageComponentsToDelete" type="List" default="[]"/>
+    <aura:attribute name="availableComponents" type="List" default="[]"/>
+    <aura:attribute name="pagesForStatuses" type="List[]"/>
+    <aura:attribute name="createPageComponentArray" type="List" default="[]"/>
+    <aura:handler event="EventApi:SavingEvent" action="{!c.handleSavingEvent}"/>
+    <aura:handler name="change" value="{!v.eventObj}" action="{!c.eventChanged}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/Sortable.min.js'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:method name="reBuildPicklist" action="{!c.reBuildPicklist}"/>
+    <aura:attribute name="pageComponentGlobalId" type="String"/>
+    <aura:dependency resource="markup://EventApi:EventBuilderPageName"/>
+    <aura:dependency resource="markup://EventApi:EventBuilderPageComponent"/>
+    <aura:handler event="Framework:ShowComponentEvent" action="{!c.handleSwitchComponent}"/>
+    <div class="" aura:id="loader">
+        <div class="slds-grid">
+            <div class="slds-col slds-text-align--center slds-align-middle">
+                <img src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+                <span class="slds-text-heading--medium">{!$Label.EventApi.Loading_Event_Builder}</span>
+            </div>
+        </div>
+    </div>
+    <div class="hidden" aura:id="mainBody">
+    <div class="slds-col slds-size--1-of-1">
+        <div class="slds-grid slds-grid--align-spread slds-m-bottom--medium">
+            <div class="slds-col slds-align-middle">
+                <div class="slds-text-heading--small slds-m-bottom--medium">{!$Label.EventApi.Pages_Event_Builder}&nbsp;({!v.pagesForStatuses.length})</div>
+                <div class="slds-text-body--regular">
+                    {!$Label.EventApi.Pages_Description_Info_Event_Builder}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-grid slds-m-bottom--medium">
+        <span class="" aura:id="statusPicklistSpan">
+            <Framework:InputFields fieldType="picklist" group="statusPagePicklist" aura:id="statusId" label="Statuses" value="{!v.pageSelectObj}" fireChangeEvent="true"/>
+        </span>
+        <div class="slds-align-bottom slds-col--bump-left">
+            <button class="slds-button slds-button--brand add-new-page-btn" onclick="{!c.addNewPage}" aura:id="addNewPageBtn">
+                <Framework:FONSVG svgPath="{!$Resource.EventApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}" containerClass="slds-icon__container" svgClass="slds-icon slds-icon--x-small slds-button__icon--left" assistiveText="Save &amp; Close" />
+                {!$Label.EventApi.New_Page_Event_Builder}
+            </button>
+        </div>
+    </div>
+    <div class="slds-col slds-size--1-of-1">
+        <table class="slds-table slds-table--bordered slds-no-row-hover" role="grid">
+            <thead>
+            <tr class="slds-text-title--caps slds-theme--shade">
+	              <th scope="col" class="">
+		              <div title="Move">Move</div>
+                </th>
+                <th scope="col" class="">
+                    <div class="slds-truncate" title="Navigation Label">{!$Label.EventApi.Event_Builder_Navigation_Label}</div>
+                </th>
+                <th scope="col" class="">
+                    <div class="slds-truncate" title="Browser Label">{!$Label.EventApi.Event_Builder_Browser_Label}</div>
+                </th>
+                <th scope="col" class="pub-col">
+                    <div title="Published">{!$Label.EventApi.Published_Event_Builder}</div>
+                </th>
+                <th scope="col" class="">
+                    <div class="slds-truncate" title="Access Permissions">{!$Label.EventApi.Event_Builder_Access_Permissions}</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Actions">{!$Label.EventApi.Actions_Event_Builder}</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody id="page-step-container">
+            <aura:iteration items="{!v.pagesForStatuses}" var="pageForStatus" indexVar="index">
+                <tr class="page-step-type slds-theme--shade" data-id="{!pageForStatus.statusPageId}" data-name="{!pageForStatus.pageName}">
+                    <td>
+                      <div class="slds-grid slds-grid_vertical fonteva-button_pagination">
+                        <div>
+                          <lightning:buttonIcon alternativeText="up" iconName="utility:up" variant="border" disabled="{!index == 0}" onclick="{!c.moveUp}" value="{!index}"/>
+                        </div>
+	                      <div>
+                          <lightning:buttonIcon alternativeText="down" iconName="utility:down" variant="border" disabled="{!index == (v.pagesForStatuses.length - 1)}" onclick="{!c.moveDown}" value="{!index}"/>
+	                      </div>
+                      </div>
+                    </td>
+                    <td data-label="Name" class="editGrid navigation-name">
+                        <Framework:InputFields aura:id="navigationName"
+                                               value="{!pageForStatus}"
+                                               fieldType="string"
+                                               group="pageInlineFields"
+                                               fireChangeEvent="true"
+                                               labelStyleClasses="hidden"/>
+                    </td>
+                    <td data-label="Name" class="editGrid">
+                        <Framework:InputFields aura:id="pageName"
+                                               value="{!pageForStatus}"
+                                               fieldType="string"
+                                               group="pageInlineFields"
+                                               fireChangeEvent="true"
+                                               labelStyleClasses="hidden"/>
+                    </td>
+                    <td data-label="Published" class="pub-col slds-text-align--center">
+                        <Framework:InputFields
+                                aura:id="isPublished"
+                                value="{!pageForStatus}"
+                                fieldType="boolean"
+                                group="pageInlineFields"
+                                fireChangeEvent="true"
+                                labelStyleClasses="hidden"/>
+                    </td>
+                    <td data-label="Access Permissions" class="editGrid slds-grow slds-cell-wrap">
+                        {!pageForStatus.ticketTypeNames.length > 0 ? 'Tickets: ' + pageForStatus.ticketTypeNames : ''}
+                        <br class="{!and(pageForStatus.ticketTypeNames.length > 0, pageForStatus.badgeNames.length > 0) ? '' : 'slds-hide'}" />
+                        {!pageForStatus.badgeNames.length > 0 ? 'Badges: ' + pageForStatus.badgeNames : ''}
+                    </td>
+                    <td data-label="Actions" class="action-cell">
+                        <div class="slds-m-left--small slds-dropdown-trigger_hover slds-is-relative" aura:id="pageMenu">
+                            <lightning:buttonIcon iconName="utility:threedots"
+                                                  alternativeText="{!$Label.EventApi.More_Options}"
+                                                  iconClass="slds-button__icon"/>
+                            <div class="slds-dropdown slds-dropdown--right slds-m-right_small">
+                                <ul class="dropdown__list" role="menu">
+                                    <li class="slds-dropdown__item" aura:id="editPageDropdown">
+                                        <a href="javascript:void(0);" onclick="{!c.editPage}" role="menuitem" data-index="{!index}"
+                                           data-id="{!pageForStatus.pageId}">
+                                            {!$Label.EventApi.Event_Builder_Edit_Page}
+                                        </a>
+                                    </li>
+                                    <li class="slds-dropdown__item">
+                                        <a href="javascript:void(0);" role="menuitem"
+                                            data-statuspageid="{!pageForStatus.statusPageId}"
+                                           data-index="{!index}"
+                                            data-id="{!pageForStatus.pageId}" onclick="{!c.managePermissions}">
+                                            {!$Label.EventApi.Event_Builder_Access_Permissions}
+                                        </a>
+                                    </li>
+                                    <li class="slds-dropdown__item">
+                                        <a href="javascript:void(0);" role="menuitem"
+                                            data-statuspageid="{!pageForStatus.statusPageId}"
+                                           data-index="{!index}"
+                                            data-id="{!pageForStatus.pageId}" onclick="{!c.confirmDeletePage}">
+                                            {!$Label.EventApi.Event_Builder_Delete_Page}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </aura:iteration>
+            </tbody>
+        </table>
+    </div>
+    <div class="slds-modal slds-modal--large" aura:id="pagesModal">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header slds-theme--shade">
+                <div class="slds-grid">
+                    <div class="slds-m-right--small slds-m-top--xx-small">
+                        <h2 class="slds-text-heading--medium">
+                            {!v.eventPageName}
+                        </h2>
+                    </div>
+                    <div>
+                        <Framework:Button type="neutral" enableProgressIndicator="false" label="{!$Label.EventApi.Cancel}" onClickAction="{!c.closeModal}"/>
+                    </div>
+                    <div class="slds-col--bump-left">
+                        <Framework:Button type="brand" aura:id="saveClosePageObj" label="Save &amp; Close" onClickAction="{!c.saveAndClosePage}"/>
+                    </div>
+                </div>
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+                    <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+                </button>
+            </div>
+
+            <div class="slds-modal__content slds-p-around--none fonteva-height_100" id="pagesBody">
+                <div class="slds-grid fonteva-height_100">
+                    <div class="slds-size--1-of-5 slds-theme--shade fonteva-height_100 fonteva-ul_select-wrapper">
+                        <div class="slds-p-horizontal_medium fonteva-max-scrollable_y">
+                            <div class="slds-text-heading_small slds-p-vertical_small slds-border_bottom">
+                              {!$Label.EventApi.Default_Component}
+                            </div>
+                            <div class="slds-text-body--regular slds-p-around--medium">
+                              {!$Label.EventApi.Default_Component_Help_text}
+                            </div>
+                            <div class="slds-p-bottom_small" aura:id="defaultlist">
+                                <ul class="fonteva-ul_select" aura:id="pageComponents" id="componentsAvailable">
+                                    <aura:iteration items="{!v.availableComponents}" var="component">
+                                        <li data-id="{!component.value}" class="componentAvailable" data-edit="{!component.editComponentLabel}" data-label="{!component.label}" onclick="{!c.selectPageComponent}" aura:id="pageComponent">{!component.label}</li>
+                                    </aura:iteration>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="slds-text-align_center slds-p-around_medium fonteva-flex_min">
+                            <Framework:Button type="brand" aura:id="addPageComponentButton" label="Add" onClickAction="{!c.addPageComponents}" disable="true"/>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-p-horizontal--medium slds-p-vertical--small slds-scrollable_y fonteva-height_100">
+                        <div class="slds-grid slds-grid--vertical" id="selectedPageComponents">
+                            <aura:iteration items="{!v.pageComponents}" var="pageComponent" indexVar="index">
+                                <EventApi:EventBuilderPageComponent pageComponent="{!pageComponent}" deleteComponent="{!c.deleteComponent}" aura:id="selectedPageComponentSpan" index="{!index}" pageComponents="{!v.pageComponents}"/>
+                            </aura:iteration>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="slds-modal slds-modal--medium" aura:id="pageComponentModal">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header slds-theme--shade">
+                    <div class="slds-grid">
+                        <div class="slds-m-right--small">
+                            <h2 class="slds-text-heading--medium">
+                                Edit Component
+                            </h2>
+                        </div>
+                        <div>
+                        </div>
+                        <div class="slds-col--bump-left">
+                            <Framework:Button type="brand" aura:id="saveClosePageCompObj" label="Save &amp; Close" onClickAction="{!c.saveAndClosePageComponent}"/>
+                        </div>
+                    </div>
+                    <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeComponentModal}">
+                        <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse"/>
+                    </button>
+                </div>
+
+                <div class="slds-modal__content slds-p-around--none" id="pageComponentBody">
+                    <div class="slds-grid">
+                        <div class="slds-size--1-of-1 slds-scrollable--y slds-p-horizontal--medium slds-p-vertical--small">
+                            <div class="slds-grid slds-grid--vertical" aura:id="pageComponentBody">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-modal slds-modal--medium" aura:id="pageAccessPermissions">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header slds-theme--shade">
+                    <div class="slds-grid">
+                        <div class="">
+                            <h2 class="slds-text-heading--medium">
+                                Permissions For Page
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-modal__content slds-p-around--none" id="pageAccessPermissionsBody">
+                    <div class="slds-grid">
+                        <div class="slds-size--1-of-1 slds-scrollable--y slds-p-horizontal--medium slds-p-vertical--small">
+                            <div class="slds-grid slds-grid--vertical">
+                                Drag Tickets to the right to allow access to this page for those ticket holders.
+                            </div>
+                            <div class="slds-grid slds-grid--vertical" aura:id="ticketsDrag">
+                            </div>
+                            <hr class="access-divider"/>
+                            <div class="slds-grid slds-grid--vertical" aura:id="permissionBoolean">
+
+                            </div>
+                            <span class="slds-hide" aura:id="permissionsEnabled">
+                                <div class="slds-grid slds-grid--vertical">
+                                    Drag Badges to the right to allow access for those contacts with the selected badge(s).
+                                </div>
+                                <div class="slds-grid slds-grid--vertical" aura:id="accessPermissionsDrag">
+
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <Framework:Button type="neutral" enableProgressIndicator="false" label="Cancel" onClickAction="{!c.closeAPModal}"/>
+                    <Framework:Button type="brand" label="Save &amp; Close" aura:id="badgesSave" onClickAction="{!c.saveBadgesForPages}"/>
+                </div>
+            </div>
+        </div>
+    <Framework:Toast aura:id="toastMessages"/>
+        <Framework:MessagePrompt aura:id="permissionsTicketsModal" title="Cannot Set Components or Permissions" message=""
+                                 severity="clear"
+                                 closeOnClickAction="{!c.closeModal}"
+                                 showSubmitButton="false"/>
+        <span class="deletePrompt">
+        <Framework:MessagePrompt aura:id="deleteModal" title="Delete Page" message=""
+                                 severity="clear"
+                                 submitButtonLabel="Delete"
+                                 submitOnClickAction="{!c.deletePage}"
+                                 closeOnClickAction="{!c.closeModal}"
+                                 cancelButtonLabel="{!$Label.EventApi.Cancel}"/>
+        </span>
+    <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+    </div>
+</aura:component>

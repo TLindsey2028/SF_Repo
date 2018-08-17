@@ -1,0 +1,68 @@
+<aura:component description="PackageItemDetails" controller="ROEApi.PackageItemDetailsController">
+    <aura:attribute name="parentSalesOrderLine" type="String" required="true"/>
+    <aura:attribute name="salesOrder" type="String" required="true"/>
+    <aura:attribute name="customerId" type="String" required="true"/>
+    <aura:attribute name="item" type="String" required="true"/>
+    <aura:attribute name="packageItems" type="List" default="[]" />
+    <aura:attribute name="currencyISOCode" type="String" default="USD" />
+    <aura:attribute name="isMultiCurrencyOrg" type="Boolean" default="false" />
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:registerEvent name="PackageItemCompTotalUpdateEvent" type="ROEApi:PackageItemCompTotalUpdateEvent"/>
+    <aura:registerEvent name="TogglePackageItemTableEvent" type="ROEApi:TogglePackageItemTableEvent"/>
+    <aura:handler event="ROEApi:PackageItemTotalUpdateEvent" action="{!c.handlePackageItemTotalUpdateEvent}"/>
+    <aura:attribute name="uniqueIdentifier" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="ROEApi:PackageItemPriceHeadingEvent" action="{!c.handlePriceOverrideEvent}"/>
+    <div class="slds-size--1-of-1 slds-p-around--medium slds-hide" aura:id="packageItemTable">
+        <div class="slds-grid slds-grid--align-spread slds-grid--pull-padded slds-m-bottom--medium">
+            <div class="slds-col--padded">
+                    <span class="slds-text-heading--small">
+                        {!$Label.ROEApi.Optional_Package_Items}
+                    </span>
+            </div>
+            <div class="slds-col--padded slds-text-align--right">
+                    <span class="slds-text-heading--small">
+                        <Framework:CurrencyField aura:id="packageTotalPrice" value="0" currencyISOCode="{!v.currencyISOCode}" isMultiCurrencyOrg="{!v.isMultiCurrencyOrg}"/>
+                    </span>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--1-of-1">
+                <table class="slds-table slds-table--bordered slds-no-row-hover">
+                    <thead>
+                    <tr class="slds-text-heading--label">
+                        <th class="slds-cell-shrink"></th>
+                        <th class="slds-size--1-of-4">Package item</th>
+                        <th class="slds-size--1-of-4">Quantity</th>
+                        <th class="slds-size--1-of-4">Price Rule</th>
+                        <th class="slds-cell-shrink"><span class="slds-hidden" aura:id="newPriceHeading">{!$Label.ROEApi.Package_Items_New_Price}</span></th>
+                        <th class="slds-cell-shrink"></th>
+                    </tr>
+                    </thead>
+                    <aura:if isTrue="{!v.packageItems.length > 0}">
+                        <tbody>
+                            <aura:iteration var="item" items="{!v.packageItems}">
+                                <ROEApi:PackageItemRow salesOrder="{!v.salesOrder}" item="{!item}" currencyISOCode="{!v.currencyISOCode}" isMultiCurrencyOrg="{!v.isMultiCurrencyOrg}" parentSalesOrderLine="{!v.parentSalesOrderLine}"/>
+                            </aura:iteration>
+                        </tbody>
+                    </aura:if>
+                </table>
+                <aura:if isTrue="{!v.packageItems.length == 0}">
+                    <table class="slds-table slds-table--bordered slds-no-row-hover slds-border-top--none">
+                        <tbody>
+                            <tr>
+                                <td>{!$Label.ROEApi.Package_Items_No_Package_Item_Added}</td>
+                                <td></td>w
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </aura:if>
+            </div>
+        </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

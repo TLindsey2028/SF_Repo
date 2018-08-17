@@ -1,0 +1,170 @@
+<aura:component description="EventRegistrationTicket" controller="LTE.EventRegistrationController">
+    <aura:attribute name="ticket" type="Object" required="true"/>
+    <aura:attribute name="ticketPurchaseObj" type="Object" required="true"/>
+    <aura:attribute name="isTicketBlock" type="Boolean" default="false"/>
+    <aura:attribute name="showTextInput" type="Boolean" default="false"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldChangeEvent}"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:handler event="ResetTicketQuantityPicklistEvent" action="{!c.handleResetTicketQuantityPicklistEvent}"/>
+    <aura:registerEvent name="EventRegistrationFlowDetailsEvent" type="LTE:EventRegistrationFlowDetailsEvent"/>
+    <aura:registerEvent name="ButtonToggleIndicatorEvent" type="Framework:ButtonToggleIndicatorEvent"/>
+    <aura:attribute name="regFlowDetailsCmpGlobalId" type="String"/>
+    <aura:attribute name="usr" type="Map"/>
+    <aura:attribute name="attendeeObj" type="Map" access="global"/>
+    <aura:attribute name="eventObj" type="Map" access="global"/>
+    <aura:attribute name="storeObj" type="Map" access="global"/>
+    <aura:attribute name="salesOrderObj" type="Map" access="global"/>
+    <aura:attribute name="showRegisterButton" type="Boolean" default="true" access="global"/>
+    <aura:attribute type="Boolean" name="isPreview"/>
+    <aura:attribute name="siteObj" type="Map"/>
+    <aura:registerEvent name="RegistrationProcessSetGlobalObjectsEvent" type="LTE:RegistrationProcessSetGlobalObjectsEvent"/>
+    <aura:registerEvent name="EventSummaryUpdateEvent" type="LTE:EventSummaryUpdateEvent"/>
+    <aura:attribute name="readOnly" type="Boolean" default="true"/>
+    <aura:handler event="LTE:UpdateButtonEvent" action="{!c.handleUpdateButtonEvent}"/>
+    <aura:registerEvent name="UpdateButtonEvent" type="LTE:UpdateButtonEvent"/>
+    <aura:handler event="LTE:UpdateShoppingCartItemCountEvent" action="{!c.handleUpdateShoppingCartItemCountEvent}"/>
+    <aura:registerEvent type="LTE:UpdateShoppingCartItemCountEvent" name="UpdateShoppingCartItemCountEvent"/>
+    <aura:attribute name="salesOrderLinesInCart" type="List"/>
+    <aura:attribute name="title" type="String"/>
+    <aura:attribute name="waitlistEntriesInCart" type="List"/>
+    <aura:registerEvent name="ResetTicketQuantityPicklistEvent" type="LTE:ResetTicketQuantityPicklistEvent"/>
+    <aura:registerEvent name="HashChangingEvent" type="LTE:HashChangingEvent"/>
+
+    <div>{!v.title}</div>
+    <div class="{!v.isTicketBlock ? 'slds-size--1-of-1 slds-card slds-theme--default slds-p-around--medium' : 'slds-size--1-of-1 slds-card slds-theme--default slds-p-around--medium slds-m-bottom--medium'}">
+        <div class="slds-grid slds-grid--pull-padded fonteva-medium--nowrap">
+            <aura:if isTrue="{!and(v.ticket.imagePath != null,v.ticket.imagePath != '')}">
+                <div class="slds-p-horizontal_small">
+                    <Framework:Img src="{!v.ticket.imagePath}" class="mediumImage" height="100" width="100"/>
+                </div>
+                <aura:set attribute="else">
+                    <div class="slds-p-horizontal_small">
+                        <lightning:icon iconName="utility:image" class="mediumImage slds-align-middle slds-grid slds-grid_align-center" size="large"/>
+                    </div>
+                </aura:set>
+            </aura:if>
+            <div class="slds-grid slds-grid--vertical slds-col slds-p-horizontal--small fonteva-min-width--0 fonteva-flex_1">
+                <div class="slds-grid fonteva-overflow--hidden fonteva-min-width--0 fonteva-max-width--100">
+                    <div class="slds-grid slds-grid--vertical slds-col fonteva-min-width--0 fonteva-flex_1">
+                        <div class="slds-grid slds-grid_vertical">
+                            <div class="slds-grid slds-grid--vertical fonteva-min-width--0">
+                                <div class="slds-text-heading--medium slds-font-weight--bold fonteva-medium-m-bottom--small slds-truncate" title="{!v.ticket.name}">
+                                    {!v.ticket.name}
+                                </div>
+                                <aura:if isTrue="{!v.ticket.description}">
+                                    <div class="slds-m-top_small">
+                                        <ui:outputTextArea value="{!v.ticket.description}" class="fonteva-slds-text" linkify="true"/>
+                                    </div>
+                                </aura:if>
+                                <div class="fonteva-max-small-m-top_small fonteva-medium--hide">
+                                    <aura:if isTrue="{!v.ticket.nonListPrice}">
+                                        <div class="slds-grid">
+                                            <span class="slds-text-body--small slds-non-list-price slds-m-right--x-small slds-align-middle">
+                                                <Framework:CurrencyField value="{!v.ticket.listPrice}" currencyISOCode="{!v.ticket.currencyISOCode}" isMultiCurrencyOrg="{!v.ticket.isMultiCurrencyOrg}"/>
+                                            </span>
+                                            <span class="slds-text-heading--medium slds-font-weight--semi-bold">
+                                                <Framework:CurrencyField value="{!v.ticket.price}" currencyISOCode="{!v.ticket.currencyISOCode}" isMultiCurrencyOrg="{!v.ticket.isMultiCurrencyOrg}"/>
+                                            </span>
+                                        </div>
+                                        <aura:set attribute="else">
+                                            <div>
+                                                <div class="slds-text-heading--medium slds-font-weight--semi-bold slds-m-bottom_xx-small">
+                                                    <Framework:CurrencyField value="{!v.ticket.price}" currencyISOCode="{!v.ticket.currencyISOCode}" isMultiCurrencyOrg="{!v.ticket.isMultiCurrencyOrg}"/>
+                                                </div>
+                                            </div>
+                                        </aura:set>
+                                    </aura:if>
+
+                                    <a class="{!v.isTicketBlock ? 'hidden' : 'slds-type-focus slds-m-bottom--small'}">
+                                        <span class="{!v.ticket.showTicketsRemaining ? '' : 'hidden'}">
+                                            <aura:if isTrue="{!v.ticket.ticketsRemaining > 1}">
+                                                {!v.ticket.ticketsRemaining}&nbsp;{!$Label.LTE.Event_Tickets_Remaining}
+                                            </aura:if>
+                                            <aura:if isTrue="{!v.ticket.ticketsRemaining == 1}">
+                                                {!v.ticket.ticketsRemaining}&nbsp;{!$Label.LTE.Event_Ticket_Remaining}
+                                            </aura:if>
+                                        </span>
+                                        <aura:if isTrue="{!and(v.ticket.ticketsRemaining == 0,!v.ticket.waitlistEnabled)}">
+                                            <span class="slds-text-color--error">
+                                                    {!$Label.LTE.Event_Sold_Out}
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(0 >= v.ticket.ticketsRemaining,v.ticket.waitlistEnabled)}">
+                                            <span class="slds-text-color--error">
+                                                    {!$Label.LTE.Event_Add_To_Waitlist}
+                                            </span>
+                                        </aura:if>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-text-align_right slds-grid slds-grid--vertical fonteva-width--ticket-price fonteva-medium--show slds-shrink-none">
+                        <aura:if isTrue="{!v.ticket.nonListPrice}">
+                            <div class="">
+                                <span class="slds-text-body--small slds-non-list-price slds-m-right--x-small slds-align-middle">
+                                    <Framework:CurrencyField value="{!v.ticket.listPrice}" currencyISOCode="{!v.ticket.currencyISOCode}" isMultiCurrencyOrg="{!v.ticket.isMultiCurrencyOrg}"/>
+                                </span>
+                                <span class="slds-text-heading--medium slds-font-weight--semi-bold">
+                                    <Framework:CurrencyField value="{!v.ticket.price}" currencyISOCode="{!v.ticket.currencyISOCode}" isMultiCurrencyOrg="{!v.ticket.isMultiCurrencyOrg}"/>
+                                </span>
+                            </div>
+                            <aura:set attribute="else">
+                                <div class="">
+                                    <span class="slds-text-heading--medium slds-font-weight--semi-bold">
+                                        <Framework:CurrencyField value="{!v.ticket.price}" currencyISOCode="{!v.ticket.currencyISOCode}" isMultiCurrencyOrg="{!v.ticket.isMultiCurrencyOrg}"/>
+                                    </span>
+                                </div>
+                            </aura:set>
+                        </aura:if>
+
+                        <a class="{!v.isTicketBlock ? 'hidden' : 'slds-type-focus slds-grid slds-grid--align-end'}">
+                            <span class="{!v.ticket.showTicketsRemaining ? ' slds-m-top_small' : 'hidden'}">
+                                <aura:if isTrue="{!v.ticket.ticketsRemaining > 1}">
+                                    {!v.ticket.ticketsRemaining}&nbsp;{!$Label.LTE.Event_Tickets_Remaining}
+                                </aura:if>
+                                <aura:if isTrue="{!v.ticket.ticketsRemaining == 1}">
+                                    {!v.ticket.ticketsRemaining}&nbsp;{!$Label.LTE.Event_Ticket_Remaining}
+                                </aura:if>
+                            </span>
+                            <aura:if isTrue="{!and(v.ticket.ticketsRemaining == 0,!v.ticket.waitlistEnabled)}">
+                            <span class="slds-text-color--error">
+                                    {!$Label.LTE.Event_Sold_Out}
+                            </span>
+                            </aura:if>
+                            <aura:if isTrue="{!and(0 >= v.ticket.ticketsRemaining,v.ticket.waitlistEnabled)}">
+                            <span class="slds-text-color--error">
+                                    {!$Label.LTE.Event_Add_To_Waitlist}
+                            </span>
+                            </aura:if>
+                        </a>
+                    </div>
+                </div>
+                <aura:if isTrue="{!and(and(!v.readOnly,!v.isPreview), or(v.ticket.ticketsRemaining > 0,v.ticket.waitlistEnabled))}">
+                    <div class="slds-grid slds-grid_align-end slds-m-top_small">
+                        <div class="slds-p-right_x-small slds-p-top_xxx-small" aura:id="ticketQuantityDiv">
+                            <aura:if isTrue="{!v.showTextInput}">
+                                <Framework:InputFields maxValueValidationMessage="{!$Label.LTE.Max_Quantity_Validation_Message}" group="{!v.ticket.itemId}" value="{!v.ticketPurchaseObj}" labelStyleClasses="hidden" useSecondaryId="true" secondaryId="{!v.ticket.itemId}" label="" fieldType="integer" otherAttributes="{!v.ticket.salesQuantities}" styleClasses="slds-border-radius--none" format="0" fireChangeEvent="true"/>
+                                <aura:set attribute="else">
+                                    <Framework:InputFields group="{!v.ticket.itemId}" value="{!v.ticketPurchaseObj}" labelStyleClasses="hidden" useSecondaryId="true" secondaryId="{!v.ticket.itemId}" label="" fieldType="picklist" selectOptions="{!v.ticket.selectOptions}" styleClasses="slds-border-radius--none" fireChangeEvent="true" aura:id="quantity"/>
+                                </aura:set>
+                            </aura:if>
+                            <div class="">
+                                <Framework:ValidationErrorMessages aura:id="validationWaitlistMessage"/>
+                            </div>
+                        </div>
+                        <div class="slds-p-left_x-small">
+                            <aura:if isTrue="{!v.eventObj.allowReg}">
+                                <aura:if isTrue="{!and(!v.readOnly,!v.isPreview)}">
+                                    <Framework:Button aura:id="registerBtn" label="Add" onClickAction="{!c.register}" type="brand" group="registerTicketBtnGroup"/>
+                                </aura:if>
+                            </aura:if>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+        </div>
+    </div>
+    <div class="" aura:id="registrationFlowDetailsPlaceHolder"/>
+
+</aura:component>

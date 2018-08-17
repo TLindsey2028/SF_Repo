@@ -1,0 +1,75 @@
+<aura:component description="ManageMyRegistration" implements="LTE:EventInterface" controller="LTE.ManageMyRegistrationController" access="global">
+    <aura:handler event="LTE:MyAttendeesLoadedEvent" action="{!c.handleMyAttendeesLoadedEvent}"/>
+    <aura:handler event="Framework:ShowComponentEvent" action="{!c.handleSwitchComponent}"/>
+    <ltng:require scripts="{!$Resource.Framework__UrlUtil}"/>
+    <aura:attribute name="attendees" type="Object[]"/>
+    <aura:attribute name="hasForms" type="Boolean" default="false"/>
+    <div class="slds-col manage-registration-tab">
+        <div class="slds-small-show-only slds-x-small-show-only">
+            <!-- TODO Need to remove this -->
+            <div class="slds-grid slds-col--rule-bottom slds-wrap slds-hide">
+                <div class="slds-col slds-grid slds-grid--vertical slds-p-vertical--medium slds-text-align--center">
+
+                    <div class="slds-img--small center slds-border-radius--circle slds-m-bottom--small slds-m-vertical--medium">
+                        <Framework:Img src="{!v.usr.smallPhotoUrl}"/>
+                    </div>
+                    <div data-name="fullName" class="slds-text-heading--medium slds-font-weight--regular">
+                      {!v.attendeeObj.fullName}
+                    </div>
+                    <div data-name="ticketTypeName" class="slds-text-heading--small slds-font-weight--light slds-p-top--small slds-truncate">
+                      {!v.attendeeObj.ticketTypeName}
+                    </div>
+                    <div data-name="eventObj_id" class="slds-p-horizontal--medium slds-p-vertical--small">
+                        <LTE:MobilePassbook attendee="{!v.attendeeObj.id}" event="{!v.eventObj.id}"/>
+                    </div>
+                    <div class="slds-nav--user__links tst">
+                        <a class="active" href="" onclick="{!c.changeRegBodyViaSideBar}" aura:id="sideBarLink" data-name="manageReg" data-component="LTE:MyAttendees">{!$Label.LTE.Registration_Manage_Side_Bar}</a>
+                        <aura:if isTrue="{!v.hasForms}">
+                            <a href="" onclick="{!c.changeRegBodyViaSideBar}" aura:id="sideBarLink" data-name="regForm" data-component="LTE:MyAttendeesForms">{!$Label.LTE.Registration_Form_My_Reg}</a>
+                        </aura:if>
+                        <a class="" href="" onclick="{!c.logout}" aura:id="logoutLink" data-name="logout">{!$Label.LTE.Logout_Label}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-col" style="height: 100%;">
+            <div class="slds-medium-show">
+                <!-- TODO Need to remove this -->
+                <div class="slds-nav--sticky__user slds-hide" id="navStickyUser">
+                    <div class="slds-grid slds-grid--vertical">
+                        <div class="slds-p-around--medium slds-text-align--center">
+                            <div class="slds-border-radius--circle slds-m-bottom--small slds-m-around--medium">
+                                <Framework:Img src="{!v.usr.smallPhotoUrl}"/>
+                            </div>
+                            <div data-name="fullName" class="slds-text-heading--medium slds-font-weight--regular">
+                              {!v.attendeeObj.fullName}
+                            </div>
+                            <div data-name="ticketTypeName" class="slds-text-heading--small slds-font-weight--light slds-p-top--small slds-truncate">
+                              {!v.attendeeObj.ticketTypeName}
+                            </div>
+                            <aura:if isTrue="{!!empty(v.attendeeObj.id)}">
+                                <div data-name="eventObj_id" class="slds-p-horizontal--medium slds-p-vertical--small">
+                                    <LTE:MobilePassbook attendee="{!v.attendeeObj.id}" event="{!v.eventObj.id}"/>
+                                </div>
+                                <a href="" onclick="{!c.viewTicket}" data-id="{!v.attendeeObj.id}">
+                                  {!$Label.LTE.My_Reg_View_Ticket}
+                                </a>
+                            </aura:if>
+                        </div>
+                        <div class="slds-nav--user__links">
+                            <a class="active" href="" onclick="{!c.changeRegBodyViaSideBar}" aura:id="sideBarLink" data-name="manageReg" data-component="LTE:MyAttendees">{!$Label.LTE.Registration_Manage_Side_Bar}</a>
+                            <aura:if isTrue="{!v.hasForms}">
+                                <a href="" onclick="{!c.changeRegBodyViaSideBar}" aura:id="sideBarLink" data-name="regForm" data-component="LTE:MyAttendeesForms">{!$Label.LTE.Registration_Form_My_Reg}</a>
+                            </aura:if>
+                            <!--<a href="#sessionForm">Session Form</a>-->
+                            <a class="" href="" onclick="{!c.logout}" aura:id="logoutLink" data-name="logout">{!$Label.LTE.Logout_Label}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-name="mainBody" class="slds-size--1-of-1 slds-grid slds-wrap slds-grid--vertical-align-start fonteva-event-component" aura:id="mainBody">
+                <LTE:MyAttendees eventObj="{!v.eventObj}" siteObj="{!v.siteObj}" storeObj="{!v.storeObj}" usr="{!v.usr}" attendeeObj="{!v.attendeeObj}" hasForms="{!v.hasForms}"/>
+            </div>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,97 @@
+<aura:component controller="OrderApi.PriceRuleController" implements="flexipage:availableForAllPageTypes,force:hasRecordId,lightning:actionOverride" access="global" extends="Framework:BaseComponent">
+  <ltng:require scripts="{!join(',', $Resource.Framework__SLDS_BaseV2+'/js/lodash.min.js', $Resource.Framework__UrlUtil)}" styles="{!$Resource.Framework__SLDS_BaseV2+'/css/styles.css'}" afterScriptsLoaded="{!c.doInit}"/>
+  <aura:attribute name="priceRuleConfigs" type="Object[]"/>
+  <aura:attribute name="preLoadedPriceRules" type="Object[]"/>
+  <aura:attribute name="priceRulesCreated" type="List"/>
+  <aura:attribute name="sObjId" type="String"/>
+  <aura:attribute name="retUrl" type="String"/>
+  <aura:attribute name="itemName" type="String" default=""/>
+  <aura:attribute name="priceRuleId" type="String"/>
+  <aura:attribute name="forceCreatePriceRule" type="Boolean" default="true"/>
+  <aura:attribute name="dateFormat" type="String"/>
+  <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+  <aura:registerEvent name="ComponentLoadedEvent" type="OrderApi:ComponentLoadedEvent"/>
+  <div class="slds hidden" aura:id="mainWrapperDiv">
+    <div class="hidden">
+      <Framework:CurrencyField value="0" currencyISOCode="EUR"/>
+    </div>
+    <div class="">
+        <div class="slds-grid slds-wrap">
+          <div class="slds-col slds-size--1-of-1">
+            <div class="slds-page-header">
+              <div class="slds-media">
+                <div class="slds-media__body">
+                  <span class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+                    {!$Label.OrderApi.Price_Rules}&nbsp;<span class="slds-text-weight--regular">{!v.itemName}</span>
+                  </span>
+                    <Framework:Button onClickAction="{!c.cancelPriceRule}"
+                                      type="neutral"
+                                      enableProgressIndicator="false"
+                                      label="{!$Label.OrderApi.Cancel_Price_Rule}"
+                                      aura:id="cancelPriceRules"/>
+                </div>
+                <div class="slds-grid slds-wrap">
+                  <div class="slds-col slds-shrink-none">
+                    <span aura:id="saving-span" class="slds-text-heading-small slds-m-right--small notSaving hidden"><img src="{!$Resource.OrderApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" class="small-spinner" /></span>
+                  </div>
+                  <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button--brand" onclick="{!c.savePriceRuleObjs}" data-preview="false"
+                            id="savePriceRules">
+                            {!$Label.OrderApi.Save_Price_Rule}
+                    </button>
+                    <span class="slds-button slds-button--brand slds-dropdown--trigger slds-p-horizontal--small">
+                      <Framework:FONSVG svgPath="{!$Resource.OrderApi__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#down'}"
+                                     containerClass="slds-icon__container" svgClass="slds-icon slds-icon--xx-small"
+                                     assistiveText="{!$Label.OrderApi.Save_Price_Rule}" />
+                      <div class="slds-dropdown slds-dropdown slds-dropdown--right slds-dropdown--menu slds-dropdown--menu__hidden" aura:id="saveAndClose">
+                        <ul class="slds-dropdown__list" role="menu">
+                          <li class="slds-dropdown__item">
+                            <a href="javascript:void(0)" onclick="{!c.saveAndNewPriceRuleObjs}">{!$Label.OrderApi.Save_And_New_Price_Rule}</a>
+                          </li>
+                          <li class="slds-dropdown__item">
+                            <a href="javascript:void(0)" onclick="{!c.saveAndExitPriceRuleObjs}">{!$Label.OrderApi.Save_And_Close_Price_Rule}</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="slds-col slds-size--1-of-1 slds-grid slds-wrap slds-theme--shade">
+            <div class="slds-col slds-size--1-of-5 slds-object-height--full__nofooter slds-scrollable--y slds-p-around--medium">
+              <ul class="slds-list--vertical" role="tablist" aura:id="priceRuleList">
+              <aura:iteration items="{!v.priceRuleConfigs}" var="priceRule">
+                <li data-id="{!priceRule.id}">
+                    <a href="javascript:void(0)" onclick="{!c.showPriceRule}" data-id="{!priceRule.id}" role="tab" tabindex="-1" aria-selected="false" aria-controls="{!priceRule.id}" class="slds-list__item slds-box slds-box--tab slds-m-bottom--x-small" data-toggle="tab">
+                      <div class="slds-tile slds-tile--board slds-grid slds-wrap" data-id="{!priceRule.id}">
+                        <div class="slds-size--4-of-5" data-id="{!priceRule.id}">
+                          <p class="slds-col slds-size--1-of-1 slds-tile__title slds-truncate slds-text-color--link" data-id="{!priceRule.id}">{!priceRule.name}</p>
+                          <div class="slds-tile__detail slds-size--1-of-1" data-id="{!priceRule.id}">
+                            <p class="slds-text-heading--medium slds-text-color--body" data-id="{!priceRule.id}"><Framework:CurrencyField value="{!priceRule.price}" aura:id="listPriceOutput" currencyISOCode="{!priceRule.currencyISOCode}" isMultiCurrencyOrg="{!priceRule.isMultiCurrencyOrg}"/></p>
+                          </div>
+                        </div>
+                        <div class="slds-size--1-of-5 slds-align-middle slds-text-align--right" data-id="{!priceRule.id}">
+                          <lightning:icon iconName="utility:chevronright" size="small" alternativeText="{!$Label.OrderApi.Save_And_Close_Price_Rule}"/>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+              </aura:iteration>
+             </ul>
+            </div>
+            <div class="slds-col slds-size--4-of-5 slds-object-height--full__nofooter slds-scrollable--y slds-border--left">
+              <div class="slds-col slds-grid tab-content" aura:id="priceRuleConfigPanel">
+                <aura:iteration items="{!v.priceRuleConfigs}" var="config">
+                  <OrderApi:PriceRuleDetail priceRuleObj="{!config}" groupName="{!config.id}" dateFormat="{!v.dateFormat}" aura:id="priceRule"/>
+                </aura:iteration>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      <Framework:Toast aura:id="toastMessages"/>
+      </div>
+  </div>
+</aura:component>

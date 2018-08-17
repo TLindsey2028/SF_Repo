@@ -1,0 +1,8 @@
+<aura:component description="InvoiceAdjustment" controller="OrderApi.CreateInvoiceAdjustmentsController" extends="Framework:BaseComponent">
+    <ltng:require scripts="{!$Resource.OrderApi__SLDS_Base+'/js/scripts.js'}" styles="{!$Resource.OrderApi__SLDS_Base+'/css/styles.css'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute name="retURL" type="String"/>
+    <aura:attribute name="errorMessageString" type="String"/>
+    <div class="slds">
+        <Framework:MessagePrompt title="Invoice Adjustment" showCancelButton="false" severity="error slds-theme--alert-texture" message="{!v.errorMessageString}" submitButtonLabel="{!$Label.OrderApi.Invoice_Adjustments_Go_Back}" submitOnClickAction="{!c.goBack}" closeOnClickAction="{!c.goBack}" aura:id="messagePrompt"/>
+    </div>
+</aura:component>

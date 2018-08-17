@@ -1,0 +1,53 @@
+<aura:component description="EventCustomVideoEdit" access="global" implements="EventApi:EditLightingCompInterface">
+    <aura:method name="validate" action="{!c.validate}" access="global"/>
+    <div class="slds-col slds-size--1-of-1">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--1-of-1">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size--1-of-1">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "EventCustomVideoEdit"}' aura:id="html"
+                                               label="Video Overview"
+                                               value="{!v.pageComponent}"
+                                               fieldType="richtext"/>
+                    </div>
+                </div>
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size--1-of-1">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "videoUrl"}' aura:id="videoUrl"
+                                               label="Video"
+                                               isRequired="true"
+                                               value="{!v.pageComponent}"
+                                               fieldType="fileupload"
+                                               otherAttributes='{
+                                               allowedMimeTypes:["video/mp4","video/quicktime","video/x-flv","video/x-msvideo","video/x-ms-wmv"]}'/>
+                    </div>
+                </div>
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size--1-of-8 slds-m-right--medium">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "width"}' aura:id="width"
+                                               label="Width"
+                                               value="{!v.pageComponent}"
+                                               fieldType="Integer"
+                                               otherAttributes='{min : 0 , max : 10000}' minValueValidationMessage="Width cannot be negative and must be equal to or greater than "/>
+                    </div>
+                    <div class="slds-size--1-of-8">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "height"}' aura:id="height"
+                                               label="Height"
+                                               value="{!v.pageComponent}"
+                                               fieldType="Integer"
+                                               otherAttributes='{min : 0 , max : 10000}' minValueValidationMessage="Height cannot be negative and must be equal to or greater than "/>
+                    </div>
+                </div>
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size--1-of-1">
+                        <Framework:InputFields qaData='{"type" : "input", "name": "customCSSClasses"}' aura:id="customCSSClasses"
+                                               label="Custom CSS Classes"
+                                               value="{!v.pageComponent}"
+                                               fieldType="String"
+                                               maxlength="255"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

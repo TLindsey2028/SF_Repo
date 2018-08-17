@@ -1,0 +1,274 @@
+<aura:component description="EventBuilderAgendaEditor" controller="EventApi.EventsBuilderController" implements="EventApi:EventBuilderTabInterface">
+    <aura:attribute name="eventScheduleItem" type="Object" default="{}" access="public"/>
+    <aura:attribute name="eventAgenda" type="Object"/>
+    <aura:attribute name="customFields" type="List" default="[]"/>
+    <aura:attribute name="customFieldsFound" type="Boolean" default="false"/>
+    <aura:attribute name="dateFormat" type="String" required="true"/>
+    <aura:method name="getCustomFields" action="{!c.getCustomFields}" access="public" description="Get Custom Fields"/>
+    <aura:method name="validate" action="{!c.doValidate}" access="public" description="Validate Form">
+    </aura:method>
+    <aura:attribute name="validated" type="Boolean" default="true" description="Validated" access="public"/>
+    <aura:method name="updateControls" action="{!c.doUpdateControls}" access="public" description="Update Form Controls">
+    </aura:method>
+    <aura:attribute name="speakerGlobalId" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="Framework:UIApiResponseEvent" action="{!c.handleUIApiResponseEvent}"/>
+	  <aura:handler event="Framework:RichTextInputFieldModalEvent" action="{!c.handleRichTextInputFieldModalEvent}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:attribute name="currentTabOpen" default="descriptionTab" access="private" type="String"/>
+    <aura:attribute name="endDateFormattedValue" default="" access="private" type="String"/>
+    <aura:attribute name="durationObj" type="Map" default="{}" access="public"/>
+    <Framework:UIApi uniqueId="agendaFields" aura:id="fieldUIApi"/>
+    <div class="tab-content tab--transparent" >
+        <div class="slds-tabs--default">
+            <ul class="slds-tabs--default__nav" role="tablist">
+                <li aura:id="descriptionTabLabel" class="slds-tabs__item slds-text-heading--label slds-active" title="{!$Label.EventApi.Agenda_Editor_Description_Tab}" role="presentation">
+                    <a href="javascript:void(0);" data-tab="descriptionTab" onclick="{!c.changeTab}">{!$Label.EventApi.Agenda_Editor_Description_Tab}</a>
+                </li>
+                <li aura:id="attachFormTabLabel" class="slds-tabs__item slds-text-heading--label" title="{!$Label.EventApi.Agenda_Editor_Attach_Tab}" role="presentation">
+                    <a href="javascript:void(0);" data-tab="attachFormTab" onclick="{!c.changeTab}">{!$Label.EventApi.Agenda_Editor_Attach_Tab}</a>
+                </li>
+                <li aura:id="accountingTabLabel" class="slds-tabs__item slds-text-heading--label" title="{!$Label.EventApi.Agenda_Editor_Accounting_Tab}" role="presentation">
+                    <a href="javascript:void(0);" data-tab="accountingTab" onclick="{!c.changeTab}">{!$Label.EventApi.Agenda_Editor_Accounting_Tab}</a>
+                </li>
+            </ul>
+        </div>
+        <!-- descriptionTab -->
+        <div aura:id="descriptionTab" id="descriptionTab" class="slds-tabs--default__content slds-show" role="tabpanel">
+            <div class="slds-col slds-size--1-of-1">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size--1-of-1">
+                        <Framework:InputFields group="description" aura:id="isActive" fieldType="boolean" label="{! v.eventScheduleItem.isEventActiveAndPublished ? $Label.EventApi.Event_Builder_Schedule_Item_Event_Not_Active : $Label.EventApi.Event_Builder_Schedule_Item_Event_Active }" value="{!v.eventScheduleItem}" fireChangeEvent="true" helpText="{!$Label.EventApi.Event_Builder_Agenda_Active_When_Event_Active}"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                <div class="slds-col slds-col--padded slds-size--2-of-3">
+                    <Framework:InputFields group="description" fieldType="string"  aura:id="scheduleItemName" label="{!$Label.EventApi.Event_Builder_Schedule_Item_Name}" value="{!v.eventScheduleItem}" isRequired="true" maxlength="80"/>
+                </div>
+                <div class="slds-col slds-col--padded slds-size--1-of-3">
+                    <Framework:InputFields group="description" fieldType="integer" aura:id="quantity" label="{!$Label.EventApi.Event_Builder_Schedule_Item_Capacity}" value="{!v.eventScheduleItem}" format="0" otherAttributes='{"min" : 0}' />
+                </div>
+            </div>
+            <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                <div class="slds-col slds-col--padded slds-size--2-of-3">
+                    <Framework:InputFields group="description" fieldType="string"  aura:id="scheduleItemDisplayName" label="Display Name" value="{!v.eventScheduleItem}" isRequired="true" maxlength="255"/>
+                </div>
+                <div class="slds-col slds-col--padded slds-size--1-of-3">
+                    <Framework:InputFields group="description" fieldType="currency" aura:id="price" label="{!$Label.EventApi.Price_Event_Builder}" value="{!v.eventScheduleItem}" format=".00" otherAttributes='{"min" : 0}' />
+                </div>
+            </div>
+            <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+                <div class="slds-col slds-size--1-of-1">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size--1-of-1">
+                            <Framework:InputFields group="description" aura:id="hideDuringRegistration" fieldType="boolean" label="Hide during Registration" value="{!v.eventScheduleItem}" helpText="Checking this field removes this session from the registration's agenda page."/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size--1-of-1">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size--1-of-1">
+                            <Framework:InputFields group="description" aura:id="disableRegistration" fieldType="boolean" label="Disable Registration" value="{!v.eventScheduleItem}" helpText="When checked, attendees cannot register for this schedule item. Useful for breaks, meals, and other schedule items that are not sessions."/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size--1-of-1">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size--1-of-1">
+                            <Framework:InputFields group="description" aura:id="requiredForRegistration" fieldType="boolean" label="Required for Registration" value="{!v.eventScheduleItem}" helpText="Checking this field automatically includes this session for purchase during registration."/>
+                        </div>
+                    </div>
+                </div>
+            </aura:if>
+            <div class="slds-col slds-size--1-of-1">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size--1-of-1">
+                        <Framework:InputFields group="description" aura:id="enableWaitlist" fieldType="boolean" label="{!$Label.EventApi.Event_Builder_Schedule_Item_Enable_Waitlist}" value="{!v.eventScheduleItem}" helpText="{!$Label.EventApi.Event_Builder_Agenda_Enable_Waitlist}"/>
+                    </div>
+                </div>
+            </div>
+            <hr class="custom-separator"/>
+            <div class="slds-size--1-of-1 slds-large-size--5-of-6 slds-grid slds-wrap">
+                <label class="slds-form-element__label helper-margin-right" id="eventStartDate">Event Start and End</label>
+            </div>
+            <!-- Duration Result -->
+            <div class="slds-size--1-of-1 slds-large-size--5-of-6 slds-grid slds-wrap slds-m-bottom--medium">
+                <span>{!v.eventObj.eventDurationStringDates}
+                <aura:if isTrue="{!v.eventObj.eventDurationStringTimes != null}">
+                    | {!v.eventObj.eventDurationStringTimes}
+                </aura:if> </span>
+            </div>
+            <!-- Start Date Time -->
+            <div class="slds-size--1-of-1 slds-large-size--5-of-6 slds-grid slds-wrap">
+                <div class="slds-size--1-of-1 slds-large-size--1-of-3 slds-p-right--xx-small">
+                    <Framework:InputFields group="dateDuration" fieldType="date" isRequired="true" aura:id="startDate" label="{!$Label.EventApi.Duration_Start_Date}" value="{!v.durationObj}" fireChangeEvent="true" format="{!v.dateFormat}"/>
+                </div>
+                <div class="slds-col slds-grid slds-wrap slds-size--1-of-1 slds-large-size--2-of-3 slds-p-left--xx-small">
+                    <div class="slds-col slds-size--1-of-3 slds-p-right--small slds-time--hour">
+                        <Framework:InputFields group="dateDuration"  fieldType="picklist" isRequired="true" aura:id="startHour" label="{!$Label.EventApi.Duration_Start_Time}" value="{!v.durationObj}" fireChangeEvent="true"/>
+                    </div>
+                    <div class="slds-col slds-size--1-of-3 slds-p-right--small">
+                        <Framework:InputFields group="dateDuration" fieldType="picklist" isRequired="true" labelStyleClasses="slds-hidden" aura:id="startMin" label="&nbsp;" value="{!v.durationObj}" fireChangeEvent="true"/>
+                    </div>
+                    <div class="slds-col slds-size--1-of-3">
+                        <div aura:id="start12hrContainer">
+                            <Framework:InputFields group="dateDuration" fieldType="picklist" isRequired="true" labelStyleClasses="slds-hidden" aura:id="startAMPM" label="&nbsp;" value="{!v.durationObj}" fireChangeEvent="true" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Duration -->
+            <div class="slds-size--1-of-1 slds-large-size--5-of-6 slds-grid slds-wrap">
+                <div class="slds-col slds-grid slds-wrap slds-size--1-of-1 slds-large-size--1-of-2 slds-p-left--xx-small">
+                    <div class="slds-col slds-size--1-of-3 slds-p-right--xx-small">
+                        <Framework:InputFields group="dateDuration" fieldType="advancedselectfield" isRequired="true" aura:id="durationHour" label="{!$Label.EventApi.Event_Builder_Schedule_Item_Duration}" value="{!v.durationObj}" fireChangeEvent="true"/>
+                    </div>
+                    <div class="slds-col slds-size--1-of-12 slds-p-right--xx-medium slds-p-left--x-small slds-p-top--x-large">
+                        hr
+                    </div>
+                    <div class="slds-col slds-size--1-of-5 slds-p-left--xx-small">
+                        <Framework:InputFields group="dateDuration" fieldType="picklist" isRequired="true" aura:id="durationMin" labelStyleClasses="slds-hidden" label="&nbsp;" value="{!v.durationObj}" fireChangeEvent="true"/>
+                    </div>
+                    <div class="slds-col slds-size--1-of-12 slds-p-right--xx-medium slds-p-left--x-small slds-p-top--x-large">
+                        min
+                    </div>
+                </div>
+                <div class="slds-size--2-of-5 slds-large-p-left--medium slds-large-p-top--x-large">
+                    <Framework:InputFields group="description" aura:id="allowConflicts" isRequired="true" fieldType="boolean" label="{!$Label.EventApi.Event_Builder_Schedule_Item_Allow_Conflicts}" value="{!v.eventScheduleItem}" helpText="{!$Label.EventApi.Event_Builder_Agenda_Allow_Conflicts}"/>
+                </div>
+            </div>
+            <div class="slds-size--1-of-1 slds-large-size--5-of-6 slds-grid slds-wrap">
+                <label class="slds-form-element__label helper-margin-right">{!$Label.EventApi.Event_Builder_Schedule_Item_End_Date_Time}</label>
+            </div>
+            <!-- Duration Result -->
+            <div class="slds-size--1-of-1 slds-large-size--5-of-6 slds-grid slds-wrap">
+                <span>{!v.endDateFormattedValue}</span>
+            </div>
+
+            <hr class="custom-separator"/>
+            <!-- Room / Location, Price -->
+            <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                <div class="slds-col slds-col--padded slds-size--2-of-3" aura:id="speakerScheduleItem">
+
+                </div>
+            </div>
+
+            <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                <div class="slds-col slds-col--padded slds-size--2-of-3">
+                    <Framework:InputFields group="description" fieldType="lookup"  aura:id="roomLocation" label="{!$Label.EventApi.Event_Builder_Schedule_Item_RoomLocation}" value="{!v.eventScheduleItem}" otherAttributes='{"type" :"EventApi__Room__c","pluralLabel":"Room / Location"}' helpText="{!$Label.EventApi.Event_Builder_Agenda_Room_Location}"/>
+                </div>
+            </div>
+
+            <div class="slds-col slds-size--1-of-1">
+                <Framework:InputFields group="description" fieldType="richtext" aura:id="description" label="{!$Label.EventApi.Description_Label}" value="{!v.eventScheduleItem}" helpText="{!$Label.EventApi.Event_Builder_Agenda_Description}"/>
+            </div>
+            <aura:if isTrue="{!v.customFields.length > 0}">
+                <div class="slds-size--1-of-1 slds-col slds-has-divider--top slds-m-top--small">
+                    <div class="slds-m-top--small">
+                        <div class="slds-m-bottom--x-small">
+                            <strong>{!$Label.EventApi.Event_Builder_Custom_Fields}</strong>
+                        </div>
+                        <aura:iteration items="{!v.customFields}" var="customField">
+                            <div class="slds-size--1-of-1">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "customfield"}' aura:id="customField" group="agendaBuilderCustomFields" value="{!v.eventScheduleItem.customFieldValues}" sObjectName="{!customField.objectName}" fieldName="{!customField.apiName}" secondaryId="{!customField.apiName}" useSecondaryId="true"/>
+                            </div>
+                        </aura:iteration>
+                    </div>
+                </div>
+            </aura:if>
+        </div>
+        <!-- attachFormTab -->
+        <div aura:id="attachFormTab" class="slds-tabs--default__content slds-hide" role="tabpanel" id="formTabSCItem">
+            <div class="slds-grid slds-wrap">
+                <aura:if isTrue="{!v.eventObj.style == 'Conference'}">
+                    <div class="slds-size--1-of-1">
+                        <Framework:InputFields group="description" fieldType="string" aura:id="formHeading" label="{!$Label.EventApi.Tickets_Form_Heading}" value="{!v.eventScheduleItem}"/>
+                    </div>
+                </aura:if>
+                <div class="slds-size--1-of-1">
+                    <Framework:InputFields group="description" fieldType="lookup" aura:id="form" label="{!$Label.EventApi.Tickets_Form}" value="{!v.eventScheduleItem}" otherAttributes='{"type" :"PagesApi__Form__c","pluralLabel":"Forms"}'/>
+                </div>
+                <div class="slds-size--1-of-1">
+                    <button class="slds-button slds-button--brand" onclick="{!c.createForm}">
+                        {!$Label.EventApi.Create_New_Form_Event_Builder}
+                    </button>
+                    <div class="slds-text-body--small slds-p-top--small">{!$Label.EventApi.Form_Open_Info_Event_Builder}</div>
+                </div>
+            </div>
+        </div>
+        <!-- accountingTab -->
+        <div aura:id="accountingTab" class="slds-tabs--default__content slds-hide" role="tabpanel" id="accountingTabSCItem">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-size--1-of-1">
+                    <Framework:InputFields group="scheduleItemAccounting" fieldType="boolean" aura:id="isTaxable" label="{!$Label.EventApi.Is_Taxable_Event_Builder}" value="{!v.eventScheduleItem}" fireChangeEvent="true"/>
+                </div>
+                <div class="slds-size--2-of-3 slds-p-left--large">
+                    <Framework:InputFields group="scheduleItemAccounting" fieldType="lookup" aura:id="taxClass" label="{!$Label.EventApi.Tax_Class_Event_Builder}" value="{!v.eventScheduleItem}" disabled="{!!v.eventScheduleItem.isTaxable}" otherAttributes='{"type" : "OrderApi__Item_Class__c", "pluralLabel" : "Tax Classes","filter" : "OrderApi__Is_Tax__c = true"}'/>
+                </div>
+                <div class="slds-size--1-of-1">
+                    <Framework:InputFields group="scheduleItemAccounting" fieldType="boolean" aura:id="isContribution" label="{!$Label.EventApi.Is_Contribution_Event_Builder}" value="{!v.eventScheduleItem}"/>
+                </div>
+                <div class="slds-size--1-of-1">
+                    <Framework:InputFields group="scheduleItemAccounting" fieldType="boolean" aura:id="isTaxDeductible" label="{!$Label.EventApi.Is_Tax_Deductible_Event_Builder}" value="{!v.eventScheduleItem}"/>
+                </div>
+                <div class="slds-size--1-of-1">
+                    <Framework:InputFields group="scheduleItemAccounting" fieldType="integer" aura:id="paymentPriority" label="{!$Label.EventApi.Invoice_Line_Payment_Priority}" value="{!v.eventScheduleItem}" otherAttributes='{"type" : "number","min" : 1,"max" : 1000}'/>
+                </div>
+                <div class="slds-size--1-of-1">
+                    <Framework:InputFields group="scheduleItemAccounting" fieldType="lookup" aura:id="arAccount" label="{!$Label.EventApi.AR_Account_Event_Builder}" value="{!v.eventScheduleItem}" otherAttributes='{"type" : "OrderApi__GL_Account__c"}'/>
+                </div>
+                <div class="slds-size--1-of-1">
+                    <Framework:InputFields group="scheduleItemAccounting" fieldType="lookup" aura:id="incomeAccount" label="{!$Label.EventApi.Income_Account_Event_Builder}" value="{!v.eventScheduleItem}" otherAttributes='{"type" : "OrderApi__GL_Account__c"}'/>
+                </div>
+                <div class="slds-size--1-of-1">
+                    <Framework:InputFields group="scheduleItemAccounting" fieldType="lookup" aura:id="refundAccount" label="{!$Label.EventApi.Refund_Account_Event_Builder}" value="{!v.eventScheduleItem}" otherAttributes='{"type" : "OrderApi__GL_Account__c"}'/>
+                </div>
+                <div class="slds-size--1-of-1">
+                    <Framework:InputFields group="scheduleItemAccounting" fieldType="lookup" aura:id="adjustmentAccount" label="{!$Label.EventApi.Adjustment_Account_Event_Builder}" value="{!v.eventScheduleItem}" otherAttributes='{"type" : "OrderApi__GL_Account__c"}'/>
+                </div>
+                <div class="slds-size--1-of-1">
+                    <Framework:InputFields group="scheduleItemAccounting" fieldType="boolean" aura:id="deferRevenue" label="{!$Label.EventApi.Defer_Revenue_Event_Builder}" value="{!v.eventScheduleItem}" fireChangeEvent="true"/>
+                    <div class="slds-col slds-size--1-of-1 slds-p-left--large">
+                        <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                            <div class="slds-size--2-of-3 slds-p-left--small">
+                                <Framework:InputFields group="scheduleItemAccounting" fieldType="lookup" aura:id="deferredRevenueAccount" label="{!$Label.EventApi.Deferred_Revenue_Account_Event_Builder}" value="{!v.eventScheduleItem}" disabled="{!!v.eventScheduleItem.deferRevenue}" otherAttributes='{"type" : "OrderApi__GL_Account__c"}'/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size--1-of-4 slds-p-left--large">
+                        <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                            <div class="slds-size--1-of-4 slds-col--padded">
+                                <Framework:InputFields group="scheduleItemAccounting" fieldType="integer" aura:id="termInMonths" label="{!$Label.EventApi.Term_In_Months_Event_Builder}" value="{!v.eventScheduleItem}" disabled="{!!v.eventScheduleItem.deferRevenue}"  otherAttributes='{"type" : "number","min" : 1,"max" : 12,}' minValueValidationMessage="Term In Months cannot be negative and must be equal to or greater than " maxValueValidationMessage="Term In Months must be equal to or less than "/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size--3-of-4 slds-p-left--large">
+                        <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                            <div class="slds-size--1-of-2 slds-col--padded">
+                                <Framework:InputFields group="scheduleItemAccounting" fieldType="picklist" aura:id="revenueRecognitionRule" label="{!$Label.EventApi.Revenue_Recognition_Rule_Event_Builder}" value="{!v.eventScheduleItem}" disabled="{!!v.eventScheduleItem.deferRevenue}" />
+                            </div>
+                            <div class="slds-size--1-of-2 slds-col--padded">
+                                <Framework:InputFields group="scheduleItemAccounting" fieldType="date" aura:id="revenueRecognitionDate" label="{!$Label.EventApi.Revenue_Recognition_Date_Event_Builder}" value="{!v.eventScheduleItem}"  disabled="{!!v.eventScheduleItem.deferRevenue}" format="{!v.dateFormat}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size--3-of-4 slds-p-left--large">
+                        <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                            <div class="slds-size--1-of-2 slds-col--padded">
+                                <Framework:InputFields group="scheduleItemAccounting" fieldType="picklist" aura:id="revenueRecognitionTermRule" label="{!$Label.EventApi.Revenue_Recognition_Term_Rule_Event_Builder}" value="{!v.eventScheduleItem}" disabled="{!!v.eventScheduleItem.deferRevenue}"/>
+                            </div>
+                            <div class="slds-size--1-of-2 slds-col--padded">
+                                <Framework:InputFields group="scheduleItemAccounting" fieldType="integer" aura:id="flexDayOfMonth" label="{!$Label.EventApi.Flex_Day_Of_Month_Event_Builder}" value="{!v.eventScheduleItem}" disabled="{!!v.eventScheduleItem.deferRevenue}" otherAttributes='{"min" : 0,"max" : 31}' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- packageTab -->
+        <div aura:id="packageTab" class="slds-tabs--default__content slds-hide" role="tabpanel"></div>
+    </div>
+</aura:component>

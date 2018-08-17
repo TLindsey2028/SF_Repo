@@ -1,0 +1,47 @@
+.THIS .item--ghost {
+    opacity: 0.5;
+}
+
+.THIS .strong {
+  font-weight: 700;
+}
+
+.THIS .step-type {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+/* (Optional) Apply a "closed-hand" cursor during drag operation. */
+.THIS .step-type.sortable-chosen {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+.THIS .step-type.sortable-chosen.item--ghost {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+.THIS .sponsor-image-modal{
+    min-width: 54rem!important;
+    width: 100%!important;
+}
+
+.THIS .tab--transparent {
+    background: transparent!important;
+}
+
+
+.THIS .slds-col.slds-size--1-of-1.slds-m-bottom--large table > thead th:nth-of-type(3),
+.THIS .slds-col.slds-size--1-of-1.slds-m-bottom--large table > tbody#step-container td:nth-of-type(3) {
+    right: 0!important;
+}
+
+.THIS .slds-col.slds-size--1-of-1.slds-m-bottom--large table > thead th:nth-of-type(2),
+.THIS .slds-col.slds-size--1-of-1.slds-m-bottom--large table > tbody#step-container td:nth-of-type(2) {
+    width: 50%;
+}

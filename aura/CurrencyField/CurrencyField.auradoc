@@ -1,0 +1,6 @@
+<aura:documentation>
+	<aura:description>Documentation for CurrencyField</aura:description>
+	<aura:example name="CurrencyField" ref="CurrencyField" label="CurrencyField">
+		Example for CurrencyField
+	</aura:example>
+</aura:documentation>

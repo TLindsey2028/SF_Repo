@@ -1,0 +1,142 @@
+<aura:component description="EventSpeakers" access="global" implements="LTE:EventInterface" controller="LTE.SpeakersController">
+    <aura:attribute name="speakerObj" type="LTE.Speaker"/>
+    <aura:attribute name="speakerIndex" type="Integer" default="0"/>
+    <aura:attribute name="speakers" type="Object[]"/>
+    <ltng:require styles="{!$Resource.LTE__SLDS_Lens + '/css/lens.css'}" scripts="{!$Resource.PagesApi__FontevaHelper+'/FontevaHelper.js'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute type="Boolean" name="openAsModal" default="false"/>
+
+    <div data-name="event-speakers" class="fonteva-event-component slds-p-horizontal--medium">
+        <aura:if isTrue="{!!v.openAsModal}">
+            <div class="slds-grid slds-grid--vertical slds-p-top_medium">
+                <div>
+                    <p data-name="Event_Speakers" class="slds-text-heading--medium slds-font-weight--semi-bold">
+                        {!$Label.LTE.Event_Speakers}
+                    </p>
+                </div>
+                <div class="slds-grid slds-wrap slds-grid--vertical-stretch slds-grid--pull-padded">
+                    <aura:iteration items="{!v.speakers}" var="speaker" indexVar="index">
+                        <div class="slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-4 slds-p-around--small slds-is-relative">
+                            <div class="slds-grid slds-wrap slds-grid--vertical-stretch">
+                                <div class="slds-size--1-of-1">
+                                    <div class="slds-is-relative slds-m-bottom--small" onclick="{!c.showSpeaker}" data-id="{!speaker.id}" data-index="{!index}">
+                                        <div data-name="speaker.id" class="slds-event--speaker" data-speaker="{!speaker.id}" data-index="{!index}">
+                                            <lightning:icon iconName="utility:add" size="large" class="speaker-add"/>
+                                        </div>
+                                        <div data-name="spacer-png" class="slds-is-relative slds-m-bottom--small fonteva-img_speaker" style="{!'background-image:url('+speaker.photoUrl+')'}">
+                                            <img src="{!$Resource.LTE__SLDS_Lens + '/img/spacer.png'}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-size--1-of-1">
+                                    <div class="slds-size--1-of-1">
+                                        <p data-name="speaker-name" class="slds-text-heading--small slds-font-weight--semi-bold">
+                                            {!speaker.name}
+                                        </p>
+                                        <p data-name="speaker-companyName" class="slds-text-body--regular">
+                                            {!speaker.companyName}
+                                            <span class="{!empty(speaker.title) ? 'slds-hide' : ''}">
+                                            <span data-name="speaker-title" class="{!empty(speaker.companyName) ? 'slds-hide' : 'slds-p-horizontal--xx-small' }">|</span>
+                                                {!speaker.title}
+                                        </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                </div>
+            </div>
+        </aura:if>
+        <div data-name="speaker-modal" aria-hidden="false" role="dialog" class="slds-modal hidden" aura:id="slds-modal--speaker">
+            <div class="slds-modal__container slds-is-relative slds-modal__medium">
+                <div class="slds-modal__header slds-modal__header--empty">
+                    <button data-name="speaker-modal-close" class="slds-button slds-modal__close slds-button--icon-inverse" data-close="modal" title="Close" onclick="{!c.hideSpeaker}">
+                        <lightning:icon iconName="utility:close" size="medium"/>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                </div>
+                <div data-name="speakerModalContent" tabindex="0" aura:id="speakerModalContent" class="slds-modal__content slds-p-horizontal--medium slds-p-vertical--x-large slds-border-radius--none speaker-content">
+                    <div class="{!v.speakers.length > 1 ? 'slds-event--speaker__prev' : 'slds-hide'}" onclick="{!c.prevSpeaker}">
+                        <div data-name="prev-speaker" class="slds-grid slds-grid--vertical-align-center">
+                            <lightning:icon iconName="utility:chevronleft" size="large" class="speaker-chevron"/>
+                        </div>
+                    </div>
+
+                    <div data-name="speakerInfo" class="slds-grid slds-wrap slds-event--speaker__info animated slds-visible slds-p-around--medium" aura:id="speakerInfo">
+                        <div class="slds-size--1-of-1 slds-large-size--1-of-2 slds-p-horizontal--small slds-grid slds-wrap slds-m-bottom--medium">
+                            <div class="slds-size--1-of-1 slds-m-bottom--small">
+                                <aura:if isTrue="{!v.speakerObj.photoUrl == null}">
+                                    <img data-name="np-photourl" src="https://placehold.it/750"/>
+                                    <aura:set attribute="else">
+                                        <Framework:Img src="{!v.speakerObj.photoUrl}" class="slds-speaker-image"/>
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                            <div class="slds-size--1-of-1 slds-text-align--center slds-text-align--left__small slds-p-horizontal--small">
+                                <aura:if isTrue="{!v.speakerObj.twitterURL != null}">
+                                    <a data-name="speaker-twitter" href="{!v.speakerObj.twitterURL}" class="slds-button--social" target="_blank">
+                                        <img src="{!$Resource.LTE__SLDS_Lens + '/img/twitter.png'}" width="30" height="30"/>
+                                    </a>
+                                </aura:if>
+                                <aura:if isTrue="{!v.speakerObj.facebookURL != null}">
+                                    <a data-name="speaker-facebook" href="{!v.speakerObj.facebookURL}" class="slds-button--social" target="_blank" style="padding-left:8px;">
+                                        <img src="{!$Resource.LTE__SLDS_Lens + '/img/facebook.png'}" width="30" height="30"/>
+                                    </a>
+                                </aura:if>
+                                <aura:if isTrue="{!v.speakerObj.linkedInURL != null}">
+                                    <a data-name="speaker-linkedin" href="{!v.speakerObj.linkedInURL}" class="slds-button--social" target="_blank" style="padding-left:8px;">
+                                        <img src="{!$Resource.LTE__SLDS_Lens + '/img/linkedIn.png'}" width="30" height="30"/>
+                                    </a>
+                                </aura:if>
+                            </div>
+                        </div>
+                        <div class="slds-size--1-of-1 slds-large-size--1-of-2 slds-p-horizontal--small">
+                            <div data-name="speaker-name" class="slds-size--1-of-1 slds-text-heading--medium slds-font-weight--semi-bold">
+                                {!v.speakerObj.name}
+                            </div>
+                            <div data-name="speaker-title" class="slds-size--1-of-1 slds-text-heading--medium">
+                                {!v.speakerObj.title}
+                            </div>
+                            <div data-name="speaker-companyname" class="slds-size--1-of-1 slds-text-heading--medium slds-m-bottom--small">
+                                {!v.speakerObj.companyName}
+                            </div>
+                            <div data-name="speaker-bio-text" class="slds-text-body--regular slds-m-bottom--small">
+                                <ui:outputRichText value="{!v.speakerObj.bio}" linkify="true" class="event-rich-text"/>
+                            </div>
+
+                            <aura:if isTrue="{!v.speakerObj.agendas.length > 0}">
+                                <div data-name="event-agenda" class="slds-size--1-of-1 slds-text-heading--medium slds-font-weight--semi-bold slds-m-bottom--small">
+                                    {!$Label.LTE.Event_Agenda}
+                                </div>
+                                <aura:iteration items="{!v.speakerObj.agendas}" var="agenda" indexVar="index">
+                                    <div class="slds-size--1-of-1 slds-grid slds-wrap slds-col slds-p-vertical--x-small slds-col--rule-bottom slds-col--rule-dark">
+                                        <div data-name="agenda-name" class="slds-size--1-of-1 slds-large-size--3-of-5">
+                                            {!agenda.name}
+                                        </div>
+                                        <div class="slds-size--1-of-1 slds-large-size--2-of-5 slds-grid slds-wrap">
+                                            <div data-name="agenda-starttime" class="slds-col slds-size--1-of-1 slds-large-size--1-of-2">
+                                                {!agenda.startTime}
+                                            </div>
+                                            <div data-name="agenda-date" class="slds-col slds-size--1-of-1 slds-large-size--1-of-2">
+                                                {!agenda.startDate}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </aura:iteration>
+                            </aura:if>
+                        </div>
+                    </div>
+                    <div class="{!v.speakers.length > 1 ? 'slds-event--speaker__next' : 'slds-hide'}" onclick="{!c.nextSpeaker}">
+                        <div data-name="next-speaker" class="slds-grid slds-grid--vertical-align-center">
+                            <lightning:icon iconName="utility:chevronright" size="large" class="speaker-chevron"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-modal__footer slds-modal__footer_clear slds-border-radius--none slds-theme--default slds-text-align--center">
+                    <Framework:Button qaData='{"type" : "button", "name": "hideSpeaker"}' type="brand" enableProgressIndicator="false" label="Close" onClickAction="{!c.hideSpeaker}"/>
+                </div>
+            </div>
+        </div>
+        <div data-name="speakerBackdrop" class="slds-backdrop" aura:id="speakerBackdrop" onclick="{!c.hideSpeaker}"/>
+    </div>
+</aura:component>

@@ -1,0 +1,11 @@
+<aura:component >
+    <aura:handler name="TrackingDataCleanupRecordCountEvent" 
+        event="et4ae5:TrackingDataCleanupRecordCountEvent"
+        action="{!c.handleTrackingDataCleanupRecordCountEvent}"/>
+    <aura:attribute name="parentRecordCount" type="Integer" default="0"/>
+
+    <div class="slds-m-bottom_large">
+        <et4ae5:TrackingDataCleanupAggregateHeader />
+    </div>
+    <et4ae5:TrackingDataCleanupGrid recordCount="{!v.parentRecordCount}"/>
+</aura:component>

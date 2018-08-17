@@ -1,0 +1,204 @@
+<aura:component controller="Framework.AdminApiServiceConnectionController">
+    <ltng:require scripts="{!join(',',$Resource.Framework__SLDS_BaseV2+'/js/scripts.min.js',$Resource.Framework__SLDS_BaseV2+'/js/plugins.js')}" afterScriptsLoaded="{!c.doInit}"/>
+  <aura:attribute name="apiServiceConnection" type="String" default="" access="public" description="Connection for the Api Service to load"/>
+  <aura:attribute name="apiServiceKey" type="String" default="" access="public" description="Key for the Api Service to load"/>
+  <aura:attribute name="apiServiceConnectionConfig" type="Object" access="public" default="{}" description="Connection config for the Api Service"/>
+
+	<aura:attribute name="apiServiceConnectionObj" type="Object" access="private" default="{}"/>
+	<aura:attribute name="modalApiServiceConnectionHeader" type="String" access="private" default=""/>
+	<aura:attribute name="apiService" type="String" access="private" default=""/>
+	<aura:attribute name="apiServiceConnectionConfigObjs" type="Map[]" access="public" default="[]"/>
+
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+  <aura:registerEvent name="InputFieldValidationEvent" type="Framework:InputFieldValidationEvent"/>
+  <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+  <div class="slds-medium-size--3-of-4 slds-size--1-of-1 slds-grid slds-wrap">
+    <div class="slds-col slds-size--1-of-1">
+      <div class="slds-page-header">
+        <div class="slds-media slds-media--center">
+          <div class="slds-media__figure slds-ie-fix--width__icon">
+            <img src="//fonteva-cdn.s3.amazonaws.com/framework-admin/APIServices/APIServices.svg" style="height:50px;" alt="Placeholder" />
+          </div>
+          <!-- /.slds-media__figure -->
+          <div class="slds-media__body">
+            <nav role="navigation">
+              <p id="bread-crumb-label" class="slds-assistive-text">{!$Label.Framework.Dashboard}:</p>
+              <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                  <li class="slds-list__item slds-text-heading--label">
+                      <a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.showComponent}" data-name="Framework:SparkAdminSidebar" >
+                              {!$Label.Framework.Dashboard}
+                      </a>
+                  </li>
+                  <li class="slds-list__item slds-text-heading--label">
+                      <a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.renderApiServices}" data-name="Framework:SparkAdminSidebar" >
+                          {!$Label.Framework.API}&nbsp;{!$Label.Framework.Services}
+                      </a>
+                  </li>
+                <li class="slds-list__item slds-text-heading--label">
+                    <a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.renderApiService}" data-name="Framework:SparkAdminSidebar" >
+                        {!v.apiServiceConnectionObj.apiService}
+                    </a>
+                </li>
+                <li class="slds-list__item slds-text-heading--label slds-p-left--x-small">
+                    {!v.apiServiceConnectionObj.configId}
+                </li>
+              </ol>
+            </nav>
+            <div class="slds-text-heading--medium">
+              API&nbsp;Services
+            </div>
+          </div>
+          <!-- /.slds-media__body -->
+        </div>
+        <!-- /.slds-media -->
+      </div>
+      <!-- /.slds-page-header -->
+      <div aura:id="mainBody" class="slds-object-height--full__nofooter slds-scrollable--y">
+        <div class="slds-grid slds-wrap slds-p-around--large">
+          <div class="slds-col slds-object--full__width">
+            <div class="slds-media slds-media--responsive slds-media--top">
+              <div class="slds-media__figure slds-ie-fix--width__icon">
+                <img src="{!v.apiService.imagePath}" style="height: 150px; width: auto;" class="slds-avatar"></img>
+              </div>
+              <!-- /.slds-media__figure -->
+              <div class="slds-media__body">
+                <table class="slds-table slds-table--bordered">
+                  <tbody>
+                    <tr>
+                      <th><strong>{!$Label.Framework.API_Service_Key}</strong></th>
+                      <td>{!v.apiService.displayName}</td>
+                    </tr>
+                    <tr>
+                      <th>
+                        {!$Label.Framework.Username}
+                      </th>
+                      <td>
+                        {!v.apiServiceConnectionObj.username}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        {!$Label.Framework.Password}
+                      </th>
+                      <td>*******************</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.slds-media__body -->
+            </div>
+            <!-- /.slds-media -->
+          </div>
+          <!-- /.slds-col -->
+        </div>
+        <!-- /.slds-grid -->
+        <div class="slds-col slds-p-bottom--large">
+          <div class="slds-page-header slds-object--full-width slds-grid slds-grid--align-spread">
+            <div class="slds-text-heading--medium">API Service Connection Configs</div>
+              <Framework:Button onClickAction="{!c.modalNewApiServiceConnectionConfig}"
+                        aura:id="newServiceResource"
+                        enableProgressIndicator="false"
+                        type="brand"
+                        label="New API Service Connection Config"
+                        svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#add'}"
+                        svgContainerClass="slds-float--left slds-m-right--small"
+                        svgClass="slds-button__icon slds-m-top--x-small"
+                        svgAssistiveText="New API Service Connection Config" />
+          </div>
+          <span class="slds-scrollable--x slds-object--full__width">
+            <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+              <thead>
+                <tr class="slds-text-heading--label">
+                  <th>
+                    {!$Label.Framework.Name}
+                  </th>
+                  <th>
+                    {!$Label.Framework.Value}
+                  </th>
+                  <th>
+                    {!$Label.Framework.Action}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                  <aura:iteration items="{!v.apiServiceConnectionConfigObjs}" var="apiServiceConnectionConfigObj">
+                      <tr>
+                                      <td>
+                                        {!apiServiceConnectionConfigObj.name}
+                                      </td>
+                                      <td>
+   <aura:if isTrue="{!apiServiceConnectionConfigObj.isMasked}">
+     ****************
+     <aura:set attribute="else">
+       {!apiServiceConnectionConfigObj.value}
+     </aura:set>
+   </aura:if>
+ </td><td>
+                        <div class="slds-dropdown-trigger">
+                          <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" aria-haspopup="true">
+                            <lightning:icon iconName="utility:down" size="x-small" alternativeText="Enabled"/>
+                          </button>
+                          <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+                            <ul class="slds-dropdown__list" role="menu">
+                              <li class="slds-dropdown__item">
+                                <a href="javascript:void(0)" onclick="{!c.modalApiServiceConnectionConfig}" data-id="{!apiServiceConnectionConfigObj.configId}" data-type="edit">
+                                {!$Label.Framework.Edit}
+                                </a>
+                              </li>
+                              <li class="slds-dropdown__item">
+                                <a href="javascript:void(0)" onclick="{!c.removeApiServiceConnectionConfig}" data-id="{!apiServiceConnectionConfigObj.name}" >
+                                {!$Label.Framework.Delete}
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                          <!-- /.slds-dropdown -->
+                        </div>
+                        <!-- /.slds-dropdown-trigger -->
+                      </td>
+                                  </tr>
+                  </aura:iteration>
+              </tbody>
+            </table>
+          </span>
+          <!-- /.slds-scrollable-x -->
+        </div>
+      </div>
+      <!-- /aura:id="mainBody" -->
+    </div>
+  </div>
+  <div class="modal fade slds-modal slds-fade-in-open" id="modalApiServiceConnectionConfig">
+    <div class="modal-dialog slds-modal__container">
+      <div class="modal-content">
+          <div class="slds-modal__header">
+            <h2 class="slds-text-heading--medium">{!v.modalApiServiceConnectionHeader}</h2>
+            <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal">
+                 <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+            </button>
+            <!-- /.slds-button -->
+          </div>
+          <!-- /.slds-modal__header -->
+          <form id="service_connection_form"  containerClass="slds-form" onsubmit="{!c.saveConnectionConfig}">
+            <div class="slds-modal__content slds-object-height--max-half slds-scrollable--y">
+              <div class="slds-col slds-size--1-of-1">
+                <div class="slds-form">
+                  <Framework:InputFields group="ConConfig" fieldType="string" isRequired="true" aura:id="name" label="{!$Label.Framework.Name}" value="{!v.apiServiceConnectionConfig}"/>
+                  <Framework:InputFields group="ConConfig" fieldType="string" isRequired="true" aura:id="value" label="{!$Label.Framework.Value}" value="{!v.apiServiceConnectionConfig}"/>
+                  <Framework:InputFields group="ConConfig" fieldType="boolean" aura:id="isMasked" label="{!$Label.Framework.Is_Masked}" value="{!v.apiServiceConnectionConfig}"/>
+                </div>
+                <!-- /.slds-form -->
+              </div>
+              <!-- /.slds-col -->
+            </div>
+            <!-- /.slds-modal__content -->
+            <div class="slds-modal__footer slds-text-align--right">
+              <button class="slds-button slds-button--neutral" data-dismiss="modal" >{!$Label.Framework.Cancel}</button>
+              <input type="submit" href="javascript:void(0)" data-group="ConConfig" onclick="{!c.validateFields}" data-form="service_connection_form" class="slds-button slds-button--neutral slds-button--brand slds-m-left--xx-small" value="{!$Label.Framework.Save}">{!$Label.Framework.Save}</input>
+            </div>
+            <!-- /.slds-modal__footer -->
+          </form>
+      </div>
+    </div>
+  </div>
+</aura:component>

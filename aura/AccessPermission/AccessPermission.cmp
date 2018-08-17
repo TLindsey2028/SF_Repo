@@ -1,0 +1,43 @@
+<aura:component description="AccessPermission" controller="OrderApi.AccessPermissionsController" extends="Framework:BaseComponent" implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global">
+    <aura:attribute name="sObjId" type="String" />
+    <aura:attribute name="objectInformation" type="Object" default="{}"  />
+    <aura:attribute name="accessPermissions" type="Object" default="{}" />
+    <aura:registerEvent name="ComponentLoadedEvent" type="OrderApi:ComponentLoadedEvent"/>
+    <ltng:require scripts="{!$Resource.Framework__UrlUtil}" styles="{!$Resource.OrderApi__SLDS_Base+'/css/styles.css'}" afterScriptsLoaded="{!c.doInit}"/>
+    <div class="slds hidden" aura:id="mainWrapperDiv">
+        <div class="slds-grid slds-grid--align-center slds-wrap">
+            <div class="slds-size--1-of-1 slds-grid slds-wrap">
+                <div class="slds-col slds-size--1-of-1">
+                    <div class="slds-page-header">
+                        <div class="slds-media slds-media--center">
+                            <div class="slds-media__body">
+                                <span class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+                                    {!$Label.OrderApi.Access_Permissions_For}&nbsp;{!v.objectInformation.name}
+                                </span>
+                                <Framework:Button enableProgressIndicator="false"
+                                                  type="neutral"
+                                                  label="{!$Label.OrderApi.Cancel}"
+                                                  aura:id="cancelConnect"
+                                                  onClickAction="{!c.cancelAccessPermissions}"/>
+                            </div>
+                            <div>
+                                <Framework:Button type="brand"
+                                                  label="{!$Label.OrderApi.Save}"
+                                                  aura:id="saveAccessPermissions"
+                                                  onClickAction="{!c.saveAccessPermissions}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap slds-size--1-of-1 slds-theme--shade slds-custom-height">
+            <div class="slds-col slds-grid">
+                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--large slds-m-vertical--medium">
+                    <Framework:InputFields aura:id="selectedPermissions" fieldType="multidragdrop" label="{!$Label.OrderApi.Access_Permissions_Drag_Drop_Label}" value="{!v.accessPermissions}" otherAttributes='{"showSearchField" : true,"searchPlaceholder" : "Search Badges"}'/>
+                </div>
+            </div>
+        </div>
+        <Framework:Toast aura:id="toastMessages"/>
+    </div>
+</aura:component>

@@ -1,0 +1,23 @@
+<aura:component >
+  <aura:attribute name="showSpinner" type="Boolean" default="true" />
+  <aura:attribute name="items" type="List[]"/>
+  <aura:attribute name="loadState" type="String" default="Loading"/>
+  <aura:attribute name="type" type="String"/>
+  <aura:attribute name="displayText" type="String"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:registerEvent name="CompleteLoaderEvent" type="EventApi:CompleteLoaderEvent"/>
+  <aura:method name="startLoader" action="{!c.startLoader}"></aura:method>
+  <aura:method name="completeLoader" action="{!c.completeLoader}"></aura:method>
+  
+  <div aura:id="loaderFrame" class="loaderFrame">
+    <div class="slds-grid slds-grid--align-center slds-wrap slds-object-height--full">
+      <div class="slds-col slds-size--1-of-1 slds-text-align--center slds-align-middle">
+        <div class="slds-text-heading--medium slds-m-bottom--x-large">
+          <div class="slds-grid slds-wrap slds-grid--align-center">
+            <span aura:id="textLoad"><strong>{!v.loadState}&nbsp;</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</aura:component>

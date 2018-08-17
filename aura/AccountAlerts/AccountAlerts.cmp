@@ -1,0 +1,68 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="GLOBAL" controller="AQB.ProspectQueueController">
+    
+    <aura:handler name="init" action="{!c.myAction}" value="{!this}" />
+    <aura:attribute name="accountinfo" type="Object" access="GLOBAL" />
+    <aura:attribute name="prospectinfo" type="Object" access="GLOBAL" />
+    
+    <div class="slds-box">
+        <aura:if isTrue="{!v.prospectinfo.AQB__Stage__c == 'Managed'}">
+            <img style="margin-left:5px; margin-right:5px; margin-top: -22px;" src="/resource/AQB__ManagedProspectIcon" title="{!'Managed by ' + v.prospectinfo.AQB__ProspectOwner__r.Name}" />
+            <aura:set attribute="else">
+                <aura:if isTrue="{!v.prospectinfo.AQB__Stage__c == 'Disqualified'}">
+                    <img style="margin-left:5px; margin-right:5px; margin-top: -22px;" src="/resource/AQB__DisqualifiedProspectIcon" title="{!'Disqualified by ' + v.prospectinfo.AQB__Researcher__r.Name + ' on ' + v.prospectinfo.AQB__ResearchCompletedDate__c}" />
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!v.prospectinfo.AQB__Stage__c == 'Research in Progress'}">
+                            <img style="margin-left:5px; margin-right:5px; margin-top: -22px;" src="/resource/AQB__ResearchingProspectIcon" title="{!'Research in progress by ' + v.prospectinfo.AQB__Researcher__r.Name}" />
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{!v.prospectinfo.AQB__Stage__c == 'Needs Manager'}">
+                                    <img style="margin-left:5px; margin-right:5px; margin-top: -22px;" src="/resource/AQB__ResearchingProspectIcon" title="Needs a Manager" />
+                                    <aura:set attribute="else">
+                                        <aura:if isTrue="{!v.prospectinfo.AQB__Stage__c == 'Needs Research'}">
+                                            <img style="margin-left:5px; margin-right:5px; margin-top: -22px;" src="/resource/AQB__ResearchingProspectIcon" title="Needs Research" />
+                                            <aura:set attribute="else">
+                                                <img style="margin-left:5px; margin-right:5px; margin-top: -22px;" src="/resource/AQB__NotProspectIcon" title="Not a prospect" />
+                                            </aura:set>
+                                        </aura:if>
+                                    </aura:set>
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>
+                    </aura:set>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+                
+        <aura:if isTrue="{!v.accountinfo.AQB__DoNotContact__c == true}">
+            <img style="margin-left:5px; margin-right:5px; margin-top: -22px;" src="/resource/AQB__DoNotContactIcon" title="Do Not Contact" />
+        </aura:if>
+        <aura:if isTrue="{!v.accountinfo.AQB__DoNotSolicit__c == true}">
+            <img style="margin-left:5px; margin-right:5px; margin-top: -22px;" src="/resource/AQB__DoNotSolicitIcon" title="Do Not Solicit" />
+        </aura:if>
+        <aura:if isTrue="{!v.accountinfo.AQB__AccountDefaultStatus__c == 'Lost'}">
+            <img style="margin-left:5px; margin-right:5px; margin-top: -22px;" src="/resource/AQB__LostIcon" title="Permanent Address is Lost" />
+        </aura:if>
+    
+        <div class="slds" id="popupDiv">
+            <div aria-hidden="true" role="dialog" class="slds-modal slds-modal--prompt slds-fade-in-hide" aura:id="alertPopup">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header slds-theme--info">
+                        <button class="slds-button slds-button--icon-inverse slds-notify__close" onclick="{!c.hideAlertPopup}" style="float:right">
+                            <AQB:svg class="slds-button__icon slds-button__icon--large" xlinkHref="/resource/SLDS214/assets/icons/action-sprite/svg/symbols.svg#close">
+                            </AQB:svg>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 class="slds-text-heading--medium">Account Alert</h2>
+                    </div>
+                    <div class="slds-modal__content slds-p-around--medium">
+                        <div>
+                            <div style="color: #ff0000; font-weight: bold; font-size: 1.0rem;">{!v.accountinfo.AQB__Alert__c}</div>
+                            <br />
+                            <center><ui:button label="OK" press="{!c.hideAlertPopup}" /></center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+                                
+</aura:component>

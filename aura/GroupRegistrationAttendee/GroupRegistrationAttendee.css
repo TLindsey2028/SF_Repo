@@ -1,0 +1,14 @@
+.THIS .slds-theme--shade {
+    border-top: 2px solid #dbdfe7;
+    border-bottom: 2px solid #dbdfe7;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.THIS .slds-object--custom-left {
+    width: .2rem;
+}
+
+.THIS .slds-object--custom-right {
+    width: .6rem;
+}

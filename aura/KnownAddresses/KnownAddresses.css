@@ -1,0 +1,17 @@
+.THIS .address-text--fonteva label.slds-checkbox{
+    height: 0;
+}
+
+.THIS .fonteva-portal-button {
+    min-height: 40px;
+}
+
+.THIS:not(.fonteva-portal) .fonteva-slds-button.fonteva-button_custom {
+    align-items: center!important;
+    display: flex!important;
+    flex-direction: row-reverse!important;
+}
+
+.THIS.fonteva-portal .slds-select_container select {
+    height: 40px!important;
+}

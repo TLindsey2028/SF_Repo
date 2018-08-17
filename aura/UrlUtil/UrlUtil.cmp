@@ -1,0 +1,11 @@
+<aura:component description="A method-only component containing methods dealing with URLs" access="global" controller="Framework.AwsUtil">
+    <aura:method name="getTimedDirectLink" access="global" description="When passed a URL targeting /apex/AwsProxy, will return a signed, timed link direct to AWS. Otherwise returns the caller's URL. URL is the only parameter provided to the callback.">
+        <aura:attribute name="url" type="String"/>
+        <aura:attribute name="callback" type="Function"/>
+    </aura:method>
+    <aura:method name="wrapLinks" access="global" description="Performs `getDirectTimedLink` against all of the `attrNames` stored in `cmp`.">
+        <aura:attribute name="cmp" type="Component" required="true"/>
+        <aura:attribute name="attrNames" type="Object[]" required="true"/>
+        <aura:attribute name="callback" type="Function" required="false"/>
+    </aura:method>
+</aura:component>

@@ -1,0 +1,16 @@
+.THIS .slds-button.rotate {
+    transform: rotate(-90deg);
+    transition: transform .25s ease-in-out;
+}
+
+.THIS .slds-button {
+    transition: transform .25s ease-in-out;
+}
+
+.THIS .slds-collapse-section-title .slds-text-heading--small {
+    font-size: 1.1rem;
+}
+
+.THIS .slds-collapse-section-title {
+    padding: .875rem .75rem;
+}

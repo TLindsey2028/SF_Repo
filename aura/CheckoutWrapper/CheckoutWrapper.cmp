@@ -1,0 +1,76 @@
+<aura:component description="CheckoutAddress" controller="OrderApi.SalesOrderPaymentController"  access="global">
+	<ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/scripts.min.js'}" afterScriptsLoaded="{!c.doInit}"/>
+	<aura:attribute name="storeId" type="Id" access="global"/>
+	<aura:attribute name="epaymentJSON" type="String" default="{}"/>
+	<aura:attribute name="eCheckRedirectUrl" type="String"/>
+	<aura:attribute name="customerObj" type="Map" default="{}"/>
+	<aura:attribute name="isLoading" type="Boolean" default="true"/>
+	<aura:attribute name="fieldTextShipping" type="String"/>
+	<aura:attribute name="fieldTextPayment" type="String"/>
+	<aura:attribute name="iFrameStyles" type="String" default="" access="global"/>
+	<aura:attribute name="textColor" type="String" access="global" description="Use this attribute to set the text color adapting the event's theme" default="rgb(22, 50, 92)"/>
+	<aura:attribute name="environmentKey" type="String" access="global"/>
+	<aura:attribute name="salesOrderId" type="String" access="global"/>
+	<aura:attribute name="paymentPageLoaded" type="Boolean" default="false" access="global"/>
+	<aura:attribute name="retURL" type="String" default="" access="global"/>
+	<aura:attribute name="salesOrderObj" type="Map" default="{}" access="global"/>
+	<aura:attribute name="salesOrderJSON" type="String"/>
+	<aura:attribute name="customerId" type="String" access="global"/>
+	<aura:attribute name="successfulPaymentReturnUrl" type="String" access="global"/>
+	<aura:attribute name="gatewayToken" type="String" access="global"/>
+	<aura:attribute name="returnObj" type="Map" access="global"/>
+	<aura:attribute name="paymentSuccessReturnObj" type="Map" access="global"/>
+	<aura:attribute name="redirectUrl" type="String" default="" access="global"/>
+	<aura:attribute name="offsiteRedirectUrl" type="String" default="" access="global"/>
+	<aura:attribute name="postbackRedirectUrl" type="String" default="" access="global"/>
+    <aura:attribute name="showOfflinePayment" type="Boolean" default="false" access="global"/>
+	<aura:attribute name="showProformaPayment" type="Boolean" default="false" access="global"/>
+	<aura:attribute name="invalidSO" type="Boolean" default="false"/>
+	<aura:attribute name="invalidMessage" type="String" default=""/>
+	<aura:attribute name="isThemed" type="Boolean" default="true" access="global"/>
+	<aura:attribute name="paymentGlobalId" type="String" />
+	<aura:attribute name="shippingGlobalId" type="String" />
+	<aura:handler event="OrderApi:WillNotShipEvent" action="{!c.handleWillNotShipEvent}"/>
+	<aura:handler event="Framework:ButtonToggleIndicatorEvent" action="{!c.handleButtonToggleIndicatorEvent}"/>
+	<aura:handler event="OrderApi:ProcessingChangesEvent" action="{!c.handleProcessingChangesEvent}"/>
+	<aura:handler event="OrderApi:PayNowTabChangeEvent" action="{!c.handlePayNowTabChangeEvent}"/>
+	<aura:handler event="OrderApi:ToggleCheckoutPanelsEvent" action="{!c.handleToggleCheckoutPanelsEvent}"/>
+	<div class="{!v.isThemed ? 'slds-col slds-grid slds-grid_vertical fonteva-portal' : 'slds-col slds-grid slds-grid_vertical'}">
+		<div class="slds slds-loading-layout" aura:id="loader">
+			<div class="slds-grid slds-loading-layout">
+				<div class="slds-col slds-text-align--center slds-align-middle" >
+					<img src="{!$Resource.Framework__SLDS_BaseV2+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+					<span class="slds-text-heading--medium">Loading...</span>
+				</div>
+			</div>
+		</div>
+		<div class="hidden" aura:id="content">
+		<aura:if isTrue="{!or(v.salesOrderObj.taxRequired,v.salesOrderObj.shippingRequired)}">
+			<div class="slds-card slds-theme_default">
+				<div class="slds-card__header slds-p-vertical--medium slds-p-horizontal--large slds-theme_shade slds-m-bottom_none">
+					{!v.fieldTextShipping}
+				</div>
+				<div class="slds-card__body slds-theme--default slds-m-bottom--none slds-p-vertical--medium slds-p-horizontal--large" data-name="shippingAddressContent" aura:id="shippingAddressContent">
+
+				</div>
+			</div>
+		</aura:if>
+
+		<div class="slds-card slds-theme_default">
+			<div class="slds-card__header slds-p-vertical--medium slds-p-horizontal--large slds-theme_shade slds-m-bottom_none">
+				{!v.fieldTextPayment}
+			</div>
+				<div class="slds-card--body slds-theme--default slds-m-bottom--none slds-p-vertical--medium slds-p-horizontal--large hidden" data-name="paymentMethodsDiv" aura:id="paymentMethodsDiv">
+					<div data-name="paymentMethodContent" aura:id="paymentMethodContent">
+					</div>
+					<div class="slds-grid slds-col hidden" data-name="processBtnDiv" aura:id="processBtnDiv">
+						<div class="slds-col slds-size--1-of-1 slds-p-bottom--medium slds-grid_vertical slds-text-align_center">
+							<Framework:Button onClickAction="{!c.processPayment}" qaData='{"type" : "button", "name": "processBtn"}' aura:id="processBtn" group="paymentButtons" label="Process Payment"/>
+						</div>
+					</div>
+				</div>
+		</div>
+		</div>
+	</div>
+	<Framework:Toast aura:id="toastMessages"/>
+</aura:component>

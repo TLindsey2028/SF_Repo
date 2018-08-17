@@ -1,0 +1,63 @@
+<aura:component description="TicketTypeDetails" controller="ROEApi.TicketTypeDetailsController">
+    <aura:attribute name="orderItem" type="Map" required="true"/>
+    <aura:attribute name="priceRuleObj" type="Map" default="{}"/>
+    <aura:attribute name="contactLookupId" type="String" />
+    <aura:attribute name="oldContactId" type="String" />
+    <aura:attribute name="scTotal" type="Decimal" default="0.00"/>
+    <aura:attribute name="piTotal" type="Decimal" default="0.00"/>
+    <aura:attribute name="scheduleItemsComplete" type="Boolean" default="true"/>
+    <aura:attribute name="formComplete" type="Boolean" default="true"/>
+    <aura:attribute name="contactPrefix" type="String" default=""/>
+    <aura:attribute name="customerObj" type="Map" default="{}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:handler event="OrderApi:ContactCreatedEvent" action="{!c.handleContactCreationEvent}"/>
+    <aura:handler event="ROEApi:ScheduleItemCompTotalUpdateEvent" action="{!c.handleSCItemTotalUpdateEvent}"/>
+    <aura:handler event="ROEApi:PackageItemCompTotalUpdateEvent" action="{!c.handlePIItemTotalUpdateEvent}"/>
+    <aura:handler event="ROEApi:TogglePackageItemTableEvent" action="{!c.handleTogglePackageItemEvent}"/>
+    <aura:handler event="ROEApi:ScheduleItemsCompletenessUpdateEvent" action="{!c.handleSCCompletenessEvent}"/>
+    <aura:handler event="ROEApi:FormSubmittedEvent" action="{!c.handleFormSubmitEvent}"/>
+    <aura:handler event="OrderApi:CustomerLookupFilterUpdatedEvent" action="{!c.handleCustomerLookupFilterUpdateEvent}"/>
+    <aura:registerEvent name="ItemUpdateEvent" type="ROEApi:ItemUpdateEvent"/>
+    <aura:registerEvent name="ItemCompleteEvent" type="ROEApi:ItemCompleteEvent"/>
+    <style>
+        .slds-icon--item-detail  {
+            height: 160px!important;
+            width: 160px!important;
+        }
+    </style>
+    <div class=" slds-size--1-of-1 slds-grid">
+        <div class="slds-size--1-of-5 slds-p-horizontal--small slds-m-bottom-x--small slds-position--relative" aura:id="customerLookup">
+            <OrderApi:ContactPopover customerObj="{!v.customerObj}" aura:id="assignmentPopOver" uniqueIdentifier="{!v.orderItem.salesOrderLine}"/>
+        </div>
+        <div class="slds-size--1-of-5 slds-p-horizontal--small slds-m-bottom-x--small">
+            <Framework:InputFields group="{!v.orderItem.salesOrderLine}" fieldType="picklist" value="{!v.orderItem}" label="Ticket Type" isRequired="true" aura:id="ticketType" fireChangeEvent="true"/>
+        </div>
+        <div class="{!v.orderItem.priceRule == null ? 'slds-size--1-of-5 slds-p-horizontal--small slds-m-bottom-x--small slds-hidden' : 'slds-size--1-of-5 slds-p-horizontal--small slds-m-bottom-x--small'}">
+            <label class="slds-form-element__label helper-margin-right">Price Rule</label>
+            <div><strong>{!v.priceRuleObj.name} - <Framework:CurrencyField value="{!v.priceRuleObj.price}" currencyISOCode="{!v.orderItem.currencyISOCode}" isMultiCurrencyOrg="{!v.orderItem.isMultiCurrencyOrg}"/></strong></div>
+            <div>
+                <Framework:InputFields group="{!v.orderItem.salesOrderLine}" fieldType="boolean" aura:id="priceOverride" value="{!v.orderItem}" label="Override" fireChangeEvent="true"/>
+            </div>
+        </div>
+        <div class="slds-size--1-of-5 slds-p-horizontal--small slds-m-bottom-x--small slds-hidden" aura:id="newPrice">
+            <Framework:InputFields group="{!v.orderItem.salesOrderLine}" otherAttributes='{"min" : 0,"max": 9999999}' fieldType="currency" aura:id="overriddenPrice" value="{!v.orderItem}" label="New Price" isRequired="true" fireChangeEvent="true" minValueValidationMessage="{!$Label.ROEApi.Min_Price_Validation_Message}" maxValueValidationMessage="{!$Label.ROEApi.Max_Price_Validation_Message}"/>
+        </div>
+        <div class="slds-size--1-of-5 slds-p-horizontal--small slds-m-bottom-x--small slds-text-align--right slds-text-heading--medium">
+            <Framework:CurrencyField aura:id="itemPrice" value="{!v.orderItem.price}" currencyISOCode="{!v.orderItem.currencyISOCode}" isMultiCurrencyOrg="{!v.orderItem.isMultiCurrencyOrg}"/>
+        </div>
+    </div>
+    <div class="slds-size--1-of-1 slds-grid slds-m-top--medium slds-col--padded" aura:id="form">
+    </div>
+    <div class="slds-size--1-of-1 slds-grid slds-m-top--medium">
+        <aura:if isTrue="{!v.orderItem.scheduleItemsEnabled}">
+            <ROEApi:ScheduleItems salesOrder="{!v.orderItem.salesOrder}" parentSalesOrderLine="{!v.orderItem.salesOrderLine}" event="{!v.orderItem.event}" currencyISOCode="{!v.orderItem.currencyISOCode}" isMultiCurrencyOrg="{!v.orderItem.isMultiCurrencyOrg}"/>
+        </aura:if>
+    </div>
+    <div class="slds-size--1-of-1 slds-grid slds-m-top--medium slds-hide" aura:id="packageItemWrapper">
+        <aura:if isTrue="{!!v.orderItem.isPackageItem}">
+            <ROEApi:PackageItemDetails customerId="{!v.orderItem.customerId}" parentSalesOrderLine="{!v.orderItem.salesOrderLine}" salesOrder="{!v.orderItem.salesOrder}" item="{!v.orderItem.itemId}" currencyISOCode="{!v.orderItem.currencyISOCode}" isMultiCurrencyOrg="{!v.orderItem.isMultiCurrencyOrg}"/>
+        </aura:if>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

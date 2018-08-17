@@ -1,0 +1,76 @@
+<aura:component description="EventAgendaModal" access="global" extends="LTE:EventBase" implements="LTE:EventInterface" controller="LTE.EventRegistrationController">
+	<aura:attribute name="sessionItems" type="List"/>
+	<aura:attribute name="currentSessionId" type="String"/>
+	<aura:registerEvent name="ButtonToggleIndicatorEvent" type="Framework:ButtonToggleIndicatorEvent"/>
+	<aura:attribute name="attendeeName" type="String"/>
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:attribute name="orderLines" type="Map[]" default="[]" />
+	<aura:attribute name="readOnly" type="Boolean" default="true" access="global"/>
+	<aura:attribute name="attendeeObj" type="LTE.AttendeeRecord" access="global"/>
+	<aura:attribute name="salesOrderObj" type="Map"/>
+	<aura:attribute name="initialPurchase" type="Boolean" access="global" default="true"/>
+	<aura:attribute name="showPurchase" type="Boolean" access="global" default="false"/>
+	<aura:attribute name="eventObj" type="Map"/>
+	<aura:attribute name="formCmpGlobalId" type="String"/>
+	<aura:attribute name="isFinalStep" type="Boolean" default="false"/>
+	<aura:registerEvent name="EventSummaryUpdateEvent" type="LTE:EventSummaryUpdateEvent"/>
+	<aura:registerEvent type="LTE:UpdateShoppingCartItemCountEvent" name="UpdateShoppingCartItemCountEvent"/>
+	<aura:registerEvent name="UpdateButtonEvent" type="LTE:UpdateButtonEvent"/>
+	<aura:attribute name="removeInProgress" type="Boolean" default="false"/>
+	<aura:attribute name="currentContact" type="String"/>
+	<aura:attribute name="continueSessionBtnLabel" type="String" default="{!$Label.LTE.Event_Add_To_Order}"/>
+	<aura:attribute name="onCheckoutPage" type="Boolean" default="false"/>
+
+	<div class="fonteva-modal_container slds-modal slds-fade-in-open" aura:id="modalContainer">
+		<div class="slds-modal__header slds-modal__header_empty">
+			<lightning:buttonIcon iconName="utility:close" alternativeText='Close' variant="bare-inverse" class="slds-modal__close" size="large" onclick="{!c.cancelSetup}"/>
+		</div>
+		<div class="fonteva-modal_body slds-p-around_large">
+			<div class="slds-grid slds-grid_vertical">
+				<div class="slds-text-heading_medium slds-m-bottom_small">
+					<strong>
+							{!v.attendeeName}
+					</strong>
+				</div>
+				<div class="fonteva-box_custom slds-m-bottom_large">
+					<aura:iteration var="item" items="{!v.sessionItems}" indexVar="i">
+						<div class="{!v.currentSessionId == item.id ? 'slds-box active' : item.assignmentComplete ? 'slds-box complete' : 'slds-box'}">
+							<div data-id="{!item.id}" data-index="{!i}" onclick="{!c.changeSession}">
+								{!item.name}
+							</div>
+							<aura:if isTrue="{!!v.onCheckoutPage}">
+								<div class="fonteva-box_action" onclick="{!c.removeSession}" data-id="{!item.id}" data-index="{!i}">
+									<lightning:button iconName="utility:clear" variant="base" class="fonteva-button_clear"/>
+								</div>
+							</aura:if>
+						</div>
+					</aura:iteration>
+				</div>
+			</div>
+			<div class="fonteva-theme_shade slds-grid_pull-padded-large">
+				<div class="slds-grid slds-grid_vertical fonteva-theme_shade fonteva-modal_body-content slds-p-top_large">
+					<div data-name="sessionForm" aura:id="sessionForm" class="fonteva-form_wrapper slds-m-bottom_small"></div>
+				</div>
+			</div>
+		</div>
+		<div class="slds-p-around_medium fonteva-modal_footer">
+			<div class="slds-text-align_center">
+				<Framework:Button label="{!$Label.LTE.Cancel_Attendee_Information_My_Reg}" onClickAction="{!c.cancelSetup}" type="neutral" aura:id="cancelSession"/>
+				<aura:if isTrue="{!v.isFinalStep}">
+					<Framework:Button label="{!v.continueSessionBtnLabel}" type="success" onClickAction="{!c.continueSetup}" aura:id="continueSession"/>
+					<aura:set attribute="else">
+						<Framework:Button label="{!$Label.LTE.Event_Next_Button}" onClickAction="{!c.continueSetup}" type="brand" aura:id="continueSession"/>
+					</aura:set>
+				</aura:if>
+			</div>
+		</div>
+	</div>
+	<div class="slds-backdrop slds-backdrop_open" aura:id="modalBackdrop" />
+	<Framework:MessagePrompt title="{!$Label.LTE.Cancel_Registration_Header}"
+							 message="{!$Label.LTE.Cancel_Add_Tickets_Message}"
+							 severity="error"
+							 aura:id="cancelAddSessions"
+							 cancelButtonLabel="{!$Label.LTE.Cancel_Reg_No}"
+							 submitButtonLabel="{!$Label.LTE.Cancel_Reg_Yes}"
+							 submitOnClickAction="{!c.closeModal}"/>
+</aura:component>

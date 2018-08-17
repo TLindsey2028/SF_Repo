@@ -1,0 +1,28 @@
+@media (max-width: 36em) {
+  .THIS .fonteva-responsive-padding {
+    padding-right: 0.35rem!important;
+    padding-left: 0.35rem!important;
+  }
+}
+
+@media (max-width: 20em) {
+  .THIS .fonteva-responsive-heading {
+    font-size: 1.2em!important;
+  }
+  .THIS .fonteva-responsive-body {
+    font-size: 1.2em!important;
+  }
+}
+
+.THIS .fonteva-num-guests {
+  max-width: 9em;
+  display: inline-block;
+}
+
+.THIS .fonteva-rsvp-button {
+  min-width: 18em;
+}
+
+.THIS .fonteva-info-block {
+  color: rgb(194, 57, 52);
+}

@@ -1,0 +1,212 @@
+<aura:component controller="AQB.BatchItemsController">
+    
+    <aura:handler name="init" action="{!c.myAction}" value="{!this}" />
+    <aura:registerEvent name="closeTransactionsPopup" type="AQB.closeTransactionsEvent" />
+    
+    <aura:attribute name="batchItem" type="AQB__Batch_Item__c" access="GLOBAL" default="{ sobjectType: 'AQB__Batch_Item__c'}" />   
+    <aura:attribute name="numberOfTransactions" type="Integer" access="GLOBAL" />
+    <aura:attribute name="currentTransaction" type="String" access="GLOBAL" />
+    <aura:attribute name="refresh" type="Boolean" access="GLOBAL" />
+    
+    <force:outputField aura:id="accountLookupOutput" value="{!v.batchItem.AQB__Amount__c}" class="slds-hide"></force:outputField>
+    <table class="slds-table slds-table--bordered slds-table--striped" style="width:100%;">
+        <thead>
+            <tr class="slds-text-heading--label">
+                <th scope="col"><span class="slds-truncate">Action</span></th>
+                <th scope="col"><span class="slds-truncate">Amount</span></th>
+                <th scope="col">
+                    <aura:if isTrue="{!v.batchItem.AQB__Method__c == 'Check'}"> 
+                   		<span class="slds-truncate">Check Number</span>
+                    	<aura:set attribute="else">
+                			<span class="slds-truncate">Reference</span>
+                        </aura:set>
+                    </aura:if>
+                </th>
+                <th scope="col"><span class="slds-truncate">Designation</span></th> 
+                <th scope="col"><span class="slds-truncate">Description</span></th> 
+            </tr>
+        </thead>
+        <tbody>
+            <!-- First Transaction -->
+            <tr>
+                <td>
+                    <aura:if isTrue="{!v.numberOfTransactions == 1}">
+                        <span style="color: gray">Delete</span>
+                        <aura:set attribute="else">
+                            <a href="" style="color: blue" id="1" onclick="{!c.confirmDelete}">Delete</a>
+                        </aura:set>
+                    </aura:if>
+                </td>
+                <td>
+                    <force:inputField value="{!v.batchItem.AQB__Amount__c}" />
+                </td>
+                <td>
+                    <aura:if isTrue="{!v.batchItem.AQB__Method__c == 'Check'}"> 
+                   		<force:inputField value="{!v.batchItem.AQB__CheckNumber__c}" />
+                    	<aura:set attribute="else">
+                        	 <force:inputField value="{!v.batchItem.AQB__Reference__c}" />
+                        </aura:set>
+                    </aura:if>
+                </td>
+                <td>
+                    <force:inputField value="{!v.batchItem.AQB__ChartOfAccounts__c}" />
+                </td>
+                <td>
+                    <force:inputField value="{!v.batchItem.AQB__Description__c}" />
+                </td>
+            </tr>
+            
+            <!-- Second Transaction -->
+            <aura:if isTrue="{!v.batchItem.AQB__Amount2__c != null}">
+             	<tr>
+                    <td>
+                       	<a href="" style="color: blue" id="2" onclick="{!c.confirmDelete}">Delete</a>
+                    </td>
+                    <td>
+                        <force:inputField value="{!v.batchItem.AQB__Amount2__c}" />
+                    </td>
+                    <td>
+                        <aura:if isTrue="{!v.batchItem.AQB__Method__c == 'Check'}"> 
+                            <force:inputField value="{!v.batchItem.AQB__CheckNumber2__c}" />
+                            <aura:set attribute="else">
+                                 <force:inputField value="{!v.batchItem.AQB__Reference2__c}" />
+                            </aura:set>
+                        </aura:if>
+                    </td>
+                    <td>
+                        <force:inputField value="{!v.batchItem.AQB__ChartOfAccounts2__c}" />
+                    </td>
+                    <td>
+                        <force:inputField value="{!v.batchItem.AQB__Description2__c}" />
+                    </td>
+                </tr>
+            </aura:if>
+            
+            <!-- Third Transaction -->
+            <aura:if isTrue="{!v.batchItem.AQB__Amount3__c != null}">
+             	<tr>
+                    <td>
+                       	<a href="" style="color: blue" id="3" onclick="{!c.confirmDelete}">Delete</a>
+                    </td>
+                    <td>
+                        <force:inputField value="{!v.batchItem.AQB__Amount3__c}" />
+                    </td>
+                    <td>
+                        <aura:if isTrue="{!v.batchItem.AQB__Method__c == 'Check'}"> 
+                            <force:inputField value="{!v.batchItem.AQB__CheckNumber3__c}" />
+                            <aura:set attribute="else">
+                                 <force:inputField value="{!v.batchItem.AQB__Reference3__c}" />
+                            </aura:set>
+                        </aura:if>
+                    </td>
+                    <td>
+                        <force:inputField value="{!v.batchItem.AQB__ChartOfAccounts3__c}" />
+                    </td>
+                    <td>
+                        <force:inputField value="{!v.batchItem.AQB__Description3__c}" />
+                    </td>
+                </tr>
+            </aura:if>
+            
+            <!-- Forth Transaction -->
+            <aura:if isTrue="{!v.batchItem.AQB__Amount4__c != null}">
+             	<tr>
+                    <td>
+                       	<a href="" style="color: blue" id="4" onclick="{!c.confirmDelete}">Delete</a>
+                    </td>
+                    <td>
+                        <force:inputField value="{!v.batchItem.AQB__Amount4__c}" />
+                    </td>
+                    <td>
+                        <aura:if isTrue="{!v.batchItem.AQB__Method__c == 'Check'}"> 
+                            <force:inputField value="{!v.batchItem.AQB__CheckNumber4__c}" />
+                            <aura:set attribute="else">
+                                 <force:inputField value="{!v.batchItem.AQB__Reference4__c}" />
+                            </aura:set>
+                        </aura:if>
+                    </td>
+                    <td>
+                        <force:inputField value="{!v.batchItem.AQB__ChartOfAccounts4__c}" />
+                    </td>
+                    <td>
+                        <force:inputField value="{!v.batchItem.AQB__Description4__c}" />
+                    </td>
+                </tr>
+            </aura:if>
+            
+            <!-- Fifth Transaction -->
+            <aura:if isTrue="{!v.batchItem.AQB__Amount5__c != null}">
+             	<tr>
+                    <td>
+                       	<a href="" style="color: blue" id="5" onclick="{!c.confirmDelete}">Delete</a>
+                    </td>
+                    <td>
+                        <force:inputField value="{!v.batchItem.AQB__Amount5__c}" />
+                    </td>
+                    <td>
+                        <aura:if isTrue="{!v.batchItem.AQB__Method__c == 'Check'}"> 
+                            <force:inputField value="{!v.batchItem.AQB__CheckNumber5__c}" />
+                            <aura:set attribute="else">
+                                 <force:inputField value="{!v.batchItem.AQB__Reference5__c}" />
+                            </aura:set>
+                        </aura:if>
+                    </td>
+                    <td>
+                        <force:inputField value="{!v.batchItem.AQB__ChartOfAccounts5__c}" />
+                    </td>
+                    <td>
+                        <force:inputField value="{!v.batchItem.AQB__Description5__c}" />
+                    </td>
+                </tr>
+            </aura:if>
+            
+        </tbody>
+    </table>
+    <br />
+    <center>
+        <!--<aura:if isTrue="{!v.numberOfTransactions == 5}">
+            <ui:button label="Add New" disabled="true" />
+            <aura:set attribute="else">
+                <ui:button label="Add New" press="{!c.addTransaction}" />
+            </aura:set>
+        </aura:if>-->
+        <ui:button label="Save" press="{!c.saveTransactions}" />
+        <ui:button label="Cancel" press="{!c.closeTransactions}" />
+    </center> 
+    
+    <!-- Delete Transaction Verification -->
+    <div class="slds">
+        <div aria-hidden="true" role="dialog" class="slds-modal slds-modal--prompt slds-fade-in-hide;" aura:id="confirmDeleteDialog">
+            <div id="ex8" class="slds-modal__container" onmouseleave="{!c.hideConfirmDeletePopup}">
+                <div class="slds-modal__header slds-theme--info">
+                    <h2 class="slds-text-heading--medium">Delete Transaction</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--medium">
+                    <center>
+                    	Are you sure you want to delete this 
+                        <aura:if isTrue="{!v.currentTransaction == '1'}"> 
+                        	<ui:outputCurrency value="{!v.batchItem.AQB__Amount__c}"/>
+                        </aura:if>
+                        <aura:if isTrue="{!v.currentTransaction == '2'}"> 
+                            <ui:outputCurrency value="{!v.batchItem.AQB__Amount2__c}"/>
+                        </aura:if>
+                        <aura:if isTrue="{!v.currentTransaction == '3'}"> 
+                            <ui:outputCurrency value="{!v.batchItem.AQB__Amount3__c}"/>
+                        </aura:if>
+                        <aura:if isTrue="{!v.currentTransaction == '4'}"> 
+                           <ui:outputCurrency value="{!v.batchItem.AQB__Amount4__c}"/>
+                        </aura:if>
+                        <aura:if isTrue="{!v.currentTransaction == '5'}"> 
+                     		<ui:outputCurrency value="{!v.batchItem.AQB__Amount5__c}"/>
+                        </aura:if>
+                        transaction for {!v.batchItem.AQB__Account__r.Name}?
+                    	<br /><br />
+                        <ui:button label="Yes" press="{!c.deleteTransaction}" />
+                        <ui:button label="No" press="{!c.hideConfirmDeletePopup}" />
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+</aura:component>

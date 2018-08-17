@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="ScheduleItemCompTotalUpdateEvent">
+    <aura:attribute name="parentSalesOrderLine" type="String" required="true"/>
+	<aura:attribute name="total" type="Decimal" required="true"/>
+</aura:event>

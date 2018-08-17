@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="InvitationAttendeesAddedEvent">
+    <aura:attribute name="attendees" type="EventApi.Attendee[]" required="true"/>
+</aura:event>

@@ -1,0 +1,14 @@
+<aura:component description="EventOverview" implements="LTE:EventInterface" access="global">
+    <div class="fonteva-event-component">
+        <div class="slds-grid slds-grid--vertical slds-col slds-p-vertical_medium">
+            <div class="slds-p-horizontal--medium">
+                    <p class="slds-text-heading--medium slds-font-weight--semi-bold">
+                        {!$Label.LTE.Event_Overview}
+                    </p>
+                </div>
+            <div class="slds-p-horizontal--medium">
+                <ui:outputRichText value="{!v.eventObj.eventOverview}" linkify="true" class="event-rich-text"/>
+            </div>
+        </div>
+    </div>
+</aura:component>

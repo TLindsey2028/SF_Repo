@@ -1,0 +1,9 @@
+<aura:component description="EventCustomHTMLEdit" access="global" implements="EventApi:EditLightingCompInterface">
+    <aura:method name="validate" action="{!c.validate}" access="global"/>
+    <Framework:InputFields aura:id="html"
+    qaData='{"type" : "input", "name": "custom_html"}'
+                             label="Custom HTML"
+                             isRequired="true"
+                             value="{!v.pageComponent}"
+                             fieldType="richtext"/>
+</aura:component>

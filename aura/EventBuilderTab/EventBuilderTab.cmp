@@ -1,0 +1,6 @@
+<aura:component description="EventBuilderTab">
+
+  <aura:attribute name="componentName" type="String"/>
+
+  <div class="slds-size--1-of-1 hidden" aura:id="componentBody"/>
+</aura:component>

@@ -1,0 +1,24 @@
+<aura:component description="EventBuilderAttendeeCreationRow" controller="EventApi.EventsBuilderInvitationOnly">
+    <aura:attribute name="attendee" type="EventApi.Attendee"/>
+    <aura:attribute name="attendeeStatusList" type="List[]" required="true"/>
+    <aura:attribute name="ticketTypes" type="List[]" required="true"/>
+    <aura:attribute name="index" type="Integer" default="1"/>
+    <aura:attribute name="uniqueId" type="String" required="true"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="EventApi:ToggleAttendeeFilter" action="{!c.handleToggleAttendeeFilter}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:handler event="EventApi:InvitationOnlyCheckToggleEvent" action="{!c.handleInvitationOnlyCheckToggleEvent}"/>
+    <aura:handler event="EventApi:EventBuilderInvitationAttendeeEvent" action="{!c.handleUpdateAttendeeEvent}"/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <tr class="remove-table-margin" aura:id="attendeeRow">
+        <td class="remove-table-margin slds-size--1-of-11">{!v.index}</td>
+        <td class="remove-table-margin slds-size--1-of-11"><Framework:InputFields group="{!v.attendee.uniqueId}" secondaryGroup="{!v.uniqueId}" aura:id="selectedAttendee" fieldType="boolean" label="" value="{!v.attendee}" labelStyleClasses="hidden" fireChangeEvent="true"/></td>
+        <td class="remove-table-margin slds-size--1-of-5 attendee-lookup attendee-lookup-input" aura:id="lookupInput"></td>
+        <td class="remove-table-margin slds-size--1-of-5"><Framework:InputFields group="{!v.attendee.uniqueId}" secondaryGroup="{!v.uniqueId}" aura:id="email" fieldType="email" label="" value="{!v.attendee}" labelStyleClasses="hidden" disabled="{!v.attendee.contact == null}" fireChangeEvent="true"/></td>
+        <td class="remove-table-margin slds-size--1-of-5"><Framework:InputFields group="{!v.attendee.uniqueId}" secondaryGroup="{!v.uniqueId}" aura:id="ticketType" fieldType="picklist" label="" value="{!v.attendee}" labelStyleClasses="hidden" selectOptions="{!v.ticketTypes}" fireChangeEvent="true"/></td>
+        <td class="remove-table-margin slds-size--1-of-7"><Framework:InputFields group="{!v.attendee.uniqueId}" secondaryGroup="{!v.uniqueId}" aura:id="status" fieldType="picklist" label="" value="{!v.attendee}" labelStyleClasses="hidden" fireChangeEvent="true"/></td>
+        <td class="remove-table-margin slds-size--1-of-8"><Framework:InputFields group="{!v.attendee.uniqueId}" secondaryGroup="{!v.uniqueId}" aura:id="maxGuests" fieldType="integer"  label="" value="{!v.attendee}" labelStyleClasses="hidden" otherAttributes='{"min" : 0, "max" : 15}' fireChangeEvent="true"/></td>
+        <td class="remove-table-margin slds-size--1-of-7"><ui:outputDateTime value="{!v.attendee.sentDate}"/></td>
+    </tr>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

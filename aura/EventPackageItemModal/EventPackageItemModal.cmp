@@ -1,0 +1,101 @@
+<aura:component description="EventPackageItemModal">
+    <aura:attribute name="packageItem" type="Object"/>
+    <aura:attribute name="quantities" type="List"/>
+    <aura:attribute name="params" type="Map" default="{}"/>
+    <aura:attribute name="subPlans" type="List"/>
+    <aura:attribute name="formResponseId" type="String" default=""/>
+    <aura:attribute name="hasForm" type="Boolean" default="false"/>
+    <aura:attribute name="renewDisabled" type="Boolean"/>
+    <aura:attribute name="purchaseAction" type="Aura.Action"/>
+    <aura:attribute name="renewVisible" type="Boolean"/>
+    <aura:attribute name="currencyISOCode" type="String" access="public"/>
+    <aura:attribute name="isMultiCurrencyOrg" type="Boolean" access="public"/>
+    <aura:attribute name="purchaseButtonLabel" type="String" description="label for purchase button"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:method name="close" action="{!c.closeItemModal}"/>
+    <aura:method access="public" name="open" action="{!c.openItemModal}">
+        <aura:attribute name="packageItem" access="public" type="Object" required="true"/>
+        <aura:attribute name="subPlans" access="public" type="List" required="true"/>
+        <aura:attribute name="existingSOL" type="Map" description="existing salesorderline"/>
+        <aura:attribute name="parentSOL" access="public" type="String"/>
+        <aura:attribute name="onPurchase" access="public" type="Function"/>
+    </aura:method>
+
+    <div class="fonteva-modal fonteva-modal_small slds-modal" aura:id="packageItemModal">
+        <div class="fonteva-modal_container slds-modal__container">
+            <div class="slds-modal__header slds-modal__header_empty">
+                <lightning:buttonIcon iconName="utility:close" alternativeText="Close" variant="bare-inverse" class="slds-modal__close" size="large" onclick="{!c.closeItemModal}"/>
+            </div>
+            <div class="fonteva-modal_body-item">
+                <div>
+                    <div class="slds-grid slds-gutters_small slds-wrap">
+                        <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-3 slds-p-bottom_small">
+                            <Framework:Img src="{!v.packageItem.imageUrl}"/>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-small-size_2-of-3">
+                            <div class="slds-grid slds-grid_vertical">
+                                <div class="slds-m-bottom_x-small">
+                                    <div class="slds-text-heading--medium"><strong>{!v.packageItem.itemName}</strong></div>
+                                </div>
+                                <div class="slds-m-bottom_x-small">
+                                    <span class="slds-badge_inverse slds-badge">{!v.packageItem.className}</span>
+                                </div>
+                                <aura:if isTrue="{!not(equals(v.packageItem.type, 'donation'))}">
+                                <div class="slds-m-bottom_x-small slds-text-heading--medium">
+                                    <strong><Framework:CurrencyField value="{!v.packageItem.price}"
+                                                           currencyISOCode="{!v.currencyISOCode}"
+                                                           isMultiCurrencyOrg="{!v.isMultiCurrencyOrg}"/></strong>
+                                </div>
+                                </aura:if>
+                                <div>
+                                    <aura:if isTrue="{!equals(v.packageItem.type, 'sub')}">
+                                        <Framework:InputFields aura:id="subPlanId" fieldType="picklist" value="{!v.params}" label="Subscription Plan" fireChangeEvent="true"
+                                                               styleClasses="slds-size_2-of-3"/>
+                                    </aura:if>
+                                    <aura:if isTrue="{!equals(v.packageItem.type, 'merch')}">
+                                        <lightning:select label="Quantity" name="qty" aura:id="quantity" class="slds-size_1-of-3">
+                                            <aura:iteration items="{!v.quantities}" var="q">
+                                                <option value="{!q}">{!q}</option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </aura:if>
+                                    <aura:if isTrue="{!equals(v.packageItem.type, 'donation')}">
+                                        <div class="slds-size_1-of-1 slds-medium-size_3-of-5 slds-large-size_2-of-5">
+                                            <Framework:InputFields aura:id="donationAmount"
+                                                                   fieldType="currency"
+                                                                   value="{!v.params}"
+                                                                   isRequired="true"
+                                                                   label="Donation Amount"
+                                                                   styleClasses="slds-size_1-of-3"
+                                                                   otherAttributes='{min : 0 , max : 100000}' minValueValidationMessage="Donation cannot be negative and must be equal to or greater than "/>
+                                        </div>
+                                    </aura:if>
+                                </div>
+                                <aura:if isTrue="{!and(v.renewVisible, equals(v.packageItem.type, 'sub'))}">
+                                    <div class="slds-m-top_x-small">
+                                        <Framework:InputFields aura:id="autoRenew" fieldType="boolean" value="{!v.params}" label="Auto Renew"
+                                                               disabled="{!v.renewDisabled}"/>
+                                    </div>
+                                </aura:if>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fonteva-max-small-m-top_small slds-grid_pull-padded-large">
+                        <div class="slds-p-horizontal_large slds-p-bottom_medium">
+                          <ui:outputTextArea value="{!v.packageItem.description}"/>
+                        </div>
+                        <aura:if isTrue="{!v.hasForm}">
+                        <div class="slds-size_1-of-1 fonteva-theme_shade slds-p-vertical_medium slds-p-horizontal_x-small" aura:id="formDiv">
+                        </div>
+                    </aura:if>
+                    </div>
+                </div>
+            </div>
+            <div class="fonteva-modal_footer slds-p-around_medium slds-grid slds-grid_align-center">
+                <Framework:Button type="neutral" label="{!$Label.LTE.Event_Cancel_Button}" onClickAction="{!c.closeItemModal}" enableProgressIndicator="false"/>
+                <Framework:Button label="{!!empty(v.purchaseButtonLabel) ? v.purchaseButtonLabel : v.packageItem.buttonLabel}" type="success" onClickAction="{!c.purchase}" aura:id="purchaseButton"/>
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop" aura:id="modalBackdrop"></div>
+</aura:component>

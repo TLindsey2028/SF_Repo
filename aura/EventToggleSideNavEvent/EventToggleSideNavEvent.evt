@@ -1,0 +1,2 @@
+<aura:event type="APPLICATION" description="EventToggleSideNavEvent" access="global">
+</aura:event>

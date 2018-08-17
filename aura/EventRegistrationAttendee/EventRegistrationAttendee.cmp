@@ -1,0 +1,212 @@
+<aura:component description="EventRegistrationAttendee" controller="LTE.EventRegistrationController" access="global">
+    <aura:attribute name="line" type="Map" required="true" access="global"/>
+    <aura:attribute name="accountId" type="String"/>
+    <aura:attribute name="quantity" type="Integer" default="1"/>
+    <aura:attribute name="index" type="Integer" default="-1" access="global"/>
+    <aura:attribute name="isTransfer" type="Boolean" default="false"/>
+    <aura:attribute name="isSalesOrderLine" type="Boolean" default="true" access="global"/>
+    <aura:attribute name="salesOrderId" type="String" access="global"/>
+    <aura:attribute name="isWaitlist" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="disableRemove" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="primaryRegistrationInvitation" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="fireChangeEvent" type="Boolean" default="true" access="global"/>
+    <aura:attribute name="showHorizontalPadding" type="Boolean" default="true" access="global"/>
+    <aura:attribute name="labelStyleClasses" type="String" default="hidden" access="global"/>
+    <aura:attribute name="label" type="String" default="{!$Label.LTE.Search_Attendee_Field_Label}" access="global"/>
+    <aura:attribute name="storeObj" type="Map" access="global" required="true"/>
+    <aura:attribute name="eventObj" type="Map" access="global"/>
+    <aura:attribute name="isAuthenticated" type="Boolean" default="true" access="global"/>
+    <aura:attribute name="isGuest" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="newAttendee" type="Object"/>
+    <aura:attribute name="contactFields" type="List" default="[]"/>
+    <aura:attribute name="contactGlobalId" type="String"/>
+    <aura:attribute name="guestRegistrationFieldsGlobals" type="List" default="[]"/>
+    <aura:attribute name="foundContact" type="Map" default="{}"/>
+    <aura:attribute name="processingChanges" type="Boolean" default="false"/>
+    <aura:attribute name="showAttendeeLabel" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="hasForm" type="Boolean" default="false"/>
+    <aura:attribute name="disableLookUp" type="Boolean" default="false"/>
+    <aura:attribute name="salesOrderObj" type="Map" default="{}" description="salesOrderObj" access="global"/>
+    <aura:handler name="change" value="{!v.processingChanges}" action="{!c.toggleStatus}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:registerEvent name="EventSummaryUpdateEvent" type="LTE:EventSummaryUpdateEvent"/>
+    <aura:registerEvent name="onRemove" type="LTE:EventRegistrationAttendeeEvent"/>
+    <aura:registerEvent name="EventRegAttendeeChangeEvent" type="LTE:EventRegAttendeeChangeEvent"/>
+    <aura:registerEvent name="EventRegistrationAttendeeUpdateEvent" type="LTE:EventRegistrationAttendeeUpdateEvent"/>
+    <aura:registerEvent name="TransitionAttendeeModal" type="LTE:TransitionAttendeeModal"/>
+    <aura:registerEvent name="DisableButtonEvent" type="LTE:DisableButtonEvent"/>
+    <aura:method name="showErrorMessage" action="{!c.showErrorMessage}">
+        <aura:attribute name="errorMessage" type="String" required="true"/>
+    </aura:method>
+    <aura:method name="addAttendee" action="{!c.addAttendee}">
+        <aura:attribute name="updateLineContact" type="Boolean"/>
+    </aura:method>
+    <aura:method name="validateAttendeeForm" action="{!c.validateAttendeeForm}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:if isTrue="{!v.eventObj.enableContactSearch}">
+        <div class="slds-col slds-grid slds-wrap slds-grid--vertical-align-center slds-size--1-of-1">
+            <div class="{!or(v.showHorizontalPadding,v.disableRemove) ? 'slds-col slds-p-horizontal--small fonteva-lookup' : 'slds-col slds-size--1-of-1 slds-medium-size--1-of-3 fonteva-lookup'}">
+                <div class="slds-form-element">
+                    <aura:if isTrue="{!!v.disableLookUp}">
+                        <div class="slds-m-bottom_small lookup-attendee">
+                            {!$Label.LTE.Attendee_Selector_Information}
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!v.showAttendeeLabel}">
+                        <div class="slds-form-element__label lookup-attendee">
+                            <abbr class="slds-required" title="required">*</abbr>
+                            {!$Label.LTE.Attendee_Selector_Label}
+                        </div>
+                    </aura:if>
+                    <div class="slds-grid">
+                        <div data-name="lookupDiv" class="slds-form-element__control slds-is-relative lookup-attendee slds-col" aura:id="lookupDiv">
+                        </div>
+                        <aura:if isTrue="{!v.isSalesOrderLine}">
+                            <div class="{!v.disableRemove ? 'slds-hide' : 'lookup-attendee slds-size_1-of-4 slds-align-middle slds-m-bottom_medium'}">
+                                <div class="{!v.disableRemove ? 'slds-hide' : 'slds-col slds-size--1-of-1 slds-medium-size--1-of-3 slds-p-horizontal--small slds-m-bottom--small'}">
+                                    <a class="{!and(not(v.disableRemove),not(v.primaryRegistrationInvitation)) ? 'slds-text-body--medium' : 'hidden'}" href="javascript:void(0);" onclick="{!c.removeAttendee}">{!$Label.LTE.Event_Attendee_Remove}</a>
+                                </div>
+                                <div class="{!v.disableRemove ? 'slds-hide' : 'slds-col slds-p-left_small'}">
+                                    <aura:if isTrue="{!v.line.nonListPrice}">
+                                        <span data-name="listPrice" class="fonteva-pricing--old">
+                                            <Framework:CurrencyField value="{!v.line.listPrice}" isMultiCurrencyOrg="{!v.line.isMultiCurrencyOrg}" currencyISOCode="{!v.line.currencyISOCode}"/>
+                                        </span>
+                                    </aura:if>
+                                        <span data-name="linePrice" class="slds-font-weight--bold slds-text-heading--small">
+                                            <Framework:CurrencyField value="{!v.line.price}" isMultiCurrencyOrg="{!v.line.isMultiCurrencyOrg}" currencyISOCode="{!v.line.currencyISOCode}"/>
+                                        </span>
+                                </div>
+                                <aura:set attribute="else">
+                                    <div class="{!v.disableRemove ? 'slds-hide' : 'slds-col slds-size--1-of-1 slds-medium-size--1-of-3 slds-p-horizontal--small slds-m-bottom--small'}">
+                                        <a class="{!and(not(v.disableRemove),not(v.primaryRegistrationInvitation)) ? 'slds-text-body--medium' : 'hidden'}" href="javascript:void(0);" onclick="{!c.removeAttendee}">{!$Label.LTE.Event_Attendee_Remove}</a>
+                                    </div>
+                                    <div class="{!v.disableRemove ? 'slds-hide' : 'slds-col slds-size--1-of-1 slds-medium-size--1-of-3 slds-p-horizontal--small slds-text-align--right slds-text-align--left__small slds-m-bottom--small'}">
+                                        <aura:if isTrue="{!v.isWaitlist}">
+                                            <span data-name="Event_Attendee_Waitlist" class="slds-font-weight--bold slds-text-heading--small">
+                                                {!$Label.LTE.Event_Attendee_Waitlist}
+                                            </span>
+                                        </aura:if>
+                                    </div>
+                                </aura:set>
+                            </div>
+                        </aura:if>
+                    </div>
+                    <div data-name="showPopover" class="fonteva-popover_wrapper slds-hide" aura:id="showPopover">
+                        <div class="slds-popover slds-popover--panel" role="dialog" >
+                            <div class="slds-hide">
+                                <p class="slds-text-heading--medium" id="modal-heading-label">
+                                    {!$Label.LTE.Attendee_Information_Header_Label}
+                                </p>
+                                <button class="slds-button slds-modal__close slds-button--icon-inverse" data-close="modal" title="Close" onclick="{!c.closePopover}">
+                                    <lightning:icon iconName="utility:close" size="medium"/>
+                                    <span class="slds-assistive-text">{!$Label.LTE.Login_Component_Cancel}</span>
+                                </button>
+                            </div>
+                            <div class="slds-modal__content">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-size--1-of-1 slds-m-bottom_large">
+                                        <span class="slds-text-heading--small"><strong>{!$Label.LTE.Attendee_Information_Header_Label}</strong></span>
+                                    </div>
+                                    <span class="slds-size--1-of-1 slds-m-bottom--medium">
+                  <div class="slds-size--1-of-1 slds-m-bottom--x-small">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "firstName"}' fieldType="string" aura:id="firstName" label="{!$Label.LTE.Login_Component_FirstName}" isRequired="true"
+                                           value="{!v.newAttendee}" group="{!v.line.id}"/>
+                  </div>
+                  <div class="slds-size--1-of-1 slds-m-bottom--x-small">
+                    <Framework:InputFields qaData='{"type" : "input", "name": "lastName"}' fieldType="string" aura:id="lastName" label="{!$Label.LTE.Login_Component_LastName}" isRequired="true"
+                                           value="{!v.newAttendee}" group="{!v.line.id}"/>
+                  </div>
+                  <div class="slds-size--1-of-1 slds-m-bottom--x-small fonteva-input--custom-wrapper">
+                    <span class="wrapper-button">
+                      <Framework:InputFields qaData='{"type" : "input", "name": "preferredEmail"}' fieldType="picklist" aura:id="preferredEmail"
+                                             label="" styleClasses="slds-p-top--large" value="{!v.newAttendee}"
+                                             selectOptions='[{"label" : "Personal","value" : "Personal"},{"label" : "Work","value" : "Work"},{"label" : "Other","value" : "Other"},{"label" : "Assistant","value" : "Assistant"}]'
+                                             group="{!v.line.id}" labelStyleClasses="hidden"/>
+                    </span>
+                    <Framework:InputFields qaData='{"type" : "input", "name": "email"}' fieldType="email" aura:id="email" label="{!$Label.LTE.Login_Component_Email}" styleClasses="wrapper-input"
+                                           isRequired="{!!v.eventObj.guestEmailOptional}" value="{!v.newAttendee}" group="{!v.line.id}" fireChangeEvent="true" otherAttributes='{"updateOn" : "keyup"}'/>
+                  </div>
+                  <aura:if isTrue="{!v.eventObj.createContactForAttendees}">
+                    <aura:if isTrue="{!v.storeObj.showMatchField}">
+                      <div data-name="customMatchFieldDiv" class="{!v.storeObj.showMatchField ? 'slds-col slds-size--1-of-1 slds-m-bottom--x-small' : 'hidden'}" aura:id="customMatchFieldDiv">
+                         <Framework:InputFields qaData='{"type" : "input", "name": "customMatchFieldDiv"}' group="{!v.line.id}" fieldType="{!v.storeObj.contactMatchFieldType}" isRequired="{!v.storeObj.requireContactMatchRuleField}" aura:id="matchingField" label="{!v.storeObj.contactMatchFieldLabel}" value="{!v.newAttendee}" fireChangeEvent="true" otherAttributes="{!v.storeObj.otherAttributes}"/>
+                      </div>
+                    </aura:if>
+                    <div data-name="newContactFields" class="slds-col slds-size--1-of-1 hidden" aura:id="newContactFields">
+                      <div data-name="fieldSetDiv" aura:id="fieldSetDiv">
+                      </div>
+                    </div>
+
+                    <aura:set attribute="else">
+                    <div data-name="newAssignmentFields" class="slds-col slds-size--1-of-1 hidden" aura:id="newAssignmentFields">
+                      <div data-name="fieldSetDiv" aura:id="fieldSetDiv">
+                      </div>
+                    </div>
+                    </aura:set>
+                  </aura:if>
+                </span>
+                                </div>
+                            </div>
+                            <div class="slds-modal__footer slds-modal__footer_clear slds-text-align--center">
+                                <Framework:Button qaData='{"type" : "button", "name": "closePopover"}' enableProgressIndicator="false" onClickAction="{!c.closePopover}" type="neutral"
+                                                  label="{!$Label.LTE.Event_Cancel_Button}" />
+                                <Framework:Button qaData='{"type" : "button", "name": "addAttendeeBtn"}' onClickAction="{!c.addAttendee}" type="brand" additionalClasses="slds-m-left--x-small" aura:id="addAttendeeBtn" label="{!$Label.LTE.Attendee_Information_Add_Button_label}" disable="true"/>
+                            </div>
+                        </div>
+                    </div>
+                    <aura:if isTrue="{!!v.hasForm}">
+                        <div class="lookup-attendee">
+                            {!$Label.LTE.Attendee_No_Information_Needed}
+                        </div>
+                    </aura:if>
+                </div>
+            </div>
+        </div>
+        <aura:set attribute="else">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-size--1-of-1 slds-m-bottom_large">
+                    <span class="slds-text-heading--small"><strong>{!$Label.LTE.Attendee_Information_Header_Label}</strong></span>
+                </div>
+                <span class="slds-size--1-of-1 slds-m-bottom--medium">
+          <div class="slds-size--1-of-1 slds-m-bottom--x-small">
+            <Framework:InputFields qaData='{"type" : "input", "name": "firstName"}' fieldType="string" aura:id="firstName" label="{!$Label.LTE.Login_Component_FirstName}" isRequired="true"
+                                   value="{!v.newAttendee}" group="{!v.line.id}"/>
+          </div>
+          <div class="slds-size--1-of-1 slds-m-bottom--x-small">
+            <Framework:InputFields qaData='{"type" : "input", "name": "lastName"}' fieldType="string" aura:id="lastName" label="{!$Label.LTE.Login_Component_LastName}" isRequired="true"
+                                   value="{!v.newAttendee}" group="{!v.line.id}"/>
+          </div>
+          <div class="slds-size--1-of-1 slds-m-bottom--x-small fonteva-input--custom-wrapper">
+            <span class="wrapper-button">
+              <Framework:InputFields qaData='{"type" : "input", "name": "preferredEmail"}' fieldType="picklist" aura:id="preferredEmail"
+                                     label="" styleClasses="slds-p-top--large" value="{!v.newAttendee}"
+                                     selectOptions='[{"label" : "Personal","value" : "Personal"},{"label" : "Work","value" : "Work"},{"label" : "Other","value" : "Other"},{"label" : "Assistant","value" : "Assistant"}]'
+                                     group="{!v.line.id}" labelStyleClasses="hidden"/>
+            </span>
+            <Framework:InputFields qaData='{"type" : "input", "name": "email"}' fieldType="email" aura:id="email" label="{!$Label.LTE.Login_Component_Email}" styleClasses="wrapper-input"
+                                   isRequired="{!!v.eventObj.guestEmailOptional}" value="{!v.newAttendee}" group="{!v.line.id}" fireChangeEvent="true" otherAttributes='{"updateOn" : "keyup"}'/>
+          </div>
+          <aura:if isTrue="{!v.eventObj.createContactForAttendees}">
+            <aura:if isTrue="{!v.storeObj.showMatchField}">
+              <div data-name="customMatchFieldDiv" class="{!v.storeObj.showMatchField ? 'slds-col slds-size--1-of-1 slds-m-bottom--x-small' : 'hidden'}" aura:id="customMatchFieldDiv">
+                 <Framework:InputFields qaData='{"type" : "input", "name": "customMatchFieldDiv"}' group="{!v.line.id}" fieldType="{!v.storeObj.contactMatchFieldType}" isRequired="{!v.storeObj.requireContactMatchRuleField}" aura:id="matchingField" label="{!v.storeObj.contactMatchFieldLabel}" value="{!v.newAttendee}" fireChangeEvent="true" otherAttributes="{!v.storeObj.otherAttributes}"/>
+              </div>
+            </aura:if>
+            <div data-name="newContactFields" class="slds-col slds-size--1-of-1 hidden" aura:id="newContactFields">
+              <div data-name="fieldSetDiv" aura:id="fieldSetDiv">
+              </div>
+            </div>
+            <aura:set attribute="else">
+              <div data-name="newAssignmentFields" class="slds-col slds-size--1-of-1 hidden" aura:id="newAssignmentFields">
+                <div data-name="fieldSetDiv" aura:id="fieldSetDiv">
+                </div>
+              </div>
+            </aura:set>
+          </aura:if>
+        </span>
+            </div>
+        </aura:set>
+    </aura:if>
+    <!--<div data-name="customerLookupModalBackdrop" class="slds-backdrop" aura:id="customerLookupModalBackdrop" onclick="{!c.closePopover}"/>-->
+</aura:component>

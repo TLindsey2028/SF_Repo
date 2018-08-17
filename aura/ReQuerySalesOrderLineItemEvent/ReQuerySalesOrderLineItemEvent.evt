@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="ReQuerySalesOrderLineItemEvent">
+    <aura:attribute name="uniqueIdentifier" type="String" required="true"/>
+</aura:event>

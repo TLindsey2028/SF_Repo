@@ -1,0 +1,51 @@
+.THIS .slds-text-title_caps_fonteva {
+    text-transform: uppercase;
+}
+
+.THIS table.table.table-default tr {
+    background-color: transparent!important;
+}
+
+.THIS .slds-table .slds-medium-cell-wrap {
+    white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+    .THIS .slds-table .slds-medium-cell-wrap {
+        white-space: normal;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
+}
+
+.THIS.fonteva-modal_parent .payment-container > .slds-modal__header,
+.THIS.fonteva-modal_parent .payment-container > .slds-modal__footer,
+.THIS.fonteva-modal_parent .payment-container > .slds-modal__content .slds-backdrop.slds-backdrop--open {
+    display: none;
+}
+
+.THIS .fonteva-modal_parent .payment-container > .slds-modal__content.payment-comp {
+    height: 0!important;
+    max-height: 0!important;
+    overflow: hidden!important;
+}
+
+.THIS .slds-modal__content.payment-comp {
+    padding: 1rem 2.25rem
+}
+
+@media(max-width: 48rem) {
+    .THIS .fonteva-cc.fonteva-spacing_custom {
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .THIS .fonteva-cc.fonteva-spacing_custom > div:last-of-type {
+        margin-top: 1rem;
+    }
+}
+
+.THIS .fonteva-button_reverse {
+    display: flex!important;
+    flex-direction: row-reverse
+}

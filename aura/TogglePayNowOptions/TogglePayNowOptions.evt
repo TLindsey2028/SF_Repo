@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="TogglePayNowOptions">
+    <aura:attribute name="optionName" type="String" required="true" />
+    <aura:attribute name="action" type="String" required="true"/>
+</aura:event>

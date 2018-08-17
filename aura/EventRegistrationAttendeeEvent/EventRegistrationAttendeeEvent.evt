@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="EventRegistrationAttendeeEvent">
+	<aura:attribute name="line" type="Map" required="true"/>
+	<aura:attribute name="isSalesOrderLine" type="Boolean" required="false" default="true"/>
+	<aura:attribute name="isWaitlist" type="Boolean" required="false" default="false"/>
+</aura:event>

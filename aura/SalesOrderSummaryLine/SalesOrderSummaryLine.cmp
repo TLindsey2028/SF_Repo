@@ -1,0 +1,60 @@
+<aura:component description="SalesOrderSummaryLine" controller="OrderApi.SalesOrderPaymentController">
+  <aura:attribute name="salesOrderLine" type="Map" default="{}"/>
+  <aura:attribute name="parentItemName" type="String" default=""/>
+  <aura:attribute name="topBorder" type="Boolean" default="false"/>
+  <aura:attribute name="currencyISOCode" type="String" default=""/>
+  <aura:attribute name="isMultiCurrency" type="Boolean" default="false"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+  <aura:handler event="OrderApi:DisableComponent" action="{!c.handleDisableComponentEvent}"/>
+  <aura:registerEvent name="SalesOrderUpdateEvent" type="OrderApi:SalesOrderUpdateEvent"/>
+  <tr class="{!v.salesOrderLine.isTax ? (v.topBorder ? 'slds-hint-parent slds-border--top' : 'slds-hint-parent') : 'hidden'}">
+    <td>
+      {!$Label.OrderApi.Tax} • <span class="slds-text-body--small">{!v.salesOrderLine.itemName}</span>
+    </td>
+    <td class="remove-label quantity-width__small">
+    </td>
+    <td class="remove-label quantity-width__small">
+      <div class="slds-m-bottom--small slds-text-align--left slds-p-left--xx-small">
+        <Framework:CurrencyField value="{!v.salesOrderLine.total}" currencyISOCode="{!v.currencyISOCode}"
+                                 isMultiCurrencyOrg="{!v.isMultiCurrency}"/>
+      </div>
+    </td>
+    <td class="remove-label">
+    </td>
+  </tr>
+  <tr class="{!v.salesOrderLine.isTax ? 'hidden' : 'slds-hint-parent'}">
+    <td class="slds-truncate">
+      <span class="{!v.salesOrderLine.isShipping ? 'hidden' : ''}">
+              {!v.salesOrderLine.itemName}
+      </span>
+      <span class="{!v.salesOrderLine.isShipping ? '' : 'hidden'}">
+        {!$Label.OrderApi.Shipping} • <span class="slds-text-body--small">{!v.parentItemName}</span>
+      </span>
+    </td>
+    <td class="remove-label quantity-width__small">
+      <span class="{!v.salesOrderLine.isShipping ? 'hidden' : ''}">
+        <Framework:InputFields group="{!v.salesOrderLine.salesOrderLineId}" fieldType="integer" aura:id="quantity" format="0"
+                               label="" value="{!v.salesOrderLine}" disabled="{!!v.salesOrderLine.canUpdateQuantity}"
+                               fireChangeEvent="true"/>
+      </span>
+    </td>
+    <td class="remove-label quantity-width__small">
+      <div class="{!v.salesOrderLine.priceOverride ? 'hidden' : 'slds-m-bottom--small slds-text-align--left slds-p-left--xx-small'}">
+        <Framework:CurrencyField value="{!v.salesOrderLine.salePrice}" currencyISOCode="{!v.currencyISOCode}"
+                                 isMultiCurrencyOrg="{!v.isMultiCurrency}"/>
+      </div>
+      <span class="{!v.salesOrderLine.priceOverride ? '' : 'hidden'}">
+        <Framework:InputFields group="{!v.salesOrderLine.salesOrderLineId}" fieldType="currency" aura:id="salePrice" format="0.00"
+                               label="" value="{!v.salesOrderLine}" otherAttributes='{"min" : 0}'
+                               fireChangeEvent="true" minValueValidationMessage="{!$Label.OrderApi.Min_Price_Validation_Message}"/>
+      </span>
+    </td>
+    <td class="remove-label">
+      <span class="{!v.salesOrderLine.canOverridePrice ? '' : 'hidden'}">
+        <Framework:InputFields group="{!v.salesOrderLine.salesOrderLineId}" fieldType="boolean" aura:id="priceOverride"
+                             label="Override" value="{!v.salesOrderLine}" fireChangeEvent="true" disabled="{!!v.salesOrderLine.canOverridePrice}"/>
+      </span>
+    </td>
+  </tr>
+  <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

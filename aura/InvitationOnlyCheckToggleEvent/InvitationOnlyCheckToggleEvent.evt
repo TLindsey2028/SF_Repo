@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="InvitationOnlyCheckToggleEvent">
+    <aura:attribute type="Boolean" name="checkAllValues" required="true"/>
+    <aura:attribute name="uniqueId" type="String" required="true"/>
+</aura:event>

@@ -1,0 +1,7 @@
+.THIS .slds-modal {
+    top : 50px!important;
+}
+
+.THIS .slds-modal .FrameworkRichTextInputField .slds-modal__container {
+     min-width: 110%;
+ }

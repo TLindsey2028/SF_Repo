@@ -1,0 +1,2486 @@
+<?xml version="1.0" encoding="utf-8"?><CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help><!-- Top WMU Prospects --></help>
+        <label><!-- WMU 300 --></label>
+        <name>AQB_WMU_300__c</name>
+    </fields>
+    <fields>
+        <label><!-- Account Count --></label>
+        <name>AQB__AccountCount__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contains comma separated codes that specify the portion of the address that was changed or modified. --></help>
+        <label><!-- Permanent Address Change Flags --></label>
+        <name>AQB__AccountDefaultAddressChangeFlags__c</name>
+    </fields>
+    <fields>
+        <label><!-- Permanent Address District --></label>
+        <name>AQB__AccountDefaultAddressDistrict__c</name>
+        <picklistValues>
+            <masterLabel>District One</masterLabel>
+            <translation><!-- District One --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Single field containing the City, State/Province, Postal Code, and Country of the Account Mailing Address. --></help>
+        <label><!-- Permanent Address Locality --></label>
+        <name>AQB__AccountDefaultAddressLocality__c</name>
+    </fields>
+    <fields>
+        <label><!-- Permanent Address Region --></label>
+        <name>AQB__AccountDefaultAddressRegion__c</name>
+        <picklistValues>
+            <masterLabel>Region One</masterLabel>
+            <translation><!-- Region One --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Formatted Account Permanent Address. --></help>
+        <label><!-- Permanent Address --></label>
+        <name>AQB__AccountDefaultAddress__c</name>
+    </fields>
+    <fields>
+        <help><!-- The carrier route of the account permanent address. --></help>
+        <label><!-- Permanent Address Carrier Route --></label>
+        <name>AQB__AccountDefaultCarrierRoute__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified city name of the account permanent address. --></help>
+        <label><!-- Permanent Address Certified City Name --></label>
+        <name>AQB__AccountDefaultCertifiedCityName__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified street name of the account permanent address. --></help>
+        <label><!-- Permanent Address Certified Street Name --></label>
+        <name>AQB__AccountDefaultCertifiedStreetName__c</name>
+    </fields>
+    <fields>
+        <help><!-- City for permanent  account address. --></help>
+        <label><!-- Permanent Address City --></label>
+        <name>AQB__AccountDefaultCity__c</name>
+    </fields>
+    <fields>
+        <help><!-- The country id of the account permanent address. --></help>
+        <label><!-- Permanet Address Country Id --></label>
+        <name>AQB__AccountDefaultCountryId__c</name>
+    </fields>
+    <fields>
+        <help><!-- Country for Account Default Address. --></help>
+        <label><!-- Permanent Address Country --></label>
+        <name>AQB__AccountDefaultCountry__c</name>
+    </fields>
+    <fields>
+        <help><!-- The county number of the account permanent address. --></help>
+        <label><!-- Permanent Address County Number --></label>
+        <name>AQB__AccountDefaultCountyNumber__c</name>
+    </fields>
+    <fields>
+        <help><!-- The name of the geographical region within which the address is located. --></help>
+        <label><!-- Permanent Address County --></label>
+        <name>AQB__AccountDefaultCounty__c</name>
+    </fields>
+    <fields>
+        <help><!-- Single check digit provided by USPS. --></help>
+        <label><!-- Permanent Address DPCD --></label>
+        <name>AQB__AccountDefaultDPCD__c</name>
+    </fields>
+    <fields>
+        <help><!-- Single character indicating delivery point validation status, (Y) Yes, (N) No --></help>
+        <label><!-- Permanent Address DPV Flag --></label>
+        <name>AQB__AccountDefaultDPVFlag__c</name>
+    </fields>
+    <fields>
+        <help><!-- Two digit validation code provided by USPS. --></help>
+        <label><!-- Permanent Address DPV --></label>
+        <name>AQB__AccountDefaultDPV__c</name>
+    </fields>
+    <fields>
+        <help><!-- Three digit code assigned by USPS that confirms the address can be delivered to (this code is a combination of Delivery Point Validation and Delivery Point Check Digit). --></help>
+        <label><!-- Permanent Addr Delivery Point Validation --></label>
+        <name>AQB__AccountDefaultDeliveryPointValidation__c</name>
+    </fields>
+    <fields>
+        <help><!-- Two digit validation code provided by USPS. --></help>
+        <label><!-- Permanent Address Delivery Point Code --></label>
+        <name>AQB__AccountDefaultDeliveryPoint__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Federal Information Processing Standard state code for the account permanent address. --></help>
+        <label><!-- Permanent Address FIPS State Code --></label>
+        <name>AQB__AccountDefaultFIPSStateCode__c</name>
+    </fields>
+    <fields>
+        <help><!-- Mid level validation flag indicating detailed status, (E) Exact, (T) Tentative, (M) Multiple, (S) Secondary, (U) Unmatched, (F) Foreign --></help>
+        <label><!-- Permanent Address Flag --></label>
+        <name>AQB__AccountDefaultFlag__c</name>
+    </fields>
+    <fields>
+        <help><!-- Specifies the east west position of a point on the Earth&apos;s surface. --></help>
+        <label><!-- Permanent Address Longitude --></label>
+        <name>AQB__AccountDefaultLongitude__c</name>
+    </fields>
+    <fields>
+        <help><!-- Default note to describe special characteristics of, or information about this address. For example, special directions may be needed to locate the location for a personal visit. It might also describe restrictions on the use of this address. --></help>
+        <label><!-- Permanent Address Note --></label>
+        <name>AQB__AccountDefaultNote__c</name>
+    </fields>
+    <fields>
+        <help><!-- Phone for permanent  account address. --></help>
+        <label><!-- Permanent Address Phone --></label>
+        <name>AQB__AccountDefaultPhone__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Residential Delivery Indicator for the account permanent address. --></help>
+        <label><!-- Permanent Address RDI --></label>
+        <name>AQB__AccountDefaultRDI__c</name>
+    </fields>
+    <fields>
+        <help><!-- The state id of the account permanent address. --></help>
+        <label><!-- Permantent Address State Id --></label>
+        <name>AQB__AccountDefaultStateId__c</name>
+    </fields>
+    <fields>
+        <help><!-- The State or Province for account permanent  address. --></help>
+        <label><!-- Permanent Address State/Province --></label>
+        <name>AQB__AccountDefaultStateProvince__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Status is used to indicate whether this address is currently thought to be valid for use in mailings. --></help>
+        <label><!-- Permanent Address Status --></label>
+        <name>AQB__AccountDefaultStatus__c</name>
+        <picklistValues>
+            <masterLabel>Good</masterLabel>
+            <translation><!-- Good --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lost</masterLabel>
+            <translation><!-- Lost --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Omit from Mailings</masterLabel>
+            <translation><!-- Omit from Mailings --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Phone Only</masterLabel>
+            <translation><!-- Phone Only --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Returned by Post Office</masterLabel>
+            <translation><!-- Returned by Post Office --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unknown</masterLabel>
+            <translation><!-- Unknown --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Permanent Street Address for Account. --></help>
+        <label><!-- Permanent Address Street --></label>
+        <name>AQB__AccountDefaultStreet__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Type describes the nature of permanent account address, e.g. Home, Business, Vacation, Other, etc --></help>
+        <label><!-- Permanent Address Type --></label>
+        <name>AQB__AccountDefaultType__c</name>
+        <picklistValues>
+            <masterLabel>Business</masterLabel>
+            <translation><!-- Business --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation><!-- Home --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation><!-- Other --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Seasonal</masterLabel>
+            <translation><!-- Seasonal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vacation</masterLabel>
+            <translation><!-- Vacation --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The verification flag of the account permanent address. --></help>
+        <label><!-- Permanent Address Verification Flag --></label>
+        <name>AQB__AccountDefaultVerificationFlag__c</name>
+    </fields>
+    <fields>
+        <help><!-- Zip Code for Account Permanent address. --></help>
+        <label><!-- Permanent Add Zip/Postal Code --></label>
+        <name>AQB__AccountDefaultZipCode__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified state abbreviation of the account permanent address. --></help>
+        <label><!-- Permanent Address Certified State Abbr. --></label>
+        <name>AQB__AccountDefautCertifiedStateAbbreviation__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date the address was validated. --></help>
+        <label><!-- Permanent Address Validated On --></label>
+        <name>AQB__AccountDefautValidationDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- A unique Account identifier, used during the process of converting data into Affinaquest. --></help>
+        <label><!-- Account External ID --></label>
+        <name>AQB__AccountExternalID__c</name>
+    </fields>
+    <fields>
+        <help><!-- Used to ensure unique account grouping. --></help>
+        <label><!-- Account Grouping --></label>
+        <name>AQB__AccountGrouping__c</name>
+    </fields>
+    <fields>
+        <help><!-- First line of the Account Mailing Street Address. --></help>
+        <label><!-- Mailing Street Line One --></label>
+        <name>AQB__AccountMailingStreetLineOne__c</name>
+    </fields>
+    <fields>
+        <help><!-- Third line of the Account Mailing Street Address. --></help>
+        <label><!-- Mailing Street Line Three --></label>
+        <name>AQB__AccountMailingStreetLineThree__c</name>
+    </fields>
+    <fields>
+        <help><!-- Second line of the Account Mailing Street Address. --></help>
+        <label><!-- Mailing Street Line Two --></label>
+        <name>AQB__AccountMailingStreetLineTwo__c</name>
+    </fields>
+    <fields>
+        <help><!-- Third line of the Account Permanent Street Address. --></help>
+        <label><!-- Permanent Add Street Line Three --></label>
+        <name>AQB__AccountPermanentAddressLineThree__c</name>
+    </fields>
+    <fields>
+        <label><!-- Account Source --></label>
+        <name>AQB__AccountSource__c</name>
+    </fields>
+    <fields>
+        <help><!-- An INACTIVE account should not generally be used for mailings, campaigns, or solicitations.  An account is automatically marked INACTIVE if all associated Contacts are deceased.  Gifts cannot be posted to an INACTIVE account. --></help>
+        <label><!-- Account Status --></label>
+        <name>AQB__AccountStatus__c</name>
+        <picklistValues>
+            <masterLabel>Active</masterLabel>
+            <translation><!-- Active --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>INACTIVE</masterLabel>
+            <translation><!-- INACTIVE --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- A picklist of the highest level categorization of this Account. The category can be further described in the Secondary Type field. --></help>
+        <label><!-- Account Type --></label>
+        <name>AQB__AccountType__c</name>
+        <picklistValues>
+            <masterLabel>Alumni</masterLabel>
+            <translation><!-- Alumni --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alumni Legacy Scholar</masterLabel>
+            <translation><!-- Alumni Legacy Scholar --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Board</masterLabel>
+            <translation><!-- Board --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Bronson Hospital Grad</masterLabel>
+            <translation><!-- Bronson Hospital Grad --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Chart of Accounts Contacts</masterLabel>
+            <translation><!-- Chart of Accounts Contacts --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Class</masterLabel>
+            <translation><!-- Class --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Club</masterLabel>
+            <translation><!-- Club --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Corporation</masterLabel>
+            <translation><!-- Corporation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>EMS Endowment</masterLabel>
+            <translation><!-- EMS Endowment --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Estate-Alumni</masterLabel>
+            <translation><!-- Estate-Alumni --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Estate-Individual</masterLabel>
+            <translation><!-- Estate-Individual --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Foundation</masterLabel>
+            <translation><!-- Foundation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Giving Society</masterLabel>
+            <translation><!-- Giving Society --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IRA Alumni Account</masterLabel>
+            <translation><!-- IRA Alumni Account --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IRA Individual Account</masterLabel>
+            <translation><!-- IRA Individual Account --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Individual</masterLabel>
+            <translation><!-- Individual --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MGAF Non People Prospects</masterLabel>
+            <translation><!-- MGAF Non People Prospects --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MGAF Person Prospects</masterLabel>
+            <translation><!-- MGAF Person Prospects --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Medallion Scholar</masterLabel>
+            <translation><!-- Medallion Scholar --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Medallion Scholarship</masterLabel>
+            <translation><!-- Medallion Scholarship --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Organization</masterLabel>
+            <translation><!-- Organization --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Prospect Management-AQ Campaigns</masterLabel>
+            <translation><!-- Prospect Management-AQ Campaigns --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Student</masterLabel>
+            <translation><!-- Student --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Student Athlete</masterLabel>
+            <translation><!-- Student Athlete --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Trust-Alumni</masterLabel>
+            <translation><!-- Trust-Alumni --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Trust-Individual</masterLabel>
+            <translation><!-- Trust-Individual --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Trust-Organization</masterLabel>
+            <translation><!-- Trust-Organization --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The latitude of the account permanent address. --></help>
+        <label><!-- Permanent Address Latitude --></label>
+        <name>AQB__AccuntDefaultLatitude__c</name>
+    </fields>
+    <fields>
+        <help><!-- An alert that should display whenever the Account or associated Contact is displayed or a gift in process for this Account. --></help>
+        <label><!-- Alert --></label>
+        <name>AQB__Alert__c</name>
+    </fields>
+    <fields>
+        <help><!-- An alphanumeric code assigned to a mail delivery or collection route within a zip code. --></help>
+        <label><!-- Mailing Address Carrier Route --></label>
+        <name>AQB__BillingAddressCarrierRoute__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified city name of the account mailing  address. --></help>
+        <label><!-- Mailing  Address Certified City Name --></label>
+        <name>AQB__BillingAddressCertifiedCityName__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified state abbreviation of the account mailing  address. --></help>
+        <label><!-- Mailing  Address Certified State Abbr. --></label>
+        <name>AQB__BillingAddressCertifiedStateAbbreviation__c</name>
+    </fields>
+    <fields>
+        <help><!-- The verified street name of the account mailing  address. --></help>
+        <label><!-- Mailing  Address Certified Street Name --></label>
+        <name>AQB__BillingAddressCertifiedStreetName__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified zip code of the account mailing  address. --></help>
+        <label><!-- Mailing Address Certified Zip Code --></label>
+        <name>AQB__BillingAddressCertifiedZipCode__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contains comma separated codes that specify the portion of the address that was changed or modified. --></help>
+        <label><!-- Mailing Address Change Flags --></label>
+        <name>AQB__BillingAddressChangeFlags__c</name>
+    </fields>
+    <fields>
+        <help><!-- The id of the geographical region within which the address is located. --></help>
+        <label><!-- Mailing Address Country Id --></label>
+        <name>AQB__BillingAddressCountryId__c</name>
+    </fields>
+    <fields>
+        <help><!-- The id of the geographical region within which the address is located. --></help>
+        <label><!-- Mailing Address County ID --></label>
+        <name>AQB__BillingAddressCountyNumber__c</name>
+    </fields>
+    <fields>
+        <help><!-- The name of the geographical region within which the address is located. --></help>
+        <label><!-- Mailing Address County --></label>
+        <name>AQB__BillingAddressCounty__c</name>
+    </fields>
+    <fields>
+        <help><!-- Single check digit provided by USPS. --></help>
+        <label><!-- Mailing Address DPCD --></label>
+        <name>AQB__BillingAddressDPCD__c</name>
+    </fields>
+    <fields>
+        <help><!-- Single character indicating delivery point validation status, (Y) Yes, (N) No --></help>
+        <label><!-- Mailing Address DPV Flag --></label>
+        <name>AQB__BillingAddressDPVFlag__c</name>
+    </fields>
+    <fields>
+        <help><!-- Two digit validation code provided by USPS. --></help>
+        <label><!-- Mailing Address DPV --></label>
+        <name>AQB__BillingAddressDPV__c</name>
+    </fields>
+    <fields>
+        <help><!-- Three digit code assigned by USPS that confirms the address can be delivered to (this code is a combination of Delivery Point Validation and Delivery Point Check Digit). --></help>
+        <label><!-- Mailing Addr Delivery Point Validation --></label>
+        <name>AQB__BillingAddressDeliveryPointValiadtion__c</name>
+    </fields>
+    <fields>
+        <help><!-- Two digit validation code provided by USPS. --></help>
+        <label><!-- Mailing Address Delivery Point Code --></label>
+        <name>AQB__BillingAddressDeliveryPoint__c</name>
+    </fields>
+    <fields>
+        <help><!-- Mid level validation flag indicating detailed status, (E) Exact, (T) Tentative, (M) Multiple, (S) Secondary, (U) Unmatched, (F) Foreign --></help>
+        <label><!-- Mailing Address Flag --></label>
+        <name>AQB__BillingAddressFlag__c</name>
+    </fields>
+    <fields>
+        <help><!-- Specifies the north south position of a point on the Earth&apos;s surface. --></help>
+        <label><!-- Mailing Address Latitude --></label>
+        <name>AQB__BillingAddressLatitude__c</name>
+    </fields>
+    <fields>
+        <help><!-- Specifies the east west position of a point on the Earth&apos;s surface. --></help>
+        <label><!-- Mailing Address Longitude --></label>
+        <name>AQB__BillingAddressLongitude__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Residential Delivery Indicator of the account mailing address. --></help>
+        <label><!-- Mailing Address RDI --></label>
+        <name>AQB__BillingAddressRDI__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Federal Information Processing Standard state code of the account Matching Gift address. --></help>
+        <label><!-- Mailing Address State FIPS Code --></label>
+        <name>AQB__BillingAddressStateFIPSCode__c</name>
+    </fields>
+    <fields>
+        <help><!-- The state id of the account mailing address. --></help>
+        <label><!-- Mailing Address State Id --></label>
+        <name>AQB__BillingAddressStateId__c</name>
+    </fields>
+    <fields>
+        <help><!-- A description of the nature of the address information, such as residence, business, etc. --></help>
+        <label><!-- Mailing Address Type --></label>
+        <name>AQB__BillingAddressType__c</name>
+        <picklistValues>
+            <masterLabel>2nd Business</masterLabel>
+            <translation><!-- 2nd Business --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alternate Mailing Address</masterLabel>
+            <translation><!-- Alternate Mailing Address --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Business</masterLabel>
+            <translation><!-- Business --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Corporate HQ</masterLabel>
+            <translation><!-- Corporate HQ --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Estate</masterLabel>
+            <translation><!-- Estate --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation><!-- Home --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mailing</masterLabel>
+            <translation><!-- Mailing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Match</masterLabel>
+            <translation><!-- Match --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The date the address was validated. --></help>
+        <label><!-- Mailing Address Validated On --></label>
+        <name>AQB__BillingAddressValidationDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- High level validation flag indicating status, (V) Verified, (N) Not Verified, (O) Overridden. --></help>
+        <label><!-- Mailing Address Verification Flag --></label>
+        <name>AQB__BillingAddressVerificationFlag__c</name>
+    </fields>
+    <fields>
+        <help><!-- The District within Region for this Mailing Address. --></help>
+        <label><!-- Mailing Address District --></label>
+        <name>AQB__BillingDistrict__c</name>
+        <picklistValues>
+            <masterLabel>-none</masterLabel>
+            <translation><!-- -none --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Coastal</masterLabel>
+            <translation><!-- Coastal --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mountain</masterLabel>
+            <translation><!-- Mountain --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Piedmont</masterLabel>
+            <translation><!-- Piedmont --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- This system-created field is an amalgamation of the City, State and Postal Code fields for this address. --></help>
+        <label><!-- Mailing Address Locality --></label>
+        <name>AQB__BillingLocality__c</name>
+    </fields>
+    <fields>
+        <help><!-- In addition to being used as the Account Preferred Mailing Address, this address is used for the specific  account mailings listed here. --></help>
+        <label><!-- Mailing Lists for This Account --></label>
+        <name>AQB__BillingMailingLists__c</name>
+        <picklistValues>
+            <masterLabel>Annual Fund Mailings</masterLabel>
+            <translation><!-- Annual Fund Mailings --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Event Invitations</masterLabel>
+            <translation><!-- Event Invitations --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Newsletter</masterLabel>
+            <translation><!-- Newsletter --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Use this field to attach any brief information regarding this Account Address. --></help>
+        <label><!-- Mailing Address Note --></label>
+        <name>AQB__BillingNote__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Region for this Mailing Address. --></help>
+        <label><!-- Mailing Address Region --></label>
+        <name>AQB__BillingRegion__c</name>
+        <picklistValues>
+            <masterLabel>East</masterLabel>
+            <translation><!-- East --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>North</masterLabel>
+            <translation><!-- North --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>South</masterLabel>
+            <translation><!-- South --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>West</masterLabel>
+            <translation><!-- West --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- A description of the validity of this address.  &apos;Returned by the post office&apos; is an intermediate condition indicating that it has been returned, but you may not yet wish to declare the address as &apos;Lost&apos;. --></help>
+        <label><!-- Mailing Address Status --></label>
+        <name>AQB__BillingStatus__c</name>
+        <picklistValues>
+            <masterLabel>Good</masterLabel>
+            <translation><!-- Good --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lost</masterLabel>
+            <translation><!-- Lost --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Omit from Mailings</masterLabel>
+            <translation><!-- Omit from Mailings --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Returned by Post Office</masterLabel>
+            <translation><!-- Returned by Post Office --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unknown</masterLabel>
+            <translation><!-- Unknown --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Deprecate Acct Mailing Addr Street Ln 4 --></label>
+        <name>AQB__BillingStreetLineFour__c</name>
+    </fields>
+    <fields>
+        <help><!-- The first of the street lines for the address that will be used as the Account&apos;s preferred address. --></help>
+        <label><!-- Deprecate Acct Mailing Addr Street Ln 1 --></label>
+        <name>AQB__BillingStreetLineOne__c</name>
+    </fields>
+    <fields>
+        <label><!-- Deprecate Acct Mailing Addr Street Ln 3 --></label>
+        <name>AQB__BillingStreetLineThree__c</name>
+    </fields>
+    <fields>
+        <label><!-- Deprecate Acct Mailing Addr Street Ln 2 --></label>
+        <name>AQB__BillingStreetLineTwo__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Time Zone for this address. --></help>
+        <label><!-- Mailing Address Time Zone --></label>
+        <name>AQB__BillingTimeZone__c</name>
+        <picklistValues>
+            <masterLabel>ACT Australia Central Time GMT+9:30</masterLabel>
+            <translation><!-- ACT Australia Central Time GMT+9:30 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AET Australia Eastern Time GMT+10:00</masterLabel>
+            <translation><!-- AET Australia Eastern Time GMT+10:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AGT Argentina Standard Time GMT-3:00</masterLabel>
+            <translation><!-- AGT Argentina Standard Time GMT-3:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ART (Arabic) Egypt Standard Time GMT+2:00</masterLabel>
+            <translation><!-- ART (Arabic) Egypt Standard Time GMT+2:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>AST Alaska Standard Time GMT-9:00</masterLabel>
+            <translation><!-- AST Alaska Standard Time GMT-9:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BET Brazil Eastern Time GMT-3:00</masterLabel>
+            <translation><!-- BET Brazil Eastern Time GMT-3:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>BST Bangladesh Standard Time GMT+6:00</masterLabel>
+            <translation><!-- BST Bangladesh Standard Time GMT+6:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CAT Central African Time GMT-1:00</masterLabel>
+            <translation><!-- CAT Central African Time GMT-1:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CNT Canada Newfoundland Time GMT-3:30</masterLabel>
+            <translation><!-- CNT Canada Newfoundland Time GMT-3:30 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CST Central Standard Time GMT-6:00</masterLabel>
+            <translation><!-- CST Central Standard Time GMT-6:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>CTT China Taiwan Time GMT+8:00</masterLabel>
+            <translation><!-- CTT China Taiwan Time GMT+8:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>EAT Eastern African Time GMT+3:00</masterLabel>
+            <translation><!-- EAT Eastern African Time GMT+3:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>ECT European Central Time GMT+1:00</masterLabel>
+            <translation><!-- ECT European Central Time GMT+1:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>EET Eastern European Time GMT+2:00</masterLabel>
+            <translation><!-- EET Eastern European Time GMT+2:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>EST Eastern Standard Time GMT-5:00</masterLabel>
+            <translation><!-- EST Eastern Standard Time GMT-5:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>GMT Greenwich Mean Time GMT</masterLabel>
+            <translation><!-- GMT Greenwich Mean Time GMT --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>HST Hawaii Standard Time GMT-10:00</masterLabel>
+            <translation><!-- HST Hawaii Standard Time GMT-10:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IET Indiana Eastern Standard Time GMT-5:00</masterLabel>
+            <translation><!-- IET Indiana Eastern Standard Time GMT-5:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>IST India Standard Time GMT+5:30</masterLabel>
+            <translation><!-- IST India Standard Time GMT+5:30 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>JST Japan Standard Time GMT+9:00</masterLabel>
+            <translation><!-- JST Japan Standard Time GMT+9:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MET Middle East Time GMT+3:30</masterLabel>
+            <translation><!-- MET Middle East Time GMT+3:30 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MIT Midway Islands Time GMT-11:00</masterLabel>
+            <translation><!-- MIT Midway Islands Time GMT-11:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>MST Mountain Standard Time GMT-7:00</masterLabel>
+            <translation><!-- MST Mountain Standard Time GMT-7:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NET Near East Time GMT+4:00</masterLabel>
+            <translation><!-- NET Near East Time GMT+4:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>NST New Zealand Standard Time GMT+12:00</masterLabel>
+            <translation><!-- NST New Zealand Standard Time GMT+12:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PLT Pakistan Lahore Time GMT+5:00</masterLabel>
+            <translation><!-- PLT Pakistan Lahore Time GMT+5:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PNT Phoenix Standard Time GMT-7:00</masterLabel>
+            <translation><!-- PNT Phoenix Standard Time GMT-7:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PRT Puerto Rico and US Virgin Islands Time GMT-4:00</masterLabel>
+            <translation><!-- PRT Puerto Rico and US Virgin Islands Time GMT-4:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PST Pacific Standard Time GMT-8:00</masterLabel>
+            <translation><!-- PST Pacific Standard Time GMT-8:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>SST Solomon Standard Time GMT+11:00</masterLabel>
+            <translation><!-- SST Solomon Standard Time GMT+11:00 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>UTC Universal Coordinated Time GMT</masterLabel>
+            <translation><!-- UTC Universal Coordinated Time GMT --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>VST Vietnam Standard Time GMT+7:00</masterLabel>
+            <translation><!-- VST Vietnam Standard Time GMT+7:00 --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- This is the CAE Category for the Account. --></help>
+        <label><!-- CAE Category --></label>
+        <name>AQB__CAECategory__c</name>
+        <picklistValues>
+            <masterLabel>Alumni</masterLabel>
+            <translation><!-- Alumni --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Corporation</masterLabel>
+            <translation><!-- Corporation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Foundation</masterLabel>
+            <translation><!-- Foundation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other Individual</masterLabel>
+            <translation><!-- Other Individual --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other Organization</masterLabel>
+            <translation><!-- Other Organization --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Parent</masterLabel>
+            <translation><!-- Parent --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- An institution-defined set of values, meant to describe the amount a prospect might be able to give. --></help>
+        <label><!-- Capacity --></label>
+        <name>AQB__Capacity__c</name>
+        <picklistValues>
+            <masterLabel>A - $1,000,000 +</masterLabel>
+            <translation><!-- A - $1,000,000 + --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>B - $500,000 to $999,999</masterLabel>
+            <translation><!-- B - $500,000 to $999,999 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>C - $250,000 to $499,999</masterLabel>
+            <translation><!-- C - $250,000 to $499,999 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>D - $100,000 to $249,999</masterLabel>
+            <translation><!-- D - $100,000 to $249,999 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>E - $10,000 to $99,999</masterLabel>
+            <translation><!-- E - $10,000 to $99,999 --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>F - Not Rated</masterLabel>
+            <translation><!-- F - Not Rated --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- List of vendors which are utilized by this Affiliated Organization. --></help>
+        <label><!-- Communications Managed --></label>
+        <name>AQB__CommunicationsManaged__c</name>
+        <picklistValues>
+            <masterLabel>Community</masterLabel>
+            <translation><!-- Community --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Facebook</masterLabel>
+            <translation><!-- Facebook --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>iModules</masterLabel>
+            <translation><!-- iModules --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Number of Consecutive Fiscal Years this Account has given. --></help>
+        <label><!-- Consecutive Years Given --></label>
+        <name>AQB__ConsecutiveYearsGiven__c</name>
+    </fields>
+    <fields>
+        <help><!-- Shows the level of highest involvement by an Account Contact by displaying a broken link indicating a lack of involvement or one to three links indicating increasing involvement in volunteer activities, interests, or communication with the institution. --></help>
+        <label><!-- Contact Involvement Rating --></label>
+        <name>AQB__ContactInvolvementRating__c</name>
+    </fields>
+    <fields>
+        <label><!-- Customer Priority --></label>
+        <name>AQB__CustomerPriority__c</name>
+        <picklistValues>
+            <masterLabel>High</masterLabel>
+            <translation><!-- High --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Low</masterLabel>
+            <translation><!-- Low --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Medium</masterLabel>
+            <translation><!-- Medium --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The most recent date on which a donation was recorded for this Account. --></help>
+        <label><!-- Deprecated Date of Last Gift --></label>
+        <name>AQB__DateofLastGift__c</name>
+    </fields>
+    <fields>
+        <help><!-- The value in this field will be assigned to the acknowledgement type field of a transaction as a gift is created. The user will have an opportunity to change the acknowledgement type for the transaction prior to saving the gift. --></help>
+        <label><!-- Default Acknowledgement Type --></label>
+        <name>AQB__DefaultAcknowledgementType__c</name>
+        <relationshipLabel><!-- Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Indicates the default anonymity of gifts from this account. --></help>
+        <label><!-- Default Anonymity Level --></label>
+        <name>AQB__DefaultAnonymityLevel__c</name>
+    </fields>
+    <fields>
+        <help><!-- The value in this field will be assigned to the campaign appeal field of a transaction as a gift is created. The user will have an opportunity to change the campaign appeal for the transaction prior to saving the gift. --></help>
+        <label><!-- Default Campaign Appeal --></label>
+        <name>AQB__DefaultCampaignAppeal__c</name>
+        <relationshipLabel><!-- Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The value in this field will be assigned to the amount field of a transaction as a gift is created. The user will have an opportunity to change the amount for the transaction prior to saving the gift. --></help>
+        <label><!-- Default Gift Amount --></label>
+        <name>AQB__DefaultGiftAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The value in this field will be assigned to the description field of a transaction as a gift is created. The user will have an opportunity to change the description for the transaction prior to saving the gift. --></help>
+        <label><!-- Default Gift Description --></label>
+        <name>AQB__DefaultGiftDescription__c</name>
+    </fields>
+    <fields>
+        <help><!-- The gift designation in this field will be assigned to the Designation field of a transaction as a gift is created.  The user will have to opportunity change the designation for the transaction prior to saving the gift. --></help>
+        <label><!-- Default Gift Designation --></label>
+        <name>AQB__DefaultGiftDistribution__c</name>
+        <relationshipLabel><!-- Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Alternate District assigned to this account, if any. --></help>
+        <label><!-- District - Alternate --></label>
+        <name>AQB__DistrictAlternate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates that the user has overridden the district associated with the Current Mailing Address Postal Code. --></help>
+        <label><!-- District is Overridden --></label>
+        <name>AQB__DistrictIsOverridden__c</name>
+    </fields>
+    <fields>
+        <help><!-- The District to which this Account would be assigned as indicated by the Postal Code Lookup. --></help>
+        <label><!-- District --></label>
+        <name>AQB__District__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Division or Unit that manages this Affiliated Organization --></help>
+        <label><!-- Division/Unit --></label>
+        <name>AQB__DivisionUnit__c</name>
+    </fields>
+    <fields>
+        <help><!-- Check this box to indicate that this Account wishes not to be contacted. --></help>
+        <label><!-- Do Not Contact --></label>
+        <name>AQB__DoNotContact__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates that this account should not be solicited in any manner. --></help>
+        <label><!-- Do Not Solicit --></label>
+        <name>AQB__DoNotSolicit__c</name>
+    </fields>
+    <fields>
+        <help><!-- The ID number for this Account in the Double the Donation database. --></help>
+        <label><!-- Double the Donation ID --></label>
+        <name>AQB__DoubletheDonationID__c</name>
+    </fields>
+    <fields>
+        <help><!-- 10 digit number issued by the IRS. --></help>
+        <label><!-- EIN Number --></label>
+        <name>AQB__EINNumber__c</name>
+    </fields>
+    <fields>
+        <help><!-- Email address for this household. --></help>
+        <label><!-- Email --></label>
+        <name>AQB__Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the Amount of the First Gift/Pledge on this Account --></help>
+        <label><!-- First Gift/Pledge Amount --></label>
+        <name>AQB__FirstGiftPledgeAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the First Gift/Pledge Balance on this Account. --></help>
+        <label><!-- First Gift/Pledge Balance --></label>
+        <name>AQB__FirstGiftPledgeBalance__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the date of the First Gift/Pledge on this Account. --></help>
+        <label><!-- First Gift/Pledge Date --></label>
+        <name>AQB__FirstGiftPledgeDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the Fundraising Campaign of the First Gift on this Account. --></help>
+        <label><!-- First Gift/Pledge Fundraising Campaign --></label>
+        <name>AQB__FirstGiftPledgeFundraisingCampaign__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the First Gift/Pledge on this Account. --></help>
+        <label><!-- First Gift/Pledge --></label>
+        <name>AQB__FirstGiftPledge__c</name>
+        <relationshipLabel><!-- Accounts (First Gift/Pledge) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Gifts Are Anonymous --></label>
+        <name>AQB__GiftsAreAnonymous__c</name>
+    </fields>
+    <fields>
+        <help><!-- Primary giving interests of this foundation. --></help>
+        <label><!-- Giving Interests --></label>
+        <name>AQB__Giving_Interests__c</name>
+        <picklistValues>
+            <masterLabel>Immigrant Rights</masterLabel>
+            <translation><!-- Immigrant Rights --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Workers Rights</masterLabel>
+            <translation><!-- Workers Rights --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- This is the greeting salutation as it might be used in a letter or email such as &quot;Mr. Smith&quot;, &quot;Dr. and Mr. Brown&quot; or &quot;Jack and Jill&quot;.  This field can contain 40 characters. --></help>
+        <label><!-- Account Greeting --></label>
+        <name>AQB__Greeting__c</name>
+    </fields>
+    <fields>
+        <help><!-- Deprecated  Jan, 2014- -  The contact that should receive hard credit for gifts --></help>
+        <label><!-- DeprecateHard Credit Recognition Contact --></label>
+        <name>AQB__HardCreditRecognitionContact__c</name>
+        <relationshipLabel><!-- Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Indicates that the user has overridden the Institutional Area 1 associated with the Current Mailing Address Postal Code. --></help>
+        <label><!-- Institutional Area 1 is Overridden --></label>
+        <name>AQB__InstitutionalArea1IsOverridden__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Institutional Area 1 that is associated with this Account. --></help>
+        <label><!-- Institutional Area 1 --></label>
+        <name>AQB__InstitutionalArea1__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates that the user has overridden the Institutional Area 2 associated with the Current Mailing Address Postal Code. --></help>
+        <label><!-- Institutional Area 2 is Overridden --></label>
+        <name>AQB__InstitutionalArea2IsOverridden__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Institutional Area 2 that is associated with this Account. --></help>
+        <label><!-- Institutional Area 2 --></label>
+        <name>AQB__InstitutionalArea2__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates that the user has overridden the Institutional Area 3 associated with the Current Mailing Address Postal Code. --></help>
+        <label><!-- Institutional Area 3 is Overridden --></label>
+        <name>AQB__InstitutionalArea3IsOverridden__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Institutional Area 3 that is associated with this Account. --></help>
+        <label><!-- Institutional Area 3 --></label>
+        <name>AQB__InstitutionalArea3__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates that the user has overridden the Institutional Area 4 associated with the Current Mailing Address Postal Code. --></help>
+        <label><!-- Institutional Area 4 is Overridden --></label>
+        <name>AQB__InstitutionalArea4IsOverridden__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Institutional Area 4 that is associated with this Account. --></help>
+        <label><!-- Institutional Area 4 --></label>
+        <name>AQB__InstitutionalArea4__c</name>
+    </fields>
+    <fields>
+        <help><!-- Holding field used to help calculate street lines. --></help>
+        <label><!-- Internal Acct Mail Street One --></label>
+        <name>AQB__InternalAcctMailStreetOne__c</name>
+    </fields>
+    <fields>
+        <help><!-- Internal Account Mailing Address with first line stripped off. --></help>
+        <label><!-- Internal Acct Mail Street Two --></label>
+        <name>AQB__InternalAcctMailStreetTwo__c</name>
+    </fields>
+    <fields>
+        <help><!-- Holding field used to help calculate street lines. --></help>
+        <label><!-- Internal Perm Mail Add Street One --></label>
+        <name>AQB__InternalPermMailAddStreetOne__c</name>
+    </fields>
+    <fields>
+        <label><!-- Internal Perm Mail Add Street Two --></label>
+        <name>AQB__InternalPermMailAddstreetTwo__c</name>
+    </fields>
+    <fields>
+        <label><!-- Engagement Score --></label>
+        <name>AQB__InvolvementScore__c</name>
+    </fields>
+    <fields>
+        <help><!-- A system-generated indicator of the degree of involvement of the Account with the institution, based on the Account having a Case, an Activity or a Volunteer Activity. --></help>
+        <label><!-- Engagement --></label>
+        <name>AQB__Involvement__c</name>
+    </fields>
+    <fields>
+        <help><!-- Name of report to display on Chart1 VisualForce page on page layout. --></help>
+        <label><!-- KPI Chart 1 --></label>
+        <name>AQB__KPIChart1__c</name>
+    </fields>
+    <fields>
+        <help><!-- Name of report to display on Chart2 VisualForce page on page layout. --></help>
+        <label><!-- KPI Chart 2 --></label>
+        <name>AQB__KPIChart2__c</name>
+    </fields>
+    <fields>
+        <help><!-- Name of report to display on Chart3 VisualForce page on page layout. --></help>
+        <label><!-- KPI Chart 3 --></label>
+        <name>AQB__KPIChart3__c</name>
+    </fields>
+    <fields>
+        <help><!-- Name of report to display on Chart4 VisualForce page on page layout. --></help>
+        <label><!-- KPI Chart 4 --></label>
+        <name>AQB__KPIChart4__c</name>
+    </fields>
+    <fields>
+        <help><!-- The size in which KPI charts should be rendered. --></help>
+        <label><!-- KPI Chart Size --></label>
+        <name>AQB__KPIChartSize__c</name>
+        <picklistValues>
+            <masterLabel>Medium</masterLabel>
+            <translation><!-- Medium --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Small</masterLabel>
+            <translation><!-- Small --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The individual largest gift given by this Account. --></help>
+        <label><!-- Largest Gift --></label>
+        <name>AQB__LargestGift__c</name>
+    </fields>
+    <fields>
+        <help><!-- Click this link to edit the Default Address. --></help>
+        <label><!-- Mailing Address Link --></label>
+        <name>AQB__LinkedAddress__c</name>
+        <relationshipLabel><!-- Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Indicates whether an address is residential (R) or business (B). --></help>
+        <label><!-- Mailing Address Residential Indicator --></label>
+        <name>AQB__MailingAddressResidentIndicator__c</name>
+    </fields>
+    <fields>
+        <help><!-- If you type data into this field when the account is created, it will override the automated name formatting routines.  The name can be changed at any time during editing. --></help>
+        <label><!-- Mailing Name Line Two --></label>
+        <name>AQB__MailingNameLineTwo__c</name>
+    </fields>
+    <fields>
+        <help><!-- If you type data into this field when the account is created, it will override the automated name formatting routines.  The name can be changed at any time during editing. --></help>
+        <label><!-- Mailing Name Line One --></label>
+        <name>AQB__MailingName__c</name>
+    </fields>
+    <fields>
+        <help><!-- If checked, this field indicates that this Account matches gifts according to Double the Donation data at the time of last verification. --></help>
+        <label><!-- Double the Donation Eligible --></label>
+        <name>AQB__MatchesGifts__c</name>
+    </fields>
+    <fields>
+        <help><!-- Amount of the most recent gift. --></help>
+        <label><!-- Most Recent Gift/Pledge Amount --></label>
+        <name>AQB__MostRecentGiftAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date of the most recent gift. --></help>
+        <label><!-- Most Recent Gift/Pledge Date --></label>
+        <name>AQB__MostRecentGiftDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Fundraising Campaign of the most recent gift. --></help>
+        <label><!-- Most Recent Gift/Pledge Fundraising Camp --></label>
+        <name>AQB__MostRecentGiftFundraisingCampaign__c</name>
+    </fields>
+    <fields>
+        <help><!-- The pledge balance, if any, of the most recent gift --></help>
+        <label><!-- Most Recent Gift/Pledge Balance --></label>
+        <name>AQB__MostRecentGiftPledgeBalance__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the Most Recent Gift/Pledge. --></help>
+        <label><!-- Most Recent Gift/Pledge --></label>
+        <name>AQB__MostRecentGiftPledge__c</name>
+        <relationshipLabel><!-- Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The Fundraising Campaign of the most recent Pledge Payment on this Account. --></help>
+        <label><!-- Most Recent Payment Fundraising Campaign --></label>
+        <name>AQB__MostRecentPaymentFundraisingCampaign__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Amount of the Most Recent Pledge Payment on this Account. --></help>
+        <label><!-- Most Recent Pledge Payment Amount --></label>
+        <name>AQB__MostRecentPledgePaymentAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Most Recent Pledge Payment&apos;s Campaign Appeal. --></help>
+        <label><!-- Most Recent Payment Campaign Appeal --></label>
+        <name>AQB__MostRecentPledgePaymentCampaignAppeal__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Date of the Most Recent Pledge Payment on this Account. --></help>
+        <label><!-- Most Recent Pledge Payment Date --></label>
+        <name>AQB__MostRecentPledgePaymentDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Designation of the Most Recent Pledge payment. --></help>
+        <label><!-- Most Recent Pledge Payment Designation --></label>
+        <name>AQB__MostRecentPledgePaymentDesignation__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Record Type of the Most Recent Pledge Payment. --></help>
+        <label><!-- Most Recent Pledge Payment Record Type --></label>
+        <name>AQB__MostRecentPledgePaymentRecordType__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the Most Recent Payment made on this Account. --></help>
+        <label><!-- Most Recent Pledge Payment --></label>
+        <name>AQB__MostRecentPledgePayment__c</name>
+        <relationshipLabel><!-- Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The date of the next Task planned for this Account. --></help>
+        <label><!-- Next Task Date --></label>
+        <name>AQB__NextActivityDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The flag indicates status of the next Task for the Account.  White - no future Tasks.  Green - Task due date is at least 14 days away.  Yellow - Task due date is within 14 days.  Red - Task is overdue. --></help>
+        <label><!-- Next Task --></label>
+        <name>AQB__NextActivity__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Locations --></label>
+        <name>AQB__NumberofLocations__c</name>
+    </fields>
+    <fields>
+        <help><!-- This field is calculated by the system and represents the oldest due date for any open pledges belonging to this Account. --></help>
+        <label><!-- Oldest Pledge Payment Due --></label>
+        <name>AQB__OldestPledgePaymentDue__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total count of all opportunities which are not yet closed. --></help>
+        <label><!-- Total Open Opportunities --></label>
+        <name>AQB__OpenOpps__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified zip code of the account permanent account. --></help>
+        <label><!-- Permanent Address Certified Zip Code --></label>
+        <name>AQB__PermanentAddressCertifiedZipCode__c</name>
+    </fields>
+    <fields>
+        <help><!-- The id of the geographical region within which the address is located. --></help>
+        <label><!-- Permanent Address County ID --></label>
+        <name>AQB__PermanentAddressCountyID__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates whether an address is residential (R) or business (B). --></help>
+        <label><!-- Permanent Address Residential Indicator --></label>
+        <name>AQB__PermanentAddressResidentialInidicator__c</name>
+    </fields>
+    <fields>
+        <help><!-- First line of the Account Mailing Street Address. --></help>
+        <label><!-- Permanent Add Street Line One --></label>
+        <name>AQB__PermanentAddressStreetLineOne__c</name>
+    </fields>
+    <fields>
+        <help><!-- Second line of the Account Permanent Street Address. --></help>
+        <label><!-- Permanent Add Street Line Two --></label>
+        <name>AQB__PermanentAddressStreetLineTwo__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total balance of all pledges to this Account. --></help>
+        <label><!-- Total Pledge Balance --></label>
+        <name>AQB__PledgeBalanceUnconditional__c</name>
+    </fields>
+    <fields>
+        <help><!-- Displays a fist for no pledge balance, one thumb up for a pledge due in the future, one thumb down for a pledge less than 30 days overdue, two thumbs down for a pledge 30 to 60 days overdue, and three thumbs down for a pledge more than 60 days overdue. --></help>
+        <label><!-- Pledge Status --></label>
+        <name>AQB__PledgeStatus__c</name>
+    </fields>
+    <fields>
+        <help><!-- The primary Contact for this Account. --></help>
+        <label><!-- Primary Contact --></label>
+        <lookupFilter>
+            <errorMessage><!-- Contact must be related to this Account. --></errorMessage>
+            <informationalMessage><!-- Select the Contact associated with this Account that should be considered the Primary Contact. --></informationalMessage>
+        </lookupFilter>
+        <name>AQB__PrimaryContact__c</name>
+        <relationshipLabel><!-- Accounts (Primary Contact) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- RFM Calculation --></label>
+        <name>AQB__RFMCalculation__c</name>
+    </fields>
+    <fields>
+        <help><!-- A star is awarded for each of the following five conditions: having a giving record, having a pending opportunity, having a largest gift over a defined amount, having a total amount of giving over a defined amount, and having made a payment this year. --></help>
+        <label><!-- RFM --></label>
+        <name>AQB__RFM__c</name>
+    </fields>
+    <fields>
+        <help><!-- An institution-defined set of values, meant to describe the preparedness of the prospect to give or the status of the prospect&apos;s cultivation. --></help>
+        <label><!-- Readiness --></label>
+        <name>AQB__Readiness__c</name>
+        <picklistValues>
+            <masterLabel>1 - Ready for Ask</masterLabel>
+            <translation><!-- 1 - Ready for Ask --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2 - Getting Ready</masterLabel>
+            <translation><!-- 2 - Getting Ready --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3 - Not Ready</masterLabel>
+            <translation><!-- 3 - Not Ready --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Alternate Region assigned to this Account, if any. --></help>
+        <label><!-- Region - Alternate --></label>
+        <name>AQB__RegionAlternate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates that the user has overridden the region associated with the Current Mailing Address Postal Code. --></help>
+        <label><!-- Region is Overridden --></label>
+        <name>AQB__RegionIsOverridden__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Region to which this Account would be assigned as indicated by the Postal Code Lookup. --></help>
+        <label><!-- Region --></label>
+        <name>AQB__Region__c</name>
+    </fields>
+    <fields>
+        <label><!-- Reject Quid Pro Quos --></label>
+        <name>AQB__RejectQuidProQuos__c</name>
+    </fields>
+    <fields>
+        <label><!-- SLA Expiration Date --></label>
+        <name>AQB__SLAExpirationDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- SLA Serial Number --></label>
+        <name>AQB__SLASerialNumber__c</name>
+    </fields>
+    <fields>
+        <label><!-- SLA --></label>
+        <name>AQB__SLA__c</name>
+        <picklistValues>
+            <masterLabel>Bronze</masterLabel>
+            <translation><!-- Bronze --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Gold</masterLabel>
+            <translation><!-- Gold --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Platinum</masterLabel>
+            <translation><!-- Platinum --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Silver</masterLabel>
+            <translation><!-- Silver --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Seasonal Start Date --></label>
+        <name>AQB__SeasonalStartDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Seasonal Stop Date --></label>
+        <name>AQB__SeasonalStopDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- A multi-select picklist allowing for the assignment of multiple secondary categorization levels for this Account.  The primary category should be entered into the Type field. --></help>
+        <label><!-- Secondary Account Types --></label>
+        <name>AQB__SecondaryTypes__c</name>
+        <picklistValues>
+            <masterLabel>Arts</masterLabel>
+            <translation><!-- Arts --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>C Type Corporation</masterLabel>
+            <translation><!-- C Type Corporation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Church</masterLabel>
+            <translation><!-- Church --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Cultural</masterLabel>
+            <translation><!-- Cultural --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Family Foundation</masterLabel>
+            <translation><!-- Family Foundation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>LLP Type Corporation</masterLabel>
+            <translation><!-- LLP Type Corporation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Limited Partnership</masterLabel>
+            <translation><!-- Limited Partnership --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Museum</masterLabel>
+            <translation><!-- Museum --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>S Type Corporation</masterLabel>
+            <translation><!-- S Type Corporation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Zoo</masterLabel>
+            <translation><!-- Zoo --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Setup --></label>
+        <name>AQB__Setup__c</name>
+        <relationshipLabel><!-- Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Indicates that Affiliated Organizational information can be surfaced to the community/portal/web. --></help>
+        <label><!-- Share with Community --></label>
+        <name>AQB__SharewithCommunity__c</name>
+    </fields>
+    <fields>
+        <help><!-- An alphanumeric code assigned to a mail delivery or collection route within a zip code. --></help>
+        <label><!-- Matching Gift Address Carrier Route --></label>
+        <name>AQB__ShippingAddressCarrierRoute__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified city name of the account Matching Gift address. --></help>
+        <label><!-- Matching Gift Add Certified City Name --></label>
+        <name>AQB__ShippingAddressCertifiedCityName__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified state abbreviation of the account Matching Gift address. --></help>
+        <label><!-- Matching Gift Add Certified State Abbr. --></label>
+        <name>AQB__ShippingAddressCertifiedStateAbbr__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified street name of the account Matching Gift address. --></help>
+        <label><!-- Matching Gift Add Certified Street Name --></label>
+        <name>AQB__ShippingAddressCertifiedStreetName__c</name>
+    </fields>
+    <fields>
+        <help><!-- The certified zip code of the account Matching Gift address. --></help>
+        <label><!-- Matching Gift Address Certified Zip Code --></label>
+        <name>AQB__ShippingAddressCertifiedZipCode__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contains comma separated codes that specify the portion of the address that was changed or modified. --></help>
+        <label><!-- Matching Gift Address Change Flags --></label>
+        <name>AQB__ShippingAddressChangeFlags__c</name>
+    </fields>
+    <fields>
+        <help><!-- The id of the geographical region within which the address is located. --></help>
+        <label><!-- Matching Gift Address Country ID --></label>
+        <name>AQB__ShippingAddressCountryId__c</name>
+    </fields>
+    <fields>
+        <help><!-- The county number of the account Matching Gift address. --></help>
+        <label><!-- Matching Gift Address County ID --></label>
+        <name>AQB__ShippingAddressCountyNumber__c</name>
+    </fields>
+    <fields>
+        <help><!-- The name of the geographical region within which the address is located. --></help>
+        <label><!-- Matching Gift Address County --></label>
+        <name>AQB__ShippingAddressCounty__c</name>
+    </fields>
+    <fields>
+        <help><!-- Single check digit provided by USPS. --></help>
+        <label><!-- Matching Gift Address DPCD --></label>
+        <name>AQB__ShippingAddressDPCD__c</name>
+    </fields>
+    <fields>
+        <help><!-- Single character indicating delivery point validation status, (Y) Yes, (N) No --></help>
+        <label><!-- Matching Gift Address DPV Flag --></label>
+        <name>AQB__ShippingAddressDPVFlag__c</name>
+    </fields>
+    <fields>
+        <help><!-- Two digit validation code provided by USPS. --></help>
+        <label><!-- Matching Gift Address DPV --></label>
+        <name>AQB__ShippingAddressDPV__c</name>
+    </fields>
+    <fields>
+        <help><!-- Three digit code assigned by USPS that confirms the address can be delivered to (this code is a combination of Delivery Point Validation and Delivery Point Check Digit). --></help>
+        <label><!-- Matching Gift Add Delivery Pt Validation --></label>
+        <name>AQB__ShippingAddressDeliveryPointValidation__c</name>
+    </fields>
+    <fields>
+        <help><!-- Two digit validation code provided by USPS. --></help>
+        <label><!-- Matching Gift Addr Delivery Point Code --></label>
+        <name>AQB__ShippingAddressDeliveryPoint__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Federal Information Processing Standard state code of the account Matching Gift address. --></help>
+        <label><!-- Matching Gift Address FIPS State Code --></label>
+        <name>AQB__ShippingAddressFIPSStateCode__c</name>
+    </fields>
+    <fields>
+        <help><!-- Mid level validation flag indicating detailed status, (E) Exact, (T) Tentative, (M) Multiple, (S) Secondary, (U) Unmatched, (F) Foreign --></help>
+        <label><!-- Matching Gift Address Flag --></label>
+        <name>AQB__ShippingAddressFlag__c</name>
+    </fields>
+    <fields>
+        <help><!-- Specifies the north south position of a point on the Earth&apos;s surface. --></help>
+        <label><!-- Matching Gift Address Latitude --></label>
+        <name>AQB__ShippingAddressLatitude__c</name>
+    </fields>
+    <fields>
+        <help><!-- Specifies the east west position of a point on the Earth&apos;s surface. --></help>
+        <label><!-- Matching Gift Address Longitude --></label>
+        <name>AQB__ShippingAddressLongitude__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Residential Delivery Indicator of the account Matching Gift address. --></help>
+        <label><!-- Matching Gift Address RDI --></label>
+        <name>AQB__ShippingAddressRDI__c</name>
+    </fields>
+    <fields>
+        <help><!-- The state id of the account Matching Gift address. --></help>
+        <label><!-- Matching Gift Address State Id --></label>
+        <name>AQB__ShippingAddressStateId__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date the address was validated. --></help>
+        <label><!-- Matching Gift Address Validated On --></label>
+        <name>AQB__ShippingAddressValidationDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The verification flag for the account Matching Gift address. --></help>
+        <label><!-- Matching Gift Address Verification Flag --></label>
+        <name>AQB__ShippingAddressVerificationFlag__c</name>
+    </fields>
+    <fields>
+        <help><!-- Use this field to attach any brief information regarding this Matching Gift Address. --></help>
+        <label><!-- Matching Gift Address Note --></label>
+        <name>AQB__ShippingNote__c</name>
+    </fields>
+    <fields>
+        <help><!-- A description of the validity of this address.  &apos;Returned by the post office&apos; is an intermediate condition indicating that it has been returned, but you may not yet wish to declare the address as &apos;Lost&apos;. --></help>
+        <label><!-- Matching Gift Address Status --></label>
+        <name>AQB__ShippingsStatus__c</name>
+        <picklistValues>
+            <masterLabel>Good</masterLabel>
+            <translation><!-- Good --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lost</masterLabel>
+            <translation><!-- Lost --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Omit From Mailings</masterLabel>
+            <translation><!-- Omit From Mailings --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Returned by Post Office</masterLabel>
+            <translation><!-- Returned by Post Office --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unknown</masterLabel>
+            <translation><!-- Unknown --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Deprecated Jan, 2014 --></help>
+        <label><!-- DeprecateSoft Credit Recognition Contact --></label>
+        <name>AQB__SoftCreditRecognitionContact__c</name>
+        <relationshipLabel><!-- Accounts (Soft Credit Recognition Contact) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Staff member liaison to this Affiliated Organization. --></help>
+        <label><!-- Staff Liaison --></label>
+        <name>AQB__StaffLiason__c</name>
+        <relationshipLabel><!-- Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The supplier or payor ID of the Affiliated Organization as issued by the institution. --></help>
+        <label><!-- Supplier ID Number --></label>
+        <name>AQB__SupplierIDNumber__c</name>
+    </fields>
+    <fields>
+        <help><!-- A running total of the gifts given by this Account. --></help>
+        <label><!-- Total Gifts --></label>
+        <name>AQB__TotalGifts__c</name>
+    </fields>
+    <fields>
+        <help><!-- The total number of Fiscal Years this Account has given. --></help>
+        <label><!-- Total Years Given --></label>
+        <name>AQB__TotalYearsGiven__c</name>
+    </fields>
+    <fields>
+        <help><!-- This field restricts a contacts ability to see other contacts related to this account when purchasing items that have assignments enabled. --></help>
+        <label><!-- Restrict Assignment Visibility --></label>
+        <name>CPBase__Restrict_Assignment_Visibility__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates the historic permits numbers associated with this account. --></help>
+        <label><!-- Historic Permit Numbers --></label>
+        <name>Historic_Permit_Numbers__c</name>
+    </fields>
+    <fields>
+        <help><!-- Legacy ID for this Account. --></help>
+        <label><!-- Legacy ID --></label>
+        <name>Legacy_ID__c</name>
+    </fields>
+    <fields>
+        <label><!-- Millennium Id --></label>
+        <name>Millennium_Id__c</name>
+    </fields>
+    <fields>
+        <help><!-- AQ_Custom Not a MG Prospect at this time --></help>
+        <label><!-- Not a MG Prospect --></label>
+        <name>Not_a_MG_Prospect__c</name>
+    </fields>
+    <fields>
+        <help><!-- The default/primary email for the account. --></help>
+        <label><!-- Account Email --></label>
+        <name>OrderApi__Account_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Aggregates the Account&apos;s active engagement scores from it&apos;s badge records for the current year. --></help>
+        <label><!-- Annual Engagement Score --></label>
+        <name>OrderApi__Annual_Engagement_Score__c</name>
+    </fields>
+    <fields>
+        <help><!-- When checked, this field disables any inheritance of flow-down badges from the parent account. --></help>
+        <label><!-- Disable Badge Flow-down --></label>
+        <name>OrderApi__Disable_Badge_Flow_down__c</name>
+    </fields>
+    <fields>
+        <help><!-- Aggregates the Account&apos;s active engagement scores from it&apos;s badge records. --></help>
+        <label><!-- Lifetime Engagement Score --></label>
+        <name>OrderApi__Lifetime_Engagement_Score__c</name>
+    </fields>
+    <fields>
+        <help><!-- ** System Calculated ** The sum of the Credit Memo Balance Due field for all Credit Memos linked to this customer. --></help>
+        <label><!-- Outstanding Credits --></label>
+        <name>OrderApi__Outstanding_Credits__c</name>
+    </fields>
+    <fields>
+        <help><!-- ** SYSTEM ** JSON of price rules --></help>
+        <label><!-- SYSTEM --></label>
+        <name>OrderApi__Price_Rules_Usages__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Primary Contact for the Account will auto-populate on all Account Transactions, Payments, etc... by default. --></help>
+        <label><!-- Primary Contact --></label>
+        <name>OrderApi__Primary_Contact__c</name>
+        <relationshipLabel><!-- Primary Contact Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- **Defaults to private** This field sets the visibility settings when account search is enabled.
+            Public: Any user in the system can search. Private: Searchable by authenticated users only. Unlisted: Can not be searched at all. --></help>
+        <label><!-- Privacy Settings --></label>
+        <name>OrderApi__Privacy_Settings__c</name>
+        <picklistValues>
+            <masterLabel>private</masterLabel>
+            <translation><!-- private --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>public</masterLabel>
+            <translation><!-- public --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>unlisted</masterLabel>
+            <translation><!-- unlisted --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Indicates the date the permit was issued. --></help>
+        <label><!-- Parking Permit Issue Date --></label>
+        <name>Parking_Permit_Issue_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates the current parking permit number. --></help>
+        <label><!-- Parking Permit Number --></label>
+        <name>Parking_Permit_Number__c</name>
+    </fields>
+    <fields>
+        <label><!-- Phone Restrictions --></label>
+        <name>Phone_Restrictions__c</name>
+        <picklistValues>
+            <masterLabel>No Contact By Phone</masterLabel>
+            <translation><!-- No Contact By Phone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Gary Fund Phone Solicitation</masterLabel>
+            <translation><!-- No Gary Fund Phone Solicitation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Phone Solicitation</masterLabel>
+            <translation><!-- No Phone Solicitation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No longer valid phone number</masterLabel>
+            <translation><!-- No longer valid phone number --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>PTF Only</masterLabel>
+            <translation><!-- PTF Only --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unlisted Phone Number</masterLabel>
+            <translation><!-- Unlisted Phone Number --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The Preferred Year of all Contacts associated with the Affiliated Organization --></help>
+        <label><!-- Year --></label>
+        <name>Year__c</name>
+    </fields>
+    <layouts>
+        <layout>2017-R1 Fonteva Account Layout</layout>
+        <sections>
+            <label><!-- Account Settings --></label>
+            <section>Account Settings</section>
+        </sections>
+        <sections>
+            <label><!-- Additional Information --></label>
+            <section>Additional Information</section>
+        </sections>
+        <sections>
+            <label><!-- Address --></label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Description --></label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label><!-- Engagement --></label>
+            <section>Engagement</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>2017-R1-LE Fonteva Account Layout</layout>
+        <sections>
+            <label><!-- Account Settings --></label>
+            <section>Account Settings</section>
+        </sections>
+        <sections>
+            <label><!-- Additional Information --></label>
+            <section>Additional Information</section>
+        </sections>
+        <sections>
+            <label><!-- Address --></label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Description --></label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label><!-- Engagement --></label>
+            <section>Engagement</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>AQ Lightning Affiliated Organization Layout</layout>
+        <sections>
+            <label><!-- Associations --></label>
+            <section>Associations</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- First Gift/Pledge --></label>
+            <section>First Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Gift Processing Options --></label>
+            <section>Gift Processing Options</section>
+        </sections>
+        <sections>
+            <label><!-- Giving Summary --></label>
+            <section>Giving Summary</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Gift/Pledge --></label>
+            <section>Most Recent Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Pledge Payment --></label>
+            <section>Most Recent Pledge Payment</section>
+        </sections>
+        <sections>
+            <label><!-- New Section --></label>
+            <section>New Section</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>AQ Lightning Affiliated Organization V2</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- New Section --></label>
+            <section>New Section</section>
+        </sections>
+        <sections>
+            <label><!-- Organizational Information --></label>
+            <section>Organizational Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>AQ Lightning Corporation Layout</layout>
+        <sections>
+            <label><!-- Account Details --></label>
+            <section>Account Details</section>
+        </sections>
+        <sections>
+            <label><!-- Corporate Data --></label>
+            <section>Corporate Data</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- First Gift/Pledge --></label>
+            <section>First Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Gift Processing Options --></label>
+            <section>Gift Processing Options</section>
+        </sections>
+        <sections>
+            <label><!-- Giving Summary --></label>
+            <section>Giving Summary</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Gift/Pledge --></label>
+            <section>Most Recent Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Pledge Payment --></label>
+            <section>Most Recent Pledge Payment</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>AQ Lightning Corporation Layout v2</layout>
+        <sections>
+            <label><!-- Corporate Data --></label>
+            <section>Corporate Data</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- First Gift/Pledge --></label>
+            <section>First Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Gift Processing Options --></label>
+            <section>Gift Processing Options</section>
+        </sections>
+        <sections>
+            <label><!-- Giving Summary --></label>
+            <section>Giving Summary</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Gift/Pledge --></label>
+            <section>Most Recent Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Pledge Payment --></label>
+            <section>Most Recent Pledge Payment</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>AQ Lightning Household Account Layout</layout>
+        <sections>
+            <label><!-- Account Information --></label>
+            <section>Account Information</section>
+        </sections>
+        <sections>
+            <label><!-- Additional Notes --></label>
+            <section>Additional Notes</section>
+        </sections>
+        <sections>
+            <label><!-- Assigned Districts and Regions --></label>
+            <section>Assigned Districts and Regions</section>
+        </sections>
+        <sections>
+            <label><!-- Current Mailing Address --></label>
+            <section>Current Mailing Address</section>
+        </sections>
+        <sections>
+            <label><!-- First Gift/Pledge --></label>
+            <section>First Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Gift Processing Options --></label>
+            <section>Gift Processing Options</section>
+        </sections>
+        <sections>
+            <label><!-- Giving Summary --></label>
+            <section>Giving Summary</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Gift/Pledge --></label>
+            <section>Most Recent Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Pledge Payment --></label>
+            <section>Most Recent Pledge Payment</section>
+        </sections>
+        <sections>
+            <label><!-- New Section --></label>
+            <section>New Section</section>
+        </sections>
+        <sections>
+            <label><!-- Permanent Address --></label>
+            <section>Permanent Address</section>
+        </sections>
+        <sections>
+            <label><!-- Research --></label>
+            <section>Research</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+        <sections>
+            <label><!-- Telephone --></label>
+            <section>Telephone</section>
+        </sections>
+        <sections>
+            <label><!-- Text --></label>
+            <section>Text</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>AQ Lightning Household Account Layout v2</layout>
+        <sections>
+            <label><!-- Account Information --></label>
+            <section>Account Information</section>
+        </sections>
+        <sections>
+            <label><!-- Additional Notes --></label>
+            <section>Additional Notes</section>
+        </sections>
+        <sections>
+            <label><!-- Assigned Districts and Regions --></label>
+            <section>Assigned Districts and Regions</section>
+        </sections>
+        <sections>
+            <label><!-- Current Mailing Address --></label>
+            <section>Current Mailing Address</section>
+        </sections>
+        <sections>
+            <label><!-- First Gift/Pledge --></label>
+            <section>First Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Gift Processing Options --></label>
+            <section>Gift Processing Options</section>
+        </sections>
+        <sections>
+            <label><!-- Giving Summary --></label>
+            <section>Giving Summary</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Gift/Pledge --></label>
+            <section>Most Recent Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Pledge Payment --></label>
+            <section>Most Recent Pledge Payment</section>
+        </sections>
+        <sections>
+            <label><!-- NOT ORIGINALLY ON PAGE LAYOUT --></label>
+            <section>NOT ORIGINALLY ON PAGE LAYOUT</section>
+        </sections>
+        <sections>
+            <label><!-- New Section --></label>
+            <section>New Section</section>
+        </sections>
+        <sections>
+            <label><!-- Permanent Address --></label>
+            <section>Permanent Address</section>
+        </sections>
+        <sections>
+            <label><!-- Research --></label>
+            <section>Research</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+        <sections>
+            <label><!-- Telephone --></label>
+            <section>Telephone</section>
+        </sections>
+        <sections>
+            <label><!-- Text --></label>
+            <section>Text</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>AQ Lightning Organization Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- First Gift/Pledge --></label>
+            <section>First Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Gift Processing Options --></label>
+            <section>Gift Processing Options</section>
+        </sections>
+        <sections>
+            <label><!-- Giving Summary --></label>
+            <section>Giving Summary</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Gift/Pledge --></label>
+            <section>Most Recent Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Pledge Payment --></label>
+            <section>Most Recent Pledge Payment</section>
+        </sections>
+        <sections>
+            <label><!-- Organizational Data --></label>
+            <section>Organizational Data</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Account Layout</layout>
+        <sections>
+            <label><!-- Account Summary --></label>
+            <section>Account Summary</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Account Layout SUM15</layout>
+        <sections>
+            <label><!-- Additional Information --></label>
+            <section>Additional Information</section>
+        </sections>
+        <sections>
+            <label><!-- Address --></label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Description --></label>
+            <section>Description</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Affiliated Organization Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- First Gift/Pledge --></label>
+            <section>First Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Gift Processing Options --></label>
+            <section>Gift Processing Options</section>
+        </sections>
+        <sections>
+            <label><!-- Giving Summary --></label>
+            <section>Giving Summary</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Gift/Pledge --></label>
+            <section>Most Recent Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Pledge Payment --></label>
+            <section>Most Recent Pledge Payment</section>
+        </sections>
+        <sections>
+            <label><!-- New Section --></label>
+            <section>New Section</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Copy of AQ Lightning Household Account Layout v2</layout>
+        <sections>
+            <label><!-- Account Information --></label>
+            <section>Account Information</section>
+        </sections>
+        <sections>
+            <label><!-- Additional Notes --></label>
+            <section>Additional Notes</section>
+        </sections>
+        <sections>
+            <label><!-- Assigned Districts and Regions --></label>
+            <section>Assigned Districts and Regions</section>
+        </sections>
+        <sections>
+            <label><!-- Current Mailing Address --></label>
+            <section>Current Mailing Address</section>
+        </sections>
+        <sections>
+            <label><!-- First Gift/Pledge --></label>
+            <section>First Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Gift Processing Options --></label>
+            <section>Gift Processing Options</section>
+        </sections>
+        <sections>
+            <label><!-- Giving Summary --></label>
+            <section>Giving Summary</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Gift/Pledge --></label>
+            <section>Most Recent Gift/Pledge</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Pledge Payment --></label>
+            <section>Most Recent Pledge Payment</section>
+        </sections>
+        <sections>
+            <label><!-- New Section --></label>
+            <section>New Section</section>
+        </sections>
+        <sections>
+            <label><!-- Permanent Address --></label>
+            <section>Permanent Address</section>
+        </sections>
+        <sections>
+            <label><!-- Research --></label>
+            <section>Research</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+        <sections>
+            <label><!-- Telephone --></label>
+            <section>Telephone</section>
+        </sections>
+        <sections>
+            <label><!-- Text --></label>
+            <section>Text</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Corporation Account Layout</layout>
+        <sections>
+            <label><!-- Additional Notes --></label>
+            <section>Additional Notes</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Gift Processing Options --></label>
+            <section>Gift Processing Options</section>
+        </sections>
+        <sections>
+            <label><!-- Giving Summary --></label>
+            <section>Giving Summary</section>
+        </sections>
+        <sections>
+            <label><!-- KPI Setup --></label>
+            <section>KPI Setup</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Fonteva Account Layout 2016R3</layout>
+        <sections>
+            <label><!-- Additional Information --></label>
+            <section>Additional Information</section>
+        </sections>
+        <sections>
+            <label><!-- Address --></label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Description --></label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label><!-- Engagement --></label>
+            <section>Engagement</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Fonteva Account Layout v67 Master</layout>
+        <sections>
+            <label><!-- Additional Information --></label>
+            <section>Additional Information</section>
+        </sections>
+        <sections>
+            <label><!-- Address --></label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Description --></label>
+            <section>Description</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Household Account Layout</layout>
+        <sections>
+            <label><!-- Account Information --></label>
+            <section>Account Information</section>
+        </sections>
+        <sections>
+            <label><!-- Additional Notes --></label>
+            <section>Additional Notes</section>
+        </sections>
+        <sections>
+            <label><!-- Current Mailing Address --></label>
+            <section>Current Mailing Address</section>
+        </sections>
+        <sections>
+            <label><!-- Gift Processing Options --></label>
+            <section>Gift Processing Options</section>
+        </sections>
+        <sections>
+            <label><!-- Giving Summary --></label>
+            <section>Giving Summary</section>
+        </sections>
+        <sections>
+            <label><!-- Most Recent Gift --></label>
+            <section>Most Recent Gift</section>
+        </sections>
+        <sections>
+            <label><!-- New Section --></label>
+            <section>New Section</section>
+        </sections>
+        <sections>
+            <label><!-- Permanent Address --></label>
+            <section>Permanent Address</section>
+        </sections>
+        <sections>
+            <label><!-- Research --></label>
+            <section>Research</section>
+        </sections>
+        <sections>
+            <label><!-- System Information --></label>
+            <section>System Information</section>
+        </sections>
+        <sections>
+            <label><!-- Telephone --></label>
+            <section>Telephone</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Organizational Account Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Gift Processing Options --></label>
+            <section>Gift Processing Options</section>
+        </sections>
+        <sections>
+            <label><!-- Giving Summary --></label>
+            <section>Giving Summary</section>
+        </sections>
+        <sections>
+            <label><!-- KPI Setup --></label>
+            <section>KPI Setup</section>
+        </sections>
+        <sections>
+            <label><!-- New Section --></label>
+            <section>New Section</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label><!-- Child Account --></label>
+        <name>Child_Account</name>
+    </quickActions>
+    <recordTypes>
+        <description><!-- Organizations directly affiliated with this institution. --></description>
+        <label><!-- Affiliated Organization --></label>
+        <name>AffiliatedOrganization</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Corporations organized for profit. --></description>
+        <label><!-- Corporation --></label>
+        <name>Corporation</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Entity made up of individuals. --></description>
+        <label><!-- Household --></label>
+        <name>Household</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Group other than a corporation or household. --></description>
+        <label><!-- Organization --></label>
+        <name>Organization</name>
+    </recordTypes>
+    <validationRules>
+        <errorMessage><!-- The data for Account Greeting is longer than the maximum allowed length of 200 characters. --></errorMessage>
+        <name>AQB__Account_Greeting_Length</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- The data for Account Mailing Name is longer than the maximum allowed length of 50 characters. --></errorMessage>
+        <name>AQB__Account_Mailing_Name_Length</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- On Household Accounts the CAE Category must equal the CAE Category of the Primary Contact. --></errorMessage>
+        <name>AQB__CAE_Category_on_Household_Accounts</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Canadian postal code must be in A9A 9A9 format. --></errorMessage>
+        <name>AQB__Canadian_Postal_Codes_in_Billing_Address</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Canadian postal code must be in A9A 9A9 format. --></errorMessage>
+        <name>AQB__Canadian_Postal_Codes_in_Perm_Addres</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Canadian postal code must be in A9A 9A9 format --></errorMessage>
+        <name>AQB__Canadian_Postal_Codes_in_Shiping_Address</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- The data entered for the Mailing Name exceeds the maximum allowed length of 20. --></errorMessage>
+        <name>AQB__Name_Length</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- There are too many street lines in the Account Mailing Address.  Edit the Account Mailing Street Address so that there are only three lines. --></errorMessage>
+        <name>AQB__Too_Many_Acct_Mailing_Add_Street_Lines</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- There are too many street lines in the Account Permanent Address.  Edit the Account Permanent Address so that there are only three lines. --></errorMessage>
+        <name>AQB__Too_Many_Acct_Permanent_Add_Street_Lines</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Zip code must be in 99999 or 99999-9999 format. --></errorMessage>
+        <name>AQB__US_Postal_Codes_in_Billing_Address</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Zip code must be in 99999 or 99999-9999 format. --></errorMessage>
+        <name>AQB__US_Postal_Codes_in_Permanent_Address</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Zip code must be in 99999 or 99999-9999 format. --></errorMessage>
+        <name>AQB__US_Postal_Codes_in_Shipping_Address</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- A valid two-letter Canadian province code is required. --></errorMessage>
+        <name>AQB__Valid_Canada_Prov_in_Billing_Add_Abbre</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- A valid two-letter Canadian province code is required. --></errorMessage>
+        <name>AQB__Valid_Canada_Prov_in_Perm_Address_Abbr</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- A valid two-letter Canadian province code is required. --></errorMessage>
+        <name>AQB__Valid_Canada_Prov_in_Shipping_Add_Abbre</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Either a valid two-letter Canadian province code or the full name of the province is required. --></errorMessage>
+        <name>AQB__Valid_Canadian_Province_in_Billing_Add</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Either a valid two-letter Canadian province code or the full name of the province is required. --></errorMessage>
+        <name>AQB__Valid_Canadian_Province_in_Perm_Address</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Either a valid two-letter Canadian province code or the full name of the province is required. --></errorMessage>
+        <name>AQB__Valid_Canadian_Province_in_Shipping_Add</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Either a valid two-letter state code or the complete state name is required. --></errorMessage>
+        <name>AQB__Valid_US_State_Billing_Address</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- A valid two-letter state code is required. --></errorMessage>
+        <name>AQB__Valid_US_State_Billing_Address_Abbrev</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Either a valid two-letter state code or the complete state name is required. --></errorMessage>
+        <name>AQB__Valid_US_State_Permanent_Address</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- A valid two-letter state code is required. --></errorMessage>
+        <name>AQB__Valid_US_State_Permanent_Address_Abbrev</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Either a valid two-letter state code or the full name of a state is required. --></errorMessage>
+        <name>AQB__Valid_US_State_Shipping_Address</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- A valid two-letter state code is required. --></errorMessage>
+        <name>AQB__Valid_US_State_Shipping_Address_Abbrev</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Please enter a type of Communication: Home Address, Phone Number, or Email. --></errorMessage>
+        <name>Communication_Choice</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- AcccountDumpReport --></label>
+        <name>AQB__AcccountDumpReport</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- AccountRelationshipTree --></label>
+        <name>AQB__AccountRelationshipTree</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Create_Action_Plan --></label>
+        <name>AQB__Create_Action_Plan</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Giving_Summary --></label>
+        <name>AQB__Giving_Summary</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleMaps --></label>
+        <name>AQB__GoogleMaps</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleNews --></label>
+        <name>AQB__GoogleNews</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleSearch --></label>
+        <name>AQB__GoogleSearch</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Select_Address --></label>
+        <name>AQB__Select_Address</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- dtd_change --></label>
+        <name>AQB__dtd_change</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleMaps --></label>
+        <name>GoogleMaps</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleNews --></label>
+        <name>GoogleNews</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleSearch --></label>
+        <name>GoogleSearch</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- ExactTarget_Resubscribe --></label>
+        <name>et4ae5__ExactTarget_Resubscribe</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- ExactTarget_Unsubscribe --></label>
+        <name>et4ae5__ExactTarget_Unsubscribe</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_ExactTarget_Email --></label>
+        <name>et4ae5__Send_ExactTarget_Email</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- View_ExactTarget_Analytics --></label>
+        <name>et4ae5__View_ExactTarget_Analytics</name>
+    </webLinks>
+</CustomObjectTranslation>

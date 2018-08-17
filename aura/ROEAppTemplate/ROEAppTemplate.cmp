@@ -1,0 +1,13 @@
+<aura:component description="ROEAppTemplate" isTemplate="true" extends="aura:template">
+    <aura:set attribute="title" value="Rapid Order Entry"/>
+    <aura:set attribute="auraPreInitBlock">
+        <auraStorage:init name="actions"
+                          secure="false"
+                          clearStorageOnInit="false"
+                          maxSize="3000"
+                          defaultExpiration="6000"
+                          version="1.0"
+                          persistent="true"
+                          defaultAutoRefreshInterval="6000" />
+    </aura:set>
+</aura:component>

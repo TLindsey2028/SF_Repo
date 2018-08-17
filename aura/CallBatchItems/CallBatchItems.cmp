@@ -1,0 +1,20 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="GLOBAL" controller="AQB.BatchItemsController">
+        
+   	<aura:handler name="init" action="{!c.myAction}" value="{!this}" />
+
+    <aura:attribute name="batch" type="AQB__Batch__c" access="GLOBAL" default="{'sobjectType': 'AQB__Batch__c'}" />
+        
+    <ui:button label="Batch Items" press="{!c.callBatchItems}" />      
+    <aura:if isTrue="{!v.batch.RecordType.Name == 'Closed Batch'}">
+        <ui:button label="Close Batch" disabled="true" />      
+        <aura:set attribute="else">
+            <aura:if isTrue="{!v.batch.AQB__BatchIsClosing__c == True}">
+                <ui:button label="Closing..." disabled="true" /> 
+            	<aura:set attribute="else">
+                	<ui:button label="Close Batch" press="{!c.closeBatch}" />     
+                </aura:set>
+            </aura:if>
+        </aura:set>
+    </aura:if>
+                                
+</aura:component>

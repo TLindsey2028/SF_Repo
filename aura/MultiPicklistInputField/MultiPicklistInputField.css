@@ -1,0 +1,17 @@
+.THIS .slds-picklist-drop-down {
+    max-width: none!important;
+}
+
+.THIS .fonteva-dropdown_close {
+    display: none;
+}
+
+.THIS.slds-is-open .fonteva-dropdown_close {
+    position: fixed;
+    display: block;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}

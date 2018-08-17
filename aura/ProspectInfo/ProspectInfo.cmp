@@ -1,0 +1,122 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="AQB.ProspectInfoController">
+    
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="prospectinfo" type="Object" access="GLOBAL" /> 
+    <aura:attribute name="accountinfo" type="Object" access="GLOBAL" /> 
+    <aura:handler name="init" action="{!c.myAction}" value="{!this}" />
+    <aura:attribute name="username" type="String" access="GLOBAL" />
+    <aura:attribute name="pmRole" type="String" />
+    <aura:attribute name="isResearcher" type="Boolean" />
+    <aura:attribute name="isManager" type="Boolean" />
+ 	<aura:attribute name="isRecommended" type="String" />
+       
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    
+    <div>
+        <!--<img style="margin-right:12px; margin-bottom:10px;" src="/resource/GraphicsPack/32/tangodesktopproject/theme/face-angel.png" title="The contact is deceased." />
+        <img style="margin-right:12px; margin-bottom:10px;" src="/resource/GraphicsPack/32/tangodesktopproject/theme/dialog-error.png" title="Do NOT contact!" />
+        <img style="margin-right:12px; margin-bottom:10px;" src="/resource/GraphicsPack/32/tangodesktopproject/theme/emblem-important.png" title="Do not solicit." />
+        <img style="margin-right:12px; margin-bottom:10px;" src="/resource/GraphicsPack/32/fatcow/farmfresh/information.png" title="Changes are Pending, Click to see the changes." />
+        
+        <br /> -->
+        
+        <div class="header">Prospect Information</div>   
+        <aura:if isTrue="{!v.prospectinfo.AQB__Stage__c == null}">
+            <div style="margin-left:5px; color: #ff0000; font-weight: bold;">
+                <ui:button label="Add to the Prospect Queue" press="{!c.ActionAddProspect}" />
+            </div>
+			<table style="width:70%; margin-left:5px;">
+            	<tr><td>Capacity:</td><td>{!v.accountinfo.AQB__Capacity__c}</td></tr>
+                <tr><td>Readiness:</td><td>{!v.accountinfo.AQB__Readiness__c}</td></tr>
+        	</table>
+
+            <aura:set attribute="else">
+                <div class="blu" style="color: #0000ff; font-weight: bold; margin-left:5px;">{!v.prospectinfo.AQB__Stage__c}</div>
+                <aura:if isTrue="{!and(v.prospectinfo.AQB__Stage__c == 'Needs Research', v.isResearcher == true)}">
+                    <div style="margin-left:5px; color: #ff0000; font-weight: bold;">
+                        <ui:button label="Claim for Research" press="{!c.ActionClaim4Research}" />
+                    </div>
+                    <table style="width:70%; margin-left:5px;">
+            			<tr><td>Capacity:</td><td>{!v.accountinfo.AQB__Capacity__c}</td></tr>
+                    	<tr><td>Readiness:</td><td>{!v.accountinfo.AQB__Readiness__c}</td></tr>
+        			</table>
+                    <aura:set attribute="else">
+                        
+                        <aura:if isTrue="{!v.isRecommended != 'Yes'}">
+                            <aura:if isTrue="{!and(v.prospectinfo.AQB__Stage__c == 'Research in Progress', v.isResearcher == true)}">
+                                <div style="margin-left:5px; color: #ff0000; font-weight: bold;">
+                                    <ui:button label="Research Complete" press="{!c.ActionResearchComplete}" />
+                                    <ui:button label="Disqualified" press="{!c.ActionDisqualified}" />
+                                </div>
+                            </aura:if>
+                            <aura:if isTrue="{!and(v.prospectinfo.AQB__Stage__c == 'Needs Manager', v.isManager == true)}">
+                                <div style="margin-left:5px; color: #ff0000; font-weight: bold;">
+                                    <ui:button label="Claim Prospect" press="{!c.ActionClaimProspect}" />
+                                </div>
+                            </aura:if>
+                        </aura:if>
+                        
+                        <table style="width:70%; margin-left:5px;">
+                            <aura:if isTrue="{!and(v.prospectinfo.AQB__ResearchStartDate__c != null, v.prospectinfo.AQB__Stage__c != 'Assigned')}">
+                                <tr><td>Research Started On:</td><td>{!v.prospectinfo.AQB__ResearchStartDate__c}</td></tr>
+                                <tr><td>Research Finished On:</td><td>{!v.prospectinfo.AQB__ResearchCompletedDate__c}</td></tr>
+                            </aura:if>
+                            <aura:if isTrue="{!v.prospectinfo.AQB__Stage__c != 'Assigned'}">
+                                <tr><td>Researcher:</td><td>{!v.prospectinfo.AQB__Researcher__r.Name}</td></tr>
+                            </aura:if>
+                            <aura:if isTrue="{!v.prospectinfo.AQB__ProspectOwner__r.Name != null}">
+                                <tr><td>Assigned To:</td><td>{!v.prospectinfo.AQB__ProspectOwner__r.Name}</td></tr>
+                            </aura:if>
+                            <tr><td>Capacity:</td><td>{!v.accountinfo.AQB__Capacity__c}</td></tr>
+                            <tr><td>Readiness:</td><td>{!v.accountinfo.AQB__Readiness__c}</td></tr>
+                        </table>
+                        
+                    </aura:set>
+                </aura:if>
+                <br />
+            </aura:set>
+            
+        </aura:if>
+        
+        
+        <!--
+        
+        <div class="header">Prospect Information</div>   
+        <aura:if isTrue="{!v.prospectinfo.AQB__Stage__c == null}">
+            <ui:button class="redbutton" label="Add to the Prospect Queue" press="{!c.ActionAddProspect}" />
+            
+            <aura:set attribute="else">
+                <div class="blu">{!v.prospectinfo.AQB__Stage__c}</div>
+                
+                <aura:if isTrue="{!v.prospectinfo.AQB__Stage__c == 'Needs Research'}">
+                    <ui:button class="redbutton" label="Claim for Research" press="{!c.ActionClaim4Research}" />
+                    <aura:set attribute="else">
+                        
+                        <aura:if isTrue="{!v.prospectinfo.AQB__Stage__c == 'Ready for Assignment'}">
+                            <ui:button class="redbutton" label="Claim Prospect" press="{!c.ActionClaimProspect}" />
+                        </aura:if>
+                        
+                        <table style="width:70%">
+                            <aura:if isTrue="{!and(v.prospectinfo.AQB__ResearchStartDate__c != null, v.prospectinfo.AQB__Stage__c != 'Managed')}">
+                                <tr><td>Research Started On:</td><td>{!v.prospectinfo.AQB__ResearchStartDate__c}</td></tr>
+                                <tr><td>Research Finished On:</td><td>{!v.prospectinfo.AQB__ResearchCompletedDate__c}</td></tr>
+                            </aura:if>
+                            <aura:if isTrue="{!v.prospectinfo.AQB__Stage__c != 'Managed'}">
+                                <tr><td>Researcer:</td><td>{!v.prospectinfo.AQB__Researcher__r.Name}</td></tr>
+                            </aura:if>
+                            <aura:if isTrue="{!v.prospectinfo.AQB__ProspectOwner__r.Name != null}">
+                                <tr><td>Managed By:</td><td>{!v.prospectinfo.AQB__ProspectOwner__r.Name}</td></tr>
+                                <tr><td>Starting On:</td><td>{!v.prospectinfo.AQB__DateAssigned__c}</td></tr>
+                            </aura:if>
+                            
+                            <tr><td>Capacity:</td><td>{!v.accountinfo.AQB__Capacity__c}</td></tr>
+                            <tr><td>Readiness:</td><td>{!v.accountinfo.AQB__Readiness__c}</td></tr>
+                        </table>
+                        
+                    </aura:set>
+                </aura:if>
+                <br />
+            </aura:set>
+        </aura:if> -->
+    </div>
+</aura:component>

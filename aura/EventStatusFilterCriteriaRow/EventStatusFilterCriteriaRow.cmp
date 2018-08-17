@@ -1,0 +1,40 @@
+<aura:component>
+
+  <aura:attribute name="sObjectName" type="String" default="" />
+  <aura:attribute name="fieldOptions" type="Object[]" default="[{}]" />
+  <aura:attribute name="fieldTypes" type="Object" default="{}" />
+  <aura:attribute name="filterCriterion" type="Object" default="[{}]" />
+  <aura:attribute name="group" type="String" default="" />
+  <aura:attribute name="showDeleteButton" type="Boolean" default="false" />
+  <aura:attribute name="index" type="Integer" default="1" />
+  <aura:attribute name="fireCreateRowEvent" description="Fire Create Row Event" type="Boolean" default="true" access="global"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.valueChanged}"/>
+  <aura:handler event="EventApi:FilterCriteriaRowSetIndexEvent" action="{!c.handleFilterCriteriaRowSetIndexEvent}"/>
+  <aura:registerEvent name="FilterCriteriaRowSet" type="EventApi:FilterCriteriaRowSet"/>
+  <aura:registerEvent name="FilterCriteriaRowSetIndexEvent" type="EventApi:FilterCriteriaRowSetIndexEvent"/>
+  <aura:registerEvent name="DeleteFilterRow" type="EventApi:DeleteFilterRow"/>
+
+
+  <div class="slds-grid slds-grid--pull-padded-medium" id="criteriaEntry">
+    <div class="fonteva-table--numbering">
+      <strong>{!v.index}.</strong>
+    </div>
+    <div class="slds-col--padded slds-size--4-of-12 fonteva-filter-builder--field">
+      <Framework:InputFields group="{!v.group}" fieldType="AdvancedSelectField" fireChangeEvent="true" aura:id="filterField" value="{!v.filterCriterion}" otherAttributes='{"allowCreate" : false}' />
+    </div>
+    <div class="slds-col--padded slds-size--2-of-12">
+      <Framework:InputFields group="{!v.group}" fieldType="AdvancedSelectField" fireChangeEvent="true" aura:id="filterOperator" value="{!v.filterCriterion}" otherAttributes='{"allowCreate" : false}' />
+    </div>
+    <div class="slds-col--padded slds-size--5-of-12" aura:id="filterValueDiv">
+      <Framework:InputFields group="{!v.group}" fieldType="string" aura:id="filterValue" value="{!v.filterCriterion}"  />
+    </div>
+    <div class="fonteva-table--numbering">
+      <span class="{!v.showDeleteButton ? '' : 'hidden'}">
+        <button aura:id="deleteRow" class="slds-button slds-button--icon-x-small" data-group="{!v.group}" onclick="{!c.deleteCriteria}">
+          <lightning:icon iconName="utility:clear" size="x-small" alternativeText="Close"/>
+        </button>
+      </span>
+    </div>
+  </div>
+</aura:component>

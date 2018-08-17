@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="TicketSeatingFulfilledEvent">
+    <aura:attribute name="seatingAssignmentComplete" required="true" type="Boolean"/>
+</aura:event>

@@ -1,0 +1,6 @@
+<aura:documentation>
+	<aura:description>
+		This component displays the number of expired or untracked Send Definitions and 
+		their related Aggregate Link Results, Individual Email Results, and Individual Link Detail Results.
+	</aura:description>
+</aura:documentation>

@@ -1,0 +1,73 @@
+<aura:component description="RepeatableEvent" controller="EventApi.EventsBuilderController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="dateFormat" type="String" required="true"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:attribute name="eventModalObj" type="Map" default="{}" description="Event Modal Object"/>
+    <Framework:InputFields group="eventModal4" fieldType="boolean" aura:id="repeatableEvent" label="{!$Label.EventApi.Repeat_Event_Event_Builder}" fireChangeEvent="true" value="{!v.eventModalObj}"/>
+    <aura:method name="validate" action="{!c.validate}"/>
+    <aura:attribute name="validated" type="Boolean" default="false"/>
+    <style>
+        .slds-align-top-custom {
+            margin-top: -25px!important;
+        }
+
+        .slds-size--1-of-11-custom {
+            max-width: 57px!important;
+        }
+        .slds-end-date-custom-repeat {
+            max-width: 150px!important;
+        }
+
+        .start-repeat-date {
+            max-width: 150px!important;
+        }
+
+        .occurrences-picklist-repeat {
+            max-width: 125px!important;
+        }
+
+        .margins {
+            margin-right: -36px;
+            margin-left: -36px;
+        }
+        .inner-margin {
+            margin-right: 36px;
+            margin-left: 26px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <span class="slds-grid slds-theme--shade margins">
+        <div class="slds-grid slds-wrap hidden inner-margin" aura:id="repeatableSection">
+            <div class="slds-col slds-size--1-of-2 slds-p-horizontal--small">
+                <Framework:InputFields group="eventModal3" fieldType="picklist" aura:id="frequency" fireChangeEvent="true" label="{!$Label.EventApi.Repeats_Event_Builder}" value="{!v.eventModalObj}"/>
+            </div>
+            <div class="slds-col slds-size--1-of-2 slds-p-horizontal--small slds-hidden" aura:id="repeatsEveryElement">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size--1-of-2">
+                        <Framework:InputFields group="eventModal3" fieldType="picklist" aura:id="daysFrequency" fireChangeEvent="true" label="{!$Label.EventApi.Repeats_Every_Event_Builder}" value="{!v.eventModalObj}"/>
+                    </div>
+                    <div class="slds-col slds-size--1-of-7 slds-m-left--small slds-m-top--x-large">
+                        {!$Label.EventApi.Days_Repeat_Event_Builder}
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-size--1-of-8 slds-p-horizontal--small start-repeat-date">
+                <Framework:InputFields group="eventModal3" fieldType="date" aura:id="startsOn" label="{!$Label.EventApi.Starts_On_Event_Builder}" value="{!v.eventModalObj}" isRequired="true"/>
+            </div>
+            <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small slds-m-bottom--medium">
+                {!$Label.EventApi.Ends_Event_Builder}
+            </div>
+            <div class="slds-col slds-size--1-of-11 slds-p-horizontal--small slds-size--1-of-11-custom">
+                {!$Label.EventApi.After_Event_Builder}
+            </div>
+            <div class="slds-col slds-size--1-of-3 slds-align-top-custom occurrences-picklist-repeat">
+                <Framework:InputFields group="eventModal3" fieldType="picklist" aura:id="occurrences" value="{!v.eventModalObj}"/>
+            </div>
+            <div class="slds-col slds-size--1-of-3 slds-p-horizontal--small">
+                {!$Label.EventApi.Occurrences_Event_Builder}
+            </div>
+        </div>
+    </span>
+</aura:component>

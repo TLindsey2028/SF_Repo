@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>false</sorted>
+    <standardValue>
+        <fullName>Major Gift Opportunity</fullName>
+        <default>false</default>
+        <label>Major Gift Opportunity</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Bequest</fullName>
+        <default>false</default>
+        <label>Bequest</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Matured Life Insurance</fullName>
+        <default>false</default>
+        <label>Matured Life Insurance</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Revoked Life Insurance</fullName>
+        <default>false</default>
+        <label>Revoked Life Insurance</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Pooled Income Fund</fullName>
+        <default>false</default>
+        <label>Pooled Income Fund</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Annuity</fullName>
+        <default>false</default>
+        <label>Annuity</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Surrendered Life Insurance</fullName>
+        <default>false</default>
+        <label>Surrendered Life Insurance</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Charitable Remainder Trust</fullName>
+        <default>false</default>
+        <label>Charitable Remainder Trust</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Life Insurance</fullName>
+        <default>false</default>
+        <label>Life Insurance</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Revoked Bequest</fullName>
+        <default>false</default>
+        <label>Revoked Bequest</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Policy transferred to spouse</fullName>
+        <default>false</default>
+        <label>Policy transferred to spouse</label>
+    </standardValue>
+</StandardValueSet>

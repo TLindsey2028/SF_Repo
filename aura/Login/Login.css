@@ -1,0 +1,52 @@
+@media only screen and (min-width: 48em) {
+    .THIS .loginDiv + .loginDiv {
+        border-left: 1px solid;
+    }
+}
+@media only screen and (max-width: 48em) {
+    .THIS .loginDiv + .loginDiv {
+        border-top: 1px solid;
+        margin-top: 24px;
+    }
+    .THIS .loginDiv {
+        padding-left: 0!important;
+        padding-right: 0!important;
+    }
+    .THIS .loginDiv:first-of-type {
+        padding-top: 0!important;
+    }
+
+    .THIS .guest-checkout-container {
+        margin-top: 24px;
+    }
+}
+
+.THIS .slds-fonteva-login-component {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.THIS .fonteva-login {
+    margin-left: 3.75em;
+}
+
+.THIS .fonteva-login p {
+    margin-top: -2px;
+}
+
+.THIS .fonteva-login p span{
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.THIS .fonteva-social-login-image {
+    height: 46px;
+    width: 186px;
+    margin-left: -3px;
+    margin-top: 19px;
+}
+
+.THIS .fonteva-social-login-image:hover {
+    cursor : pointer;
+}

@@ -1,0 +1,5 @@
+<apex:page standardController="Opportunity">
+    <flow:interview name="Interaction_Report" finishLocation="{!$Page.InteractionSuccessPage}">
+        <apex:param name="varOppID" value="{!Opportunity.Id}"/>
+    </flow:interview> 
+</apex:page>

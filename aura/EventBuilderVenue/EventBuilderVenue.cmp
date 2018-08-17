@@ -1,0 +1,36 @@
+<aura:component controller="EventApi.EventsBuilderController">
+  <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+
+  <aura:attribute name="eventVenue" type="Object" required="true"/>
+
+  <div class="slds-col slds-size--1-of-1">
+    <div class="slds-grid slds-wrap">
+      <div class="slds-size--2-of-3">
+        <Framework:InputFields group="simpleEventVenue" fieldType="string" aura:id="venueName" label="{!$Label.EventApi.Primary_Venue_Name_Event_Builder}" value="{!v.eventVenue.primaryVenue}" maxlength="80"/>
+      </div>
+      <div class="slds-col slds-size--1-of-1">
+        <Framework:InputFields group="simpleEventVenue" fieldType="textarea" aura:id="description" label="{!$Label.EventApi.Description_Event_Builder}" value="{!v.eventVenue.primaryVenue}" maxlength="32767" helpText="{!$Label.EventApi.Event_Builder_Venue_Description}"/>
+      </div>
+      <div class="slds-col slds-size--1-of-1">
+        <div class="slds-grid slds-wrap slds-grid--pull-padded">
+          <div class="slds-col slds-size--1-of-1 slds-col--padded">
+            <Framework:InputFields group="simpleEventVenue" fieldType="address" aura:id="addressObj" label="{!$Label.EventApi.Address_Event_Builder}" value="{!v.eventVenue.primaryVenue}"/>
+          </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+          <div class="slds-col slds-size--1-of-2 slds-p-top--small">
+            <Framework:InputFields group="simpleEventVenue" fieldType="boolean" aura:id="displayMap" label="{!$Label.EventApi.Display_Map_Event_Builder}" value="{!v.eventVenue.primaryVenue}" helpText="{!$Label.EventApi.Event_Builder_Venue_Display_Map}"/>
+          </div>
+        </div>
+      </div>
+      <div class="slds-col slds-size--1-of-1">
+        <hr class="slds-m-vertical--small" />
+      </div>
+      <div class="slds-col slds-size--1-of-1">
+        <Framework:InputFields group="simpleEventVenue" fieldType="fileUpload" aura:id="venueImageUrl" label="{!$Label.EventApi.Venue_Image_Url_Event_Builder}" value="{!v.eventVenue.primaryVenue}" otherAttributes='{maximumFileSize : 5242880,allowedMimeTypes:["image/png","image/jpeg","image/jpg","image/gif","image/bmp","image/tiff"]}' helpText="{!$Label.EventApi.Event_Builder_Venue_Venue_Image_Url}"/>
+      </div>
+
+    </div>
+  </div>
+
+</aura:component>

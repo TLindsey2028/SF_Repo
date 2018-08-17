@@ -1,0 +1,58 @@
+<aura:component description="TransferAttendeeRegistration" implements="LTE:EventInterface" controller="LTE.ManageMyRegistrationController" access="global">
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:attribute name="attendee" type="Map" default="{}" description="attendee is an object to transfer contact to" access="global"/>
+    <aura:attribute name="attendeeObj" type="Map" default="{}" description="attendeeObj is a current user attendee" access="global"/>
+    <aura:attribute name="isPrimary" type="Boolean" default="false" />
+
+    <div class="active slds-col" id="transfer">
+        <div class="slds-size--1-of-1">
+            <p data-name="Transfer_Registration" class="slds-text-heading--large slds-font-weight--semi-bold slds-m-bottom--large">
+                {!$Label.LTE.Transfer_Registration}
+            </p>
+        </div>
+        <div class="slds-size--1-of-1 slds-grid slds-wrap">
+            <div class="slds-size--1-of-1 slds-grid slds-wrap slds-col slds-p-vertical--x-small">
+                <div data-name="fullName" class="slds-text-heading--medium slds-size--1-of-1">
+                    {!v.attendee.fullName}
+                </div>
+                <div data-name="ticketTypeName" class="slds-text-heading--medium slds-size--1-of-1">
+                    {!v.attendee.ticketTypeName}
+                </div>
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 slds-grid slds-wrap">
+            <div data-name="Transfer_Registration_Description" class="slds-size--1-of-1 slds-grid slds-wrap slds-col slds-p-vertical--x-small">
+                {!$Label.LTE.Transfer_Registration_Description}
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 slds-grid slds-wrap">
+            <div data-name="EventRegistrationAttendee" class="slds-size--1-of-1 slds-grid slds-wrap slds-col slds-p-vertical--x-small">
+                <LTE:EventRegistrationAttendee isSalesOrderLine="false"
+                                             disableRemove="true"
+                                             isTransfer="true"
+                                             line="{!v.attendee}"
+                                             accountId="{!v.attendee.accountId}"
+                                             fireChangeEvent="false"
+                                             storeObj="{!v.storeObj}"
+                                             eventObj="{!v.eventObj}"
+                                             labelStyleClasses=""
+                                             showHorizontalPadding="false"/>
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 slds-grid slds-wrap">
+            <div class="slds-size--1-of-1 slds-grid slds-wrap slds-col slds-p-vertical--x-small">
+                <Framework:Button qaData='{"type" : "button", "name": "cancelTransfer"}' type="neutral" label="{!$Label.LTE.Event_Cancel_Button}" additionalClasses=" slds-border-radius--none slds-m-right--xx-small" onClickAction="{!c.cancelTransfer}" enableProgressIndicator="false"/>
+                <Framework:Button qaData='{"type" : "button", "name": "transferRegistration"}' type="brand" label="{!$Label.LTE.Transfer_Button}" aura:id="transferRegistration" enableProgressIndicator="false" additionalClasses=" slds-tab-animate--top slds-m-right--xx-small" onClickAction="{!c.transferAttendeeHandler}"/>
+            </div>
+        </div>
+	    <Framework:MessagePrompt title="{!$Label.LTE.Transfer_Registration_Confirm_Title}"
+	                             message="{!$Label.LTE.Transfer_Registration_Confirm_Message}"
+	                             severity="clear"
+	                             submitButtonLabel="{!$Label.LTE.Transfer_Button}"
+	                             cancelButtonLabel="{!$Label.LTE.My_Registration_Close_Button}"
+	                             showCancelButton="true"
+	                             submitOnClickAction="{!c.confirmTransferAttendee}"
+	                             closeOnClickAction="{!c.closeModal}"
+	                             aura:id="confirmTransferAttendee"/>
+    </div>
+</aura:component>

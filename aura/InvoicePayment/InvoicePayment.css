@@ -1,0 +1,150 @@
+.THIS .slds-page-header{
+  height: 87px;
+}
+
+.THIS .slds-backdrop.slds-backdrop--dark {
+  background: rgba(126, 140, 153, 0.99);
+}
+
+.THIS .tab-pane.active {
+  display: block!important;
+}
+
+.THIS .slds-badge--paid__full {
+    background-color: #4ab2af!important;
+    color: white!important;
+}
+
+.THIS .slds-badge--paid__under {
+    background-color: #1c2e5c!important;
+    color: white!important;
+}
+
+.THIS .slds-table tr > th:first-child,
+.THIS .slds-table tr > td:first-child {
+    padding-left: .75rem!important;
+}
+
+.THIS .slds-tabs--custom-nav {
+    margin-right: 25px;
+}
+
+.THIS .table-invoice {
+    padding-right: 26px;
+}
+
+.THIS .slds-object-height--full__nofooter {
+    height: calc(100vh - 73px)!important;
+}
+
+.THIS .delete-icon svg {
+    fill : gray!important;
+}
+
+.THIS .hide-loading-span {
+    display: none;
+}
+
+.THIS .fonteva-payment-info .slds-form-element.display-element label{
+   display: none;
+}
+.THIS .fonteva-payment-info .slds-form-element__control.slds-m-bottom--small {
+    margin-bottom: 0!important;
+}
+
+.THIS .fonteva-border_bottom-none {
+    border-bottom: none;
+}
+
+.THIS .slds-table.fonteva-table_custom tr>th:first-child,
+.THIS .slds-table.fonteva-table_custom tr>td:first-child {
+    padding-left: 0!important;
+}
+
+.THIS .slds-table.fonteva-table_custom tr>th:last-child,
+.THIS .slds-table.fonteva-table_custom tr>td:last-child {
+    padding-right: 0;
+}
+
+.THIS .fonteva-font-weight_bold {
+    font-weight: 600;
+}
+
+.THIS .fonteva-text_uppercase,
+.THIS .fonteva-summary_wrapper {
+    text-transform: uppercase;
+}
+
+.THIS .fonteva-summary_wrapper > div:not(.fonteva-invoice_comment) {
+    padding: .25rem 0;
+}
+
+
+
+.THIS .fonteva-payment-info .input-fields-span {
+    width: 100px;
+    min-width: 100px;
+}
+
+.THIS .fonteva-summary_wrapper .slds-text-heading--label {
+    color: rgb(22, 50, 92);
+}
+
+.THIS .fonteva-payment-info:last-of-type .input-fields-span input {
+    text-align: right;
+}
+
+.THIS .slds-table tbody > tr:not(.fonteva-table_row-spacer) {
+    height: 53px;
+}
+
+.THIS .slds-table thead .fonteva-table_th-balance {
+    min-width: 150px;
+}
+
+.THIS table.slds-table.fonteva-table_custom td,
+.THIS table.slds-table.fonteva-table_custom th {
+    color: rgb(22, 50, 92)!important
+}
+
+.THIS .slds-badge.slds-badge--paid__full,
+.THIS .slds-badge.slds-badge--paid__under {
+    padding: 0.5rem 0.75rem
+}
+
+.THIS .fonteva-summary_wrapper > div:first-of-type {
+    padding-top: 0!important;
+}
+
+.THIS .fonteva-payment-section {
+    background-color: transparent!important;
+}
+
+.THIS .invoice-payment-header {
+    background-color: #f4f6f9!important;
+}
+
+.THIS .fonteva-card_custom{
+    background-color: white;
+    position: relative;
+    top: -1px;
+    border-left: 1px solid #d8dde6;
+    border-right: 1px solid #d8dde6;
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+    border-bottom: 1px solid #d8dde6;
+    padding-bottom: 1rem;
+    text-align: center;
+}
+
+.THIS .fonteva-input_custom input {
+    min-width: 5rem;
+}
+
+.THIS .fonteva-input_custom .slds-form-element__label {
+    display: none;
+}
+
+.THIS .fonteva-input_custom .slds-form-element__control.slds-m-bottom--small {
+    margin-bottom: 0!important;
+}

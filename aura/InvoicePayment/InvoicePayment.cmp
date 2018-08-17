@@ -1,0 +1,831 @@
+<aura:component controller="OrderApi.InvoicesPaymentController" extends="Framework:BaseComponent" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId" access="global">
+    <ltng:require scripts="{!$Resource.OrderApi__SLDS_Base+'/js/scripts.js'}"  styles="{!$Resource.Framework__SLDS_BaseV2+'/css/styles.css'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="environmentKey" type="String"/>
+    <aura:attribute name="epaymentId" type="String"/>
+    <aura:attribute name="storeId" type="Id" access="global"/>
+    <aura:attribute name="invoices" type="String"/>
+    <aura:attribute name="contact" type="String"/>
+    <aura:attribute name="account" type="String"/>
+    <aura:attribute name="previousLabel" type="String"/>
+    <aura:attribute name="dateFormat" type="String" description="Date Format"/>
+    <aura:attribute name="currentTabOpen" type="String"  default="offline"/>
+    <aura:attribute name="gatewaySelected" type="Boolean" default="false"/>
+    <aura:attribute name="entitySelected" type="Boolean" default="false"/>
+    <aura:attribute name="epaymentObj" type="Object" default="{}"/>
+    <aura:attribute name="showError" type="Boolean" default="true"/>
+    <aura:attribute name="errorMessage" type="String" default=""/>
+    <aura:attribute name="eCheckRedirectUrl" type="String" default=""/>
+    <aura:attribute name="paymentGlobalId" type="String" />
+    <aura:attribute name="offlinePaymentGlobalId" type="String"/>
+    <aura:attribute name="hidePaymentComponent" type="Boolean"  default="false"/>
+    <aura:attribute name="customerGlobalId" type="String" />
+    <aura:attribute name="isAppUpdateActivated" type="Boolean" default="false"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:handler event="OrderApi:ChangeTextEvent" action="{!c.changeEPaymentFieldText}"/>
+    <aura:handler event="OrderApi:CreditCardValidateEvent" action="{!c.handleCCValidateEvent}"/>
+    <aura:registerEvent name="ComponentLoadedEvent" type="OrderApi:ComponentLoadedEvent"/>
+    <aura:registerEvent name="CreditCardContactUpdateEvent" type="OrderApi:CreditCardContactUpdateEvent"/>
+    <aura:handler event="OrderApi:PayNowTabChangeEvent" action="{!c.handlePayNowTabChangeEvent}"/>
+    <aura:dependency resource="OrderApi:PayNow"/>
+    <aura:dependency resource="OrderApi:OfflinePayment"/>
+    <style>
+    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+      .slds-ie-fix--width {
+        max-width: calc(100vw - 23px)!important;
+      }
+    }
+    .slds-modal__content {
+      padding: 0!important;
+    }
+    .forceModal .slds-modal__container {
+      width: 99.5%!important;
+      max-width: 100%!important;
+    }
+    .forceChatterLightningComponent .bodyWrapper{height:100%;width:100%;padding:0;box-sizing:border-box}
+  </style>
+    <div data-name="mainWrapperDiv" class="slds hidden" aura:id="mainWrapperDiv">
+        <div data-name="currencyISOCode" class="hidden">
+            <Framework:CurrencyField currencyISOCode="EUR"/>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size--1-of-1 slds-theme--shade slds-border--bottom">
+                <div class="slds-p-horizontal--large slds-p-vertical--small">
+                    <div class="slds-grid slds-grid--pull-padded">
+                        <div class="slds-col-padded slds-size--1-of-4">
+                            <div class="slds-media">
+                                <div class="slds-media__figure">
+                                </div>
+                                <div class="slds-media__body">
+                                    <div class="slds-grid">
+                                        <h1 data-name="Invoice_Payment_Title" class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+                                            {!$Label.OrderApi.Invoice_Payment_Title}
+                                        </h1>
+                                        <Framework:Button qaData='{"type": "button", "name":"exitInvoices"}' type="neutral" label="{!$Label.OrderApi.Exit_Invoice_Payment}" enableProgressIndicator="false" onClickAction="{!c.exitInvoices}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-name="errorMessage" class="{!v.showError ? 'slds-text-heading--large' : 'hidden'}">{!v.errorMessage}</div>
+            <div class="{!v.showError ? 'hidden' : 'slds-col slds-size--1-of-1 slds-grid slds-theme--shade'}">
+                <div class="slds-size--1-of-1 slds-p-left--large slds-p-vertical--small">
+                    <div class="slds-col slds-size--1-of-1">
+                        <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                            <div class="slds-col slds-grow-none slds-col--padded">
+                                <div data-name="customerLookupDiv" class="" aura:id="customerLookupDiv">
+                                </div>
+                            </div>
+                            <aura:if isTrue="{!v.epaymentObj.businessGroup.storeOptions.length > 1}">
+                                <div data-name="storeDiv" class="slds-col slds-grow-none slds-col--padded" aura:id="storeDiv">
+                                    <Framework:InputFields qaData='{"type" : "input", "name": "storeId"}' fieldType="Picklist" label="{!$Label.OrderApi.Store_Label}" aura:id="storeId" selectOptions="{!v.epaymentObj.businessGroup.storeOptions}"
+                                                           group="epaymentInfo" value="{!v.epaymentObj}"/>
+                                </div>
+                            </aura:if>
+                            <aura:set attribute="else">
+                                <div class="{!v.epaymentObj.businessGroup.paymentGatewayOptions.length > 1 ? 'slds-col slds-size--1-of-4 slds-col--padded' : 'hidden'}">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-siz--1-of-2">
+                                            <Framework:InputFields qaData='{"type" : "input", "name": "paymentGateway"}' fieldType="Picklist" label="{!$Label.OrderApi.Payment_Gateway_Label}" aura:id="paymentGateway"
+                                                                   group="epaymentInfo" value="{!v.epaymentObj}" fireChangeEvent="true"/>
+                                        </div>
+                                        <div class="slds-col slds-siz--1-of-2">
+                                        </div>
+                                    </div>
+                                </div>
+                            </aura:set>
+                            <div class="slds-size--1-of-3">
+                                <div class="slds-grid slds-wrap slds-size--1-of-2">
+
+                                    <div class="slds-col slds-size--1-of-1">
+                                        <Framework:InputFields qaData='{"type" : "input", "name": "batch"}' group="epaymentInfo" fieldType="lookup" aura:id="batch"
+                                                               label="{!$Label.OrderApi.Batch_Invoice_Payment}" value="{!v.epaymentObj}"
+                                                               otherAttributes='{"type" : "OrderApi__Batch__c"}' fireChangeEvent="true"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="{!v.epaymentObj.customer == null ? 'slds-col slds-size--1-of-4' : 'hidden'}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="{!v.hidePaymentComponent? 'hidden' : 'slds-col slds-size--1-of-1'}">
+                        <div data-name="Payment_Information_Invoice_Payment" class="slds-text-heading--small slds-m-bottom_small slds-m-top_large">
+                            <strong>{!$Label.OrderApi.Payment_Information_Invoice_Payment}</strong>
+                        </div>
+                        <div>
+                            <div data-name="depositAccountDiv" class="slds-grid_pull-padded slds-size--1-of-3 hidden" aura:Id="depositAccountDiv">
+                                <div class="slds-col_padded slds-p-right_none">
+                                    <Framework:InputFields qaData='{"type" : "input", "name": "depositAccount"}' fieldType="Picklist" label="{!$Label.OrderApi.Deposit_Account_Label}" aura:id="depositAccount"
+                                                           group="epaymentInfo" value="{!v.epaymentObj}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div data-name="fonteva-payment-section" class="slds-tabs--default slds-theme--shade fonteva-payment-section">
+                                <ul class="slds-tabs--default__nav slds-tabs--custom-nav" role="tablist">
+                                    <li data-name="payNowLabel" aura:id="payNowLabel" class="slds-tabs__item slds-text-heading--label" title="{!$Label.OrderApi.Pay_Now_Invoice_Payment}" role="presentation">
+                                        <a href="" class="slds-tabs--default__link" data-tab="payNow" onclick="{!c.changeTab}">{!$Label.OrderApi.Pay_Now_Invoice_Payment}</a>
+                                    </li>
+                                    <li data-name="offlineLabel" aura:id="offlineLabel" class="slds-tabs__item slds-text-heading--label slds-active" title="{!$Label.OrderApi.Offline_Invoice_Payment}" role="presentation">
+                                        <a href=""  class="slds-tabs--default__link" data-tab="offline" onclick="{!c.changeTab}">{!$Label.OrderApi.Offline_Invoice_Payment}</a>
+                                    </li>
+                                </ul>
+                                <aura:if isTrue="{!v.entitySelected}">
+                                    <div aura:id="payNow" id="payNow" class="slds-tabs__content tab-pane slds-size--1-of-2 slds-hide" role="tabpanel">
+                                    </div>
+                                    <div aura:id="offline" id="offline" class="slds-tabs__content tab-pane active slds-size--1-of-2 slds-p-bottom_none" role="tabpanel">
+
+                                    </div>
+                                </aura:if>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-grid">
+                            <div class="slds-size--1-of-2 slds-m-bottom-x--small">
+                                <Framework:InputFields qaData='{"type" : "input", "name": "memo"}' group="epaymentInfo" fieldType="string" aura:id="memo" label="{!$Label.OrderApi.Offline_Payment_Memo}" value="{!v.epaymentObj}" />
+                            </div>
+                        </div>
+                        <aura:if isTrue="{!!v.isAppUpdateActivated}">
+                            <div class="slds-col slds-grid">
+                                <div class="slds-size--1-of-6 slds-m-bottom-x--small">
+                                    <Framework:InputFields qaData='{"type" : "input", "name": "paymentAmount"}' group="epaymentInfo" fieldType="currency" aura:id="paymentAmount" value="{!v.epaymentObj}" label="{!$Label.OrderApi.Payment_Amount_Text}" isRequired="{!!v.epaymentObj.applyAvailableCredit}" fireChangeEvent="true" otherAttributes='{"min" : 0}' format="0.00"/>
+                                </div>
+                            </div>
+                        </aura:if>
+                    </div>
+                    <aura:if isTrue="{!!v.isAppUpdateActivated}">
+                        <div class="{!v.epaymentObj.customer.outstandingCredits > 0 ? 'slds-col slds-size--1-of-1 slds-grid_pull-padded' : 'hidden'}">
+                            <div data-name="Available_Credit" class="slds-col slds-size--2-of-4 slds-col--padded">
+                                <label class=" slds-form-element__label helper-margin-right" >
+																	{!$Label.OrderApi.Available_Credit}
+                                </label>
+                                <div class="slds-text-heading--small slds-m-bottom--small">
+                                    <strong data-name="epaymentObj">
+                                        <Framework:CurrencyField value="{!v.epaymentObj.customer.outstandingCredits}"
+                                                                 currencyISOCode="{!v.epaymentObj.currencyISOCode}"
+                                                                 isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"/>
+                                    </strong>
+                                </div>
+                                <Framework:InputFields qaData='{"type" : "input", "name": "applyAvailableCredit"}' group="epaymentInfo" fieldType="boolean" aura:id="applyAvailableCredit"
+                                                       label="{!$Label.OrderApi.Apply_Credit_to_Payment}" value="{!v.epaymentObj}"
+                                                       fireChangeEvent="true"/>
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-wrap slds-size--1-of-1 table-invoice">
+                            <div class="slds-col slds-size--1-of-1 slds-m-bottom--small slds-m-top--x-small">
+                                <div class="slds-text-heading--small"><strong>Selected Invoices</strong></div>
+                            </div>
+                            <table class="slds-table slds-table--bordered slds-table--cell-buffer slds-theme--shade slds-border-bottom--none slds-no-row-hover">
+                                <thead>
+                                <tr class="slds-text-heading--label">
+                                    <th scope="col" title="" class="slds-cell-shrink invoice-payment-header">
+                                    </th>
+                                    <th data-name="Invoice_Number_Invoice_Payment" class="invoice-payment-header" scope="col" title="{!$Label.OrderApi.Invoice_Number_Invoice_Payment}">
+                                        <div class="slds-truncate">{!$Label.OrderApi.Invoice_Number_Invoice_Payment}</div>
+                                    </th>
+                                    <th data-name="Order_Includes_Invoice_Payment" class="invoice-payment-header" scope="col" title="{!$Label.OrderApi.Order_Includes_Invoice_Payment}">
+                                        <div class="slds-truncate">{!$Label.OrderApi.Order_Includes_Invoice_Payment}</div>
+                                    </th>
+                                    <th data-name="Due_Date_Invoice_Payment" class="invoice-payment-header" scope="col" title="{!$Label.OrderApi.Due_Date_Invoice_Payment}">
+                                        <div class="slds-truncate">{!$Label.OrderApi.Due_Date_Invoice_Payment}</div>
+                                    </th>
+                                    <th data-name="Balance_Due_Invoice_Payment" class="invoice-payment-header" scope="col" title="{!$Label.OrderApi.Balance_Due_Invoice_Payment}">
+                                        <div class="slds-truncate">{!$Label.OrderApi.Balance_Due_Invoice_Payment}</div>
+                                    </th>
+                                    <th data-name="Payment_Invoice_Payment" class="invoice-payment-header" scope="col" title="{!$Label.OrderApi.Payment_Invoice_Payment}">
+                                        <div class="slds-truncate">{!$Label.OrderApi.Payment_Invoice_Payment}</div>
+                                    </th>
+                                    <th scope="col" title="" class="slds-cell-shrink invoice-payment-header">
+                                        <div class="slds-truncate"></div>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <aura:iteration items="{!v.epaymentObj.lines}" var="invoice">
+                                    <tr>
+                                        <td scope="col" class="slds-cell-shrink">
+                                                <span class="{!v.epaymentObj.allowDelete ? '' : 'hidden'}">
+                                                    <button data-name="deleteEpaymentLine" data-id="{!invoice.dataAttribute.id}" class="slds-button slds-button--icon-inverse slds-align-middle" onclick="{!c.deleteEpaymentLine}">
+                                                      <lightning:icon iconName="utility:clear" size="x-small" class="slds-button__icon delete-icon" variant="bare"/>
+                                                    </button>
+                                                </span>
+                                        </td>
+                                        <td data-name="invoiceNumber" scope="col">
+                                            <div class="slds-truncate">
+                                                {!invoice.invoiceNumber}
+                                            </div>
+                                        </td>
+                                        <td data-name="itemDescription" scope="col">
+                                            <div>
+                                                {!invoice.itemDescription}
+                                            </div>
+                                        </td>
+                                        <td data-name="dueDate" scope="col">
+                                            <div class="slds-truncate">
+                                                {!invoice.dueDate}
+                                            </div>
+                                        </td>
+                                        <td data-name="listPriceOutput" scope="col">
+                                            <div class="slds-truncate">
+                                                <Framework:CurrencyField aura:id="listPriceOutput" value="{!invoice.balanceDue}" currencyISOCode="{!invoice.currencyISOCode}" isMultiCurrencyOrg="{!invoice.isMultiCurrency}" showFreeLabel="false"/>
+                                            </div>
+                                        </td>
+                                        <td data-name="paymentAmountOutput" scope="col">
+                                            <div class="slds-truncate slds-disabled--field">
+                                                <Framework:CurrencyField aura:id="paymentAmountOutput" value="{!invoice.displayAmount}" currencyISOCode="{!invoice.currencyISOCode}" isMultiCurrencyOrg="{!invoice.isMultiCurrency}" showFreeLabel="false"/>
+                                            </div>
+                                        </td>
+                                        <td data-name="badge--paid__full__under" scope="col" title="" class="slds-cell-shrink">
+                                            <div>
+                                                <lightning:badge label="{!$Label.OrderApi.Paid_In_Full}" class="{!invoice.paidInFull ? 'slds-badge--paid__full' : 'hidden'}"/>
+                                                <lightning:badge label="{!$Label.OrderApi.Underpayment}" class="{!invoice.underPayment ? 'slds-badge--paid__under' : 'hidden'}"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                                <tr>
+                                    <td scope="col">
+                                    </td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col">
+                                        <div>
+                                                <span data-name="Balance_Due_Invoice_Payment" class="{!v.epaymentObj.balanceDuePayment ? 'slds-text-heading--label' : 'hidden'}">
+                                                        {!$Label.OrderApi.Balance_Due_Invoice_Payment}
+                                                </span>
+                                            <span data-name="Write_Off" class="{!v.epaymentObj.writeOff ? 'slds-text-heading--label' : 'hidden'}">
+                                                    {!$Label.OrderApi.Write_Off}
+                                            </span>
+                                            <span data-name="Over_Payment" class="{!v.epaymentObj.overPayment ? 'slds-text-heading--label' : 'hidden'}">
+                                                    {!$Label.OrderApi.Over_Payment}
+                                            </span>
+                                            <span data-name="Credit_Memo" class="{!v.epaymentObj.creditMemo ? 'slds-text-heading--label' : 'hidden'}">
+                                                    {!$Label.OrderApi.Credit_Memo}
+                                            </span>
+                                            <span data-name="Credit_Remaining" class="{!v.epaymentObj.creditRemaining ? 'slds-text-heading--label' : 'hidden'}">
+                                                    {!$Label.OrderApi.Credit_Remaining}
+                                            </span><br/>
+                                            <span class="slds-text-heading--small">
+                                                    <strong data-name="epaymentBalanceDue">
+                                                        <Framework:CurrencyField aura:id="epaymentBalanceDue"
+                                                                                 showFreeLabel="false"
+                                                                                 value="{!v.epaymentObj.balanceDue}"
+                                                                                 currencyISOCode="{!v.epaymentObj.currencyISOCode}"
+                                                                                 isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"/>
+                                                    </strong>
+                                                </span>
+                                        </div>
+                                    </td>
+                                    <td scope="col" title=""></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </aura:if>
+                    <aura:if isTrue="{!v.isAppUpdateActivated}">
+                        <hr class="slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-vertical_small"  />
+                        <div class="{!v.epaymentObj.customer.outstandingCredits > 0 ? 'slds-col slds-size--1-of-1 slds-grid_pull-padded' : 'hidden'}">
+                            <div data-name="Available_Credit" class="slds-col slds-size--2-of-4 slds-col--padded">
+                                <label class=" slds-form-element__label helper-margin-right" >
+																	{!$Label.OrderApi.Available_Credit}
+                                </label>
+                                <div class="slds-text-heading--small slds-m-bottom--small">
+                                    <strong data-name="epaymentObj">
+                                        <Framework:CurrencyField value="{!v.epaymentObj.customer.outstandingCredits}"
+                                                                 currencyISOCode="{!v.epaymentObj.currencyISOCode}"
+                                                                 isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"/>
+                                    </strong>
+                                </div>
+                                <Framework:InputFields qaData='{"type" : "input", "name": "applyAvailableCredit"}' group="epaymentInfo" fieldType="boolean" aura:id="applyAvailableCredit"
+                                                       label="{!$Label.OrderApi.Apply_Credit_to_Payment}" value="{!v.epaymentObj}"
+                                                       fireChangeEvent="true"/>
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-grid slds-grid_vertical slds-m-right--large">
+                                <span data-name="paymentInfoOverrides" aura:id="paymentInfoOverrides">
+                                    <div class="slds-m-bottom_x-small">
+                                        <Framework:InputFields qaData='{"type" : "input", "name": "overrideIPP"}' group="epaymentInfo" fieldType="boolean" label="{!$Label.OrderApi.Override_Invoice_Payment_Prioritization}" aura:id="overrideIPP" value="{!v.epaymentObj}" fireChangeEvent="false" />
+                                    </div>
+                                    <div class="slds-size_1-of-6" aura:id="paymentAmountPPILDiv">
+                                        <Framework:InputFields qaData='{"type" : "input", "name": "paymentAmountPPIL"}' group="epaymentInfo" fieldType="currency" aura:id="paymentAmountPPIL" value="{!v.epaymentObj}" label="{!$Label.OrderApi.Payment_Amount_Invoice_Payment}" isRequired="{!!v.epaymentObj.applyAvailableCredit}" fireChangeEvent="true" otherAttributes='{"min" : 0}' format="0.00"/>
+                                    </div>
+                                </span>
+                                <aura:iteration items="{!v.epaymentObj.invoices}" var="invoice">
+                                    <div class="slds-box slds-theme_default slds-m-bottom_small">
+                                        <div class="slds-p-horizontal_small slds-grid slds-grid_vertical">
+                                            <div class="slds-m-bottom_small slds-grid slds-grid_align-spread">
+                                                <strong data-name="Invoice_Number_Invoice_Payment" class="slds-text-heading_small">
+                                                    {!$Label.OrderApi.Invoice_Number_Invoice_Payment}&nbsp;<a href="javascript:void(0);" onclick="{!c.takeMeToInvoice}" data-id="{!invoice.invoiceId}">#{!invoice.invoiceNumber}</a>
+                                                </strong>
+                                                <div>
+                                                    <div data-name="removeInvoice">
+                                                        <a href="javascript:void(0);" onclick="{!c.removeInvoice}" data-id="{!invoice.invoiceId}">{!$Label.OrderApi.Remove}</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div data-name="Invoice_Due_Date" class="slds-text-body_regular">
+                                                    {!$Label.OrderApi.Invoice_Due_Date}
+                                                </div>
+                                            </div>
+                                            <div class="slds-m-bottom_small">
+                                                <strong data-name="dueDate">
+                                                    <ui:outputDate value="{!invoice.dueDate}" format="{!v.dateFormat}"/>
+                                                </strong>
+                                            </div>
+                                            <table class="slds-table slds-table_bordered slds-no-row-hover fonteva-border_bottom-none fonteva-table_custom">
+                                                <thead>
+                                                <tr class="">
+                                                    <th data-name="Prioritization_Number" scope="col" title="" class="slds-size_1-of-8">
+                                                        <div class="slds-truncate">
+                                                            {!$Label.OrderApi.Prioritization_Number}
+                                                        </div>
+                                                    </th>
+                                                    <th data-name="Invoice_Line_ID" scope="col" title="Invoice Line Id" class="slds-size_1-of-8">
+                                                        <div class="slds-truncate">
+                                                            {!$Label.OrderApi.Invoice_Line_ID}
+                                                        </div>
+                                                    </th>
+                                                    <th data-name="Item" scope="col" class="slds-size_1-of-1" title="Item">
+                                                        <div>
+                                                            {!$Label.OrderApi.Item}
+                                                        </div>
+                                                    </th>
+                                                    <th data-name="Shipping" scope="col" class="slds-size_1-of-1" title="Shipping">
+                                                        <div>
+                                                            {!$Label.OrderApi.Shipping}
+                                                        </div>
+                                                    </th>
+                                                    <th data-name="Tax" scope="col" class="slds-size_1-of-1" title="Shipping">
+                                                        <div>
+                                                            {!$Label.OrderApi.Tax}
+                                                        </div>
+                                                    </th>
+                                                    <th data-name="Balance_Due_Invoice_Payment" scope="col" title="{!$Label.OrderApi.Balance_Due_Invoice_Payment}" class="fonteva-table_th-balance">
+                                                        <div class="slds-truncate">
+                                                            {!$Label.OrderApi.Balance_Due_Invoice_Payment}
+                                                        </div>
+                                                    </th>
+                                                    <aura:if isTrue="{!v.epaymentObj.overrideIPP}">
+                                                        <aura:if isTrue="{!v.epaymentObj.applyAvailableCredit}">
+                                                            <th></th>
+                                                            <th data-name="Credit_Applied" scope="col" title="{!$Label.OrderApi.Credit_Applied}" class="slds-text-align_right">
+                                                                <div class="slds-truncate">
+                                                                    {!$Label.OrderApi.Credit_Applied}
+                                                                </div>
+                                                            </th>
+                                                            <th data-name="Payment_Invoice_Payment" scope="col" title="{!$Label.OrderApi.Payment_Invoice_Payment}" class="slds-text-align_right">
+                                                                <div>
+                                                                    {!$Label.OrderApi.Payment_Invoice_Payment}
+                                                                </div>
+                                                            </th>
+                                                        </aura:if>
+                                                        <aura:if isTrue="{!!v.epaymentObj.applyAvailableCredit}">
+                                                            <th></th>
+                                                            <th data-name="Payment_Invoice_Payment" scope="col" title="{!$Label.OrderApi.Payment_Invoice_Payment}" class="slds-text-align_right">
+                                                                <div>
+                                                                    {!$Label.OrderApi.Payment_Invoice_Payment}
+                                                                </div>
+                                                            </th>
+                                                        </aura:if>
+                                                        <aura:set attribute="else">
+                                                            <aura:if isTrue="{!v.epaymentObj.applyAvailableCredit}">
+                                                                <th></th>
+                                                                <th data-name="Credit_Applied" scope="col" title="{!$Label.OrderApi.Credit_Applied}" class="slds-text-align_right">
+                                                                    <div class="slds-truncate">
+                                                                        {!$Label.OrderApi.Credit_Applied}
+                                                                    </div>
+                                                                </th>
+                                                                <th data-name="Payment_Invoice_Payment" scope="col" title="{!$Label.OrderApi.Payment_Invoice_Payment}" class="slds-text-align_right">
+                                                                    <div>
+                                                                        {!$Label.OrderApi.Payment_Invoice_Payment}
+                                                                    </div>
+                                                                </th>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!!v.epaymentObj.applyAvailableCredit}">
+                                                                <th></th>
+                                                                <th data-name="Payment_Invoice_Payment" scope="col" title="{!$Label.OrderApi.Payment_Invoice_Payment}" class="slds-text-align_right">
+                                                                    <div>
+                                                                        {!$Label.OrderApi.Payment_Invoice_Payment}
+                                                                    </div>
+                                                                </th>
+                                                            </aura:if>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <aura:iteration items="{!invoice.invoiceLines}" var="invoiceLine">
+                                                    <tr>
+                                                        <td data-name="paymentPriority" scope="col">
+                                                            <div class="slds-truncate">
+                                                                {!invoiceLine.paymentPriority}
+                                                            </div>
+                                                        </td>
+                                                        <td data-name="invoiceLineNumber" scope="col">
+                                                            <div class="slds-truncate">
+                                                                {!invoiceLine.invoiceLineNumber}
+                                                            </div>
+                                                        </td>
+                                                        <td data-name="itemDescription" scope="col">
+                                                            <div class="slds-truncate">
+                                                                {!invoiceLine.itemDescription}
+                                                            </div>
+                                                        </td>
+                                                        <td data-name="totalShippingAmount" scope="col">
+                                                            <div class="slds-truncate">
+                                                                <Framework:CurrencyField aura:id="totalShippingAmount" value="{!invoiceLine.totalShippingAmount}" currencyISOCode="{!invoiceLine.currencyISOCode}" isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}" showFreeLabel="false"/>
+                                                            </div>
+                                                        </td>
+                                                        <td data-name="totalTaxAmount" scope="col">
+                                                            <div class="slds-truncate">
+                                                                <Framework:CurrencyField aura:id="totalTaxAmount" value="{!invoiceLine.totalTaxAmount}" currencyISOCode="{!invoiceLine.currencyISOCode}" isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}" showFreeLabel="false"/>
+                                                            </div>
+                                                        </td>
+                                                        <td data-name="balanceDue" scope="col">
+                                                            <div class="slds-truncate">
+                                                                <Framework:CurrencyField aura:id="balanceDue" value="{!invoiceLine.balanceDue}" currencyISOCode="{!invoiceLine.currencyISOCode}" isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}" showFreeLabel="false"/>
+                                                            </div>
+                                                        </td>
+                                                        <aura:if isTrue="{!v.epaymentObj.overrideIPP}">
+                                                            <aura:if isTrue="{!v.epaymentObj.applyAvailableCredit}">
+                                                                <td data-name="fonteva-payment" scope="col" class="fonteva-payment-info">
+                                                                    <div class="slds-grid slds-grid_align-end">
+                                                                        <div data-name="Paid_In_Full_Under" class="slds-m-right_small slds-align-middle">
+                                                                            <aura:if isTrue="{!invoiceLine.paidInFull}">
+                                                                                <lightning:badge label="{!$Label.OrderApi.Paid_In_Full}" class="slds-badge--paid__full"/>
+                                                                            </aura:if>
+                                                                            <aura:if isTrue="{!invoiceLine.underPayment}">
+                                                                                <lightning:badge label="{!$Label.OrderApi.Underpayment}" class="slds-badge--paid__under"/>
+                                                                            </aura:if>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="slds-text-align_right">
+                                                                    <div class="fonteva-input_custom">
+                                                                        <Framework:InputFields qaData='{"type" : "input", "name": "creditAmountApplied"}' group="epaymentInfo" secondaryGroup="{!invoiceLine.invoiceLineId}" fieldType="currency" aura:id="creditAmountApplied" value="{!invoiceLine}" fireChangeEvent="true" otherAttributes='{"min" : 0}' format="0.00"/>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="fonteva-input_custom">
+                                                                        <Framework:InputFields qaData='{"type" : "input", "name": "invLinePaymentAmount"}' group="epaymentInfo" secondaryGroup="{!invoiceLine.invoiceLineId}" fieldType="currency" aura:id="invLinePaymentAmount" value="{!invoiceLine}" fireChangeEvent="true" otherAttributes='{"min" : 0}' format="0.00"/>
+                                                                    </div>
+                                                                </td>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!!v.epaymentObj.applyAvailableCredit}">
+                                                                <td data-name="fonteva-payment-2" scope="col" class="fonteva-payment-info">
+                                                                    <div class="slds-grid slds-grid_align-end">
+                                                                        <div data-name="Paid_In_Full_Under_2" class="slds-m-right_small slds-align-middle">
+                                                                            <aura:if isTrue="{!invoiceLine.paidInFull}">
+                                                                                <lightning:badge label="{!$Label.OrderApi.Paid_In_Full}" class="slds-badge--paid__full"/>
+                                                                            </aura:if>
+                                                                            <aura:if isTrue="{!invoiceLine.underPayment}">
+                                                                                <lightning:badge label="{!$Label.OrderApi.Underpayment}" class="slds-badge--paid__under"/>
+                                                                            </aura:if>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="slds-text-align_right">
+                                                                    <div class="fonteva-input_custom">
+                                                                        <Framework:InputFields qaData='{"type" : "input", "name": "invLinePaymentAmount"}' group="epaymentInfo" secondaryGroup="{!invoiceLine.invoiceLineId}" fieldType="currency" aura:id="invLinePaymentAmount" value="{!invoiceLine}" fireChangeEvent="true" otherAttributes='{"min" : 0}' format="0.00"/>
+                                                                    </div>
+                                                                </td>
+                                                            </aura:if>
+                                                            <aura:set attribute="else">
+                                                                <aura:if isTrue="{!v.epaymentObj.applyAvailableCredit}">
+                                                                    <td scope="col">
+                                                                        <div class="slds-grid slds-grid_align-end">
+                                                                            <div data-name="Paid_In_Full_Under_3" class="slds-m-right_small slds-align-middle">
+                                                                                <aura:if isTrue="{!invoiceLine.paidInFull}">
+                                                                                    <lightning:badge label="{!$Label.OrderApi.Paid_In_Full}" class="slds-badge--paid__full"/>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!invoiceLine.underPayment}">
+                                                                                    <lightning:badge label="{!$Label.OrderApi.Underpayment}" class="slds-badge--paid__under"/>
+                                                                                </aura:if>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="slds-text-align_right">
+                                                                        <div class="slds-truncate slds-disabled--field">
+                                                                            <Framework:CurrencyField aura:id="creditAmountApplied" value="{!invoiceLine.creditAmountApplied}" currencyISOCode="{!invoiceLine.currencyISOCode}" isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}" showFreeLabel="false"/>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="slds-text-align_right">
+                                                                        <div class="slds-truncate slds-disabled--field">
+                                                                            <Framework:CurrencyField aura:id="invLinePaymentAmount" value="{!invoiceLine.displayAmount}" currencyISOCode="{!invoiceLine.currencyISOCode}" isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}" showFreeLabel="false"/>
+                                                                        </div>
+                                                                    </td>
+                                                                </aura:if>
+                                                                <aura:if isTrue="{!!v.epaymentObj.applyAvailableCredit}">
+                                                                    <td scope="col">
+                                                                        <div class="slds-grid slds-grid_align-end">
+                                                                            <div data-name="Paid_In_Full_Under_4" class="slds-m-right_small slds-align-middle">
+                                                                                <aura:if isTrue="{!invoiceLine.paidInFull}">
+                                                                                    <lightning:badge label="{!$Label.OrderApi.Paid_In_Full}" class="slds-badge--paid__full"/>
+                                                                                </aura:if>
+                                                                                <aura:if isTrue="{!invoiceLine.underPayment}">
+                                                                                    <lightning:badge label="{!$Label.OrderApi.Underpayment}" class="slds-badge--paid__under"/>
+                                                                                </aura:if>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="slds-text-align_right">
+                                                                        <div class="slds-truncate slds-disabled--field">
+                                                                            <Framework:CurrencyField aura:id="invLinePaymentAmount" value="{!invoiceLine.displayAmount}" currencyISOCode="{!invoiceLine.currencyISOCode}" isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}" showFreeLabel="false"/>
+                                                                        </div>
+                                                                    </td>
+                                                                </aura:if>
+                                                            </aura:set>
+                                                        </aura:if>
+                                                    </tr>
+                                                </aura:iteration>
+                                                <tr class="fonteva-table_row-spacer">
+                                                    <td scope="col"></td>
+                                                    <td scope="col"></td>
+                                                    <td scope="col"></td>
+                                                    <td scope="col"></td>
+                                                    <td scope="col"></td>
+                                                    <td scope="col"></td>
+                                                    <aura:if isTrue="{!v.epaymentObj.overrideIPP}">
+                                                        <aura:if isTrue="{!v.epaymentObj.applyAvailableCredit}">
+                                                            <td scope="col"></td>
+                                                            <td scope="col"></td>
+                                                            <td scope="col"></td>
+                                                        </aura:if>
+                                                        <aura:if isTrue="{!!v.epaymentObj.applyAvailableCredit}">
+                                                            <td scope="col"></td>
+                                                            <td scope="col"></td>
+                                                        </aura:if>
+                                                        <aura:set attribute="else">
+                                                            <aura:if isTrue="{!v.epaymentObj.applyAvailableCredit}">
+                                                                <td scope="col"></td>
+                                                                <td scope="col"></td>
+                                                                <td scope="col"></td>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!!v.epaymentObj.applyAvailableCredit}">
+                                                                <td scope="col"></td>
+                                                                <td scope="col"></td>
+                                                            </aura:if>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="slds-grid slds-grid_align-end">
+                                                <div class="slds-size_1-of-5 fonteva-summary_wrapper">
+                                                    <div class="slds-grid slds-grid_align-spread fonteva-font-weight_bold">
+                                                        <div data-name="Total" class="">
+                                                            {!$Label.OrderApi.Total}
+                                                        </div>
+                                                        <div data-name="invoiceTotal" class="">
+                                                            <Framework:CurrencyField aura:id="invoiceTotal"
+                                                                                     value="{!invoice.total}"
+                                                                                     showFreeLabel="false"
+                                                                                     currencyISOCode="{!invoice.currencyISOCode}"
+                                                                                     isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-grid slds-grid_align-spread fonteva-font-weight_bold">
+                                                        <div data-name="Amount_Paid" class="">
+                                                            {!$Label.OrderApi.Amount_Paid}
+                                                        </div>
+                                                        <div data-name="invoiceAmounPaid" class="">
+                                                            <Framework:CurrencyField aura:id="invoiceAmounPaid"
+                                                                                     showFreeLabel="false"
+                                                                                     value="{!invoice.amountPaid}"
+                                                                                     currencyISOCode="{!invoice.currencyISOCode}"
+                                                                                     isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"/>
+                                                        </div>
+                                                    </div>
+                                                    <aura:if isTrue="{!invoice.creditsApplied > 0}">
+                                                        <div class="slds-grid slds-grid_align-spread fonteva-font-weight_bold">
+                                                            <div data-name="Credit_Applied" class="">
+                                                                {!$Label.OrderApi.Credit_Applied}
+                                                            </div>
+                                                            <div data-name="invoiceCreditsApplied" class="">
+                                                                <Framework:CurrencyField aura:id="invoiceCreditsApplied"
+                                                                                         value="{!invoice.creditsApplied}"
+                                                                                         showFreeLabel="false"
+                                                                                         currencyISOCode="{!invoice.currencyISOCode}"
+                                                                                         isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"/>
+                                                            </div>
+                                                        </div>
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!invoice.writeOffAmountApplied > 0}">
+                                                        <div class="slds-grid slds-grid_align-spread fonteva-font-weight_bold">
+                                                            <div data-name="Write_Off" class="">
+                                                                {!$Label.OrderApi.Write_Off}
+                                                            </div>
+                                                            <div data-name="invWriteOffAmountApplied" class="">
+                                                                <Framework:CurrencyField aura:id="invWriteOffAmountApplied"
+                                                                                         value="{!invoice.writeOffAmountApplied}"
+                                                                                         showFreeLabel="false"
+                                                                                         currencyISOCode="{!invoice.currencyISOCode}"
+                                                                                         isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"/>
+                                                            </div>
+                                                        </div>
+                                                    </aura:if>
+                                                    <hr class="slds-m-vertical_x-small"/>
+                                                    <div class="slds-grid slds-grid_align-spread">
+                                                        <div class="fonteva-font-weight_bold slds-text-heading_small">
+                                                            <div data-name="Balance_Due_Invoice_Payment">
+                                                                <span class="fonteva-text_uppercase">
+                                                                        {!$Label.OrderApi.Balance_Due_Invoice_Payment}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="fonteva-font-weight_bold">
+                                                            <div data-name="invoiceBalanceDue">
+                                                                <span class="slds-text-heading_small">
+                                                                        <strong>
+                                                                            <Framework:CurrencyField aura:id="invoiceBalanceDue"
+                                                                                                     value="{!invoice.balanceDue}"
+                                                                                                     showFreeLabel="false"
+                                                                                                     currencyISOCode="{!invoice.currencyISOCode}"
+                                                                                                     isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"/>
+                                                                        </strong>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="{!invoice.overPayment || invoice.creditMemo || invoice.creditRemaining ? 'fonteva-invoice_comment' :'slds-hide'}">
+                                                        <div class="slds-grid slds-grid_align-spread">
+                                                            <div class="fonteva-font-weight_bold">
+                                                                <div>
+                                                                    <span data-name="Over_Payment" class="{!invoice.overPayment ? '' : 'hidden'}">
+                                                                            {!$Label.OrderApi.Over_Payment}
+                                                                    </span>
+                                                                    <span data-name="Credit_Memo" class="{!invoice.creditMemo ? '' : 'hidden'}">
+                                                                            {!$Label.OrderApi.Credit_Memo}
+                                                                    </span>
+                                                                    <span data-name="Credit_Remaining" class="{!invoice.creditRemaining ? '' : 'hidden'}">
+                                                                            {!$Label.OrderApi.Credit_Remaining}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="fonteva-font-weight_bold">
+                                                                <div>
+                                                                    <span class="">
+                                                                        <aura:if isTrue="{!invoice.overPayment}">
+                                                                            <strong data-name="invoiceOverPymntApplied">
+                                                                                <Framework:CurrencyField aura:id="invoiceOverPymntApplied"
+                                                                                                         showFreeLabel="false"
+                                                                                                         value="{!invoice.overPaymentApplied}"
+                                                                                                         currencyISOCode="{!invoice.currencyISOCode}"
+                                                                                                         isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"/>
+                                                                            </strong>
+                                                                        </aura:if>
+                                                                        <aura:if isTrue="{!invoice.creditMemo}">
+                                                                            <strong data-name="invoiceCMAmountApplied">
+                                                                                <Framework:CurrencyField aura:id="invoiceCMAmountApplied"
+                                                                                                         showFreeLabel="false"
+                                                                                                         value="{!invoice.creditMemoAmountApplied}"
+                                                                                                         currencyISOCode="{!invoice.currencyISOCode}"
+                                                                                                         isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"/>
+                                                                            </strong>
+                                                                        </aura:if>
+                                                                        <aura:if isTrue="{!invoice.creditRemaining}">
+                                                                            <strong data-name="invoiceCRAmount">
+                                                                                <Framework:CurrencyField aura:id="invoiceCRAmount"
+                                                                                                         showFreeLabel="false"
+                                                                                                         value="{!invoice.creditRemainingAmount}"
+                                                                                                         currencyISOCode="{!invoice.currencyISOCode}"
+                                                                                                         isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"/>
+                                                                            </strong>
+                                                                        </aura:if>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </aura:iteration>
+                                <div class="slds-grid slds-grid_align-end">
+                                    <div class="slds-size_1-of-2">
+                                        <div class="slds-box slds-theme_default">
+                                            <div class="slds-grid slds-grid_vertical slds-p-horizontal_small fonteva-summary_wrapper">
+
+                                                <div class="slds-grid slds-grid_align-spread fonteva-font-weight_bold">
+                                                    <div data-name="Total">{!$Label.OrderApi.Total}</div>
+                                                    <div data-name="epaymentTotal">
+                                                        <Framework:CurrencyField aura:id="epaymentTotal"
+                                                                                 value="{!v.epaymentObj.total}"
+                                                                                 currencyISOCode="{!v.epaymentObj.currencyISOCode}"
+                                                                                 isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"
+                                                                                 showFreeLabel="false"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="slds-grid slds-grid_align-spread fonteva-font-weight_bold">
+                                                    <div data-name="Amount_Paid">{!$Label.OrderApi.Amount_Paid}</div>
+                                                    <div data-name="epaymentPaymentAmount">
+                                                        <Framework:CurrencyField aura:id="epaymentPaymentAmount"
+                                                                                 value="{!v.epaymentObj.epaymentAmountPaid}"
+                                                                                 currencyISOCode="{!v.epaymentObj.currencyISOCode}"
+                                                                                 isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"
+                                                                                 showFreeLabel="false"/>
+                                                    </div>
+                                                </div>
+
+
+                                                <aura:if isTrue="{!v.epaymentObj.creditsApplied > 0}">
+                                                    <div class="slds-grid slds-grid_align-spread fonteva-font-weight_bold">
+                                                        <div data-name="Credit_Applied">{!$Label.OrderApi.Credit_Applied}</div>
+                                                        <div data-name="epaymentCreditApplied">
+                                                            <Framework:CurrencyField aura:id="epaymentCreditApplied"
+                                                                                     value="{!v.epaymentObj.creditsApplied}"
+                                                                                     currencyISOCode="{!v.epaymentObj.currencyISOCode}"
+                                                                                     isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"
+                                                                                     showFreeLabel="false"/>
+                                                        </div>
+                                                    </div>
+                                                </aura:if>
+
+                                                <aura:if isTrue="{!v.epaymentObj.writeOffAmountApplied > 0}">
+                                                    <div class="slds-grid slds-grid_align-spread fonteva-font-weight_bold">
+                                                        <div data-name="Write_Off">{!$Label.OrderApi.Write_Off}</div>
+                                                        <div data-name="epaymentWriteOffAmountApplied">
+                                                            <Framework:CurrencyField aura:id="epaymentWriteOffAmountApplied"
+                                                                                     value="{!v.epaymentObj.writeOffAmountApplied}"
+                                                                                     currencyISOCode="{!v.epaymentObj.currencyISOCode}"
+                                                                                     isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"
+                                                                                     showFreeLabel="false"/>
+                                                        </div>
+                                                    </div>
+                                                </aura:if>
+                                                <hr class="slds-m-vertical_x-small" />
+                                                <div class="slds-grid slds-grid_align-spread slds-text-heading_small fonteva-font-weight_bold">
+                                                    <div data-name="Balance_Due_Invoice_Payment" class="fonteva-text_uppercase">{!$Label.OrderApi.Balance_Due_Invoice_Payment}</div>
+                                                    <div data-name="epaymentTotalBalanceDue">
+                                                        <Framework:CurrencyField aura:id="epaymentTotalBalanceDue"
+                                                                                 value="{!v.epaymentObj.balanceDue}"
+                                                                                 currencyISOCode="{!v.epaymentObj.currencyISOCode}"
+                                                                                 isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"
+                                                                                 showFreeLabel="false"/>
+                                                    </div>
+                                                </div>
+
+                                                <aura:if isTrue="{!v.epaymentObj.epayCreditMemoAmntApplied > 0}">
+                                                    <div class="slds-grid slds-grid_align-spread fonteva-font-weight_bold">
+                                                        <div data-name="Credit_Memo">{!$Label.OrderApi.Credit_Memo}</div>
+                                                        <div data-name="epayCreditMemoAmntApplied">
+                                                            <Framework:CurrencyField aura:id="epayCreditMemoAmntApplied"
+                                                                                     value="{!v.epaymentObj.epayCreditMemoAmntApplied}"
+                                                                                     currencyISOCode="{!v.epaymentObj.currencyISOCode}"
+                                                                                     isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"
+                                                                                     showFreeLabel="false"/>
+                                                        </div>
+                                                    </div>
+                                                </aura:if>
+
+                                                <aura:if isTrue="{!v.epaymentObj.epayOverPymntApplied > 0}">
+                                                    <div class="slds-grid slds-grid_align-spread fonteva-font-weight_bold">
+                                                        <div data-name="Over_Payment">{!$Label.OrderApi.Over_Payment}</div>
+                                                        <div data-name="epayOverPymntApplied">
+                                                            <Framework:CurrencyField aura:id="epayOverPymntApplied"
+                                                                                     value="{!v.epaymentObj.epayOverPymntApplied}"
+                                                                                     currencyISOCode="{!v.epaymentObj.currencyISOCode}"
+                                                                                     isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"
+                                                                                     showFreeLabel="false"/>
+                                                        </div>
+                                                    </div>
+                                                </aura:if>
+                                                <aura:if isTrue="{!v.epaymentObj.epaymentCreditRmng > 0}">
+                                                    <div class="slds-grid slds-grid_align-spread fonteva-font-weight_bold">
+                                                        <div data-name="Credit_Remaining">{!$Label.OrderApi.Credit_Remaining}</div>
+                                                        <div data-name="epaymentCreditRmng">
+                                                            <Framework:CurrencyField aura:id="epaymentCreditRmng"
+                                                                                     value="{!v.epaymentObj.epaymentCreditRmng}"
+                                                                                     currencyISOCode="{!v.epaymentObj.currencyISOCode}"
+                                                                                     isMultiCurrencyOrg="{!v.epaymentObj.isMultiCurrency}"
+                                                                                     showFreeLabel="false"/>
+                                                        </div>
+                                                    </div>
+                                                </aura:if>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aura:if>
+                    <div class="{!!v.isAppUpdateActivated ? 'slds-grid' : 'slds-grid slds-grid_align-end slds-p-right_large'}">
+                        <div data-name="payButtonDiv" aura:id="payButtonDiv" class="{!!v.isAppUpdateActivated ? 'slds-text-align_center slds-m-top_small slds-col' : 'fonteva-card_custom slds-size_1-of-2'}">
+                            <Framework:Button qaData='{"type": "button", "name":"saveAndPayEpayment"}' label="{!$Label.OrderApi.Apply_Payment}" aura:id="payButton" onClickAction="{!c.saveAndPayEpayment}" type="brand" group="paymentButtons"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <OrderApi:EpaymentError ePaymentId="{!v.epaymentId}"/>
+        <Framework:Toast aura:id="toastMessages"/>
+    </div>
+</aura:component>

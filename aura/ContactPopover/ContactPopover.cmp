@@ -1,0 +1,120 @@
+<aura:component description="ContactPopover" controller="OrderApi.CustomerLookupsController" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="customerObj" type="Map" default="{}" access="global"/>
+    <aura:attribute name="accountId" type="String" access="global"/>
+    <aura:attribute name="enableIndividualAccounts" type="Boolean" default="false"/>
+    <aura:attribute name="firstName" type="String"/>
+    <aura:attribute name="lastName" type="String"/>
+    <aura:attribute name="contactFields" type="List" default="[]"/>
+    <aura:attribute name="position" type="String" default="left" access="global"/>
+    <aura:attribute name="uniqueIdentifier" type="String" required="true" default="customerLookup" access="global"/>
+    <aura:method name="showPopover" action="{!c.showPopover}" access="global"/>
+    <aura:method name="closePopover" action="{!c.closePopover}" access="global"/>
+    <aura:method name="setNameValues" action="{!c.setNameValues}" access="global">
+        <aura:attribute name="firstName" type="String"/>
+        <aura:attribute name="lastName" type="String"/>
+        <aura:attribute name="accountId" type="String"/>
+    </aura:method>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:registerEvent name="ContactCreatedEvent" type="OrderApi:ContactCreatedEvent"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <style>
+        .uiDatePicker {
+            z-index: 1000000001!important;
+        }
+    </style>
+    <span class="slds-hide" aura:id="showPopover">
+        <div class="{!'slds-popover slds-popover--panel slds-nubbin--'+v.position+'-top'}" role="dialog" >
+            <div class="slds-popover__body">
+                <div class="slds-grid slds-wrap slds-p-top--medium">
+                    <div class="slds-size--1-of-1 slds-m-bottom--medium slds-p-horizontal--medium">
+                        <span class="slds-text-heading--small"><strong>{!$Label.OrderApi.Create_New_Contact}</strong></span>
+                    </div>
+                    <span class="slds-size--1-of-1 slds-m-bottom--medium slds-p-around--medium  slds-object-height--custom slds-scrollable--y">
+                        <div class="slds-size--1-of-1 slds-m-bottom--medium hidden" aura:id="enableIndAccounts">
+                                <Framework:InputFields fieldType="boolean"
+                                                       group="{!v.uniqueIdentifier}"
+                                                       aura:id="enableIndividualAccountCreation"
+                                                       label="Enable Individual Account"
+                                                       fireChangeEvent="true"
+                                                       value="{!v.customerObj}" />
+                            </div>
+                        <div class="slds-size--1-of-1 slds-m-bottom--medium hidden" aura:id="accountLookup">
+                                <Framework:InputFields fieldType="lookup"
+                                                       group="{!v.uniqueIdentifier}"
+                                                       aura:id="accountId"
+                                                       label="Account"
+                                                       secondaryId="{!contactField.fieldKey}"
+                                                       otherAttributes='{"type" : "Account"}'
+                                                       isRequired="true"
+                                                       value="{!v.customerObj}" />
+                            </div>
+                            <div class="slds-size--1-of-1 slds-m-bottom--medium" aura:id="syncAddresses">
+                                <Framework:InputFields fieldType="boolean"
+                                                       group="{!v.uniqueIdentifier}"
+                                                       aura:id="OrderApi__Sync_Address_Shipping__c"
+                                                       label="Sync Address With Account"
+                                                       fireChangeEvent="true"
+                                                       value="{!v.customerObj}" />
+                            </div>
+                        <aura:iteration items="{!v.contactFields}" var="contactField">
+                            <div class="slds-size--1-of-1 slds-m-bottom--medium">
+                                <aura:if isTrue="{!contactField.fieldKey == 'email'}">
+                                    <span class="wrapper-button">
+                                        <Framework:InputFields fieldType="picklist"
+                                                               group="{!v.uniqueIdentifier}"
+                                                               aura:id="OrderApi__Preferred_Email_Type__c"
+                                                               label=""
+                                                               otherAttributes="{!contactField.otherAttributes}"
+                                                               styleClasses="wrapper-select-input"
+                                                               value="{!v.customerObj}"
+                                                               selectOptions='[{"label" : "Personal","value" : "Personal"},{"label" : "Work","value" : "Work"},{"label" : "Other","value" : "Other"},{"label" : "Assistant","value" : "Assistant"}]'/>
+                                    </span>
+                                        <Framework:InputFields fieldType="{!contactField.fieldType}"
+                                                               group="{!v.uniqueIdentifier}"
+                                                               aura:id="contactField"
+                                                               label="{!contactField.label}"
+                                                               secondaryId="{!contactField.fieldKey}"
+                                                               otherAttributes="{!contactField.otherAttributes}"
+                                                               useSecondaryId="true"
+                                                               styleClasses="wrapper-input"
+                                                               isRequired="true"
+                                                               value="{!v.customerObj}" />
+                                    <aura:set attribute="else">
+                                        <Framework:InputFields fieldType="{!contactField.fieldType}"
+                                                               group="{!v.uniqueIdentifier}"
+                                                               aura:id="contactField"
+                                                               label="{!contactField.label}"
+                                                               secondaryId="{!contactField.fieldKey}"
+                                                               otherAttributes="{!contactField.otherAttributes}"
+                                                               useSecondaryId="true"
+                                                               format="{!contactField.format}"
+                                                               isRequired="true"
+                                                               value="{!v.customerObj}" />
+                                    </aura:set>
+                                </aura:if>
+                            </div>
+                        </aura:iteration>
+                    </span>
+                </div>
+            </div>
+            <div class="slds-popover__body slds-theme--shade">
+                <div class="slds-grid slds-wrap slds-p-around--medium">
+                    <div class="slds-size--1-of-1 slds-text-align--right">
+                        <Framework:Button enableProgressIndicator="false"
+                                          onClickAction="{!c.closePopover}"
+                                          type="neutral"
+                                          label="Cancel" />
+                        <Framework:Button onClickAction="{!c.createNewContact}"
+                                          type="brand"
+                                          additionalClasses="slds-m-left--x-small"
+                                          aura:id="createContact"
+                                          label="Create" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-customer-lookup--backdrop" aura:id="customerLookupBackdrop" onclick="{!c.closePopover}"></div>
+    </span>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

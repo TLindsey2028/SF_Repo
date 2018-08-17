@@ -1,0 +1,5 @@
+<aura:interface description="FontevaBaseInterface" access="global">
+	<aura:attribute name="params" type="Map" access="global"/>
+	<aura:attribute name="identifier" type="String" access="global"/>
+	<aura:attribute name="isPreview" type="Boolean" access="global"/>
+</aura:interface>

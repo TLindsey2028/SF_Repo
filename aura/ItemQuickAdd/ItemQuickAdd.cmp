@@ -1,0 +1,181 @@
+<aura:component description="ItemQuickAdd" controller="ROEApi.ItemQuickAddController" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <style>
+        button.disabled {
+            background-color: #0070d2!important;
+            opacity: 0.6!important;
+            border: 1px solid #0070d2!important;
+            cursor: not-allowed!important;
+        }
+    </style>
+    <aura:attribute name="roeObj" type='Map' default="{}"/>
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:attribute name="itemObj" type="Map" default="{}"/>
+    <aura:attribute name="createdSO" type="Boolean" default="false"/>
+    <aura:attribute name="salesOrderNumber" type="String" default=""/>
+    <aura:attribute name="customerLookupInput" type="String"/>
+    <aura:attribute name="ticketsAvailable" type="Decimal"/>
+    <aura:attribute name="waitlistEnabled" type="Boolean" default="false"/>
+    <aura:attribute name="salesOrderCompleteObj" type="Map" default="{}"/>
+    <aura:attribute name="globalId" type="String" />
+    <aura:attribute name="pathPrefix" type="String" default=""/>
+    <aura:attribute name="totals" type="Map" default="{}"/>
+    <aura:attribute name="salesOrder" type="String"/>
+    <aura:attribute name="contact" type="String"/>
+    <aura:attribute name="account" type="String"/>
+    <aura:attribute name="exceptionContact" type="String"/>
+    <aura:attribute name="exceptionAccount" type="String"/>
+    <aura:attribute name="currencyISOCode" type="String" default="USD"/>
+    <aura:attribute name="isMultiCurrencyOrg" type="Boolean" default="false"/>
+    <aura:attribute name="businessGroupGlobalId" type="String" default=""/>
+    <aura:attribute name="businessGroups" type="List[]"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:registerEvent name="ItemInsertedEvent" type="ROEApi:ItemInsertedEvent"/>
+    <aura:registerEvent name="ComponentLoadedEvent" type="ROEApi:ComponentLoadedEvent"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:handler event="ROEApi:RemoveItemEvent" action="{!c.removeItemClickEvent}"/>
+    <aura:handler event="ROEApi:OrderTotalUpdateEvent" action="{!c.handleOrderTotalUpdateEvent}"/>
+    <aura:handler event="ROEApi:ItemCardCompleteEvent" action="{!c.handleItemCardCompleteEvent}"/>
+    <aura:registerEvent name="RemoveItemEvent" type="ROEApi:RemoveItemEvent"/>
+    <aura:registerEvent name="ItemDisableRemoveEvent" type="ROEApi:ItemDisableRemoveEvent"/>
+    <div class="hidden" aura:id="mainWrapperDiv">
+        <div class="slds-theme--shade">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size--1-of-1">
+                    <div class="slds-page-header">
+                        <div class="slds-media">
+                            <div class="slds-media__body">
+                                <span class="slds-text-heading--medium slds-m-right--small slds-align-middle">
+                                    {!$Label.ROEApi.Sales_Order}&nbsp;<span class="slds-text-weight--regular">#{!v.salesOrderNumber}</span>
+                                </span>
+                                <Framework:Button label="Exit" onClickAction="{!c.exitSO}" enableProgressIndicator="false" aura:id="exitBtn" type="neutral"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid">
+                <div class="slds-size--1-of-1 slds-grid slds-nowrap slds-p-horizontal--large slds-p-top--medium">
+                  <div class="slds-size--1-of-2 slds-grid slds-wrap">
+                    <div class="slds-size--2-of-3" aura:id="customerLookup">
+                        <ROEApi:CustomerLookup group="salesOrderInfo"
+                                          isRequired="true"
+                                          aura:id="salesOrderEntity"
+                                          fireChangeEvent="false"
+                                          label="Customer (Entity)"
+                                          value="{!v.roeObj}"
+                                          sldsIconResource="ROEApi__SLDS_Icons"
+                                          contactNubbinLocation="left"
+                                          exceptionAccount="{!v.exceptionAccount}"
+                                          exceptionContact="{!v.exceptionContact}"/>
+                    </div>
+                  </div>
+                  <div class="slds-size--1-of-2 slds-grid slds-wrap">
+                    <div class="slds-size--1-of-3 hidden" aura:id="businessGroupDiv">
+
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-theme--shade__dark">
+                <div class="slds-col slds-grid slds-wrap slds-p-horizontal--large slds-p-vertical--medium">
+                    <div class="slds-col slds-grid slds-wrap slds-grid--pull-padded">
+                        <div class="slds-col--padded slds-lookup-input">
+                            <span class="slds-text-heading--small">
+                                <strong>{!$Label.ROEApi.Item_Quick_Add}</strong>
+                            </span>
+                            <span aura:id="itemQuickAddLookup">
+                                <Framework:InputFields fieldType="lookup" aura:id="quickAddItem" label="Customer Id" disabled="true" labelStyleClasses="slds-hide" fireChangeEvent="true" value="{!v.roeObj}"/>
+                            </span>
+                            <span aura:id="statusEventItem" class="slds-hidden">
+                                <span class="{!and(v.ticketsAvailable == 0,!v.waitlistEnabled) ? 'slds-text-body--small slds-text--danger' : 'hidden'}">
+                                    {!$Label.ROEApi.Sold_Out}
+                                </span>
+                                <span class="{!and(v.ticketsAvailable == 0,v.waitlistEnabled) ? 'slds-text-body--small slds-text--warning' : 'hidden'}">
+                                    {!$Label.ROEApi.Waitlist_Available}
+                                </span>
+                                <span class="{!v.ticketsAvailable > 0 ? 'slds-text-body--small slds-text--success' : 'hidden'}">
+                                    {!v.ticketsAvailable}&nbsp;<span class="{!v.ticketsAvailable == 1 ? '' : 'hidden'}">&nbsp;{!$Label.ROEApi.Event_Ticket}</span><span class="{!v.ticketsAvailable > 1 ? '' : 'hidden'}"> {!$Label.ROEApi.Event_Tickets}</span>&nbsp;{!$Label.ROEApi.Tickets_Remaining}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="{!v.itemObj.showQuantity ? 'slds-p-right--medium' : 'slds-hide'}">
+                            <Framework:InputFields fieldType="integer"
+                                                   group="quickAdd"
+                                                   aura:id="quantity"
+                                                   isRequired="true"
+                                                   label="{!$Label.ROEApi.Item_Quantity}"
+                                                   value="{!v.roeObj}"
+                                                   format="0"
+                                                   otherAttributes='{"min" : 0,"max": 50000}'/>
+                        </div>
+                        <div class="{!v.itemObj.isContribution ? 'slds-p-right--medium' : 'slds-hide'}">
+                            <Framework:InputFields fieldType="currency"
+                                                   group="quickAdd"
+                                                   aura:id="price"
+                                                   label="{!$Label.ROEApi.Item_Price}"
+                                                   isRequired="true"
+                                                   value="{!v.roeObj}"
+                                                   otherAttributes='{"min" : 0,"max": 9999999}'
+                                                   minValueValidationMessage="{!$Label.ROEApi.Min_Price_Validation_Message}"
+                                                   maxValueValidationMessage="{!$Label.ROEApi.Max_Price_Validation_Message}"/>
+                        </div>
+                        <div class="{!v.itemObj.hasSubscriptionPlans ? 'slds-col--padded' : 'slds-hide'}">
+                            <aura:if isTrue="{!v.itemObj.hasSubscriptionPlans}">
+                                <Framework:InputFields fieldType="picklist"
+                                                       group="quickAdd"
+                                                       aura:id="selectedPlan"
+                                                       isRequired="true"
+                                                       label="{!$Label.ROEApi.Subscription_Plan}"
+                                                       value="{!v.roeObj}" />
+                            </aura:if>
+                        </div>
+                        <div class="slds-col fon-slds-p-top--xx-small">
+                            <Framework:Button onClickAction="{!c.addItem}"
+                                              type="brand"
+                                              label="{!$Label.ROEApi.Add_to_Order}"
+                                              aura:id="addItemButton"
+                                              additionalClasses="slds-m-top--medium "
+                                              disable="true"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-wrap slds-p-vertical--medium slds-p-horizontal--large slds-float--right">
+                    <div class="slds-col slds-grow">
+                        <span class="slds-grid slds-wrap">
+                            <div class="slds-col">
+                                <div class="slds-text-heading--small slds-hide" aura:id="totalDiv">
+                                    <strong>{!$Label.ROEApi.Items}:&nbsp;<Framework:CurrencyField aura:id="orderTotal" value="1.00" currencyISOCode="{!v.currencyISOCode}" isMultiCurrencyOrg="{!v.isMultiCurrencyOrg}"/></strong>
+                                </div>
+                            </div>
+                        </span>
+                        <div>
+                            <div class="slds-grid" aura:id="paymentProcessDiv">
+                                <div class="slds-col">
+                                    <Framework:Button type="brand"
+                                                      label="{!$Label.ROEApi.Go}"
+                                                      onClickAction="{!c.processPaymentOption}"
+                                                      aura:id="processPaymentBtn"
+                                                      disable="true"
+                                                      additionalClasses="slds-m-left--small"/>
+                                </div>
+                            </div>
+                            <div class="slds-m-top--xx-small slds-m-left--xx-small slds-text-body--small slds-text--danger slds-hidden" aura:id="missingInfoDiv">
+                                <strong>{!$Label.ROEApi.Missing_Required_Info}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="slds-grid slds-wrap slds-p-vertical--medium slds-p-horizontal--large">
+                <div class="slds-size--1-of-1 slds-grid slds-wrap">
+                    <div aura:id="itemCard" class="slds-size--1-of-1">
+                    </div>
+                </div>
+            </div>
+            <Framework:Toast aura:id="toastMessages"/>
+        </div>
+    </div>
+</aura:component>

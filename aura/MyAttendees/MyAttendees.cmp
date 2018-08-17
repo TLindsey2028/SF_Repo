@@ -1,0 +1,161 @@
+<aura:component description="MyAttendees" implements="LTE:EventInterface" controller="LTE.ManageMyRegistrationController" access="global">
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:registerEvent name="MyAttendeesLoadedEvent" type="LTE:MyAttendeesLoadedEvent"/>
+    <aura:registerEvent name="HashEvent" type="LTE:HashChangingEvent"/>
+    <ltng:require scripts="{!$Resource.Framework__UrlUtil}"/>
+    <aura:attribute name="attendees" type="LTE.AttendeeRecord[]" access="global"/>
+    <aura:attribute name="invitedAttendee" type="LTE.AttendeeRecord"/>
+    <aura:attribute name="attendeeObjToEdit" type="Map" default="{}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="attendeeToCancel" type="String"/>
+    <aura:attribute name="ticketToCancel" type="String"/>
+    <aura:attribute name="refundPolicyForTicket" type="String"/>
+    <aura:attribute name="attendeeObjToCancel" type="Map"/>
+	<aura:attribute name="disableStorable" type="Boolean" default="false"/>
+    <aura:attribute name="hasForms" type="Boolean" default="false"/>
+    <aura:handler event="LTE:ReloadAttendeesEvent" action="{!c.updateAttendees}"/>
+
+    <div class="active slds-col slds-p-top_medium slds-p-horizontal_large slds-size_1-of-1" id="manageReg">
+        <div class="slds-size--1-of-4">
+            <div data-name="eventObj_name" class="slds-text-heading_medium slds-font-weight--semi-bold slds-m-bottom--large">
+                {!v.eventObj.name}
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 slds-grid slds-large-grid--vertical-align-center slds-col slds-col--rule-bottom fonteva-ticket-type_header">
+            <div class="slds-grid slds-nowrap slds-show_large slds-gutters_x-small">
+                <div class="slds-col slds-size--1-of-1 slds-large-size--1-of-5 slds-p-vertical_x-small fonteva-text-overflow slds-align-middle">
+                    <strong>{!$Label.LTE.Registration_Table_Attendee_Name}</strong>
+                </div>
+                <div class="slds-col slds-size--1-of-1 slds-large-size--1-of-5 slds-p-vertical_x-small fonteva-text-overflow slds-align-middle">
+                    <strong>{!$Label.LTE.Registration_Table_Email}</strong>
+                </div>
+                <div class="slds-col slds-size--1-of-1 slds-large-size--1-of-5 slds-p-vertical_x-small fonteva-text-overflow slds-align-middle">
+                    <strong>{!$Label.LTE.Registration_Table_Ticket_Type}</strong>
+                </div>
+                <div class="slds-col slds-grid slds-nowrap slds-grid_vertical-align-center slds-align-middle slds-p-vertical_x-small"></div>
+            </div>
+            <div class="slds-grow-none slds-p-vertical_x-small">
+                <aura:if isTrue="{!v.eventObj.allowReg}">
+                    <Framework:Button qaData='{"type" : "button", "name": "newAttendee"}' type="brand" aura:id="newAttendee" label="New Attendee" onClickAction="{!c.registerNewAttendee}" disable="{!v.eventObj.isInvitationOnly}"/>
+                </aura:if>
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 slds-grid slds-wrap slds-border_top">
+            <aura:iteration items="{!v.attendees}" var="attendee">
+                <div class="slds-size--1-of-1 slds-grid slds-large-grid--vertical-align-center slds-col slds-col--rule-bottom slds-ticket-type--interaction">
+                    <div class="slds-col slds-grid slds-wrap fonteva-header_faux-anchor slds-gutters_x-small">
+                        <div class="slds-col slds-size--1-of-1 slds-large-size--1-of-5 slds-p-vertical_x-small fonteva-text-overflow slds-align-middle" data-title="{!$Label.LTE.Registration_Table_Attendee_Name}">
+                            <span class="slds-medium-show-max inline slds-shrink-none"><strong>{!$Label.LTE.Registration_Table_Attendee_Name} :</strong></span>&nbsp;<div>{!attendee.fullName}</div>
+                        </div>
+                        <div class="slds-col slds-size--1-of-1 slds-large-size--1-of-5 slds-p-vertical_x-small fonteva-text-overflow slds-align-middle" data-title="{!$Label.LTE.Registration_Table_Email}">
+                            <span class="slds-medium-show-max inline slds-shrink-none"><strong>{!$Label.LTE.Registration_Table_Email} :</strong></span>&nbsp;<div>{!attendee.email}</div>
+                        </div>
+                        <div class="slds-col slds-size--1-of-1 slds-large-size--1-of-5 slds-p-vertical_x-small slds-align-middle" data-title="{!$Label.LTE.Registration_Table_Ticket_Type}">
+                            <span class="slds-medium-show-max inline slds-shrink-none"><strong>{!$Label.LTE.Registration_Table_Ticket_Type} :</strong></span>&nbsp;{!attendee.ticketTypeName}
+                        </div>
+                        <div class="slds-col slds-grid slds-nowrap slds-grid_vertical-align-center slds-align-middle slds-p-vertical_x-small ">
+                            <div>
+                                <aura:if isTrue="{!and(attendee != null, attendee.contactId == v.usr.contactId)}">
+                                    <div data-name="attendee_id" class="slds-m-right_small">
+                                        <LTE:MobilePassbook attendee="{!attendee.id}" event="{!v.eventObj.id}"/>
+                                    </div>
+                                </aura:if>
+                            </div>
+                            <div>
+                                <div data-name="Cancellation_Requested" class="{!attendee.refundRequested ? '' : 'hidden'}">
+                                    <lightning:badge label="{!$Label.LTE.Cancellation_Requested}" class="fonteva-slds-cancellation-requested"/>
+                                </div>
+                                <div data-name="isCancelled" class="{!attendee.isCancelled ? '' : 'hidden'}">
+                                    <lightning:badge label="{!$Label.LTE.Cancelled}" class="fonteva-slds-cancellation-requested"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="{!attendee.isCancelled ? 'slds-hidden' : ''}">
+                      <div class="slds-p-vertical_x-small">
+                          <div class="slds-size--1-of-1">
+                              <div class="slds-text-align--right">
+                                  <div class="slds-dropdown-trigger slds-is-open">
+                                      <button class="slds-button slds-button--icon-border-filled fonteva-button_clear" aria-haspopup="true" title="Show More">
+                                          <lightning:icon iconName="utility:threedots" size="x-small"/>
+                                      </button>
+                                      <div class="slds-dropdown slds-dropdown_right">
+                                          <ul class="slds-dropdown__list">
+                                              <li data-name="My_Reg_View_Ticket" class="slds-dropdown__item">
+                                                  <a href="javascript:void(0);" onclick="{!c.viewTicket}" data-id="{!attendee.id}">
+                                                      <span class="slds-truncate">{!$Label.LTE.My_Reg_View_Ticket}</span>
+                                                  </a>
+                                              </li>
+
+                                              <li data-name="Registration_Edit_Order_Detail" class="slds-dropdown__item">
+                                                  <a href="javascript:void(0);" onclick="{!c.editOrderDetail}" data-id="{!attendee.id}">
+                                                      <span class="slds-truncate">{!$Label.LTE.Registration_Edit_Order_Detail}</span>
+                                                  </a>
+                                              </li>
+                                              <span class="{!or(attendee.hasSessions, v.eventObj.sessionsEnabled) ? '' : 'slds-hide'}">
+                                                  <li class="slds-has-divider--top-space" role="separator"></li>
+                                                  <li data-name="View_Sessions" class="{!attendee.hasSessions ? 'slds-dropdown__item' : 'hidden'}">
+                                                      <a href="javascript:void(0);" onclick="{!c.viewAgenda}" data-id="{!attendee.id}">
+                                                          <span class="slds-truncate">{!$Label.LTE.View_Sessions}</span>
+                                                      </a>
+                                                  </li>
+                                                  <li data-name="Purchase_More_Sessions" class="{!v.eventObj.sessionsEnabled ? 'slds-dropdown__item' : 'hidden'}">
+                                                      <a href="javascript:void(0);" onclick="{!c.purchaseNewSession}" data-id="{!attendee.id}">
+                                                          <span class="slds-truncate">{!$Label.LTE.Purchase_More_Sessions}</span>
+                                                      </a>
+                                                  </li>
+                                              </span>
+                                              <aura:if isTrue="{!or(!v.eventObj.isInvitationOnly, v.invitedAttendee.id != attendee.id)}">
+                                                  <aura:if isTrue="{!or(v.eventObj.enableContactSearch,v.eventObj.createContactForAttendees)}">
+                                                      <li class="slds-has-divider--top-space" role="separator"></li>
+                                                      <li data-name="Attendee_Reg_Action_Transfer" class="slds-dropdown__item">
+                                                          <a href="javascript:void(0);" onclick="{!c.transferTicket}" data-id="{!attendee.id}">
+                                                              <span class="slds-truncate">{!$Label.LTE.Attendee_Reg_Action_Transfer}</span>
+                                                          </a>
+                                                      </li>
+                                                  </aura:if>
+                                              </aura:if>
+                                              <aura:if isTrue="{!and(attendee.enableRefundRequest,!attendee.refundRequested)}">
+                                                  <li class="slds-has-divider--top-space" role="separator"></li>
+                                                  <li data-name="Attendee_Reg_Action_Cancel" class="slds-dropdown__item" data-target="#slds-modal--cancel" data-type="modal">
+                                                      <a href="javascript:void(0);" onclick="{!c.showCancelModal}" data-id="{!attendee.id}">
+                                                          <span class="slds-truncate">{!$Label.LTE.Attendee_Reg_Action_Cancel}</span>
+                                                      </a>
+                                                  </li>
+                                              </aura:if>
+                                          </ul>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+            </aura:iteration>
+        </div>
+    </div>
+		<!--{!v.editOrderDetailModal}-->
+    <div data-name="modalDetailsForCancel" class="hidden" aura:id="modalDetailsForCancel">
+        <div class="slds-text-align--center">
+            <div data-name="attendeeToCancel" class="slds-text-heading--large slds-font-weight--regular slds-p-bottom--medium">{!v.attendeeToCancel}</div>
+            <div data-name="ticketToCancel" class="slds-text-heading--medium slds-font-weight--regular slds-p-bottom--medium">{!v.ticketToCancel}</div>
+            <div class="slds-text-heading--medium slds-font-weight--light">
+                <ui:outputRichText value="{!v.refundPolicyForTicket}" linkify="true"/>
+            </div>
+        </div>
+    </div>
+    <Framework:MessagePrompt title="{!$Label.LTE.My_Registration_Cancel_Header}"
+                             message=""
+                             severity="company-tertiary"
+                             aura:id="cancelRegPrompt"
+                             cancelButtonLabel="{!$Label.LTE.My_Registration_Cancel_Button}"
+                             submitButtonLabel="{!$Label.LTE.My_Registration_Request_Button}"
+                             submitOnClickAction="{!c.cancelRegisteredAttendee}"/>
+    <Framework:MessagePrompt title="{!$Label.LTE.My_Registration_Cancel_Success_Header}"
+                             message="{!$Label.LTE.My_Registration_Cancel_Success_Body}"
+                             severity="company-tertiary"
+                             aura:id="cancelRegPromptSuccess"
+                             cancelButtonLabel="{!$Label.LTE.My_Registration_Close_Button}"
+                             showSubmitButton="false"/>
+    <span aura:id="eventRegEditOrderDetail"/>
+</aura:component>

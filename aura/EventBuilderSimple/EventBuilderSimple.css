@@ -1,0 +1,50 @@
+.THIS .slds-datepicker {
+  padding: 0 1rem 0 0.75rem!important;
+}
+
+.THIS .input-has-icon.input-has-icon--right,
+.THIS .dateTime-inputDate.form-element.form-element__control,
+.THIS .form--stacked.form-element.uiInput.uiInputDate.uiInput--default.uiInput--input.uiInput--datetime {
+  position: relative;
+}
+
+.THIS .timePicker-openIcon.display, .THIS .datePicker-openIcon.display {
+  top: 10px;
+  right: 13px;
+  position: absolute;
+  left: auto;
+}
+
+.THIS .small-spinner {
+  width: 35px;
+}
+
+.THIS .slds-rounded {
+  border-radius: 0.25rem;
+}
+
+.THIS  .slds-dropdown--trigger  .slds-dropdown--menu__hidden {
+  display: none;
+  z-index: 0;
+}
+
+.THIS  .slds-dropdown--trigger:hover  .slds-dropdown--menu__hidden,
+.THIS  .slds-dropdown--trigger:active  .slds-dropdown--menu__hidden {
+  display: block;
+  z-index: 100;
+}
+
+.THIS .slds-icon--xx-small {
+  line-height: 1;
+  width: .8rem!important;
+  height: 0.8rem!important;
+}
+
+.THIS .slds-dropdown--trigger.event-builder-action-button {
+  padding-left: .75rem!important;
+  padding-right: .75rem!important;
+}
+
+.THIS .slds-icon-text-brand {
+  fill: #0070d2!important;
+}

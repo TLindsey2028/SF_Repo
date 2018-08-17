@@ -1,0 +1,5 @@
+<apex:page standardController="Account">
+    <flow:interview name="Interaction_Report_Account" finishLocation="{!$Page.InteractionSuccessPage}">
+        <apex:param name="varAccountID" value="{!Account.Id}"/>
+    </flow:interview> 
+</apex:page>

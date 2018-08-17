@@ -1,0 +1,372 @@
+<aura:component controller="Framework.AdminMarketplaceController" >
+    <ltng:require scripts="{!join(',',$Resource.Framework__SLDS_BaseV2+'/js/scripts.min.js',$Resource.Framework__SLDS_BaseV2+'/js/plugins.js')}" afterScriptsLoaded="{!c.doInit}"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+  <!-- LOCAL ATTRIBUTES -->
+  <aura:attribute name="packages" type="List" default="[]" description="List of Packages" />
+  <aura:attribute name="renderModal" type="Boolean" default="false" description="Render Modal"/>
+  <aura:attribute name="releaseNotes" type="List" default="[]" description="List Of Release Notes" />
+  <aura:attribute name="pageSize" type="Integer" default="10" description="Page Size"/>
+  <aura:attribute name="currentPageNum" type="Integer" default="1" description="Current Page Number"/>
+  <aura:attribute name="installingPackage" type="Map" default="{}" />
+     <aura:attribute name="intervalTimer" type="String"/>
+    <aura:attribute name="asyncResult" type="String"/>
+  <aura:attribute name="totalPages" type="Integer" default="1" description="Total Pages"/>
+  <aura:attribute name="AllpackagesMap" type="Object" default="{}" description="All Packages Obj" />
+  <aura:attribute name="Allpackages" type="List" default="[]" description="All Packages List" />
+  <aura:attribute name="packagesSize" type="Integer" default="0" description="All Packages Size"/>
+  <aura:attribute name="packageInstallError" type="String" default="" description="Package Install Error"/>
+  <aura:attribute name="successLabel" type="String" default="{!$Label.Framework.Success}" description="Install Successful"/>
+  <aura:attribute name="installSuccessfullyRun" type="String" default="{!$Label.Framework.Install_Successfully_Run}" description="Install Successful Message"/>
+  <aura:attribute name="packageName" type="String" default="" description="Package Name Release Notes Modal"/>
+  <aura:attribute name="loading" type="Boolean" default="true" description="Modal header"/>
+  <aura:attribute name="loadingRows" type="List" default="[1,2,3,4,5]" description="Modal header" />
+  <aura:attribute name="errorModalHeader" type="String" default="Package Install Failed"/>
+  <aura:attribute name="enableMaintainence" type="Boolean" default="false"/>
+
+    <aura:if isTrue="{!v.enableMaintainence}">
+        <div class="slds-medium-size--3-of-4 slds-size--1-of-1 slds-grid slds-wrap">
+            <div class="slds-col slds-size--1-of-1">
+                <div class="slds-page-header">
+                    <div class="slds-media slds-media--center">
+                        <div class="slds-media__figure slds-ie-fix--width__icon">
+                            <img src="//fonteva-cdn.s3.amazonaws.com/framework-admin/Marketplace/Marketplace.svg" style="height:50px;" alt="Placeholder" />
+                        </div>
+                        <!-- /.slds-media__figure -->
+                        <div class="slds-media__body">
+                            <nav role="navigation">
+                                <p id="bread-crumb-label" class="slds-assistive-text">Dashboard:</p>
+                                <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                                    <li class="slds-list__item slds-text-heading--label">
+                                        <a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.showComponent}" data-name="Framework:SparkAdminSidebar">
+                                            {!$Label.Framework.Dashboard}
+                                        </a>
+                                    </li>
+                                </ol>
+                            </nav>
+                            <div class="slds-text-heading--medium">
+                                    {!$Label.Framework.Marketplace}
+                            </div>
+                        </div>
+                        <!-- /.slds-media__body -->
+                    </div>
+                    <!-- /.slds-media -->
+                </div>
+            </div>
+            <!-- /.slds-page-header -->
+            <div class="slds-m-top--xx-large slds-text-align--center slds-size--1-of-1 slds-text-heading--small">
+                <img src="{!$Resource.Framework__SLDS_Icons+'/icons/fonteva/orderapi/icons/svg/itemclasses.svg'}" style="height:100px;" alt="Placeholder"/>
+                <div>
+                    &nbsp;
+                    <p>  {!$Label.Framework.MarketplaceMaintanencePagelabel1} </p><p> {!$Label.Framework.MarketplaceMaintanencePagelabel2} </p>
+                </div>
+            </div></div>
+        <aura:set attribute="else">
+
+  <div class="slds-medium-size--3-of-4 slds-size--1-of-1 slds-grid slds-wrap">
+    <div class="slds-col slds-size--1-of-1">
+      <div class="slds-page-header">
+        <div class="slds-media slds-media--center">
+          <div class="slds-media__figure slds-ie-fix--width__icon">
+            <img src="//fonteva-cdn.s3.amazonaws.com/framework-admin/Marketplace/Marketplace.svg" style="height:50px;" alt="Placeholder" />
+          </div>
+          <!-- /.slds-media__figure -->
+          <div class="slds-media__body">
+            <nav role="navigation">
+              <p id="bread-crumb-label" class="slds-assistive-text">Dashboard:</p>
+              <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                  <li class="slds-list__item slds-text-heading--label">
+                      <a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.showComponent}" data-name="Framework:SparkAdminSidebar">
+                          {!$Label.Framework.Dashboard}
+                      </a>
+                  </li>
+              </ol>
+            </nav>
+            <div class="slds-text-heading--medium">
+              {!$Label.Framework.Marketplace}
+            </div>
+          </div>
+          <!-- /.slds-media__body -->
+        </div>
+        <!-- /.slds-media -->
+      </div>
+      <!-- /.slds-page-header -->
+      <div aura:id="mainBody" class="slds-object-height--full__nofooter slds-scrollable--y">
+        <div class="slds-grid slds-col slds-grid--align-spread slds-p-vertical--medium slds-p-horizontal--large slds-col-rule--bottom">
+          <div class="slds-col">
+            <div class="slds-grid">
+              <div class="slds-text-heading--small slds-align-middle slds-m-right--medium">All packages ({!v.packagesSize})</div>
+            </div>
+          </div>
+          <div class="slds-col">
+            <form id="installable-application-paging">
+              <div class="slds-grid">
+                <div class="slds-text-heading--label slds-align-middle slds-m-right--medium paging-controls">
+                  Page {!v.currentPageNum} of {!v.totalPages}
+                </div>
+                <a href="javascript:void(0)" class="slds-button slds-button--icon-border-filled slds-button--icon-small" onclick="{!c.previousPage}">
+                    <lightning:icon iconName="utility:chevronleft" size="small"/>
+                </a>
+                <a href="javascript:void(0)" class="slds-button slds-button--icon-border-filled slds-button--icon-small" onclick="{!c.nextPage}">
+                    <lightning:icon iconName="utility:chevronright" size="small"/>
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div id="applications">
+            <aura:if isTrue="{!v.loading}">
+                <div aura:id="loading-span-stencil">
+            <aura:iteration items="{!v.loadingRows}" var="object">
+                <div class="slds-grid slds-col slds-col-rule--bottom slds-p-around--large slds-size--1-of-1">
+                  <div class="slds-col slds-size--4-of-5">
+                    <div class="slds-col slds-m-bottom--medium loading-span" style="height : 70px; width: 20vw;">
+                     &nbsp;
+                    </div>
+                    <div class="slds-col">
+                      <div class="slds-text-body--regular loading-span slds-m-bottom--xx-small" style="width: 40vw;">
+                        &nbsp;
+                     </div>
+                     <div class="slds-text-body--regular loading-span slds-m-bottom--xx-small" style="width: 45vw;">
+                       &nbsp;
+                    </div>
+                    <div class="slds-text-body--regular loading-span slds-m-bottom--xx-small" style="width: 37vw;">
+                      &nbsp;
+                   </div>
+                    </div>
+                  </div>
+                  <div class="slds-col slds-size--1-of-5 slds-text-align--center loading-span" style="height: 35px; width:125px">
+                      &nbsp;
+                  </div>
+                </div>
+        </aura:iteration>
+    </div>
+            <aura:set attribute="else">
+          <aura:iteration items="{!v.packages}" var="p">
+            <div class="slds-grid slds-col slds-col-rule--bottom slds-p-around--large slds-size--1-of-1">
+              <div class="slds-col slds-size--4-of-5">
+                <div class="slds-col slds-m-bottom--medium">
+                  <img src="{!p.iconImageUrl}" style="height: 70px"/>
+                </div>
+                <div class="slds-col">
+                  <div class="slds-text-body--regular">
+                    <strong>{!p.name}</strong>&nbsp;{!p.description}
+                 </div>
+                </div>
+                <aura:if isTrue="{!p.releaseNotes.length > 0}">
+                <div class="slds-col release-notes-show"><!--{!p.hasMoreReleaseNotes}-->
+                 <Framework:FONSVG svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/custom-sprite/svg/symbols.svg#custom18'}" svgClass="slds-icon slds-icon--small icon-custom-custom18 slds-icon-text-default" assistiveText="Release Notes"/>
+                  <a href="javascript:void(0)" class="show-release-notes" data-id="{!p.namespace}" onclick="{!c.showReleaseNotes}">
+                      Release Notes
+                  </a>
+                </div>
+               </aura:if>
+              </div>
+              <div class="slds-col slds-size--1-of-5 slds-text-align--center">
+                <aura:if isTrue="{!p.installAvailable}">
+                  <button href="javascript:void(0)" class="slds-button slds-button--brand slds-m-bottom--xx-small install-package-set" data-id="{!p.namespace}" data-type="Install" onclick="{!c.showModal}">Install {!p.versionName}</button><!--{!p.isDisabled}-->
+                </aura:if>
+                <aura:if isTrue="{!p.isUpgrading}">
+                  <button class="slds-button slds-button--brand slds-m-bottom--xx-small" disabled="true" data-id="{!p.namespaceVersion}" data-type="Upgrade">Upgrading</button>
+                </aura:if>
+                <aura:if isTrue="{!p.isInstalled}">
+                  <button class="slds-button slds-button--static slds-m-bottom--xx-small">
+                    <Framework:FONSVG svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#success'}" svgClass="slds-button__icon slds-button__icon--large" assistiveText="Installed"/>
+                  </button>
+                  <div class="slds-text-body--small slds-m-bottom--medium">
+                    Your version is {!p.version}
+                  </div>
+                </aura:if>
+                <aura:if isTrue="{!p.isInstalling}">
+                  <button class="slds-button slds-button--brand slds-m-bottom--xx-small" disabled="true" data-id="{!p.namespaceVersion}" data-type="Install">Installing</button>
+                </aura:if>
+                <aura:if isTrue="{!p.upgradeAvailable}">
+                  <button class="slds-button slds-button--brand slds-m-bottom--xx-small install-package-set"  data-id="{!p.namespace}" data-type="Upgrade" onclick="{!c.showModal}">Upgrade to {!p.versionName}</button><!--{!p.isDisabled}-->
+                  <div class="slds-text-body--small">
+                    Your version is {!p.installedVersion}
+                  </div>
+                </aura:if>
+              </div>
+            </div>
+          </aura:iteration>
+      </aura:set>
+      </aura:if>
+        </div>
+        <div class="modal fade slds-modal slds-fade-in-open" id="modalUploadPackage">
+          <div class="modal-dialog slds-modal__container">
+            <div class="modal-content" id="modal-body">
+              <aura:if isTrue="{!v.renderModal}">
+              <div class="slds-modal__header">
+                <aura:if isTrue="{!v.installingPackage.upgradeAvailable}">
+                  <h2 class="slds-text-heading--medium">Upgrade Package</h2>
+                  <aura:set attribute="else">
+                    <h2 class="slds-text-heading--medium">Install Package</h2>
+                  </aura:set>
+                </aura:if>
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal">
+                    <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+                </button>
+              </div>
+              <div class="slds-modal__content">
+                <div class="slds-col slds-size--1-of-1 slds-p-vertical--small">
+                  <div class="slds-text-body--normal slds-p-bottom--small">
+                    <strong>{!v.installingPackage.name}</strong>
+                    requires other packages to run correctly. Clicking "{!v.installingPackage.installType}" below will automatically install or upgrade the following packages:
+                  </div>
+                  <ul class="slds-list--vertical slds-has-dividers slds-p-vertical--medium">
+                    <aura:iteration items="{!v.installingPackage.fullDependencies}" var="d">
+                      <li class="slds-list__item">{!d.name}&nbsp;v{!d.version}</li>
+                    </aura:iteration>
+                  </ul>
+                </div>
+              </div>
+              <div class="slds-modal__footer slds-text-align--right">
+                <button class="slds-button slds-button--neutral" data-dismiss="modal" >{!$Label.Framework.Cancel}</button>
+                <button class="slds-button slds-button--brand slds-button--brand install-package" data-dismiss="modal" data-type="{!v.installingPackage.installType}" onclick="{!c.install}" data-id="{!v.installingPackage.namespace}">{!v.installingPackage.installType}</button>
+              </div>
+            </aura:if>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade slds-modal slds-fade-in-open" id="modalUploadPackageError" >
+              <div class="modal-dialog slds-modal__container">
+                <div class="modal-content" id="modal-body">
+            <div class="slds-modal__header">
+                <div class="slds-notify-container">
+                    <div class="slds-notify slds-notify--toast slds-theme--error" role="alert">
+                        <span class="slds-assistive-text">Error</span>
+                        <button class="slds-button slds-button--icon-inverse slds-notify__close" data-dismiss="modal"  >
+                            <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+                        </button>
+                        <div class="notify__content slds-grid">
+                             <Framework:FONSVG svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#warning'}" svgClass="slds-icon slds-icon--small slds-m-right--small slds-col slds-no-flex" assistiveText="{!$Label.Framework.Close}"/>
+                            <div class="slds-col slds-align-middle">
+                                <h2 class="slds-text-heading--small">{!v.errorModalHeader}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2 class="slds-text-heading--medium"></h2>
+                <button class="slds-button slds-button--icon-inverse slds-modal__close">
+                    <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+                </button>
+            </div>
+            <div class="slds-modal__content">
+                <div>
+                    <p>{!v.packageInstallError}
+                        </p>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <div class="slds-x-small-buttons--horizontal">
+                    <button class="slds-button slds-button--neutral slds-button--brand" data-dismiss="modal"  >Close</button>
+                </div>
+            </div>
+          </div>
+              </div>
+            </div>
+            <div class="modal fade slds-modal slds-modal--prompt slds-fade-in-open" id="modalRunConfirmation">
+              <div class="modal-dialog slds-modal__container">
+                <div class="modal-content">
+
+                  <div class="slds-modal__header slds-theme--success slds-theme--alert-texture">
+                    <h2 class="slds-text-heading--medium">{!v.successLabel}</h2>
+                    <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal">
+                        <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+                    </button><!-- /.slds-button -->
+                  </div><!-- /.slds-modal__header -->
+
+                  <div class="slds-modal__content">
+                    <div class="slds-col slds-size--1-of-1 slds-text-align--center slds-p-vertical--large" id="app-name-modal">
+                      <span class="slds-text-heading--small">{!v.installSuccessfullyRun}</span>
+                    </div><!-- /.slds-col -->
+                  </div><!-- /.slds-modal__content -->
+
+                  <div class="slds-modal__footer">
+                    <button class="slds-button slds-button--neutral" data-dismiss="modal">{!$Label.Framework.Close}</button>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog .slds-modal__container -->
+            </div><!-- /.modal .slds-modal -->
+            <div class="modal fade slds-modal slds-fade-in-open" id="releaseNotesModal">
+              <div class="modal-dialog slds-modal__container">
+                <div class="modal-content" id="modal-body">
+                    <div class="slds-modal__header">
+              <h2 class="slds-text-heading--medium">{!v.packageName} Release Notes</h2>
+              <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal">
+                  <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+              </button><!-- /.slds-button -->
+          </div><!-- /.slds-modal__header -->
+          <div class="slds-modal__content">
+          <div class="slds-col slds-size--1-of-1 slds-p-vertical--small" style="
+  height: 60vh;
+  overflow-x: hidden;
+  overflow-y: scroll;">
+            <aura:iteration items="{!v.releaseNotes}" var="releaseNote" indexVar="index">
+                  <div class="slds-text-heading--small slds-m-bottom--small">
+                     <aura:if isTrue="{!index == 0}">
+                         <a href="{!'#'+releaseNote.versionNumber}" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="{!'#'+releaseNote.versionNumber}" class="open version-selector">
+                             <Framework:FONSVG svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#chevronup'}" svgClass="slds-icon slds-icon--x-small icon-utility-chevronup slds-icon-text-default" />
+                           v{!releaseNote.version}
+                         </a>
+                      <aura:set attribute="else">
+                          <a href="{!'#'+releaseNote.versionNumber}" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="{!'#'+releaseNote.versionNumber}" class="collapsed version-selector">
+                              <Framework:FONSVG svgPath="{!$Resource.Framework__SLDS_Icons+'/icons/utility-sprite/svg/symbols.svg#chevronup'}" svgClass="slds-icon slds-icon--x-small icon-utility-chevronup slds-icon-text-default" />
+                            v{!releaseNote.version}
+                          </a>
+                      </aura:set>
+                     </aura:if>
+                  </div>
+                  <div class="collapse in" id="{!releaseNote.versionNumber}">
+                    <aura:if isTrue="{!releaseNote.newFeaturesArr.length > 0}">
+                        <div class="slds-text-body--normal slds-p-bottom--small">
+                            <strong>New Features</strong>
+                        </div>
+                        <ul class="slds-list--vertical slds-has-dividers slds-p-bottom--medium slds-p-top--xx-small">
+                            <aura:iteration items="{!releaseNote.newFeaturesArr}" var="newFeature">
+                                <li class="slds-list__item">{!newFeature.summary}</li>
+                            </aura:iteration>
+                        </ul>
+                    </aura:if>
+                    <aura:if isTrue="{!releaseNote.fixedIssuesArr.length > 0}">
+                        <div class="slds-text-body--normal slds-p-bottom--small">
+                            <strong>Fixed Issues</strong>
+                        </div>
+                        <ul class="slds-list--vertical slds-has-dividers slds-p-top--xx-small">
+                            <aura:iteration items="{!releaseNote.fixedIssuesArr}" var="fixedIssue">
+                                <li class="slds-list__item slds-list__item slds-grid slds-wrap">
+                                  <span class="slds-col slds-size--1-of-6">{!fixedIssue.key}</span>
+                                  <span class="slds-col slds-size--5-of-6">{!fixedIssue.summary}</span>
+                                </li>
+                            </aura:iteration>
+                        </ul>
+                    </aura:if>
+                    <aura:if isTrue="{!releaseNote.knownIssuesArr.length > 0}">
+                        <div class="slds-text-body--normal slds-p-bottom--small">
+                            <strong>Known Issues</strong>
+                        </div>
+                        <ul class="slds-list--vertical slds-has-dividers slds-p-top--xx-small">
+                            <aura:iteration items="{!releaseNote.knownIssuesArr}" var="knownIssue">
+                                <li class="slds-list__item slds-list__item slds-grid slds-wrap">
+                                  <span class="slds-col slds-size--1-of-6">{!knownIssue.key}</span>
+                                  <span class="slds-col slds-size--5-of-6">{!knownIssue.summary}</span>
+                                </li>
+                            </aura:iteration>
+                        </ul>
+                    </aura:if>
+                    </div>
+            </aura:iteration>
+             </div><!-- /.slds-col -->
+          </div><!-- /.slds-modal__content -->
+          <div class="slds-modal__footer slds-text-align--right">
+              <button class="slds-button slds-button--neutral" data-dismiss="modal" >{!$Label.Framework.Close}</button>
+          </div><!-- /.slds-modal__footer -->
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog .slds-modal__container -->
+            </div><!-- /.modal .slds-modal -->
+        </aura:set>
+    </aura:if>
+</aura:component>

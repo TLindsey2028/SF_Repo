@@ -1,0 +1,78 @@
+.THIS .atcb-list .atcb-item a.atcb-item-link {
+    box-shadow: none!important;
+    padding: .5rem .75rem;
+    border: none;
+}
+.THIS .atcb-list {
+    border-radius: .25rem;
+    left: auto!important;
+    right: 0;
+    border-color: rgb(212, 212, 212);
+    border-width: 1px;
+    border-image: initial;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0px;
+    margin-top: .125rem;
+    margin-bottom: .125rem;
+    background: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 3px 0px;
+}
+.THIS .atcb-list .atcb-item:first-of-type a.atcb-item-link,
+.THIS .atcb-list .atcb-item:first-of-type {
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+
+.THIS .atcb-list .atcb-item:last-of-type a.atcb-item-link,
+.THIS .atcb-list .atcb-item:last-of-type {
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+}
+
+.THIS a.atcb-item-link:hover,
+.THIS a.atcb-item-link:active,
+.THIS a.atcb-item-link:visited,
+.THIS a.atcb-item-link:focus {
+    text-decoration: none;
+}
+
+.THIS a.atcb-item-link:hover,
+.THIS a.atcb-item-link:active,
+.THIS a.atcb-item-link:visited,
+.THIS a.atcb-item-link:focus {
+    background-color: #f8f8f8;
+}
+
+.THIS.addtocalendar:hover ul{
+    visibility: visible!important;
+}
+
+.THIS .atcb-link span.lightningPrimitiveIcon:before,
+.THIS .atcb-link > *:before {
+    display: block;
+    width: 10px;
+    height: 8px;
+    position: absolute;
+    content: '';
+    margin: 0 auto;
+    bottom: 2px;
+    right: 0;
+    left: 0;
+}
+.THIS .atcb-link svg {
+    height: 20px;
+    width: 20px;
+}
+.THIS .atcb-link span.lightningPrimitiveIcon:after,
+.THIS .atcb-link > *:after {
+    display: block;
+    position: absolute;
+    content: '+';
+    width: 100%;
+    font-weight: 600;
+    margin: 0 auto;
+    transform: translateY(.5px);
+    bottom: 0;
+    right: 0;
+    left: 0;
+}

@@ -1,0 +1,122 @@
+.THIS.slds-card .slds-form-element__control.slds-m-bottom--small {
+    margin-bottom: 0;
+}
+
+.THIS .waitlist-validation-message ul li {
+    font-size: 12px!important;
+    margin-top: -9px!important;
+    margin-right: 26px!important;
+}
+
+.THIS .slds-type-focus {
+    pointer-events: none;
+}
+
+.THIS.slds-card {
+    min-height: 132px;
+}
+
+/* Custom */
+
+@media (min-width: 1200px) {
+    .THIS {
+        max-width: 1200px;
+    }
+}
+.THIS .fonteva-overflow--hidden {
+    overflow: hidden;
+}
+
+.THIS .fonteva-min-width--0 {
+    min-width: 0;
+}
+
+.THIS .fonteva-max-width--100 {
+    max-width: 100%;
+}
+
+.THIS .fonteva-width--ticket-price {
+    min-width: 160px;
+}
+
+.THIS .mediumImage {
+    min-width: 100px;
+}
+
+.THIS .fonteva-medium--show,
+.THIS .fonteva-large--show {
+    display: none;
+}
+.THIS .fonteva-medium--hide,
+.THIS .fonteva-large--hide {
+    display: block;
+}
+
+.THIS .fonteva-medium--nowrap {
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.THIS .fonteva-custom__small-text-align--right .slds-form-element__control.slds-grow,
+.THIS .fonteva-custom__small-text-align--right input.slds-input {
+    width: auto!important;
+}
+
+@media (min-width: 1280px) {
+    .THIS .fonteva-large--show {
+        display: block;
+    }
+    .THIS .fonteva-large--hide {
+        display: none;
+    }
+}
+
+.THIS .fonteva-medium-m-bottom_small,
+.THIS .fonteva-medium-m-top_small {
+    margin-bottom: 0;
+    margin-top: 0;
+}
+.THIS .fonteva-max-small-m-top_small {
+    margin-top: .75rem;
+}
+
+@media (min-width: 767px) {
+    .THIS .fonteva-medium--show {
+        display: block;
+    }
+    .THIS .fonteva-medium--hide {
+        display: none;
+    }
+    .THIS .fonteva-medium--nowrap{
+        flex: 1 1 auto;
+        flex-wrap: nowrap;
+        align-items: stretch;
+    }
+    .THIS .fonteva-custom__small-text-align--right .slds-form-element.slds-text-align--center {
+        text-align: center;
+    }
+    .THIS .fonteva-medium-m-bottom_small {
+        margin-bottom: .75rem;
+    }
+    .THIS .fonteva-medium-m-top_small {
+        margin-top: .75rem;
+    }
+    .THIS .fonteva-max-small-m-top_small {
+        margin-top: 0;
+    }
+}
+
+
+/* Typograpahy */
+
+.THIS .uiOutputTextArea {
+    font-size: 14px;
+}
+
+.THIS .slds-type-focus {
+    font-size: 12px;
+}
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .THIS .slds-col.fonteva-flex_1 { flex: 1; }
+}

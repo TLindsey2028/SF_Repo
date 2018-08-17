@@ -1,0 +1,12 @@
+<aura:component description="EventCustomImage" access="global" implements="LTE:EventInterface">
+    <aura:if isTrue="{!and(v.componentObj != null,v.componentObj.config != null,v.componentObj.config.imageUrl != null)}">
+        <div data-name="EventCustomImage" class="fonteva-event-component slds-p-around--medium">
+            <div class="slds-grid slds-grid--vertical">
+                <aura:if isTrue="{!not(empty(v.componentObj.config.html))}">
+                    <lightning:formattedRichText value="{!v.componentObj.config.html}" class="slds-m-bottom--medium"/>
+                </aura:if>
+                <Framework:Img src="{!v.componentObj.config.imageUrl}" width="{!v.componentObj.config.width}" height="{!v.componentObj.config.height}" class="{!v.componentObj.config.customCSSClasses}"/>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

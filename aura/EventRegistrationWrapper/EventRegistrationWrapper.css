@@ -1,0 +1,41 @@
+.THIS {
+    z-index: 9000;
+}
+.THIS.fonteva-event-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.THIS .fonteva-event-content {
+    margin: 0 auto;
+}
+
+.THIS.fonteva-slds-process-bar {
+    padding-left: 33px;
+    overflow: hidden;
+    padding-right: 42px;
+}
+
+.THIS .slds.slds-ie-fix--width.slds-theme--shade {
+    max-width: 1200px;
+    margin: 1.5em auto;
+}
+
+.THIS .slds-icon-add-fonteva {
+    margin-top: -3px!important;
+}
+
+.THIS .address-text--fonteva .slds-p-top_xxx-small {
+    margin-top: -13px;
+}
+
+.THIS .FrameworkMessagePrompt {
+    z-index: 9002;
+}
+
+.THIS .FrameworkMessagePrompt .slds-backdrop {
+    z-index: 9001;
+}
+
+.THIS.fonteva-navbar--container.prompted {
+    z-index: 9003;
+}

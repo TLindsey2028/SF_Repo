@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomSite xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <allowHomePage>false</allowHomePage>
+    <allowStandardAnswersPages>false</allowStandardAnswersPages>
+    <allowStandardIdeasPages>false</allowStandardIdeasPages>
+    <allowStandardLookups>false</allowStandardLookups>
+    <allowStandardPortalPages>true</allowStandardPortalPages>
+    <allowStandardSearch>false</allowStandardSearch>
+    <authorizationRequiredPage>CPBase__custom_login</authorizationRequiredPage>
+    <bandwidthExceededPage>CPBase__limit_exceeded</bandwidthExceededPage>
+    <browserXssProtection>true</browserXssProtection>
+    <changePasswordPage>CPBase__reset_password</changePasswordPage>
+    <clickjackProtectionLevel>SameOriginOnly</clickjackProtectionLevel>
+    <contentSniffingProtection>true</contentSniffingProtection>
+    <cspUpgradeInsecureRequests>true</cspUpgradeInsecureRequests>
+    <fileNotFoundPage>CPBase__page_not_found</fileNotFoundPage>
+    <forgotPasswordPage>CPBase__forgot_password</forgotPasswordPage>
+    <genericErrorPage>CPBase__generic_error</genericErrorPage>
+    <inMaintenancePage>CPBase__custom_login</inMaintenancePage>
+    <inactiveIndexPage>CPBase__custom_login</inactiveIndexPage>
+    <indexPage>CPBase__profile</indexPage>
+    <masterLabel>Alumni</masterLabel>
+    <referrerPolicyOriginWhenCrossOrigin>true</referrerPolicyOriginWhenCrossOrigin>
+    <requireHttps>true</requireHttps>
+    <requireInsecurePortalAccess>false</requireInsecurePortalAccess>
+    <selfRegPage>CommunitiesSelfReg</selfRegPage>
+    <siteAdmin>wmuimplementations@fonteva.com.wmudarprod</siteAdmin>
+    <siteType>ChatterNetwork</siteType>
+    <subdomain>wmualumni</subdomain>
+</CustomSite>

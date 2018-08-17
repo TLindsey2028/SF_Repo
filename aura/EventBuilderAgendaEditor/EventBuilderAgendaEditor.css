@@ -1,0 +1,23 @@
+.THIS .slds-large-p-top--x-large {
+    padding-top : 0;
+}
+.THIS .slds-large-p-left--medium {
+    padding-left: 0;
+}
+@media (min-width: 64em){
+    .THIS .slds-large-p-top--x-large {
+        padding-top : 2rem;
+    }
+    .THIS .slds-large-p-left--medium {
+        padding-left: 1rem;
+    }
+}
+
+.THIS .strong {
+    font-weight: 700;
+}
+
+.THIS .custom-separator {
+    margin-top: 15px;
+    margin-bottom: 24px;
+}

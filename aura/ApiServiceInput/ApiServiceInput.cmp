@@ -1,0 +1,108 @@
+<aura:component controller="Framework.ApiServiceController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="apiService" type="Map" description="base Object to set" default="{}"/>
+    <aura:attribute name="httpMethodOptions" type="List" description="Auth Types" default="[]"/>
+    <aura:attribute name="mode" type="String" default="new"/>
+    <aura:registerEvent name="RefreshComponentEvent" type="Framework:RefreshComponentEvent"/>
+    <aura:registerEvent name="InputFieldValidationEvent" type="Framework:InputFieldValidationEvent"/>
+    <aura:handler event="Framework:RefreshComponentEvent" action="{!c.handleRefreshComponent}"/>
+    <!-- LOCAL ATTRIBUTES -->
+    <aura:attribute name="isBasic" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="isOAuth" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="isOAuth1A" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="isOAuth2" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="isNone" type="Boolean" default="false" access="private"/>
+    <div class="modal fade slds-modal slds-fade-in-open" id="modalNewAPIServices">
+        <div class="modal-dialog slds-modal__container">
+            <div class="modal-content">
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading--medium" id="api-service-header">
+                      <span class="{!(v.mode == 'new') ? '' : 'hidden'}">
+                              {!$Label.Framework.New}
+                      </span>
+                      <span class="{!(v.mode == 'edit') ? '' : 'hidden'}">
+                              {!$Label.Framework.Edit}
+                      </span>
+                        &nbsp;{!$Label.Framework.API_Service}
+                    </h2>
+                    <button class="slds-button slds-button--icon-inverse slds-modal__close" data-dismiss="modal">
+                        <Framework:FONSVG svgPath="/resource/Framework__SLDS_Icons/icons/action-sprite/svg/symbols.svg#close" containerClass="" svgClass="slds-button__icon slds-button__icon--large" assistiveText="Close" />
+                    </button><!-- /.slds-button -->
+                </div><!-- /.slds-modal__header -->
+                <div class="tab-content" id="api-service-content-modal">
+                        <div class="slds-tabs--default">
+                         <ul class="slds-tabs--default__nav" role="tablist">
+              <li aura:id="createNewServiceLink" id="createNewServiceLink" class="slds-tabs__item slds-tabs__item--static slds-text-heading--label slds-active" title="Item One" role="presentation">
+                <a href="#createNewService" role="tab" tabindex="-1" aria-selected="false" aria-controls="createNewService" data-toggle="tab" class="disabled">Create</a>
+                          </li>
+                          <li aura:id="connectNewServiceLink" id="connectNewServiceLink" class="slds-tabs__item slds-tabs__item--static slds-text-heading--label" title="Item Two" role="presentation">
+                           <a href="#connectNewService" role="tab" tabindex="-1" aria-selected="false" aria-controls="connectNewService" data-toggle="tab" class="disabled">Connect</a>
+                          </li>
+                          <li aura:id="deployNewServiceLink" id="deployNewServiceLink" class="slds-tabs__item slds-tabs__item--static slds-text-heading--label" title="Item Three" role="presentation">
+                           <a href="#deployNewService" role="tab" tabindex="-1" aria-selected="false" aria-controls="deployNewService" data-toggle="tab" class="disabled">Deploy</a>
+                          </li>
+                         </ul>
+                        </div>
+                    <div aura:id="createNewService" id="createNewService" class="slds-tabs__content tab-pane active" role="tabpanel">
+                    <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+                        <div class="slds-col slds-size--1-of-1">
+                              <Framework:InputFields group="createService" fieldType="String" label="{!$Label.Framework.API_Service_Key}" aura:id="name" value="{!v.apiService}" isRequired="true" maxlength="8"/>
+                              <Framework:InputFields group="createService" fieldType="String" label="{!$Label.Framework.Display_Name}" aura:id="displayName" value="{!v.apiService}" isRequired="true" />
+                              <Framework:InputFields group="createService" fieldType="String" label="{!$Label.Framework.Description}" aura:id="description" value="{!v.apiService}"/>
+                              <Framework:InputFields group="createService" fieldType="Url" label="{!$Label.Framework.Endpoint}" aura:id="endpoint" value="{!v.apiService}" isRequired="true"/>
+                              <Framework:InputFields group="createService" fieldType="String" label="{!$Label.Framework.Authentication_Service}" aura:id="apexClass" value="{!v.apiService}" isRequired="true"/>
+                              <Framework:InputFields group="createService" fieldType="picklist" label="{!$Label.Framework.Auth_Type}" aura:id="authType" value="{!v.apiService}"/>
+                          </div>
+                        </div>
+                        <div class="slds-modal__footer slds-text-align--right">
+                            <a class="slds-button slds-button--neutral" data-dismiss="modal">{!$Label.Framework.Cancel}</a>
+                            <Framework:Button enableProgressIndicator="false" type="brand" onClickAction="{!c.validateFieldsMainScreen}" additionalClasses="slds-m-left--xx-small" label="{!$Label.Framework.Next}"/>
+                        </div>
+                </div>
+                <div aura:id="connectNewService" id="connectNewService" class="slds-tabs__content tab-pane" role="tabpanel">
+                    <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+                        <div class="slds-col slds-size--1-of-1">
+                                 <span class="{!v.isBasic ? '' : 'hidden'}">
+                                     <Framework:InputFields group="connectService" fieldType="String" label="{!$Label.Framework.Username}" aura:id="username" value="{!v.apiService}" isRequired="true"/>
+                                     <Framework:InputFields group="connectService" fieldType="Password" label="{!$Label.Framework.Password}" aura:id="password" value="{!v.apiService}" isRequired="true" />
+                                 </span>
+                                 <span class="{!v.isOAuth ? '' : 'hidden'}">
+                                     <Framework:InputFields group="connectService" fieldType="String" label="{!$Label.Framework.Client_ID}" aura:id="clientId" value="{!v.apiService}" isRequired="true"/>
+                                     <Framework:InputFields group="connectService" fieldType="Password" label="{!$Label.Framework.Client_Secret}" aura:id="clientSecret" value="{!v.apiService}" isRequired="true" />
+                                     <Framework:InputFields group="connectService" fieldType="String" label="{!$Label.Framework.Scope}" aura:id="scope" value="{!v.apiService}" />
+                                 </span>
+                                 <span class="{!v.isOAuth1A ? '' : 'hidden'}">
+                                    <Framework:InputFields group="connectService" fieldType="Url" label="{!$Label.Framework.Request_Token_URL}" aura:id="requestTokenUrl" value="{!v.apiService}" isRequired="true"/>
+                                 </span>
+                                 <span class="{!v.isOAuth ? '' : 'hidden'}">
+                                     <Framework:InputFields group="connectService" fieldType="Url" label="{!$Label.Framework.Login_Dialog_URL}" aura:id="loginDialogUrl" value="{!v.apiService}" isRequired="true"/>
+                                     <Framework:InputFields group="connectService" fieldType="Url" label="{!$Label.Framework.Authorization_Code_URL}" aura:id="authorizationCodeUrl" value="{!v.apiService}" isRequired="true"/>
+                                     <Framework:InputFields group="connectService" fieldType="Picklist" label="{!$Label.Framework.HTTP_Method_For_Token}" aura:id="httpMethodGetToken" value="{!v.apiService}" isRequired="true" selectOptions='[{"label" : "GET","value" : "GET"},{"label" : "POST","value" : "POST"}]'/>
+                                 </span>
+                                 <span class="{!v.isOAuth2 ? '' : 'hidden'}">
+                                     <Framework:InputFields group="connectService" fieldType="Url" label="{!$Label.Framework.Refresh_Token_URL}" aura:id="refreshTokenUrl" value="{!v.apiService}" isRequired="true"/>
+                                 </span>
+                        </div>
+                    </div>
+                    <div class="slds-modal__footer slds-text-align--right">
+                        <a class="slds-button slds-button--neutral"  href="javascript:void(0)" data-previoustab="createNewService" onclick="{!c.backtrackForm}">Back</a>
+                        <Framework:Button enableProgressIndicator="false" type="brand" onClickAction="{!c.validateFieldsCredentials}" additionalClasses="slds-m-left--xx-small" label="{!$Label.Framework.Next}"/>
+                    </div>
+                </div>
+                <div aura:id="deployNewService" id="deployNewService" class="slds-tabs__content tab-pane" role="tabpanel">
+                    <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+                        <div class="slds-col slds-size--1-of-1">
+                            <Framework:InputFields group="deployService" fieldType="url" label="{!$Label.Framework.Icon_Image_URL}" aura:id="imagePath" value="{!v.apiService}"/>
+                            <Framework:InputFields group="deployService" fieldType="boolean" label="{!$Label.Framework.Is_Enabled}" aura:id="isEnabled" value="{!v.apiService}"/>
+                        </div>
+                    </div>
+                    <div class="slds-modal__footer slds-text-align--right">
+                        <a class="slds-button slds-button--neutral"  href="javascript:void(0)" data-previoustab="connectNewService" onclick="{!c.backtrackForm}">{!$Label.Framework.Back}</a>
+                        <Framework:Button enableProgressIndicator="false" type="brand" onClickAction="{!c.submitApiService}" additionalClasses="slds-m-left--xx-small" label="{!$Label.Framework.Save}"/>
+                    </div>
+                </div>
+                </div><!-- /.tab-content -->
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog .slds-modal__container -->
+    </div><!-- /.modal .slds-modal -->
+</aura:component>

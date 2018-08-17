@@ -1,0 +1,4 @@
+<design:component label="Fonteva Controller">
+	<design:attribute name="disableRouting" label="Disable Routing" default="false"/>
+	<design:attribute name="disableTheme" label="Disable Theme" default="false"/>
+</design:component>

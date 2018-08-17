@@ -1,0 +1,48 @@
+.THIS .drag-drop-image {
+    height: 30px;
+    padding-right: 10px;
+}
+
+.THIS .slds-picklist__options--multi {
+  overflow-x: hidden!important;
+}
+
+.THIS .dragdrop-dashed {
+  border: 2px dashed #d8dde6!important;
+}
+
+.THIS .slds-filter-input-drag-drop {
+    width: 240px!important;
+}
+
+.THIS .slds-show-search-bar {
+    height: 12.8rem!important;
+}
+
+.THIS .slds-filter-search-bar {
+    padding-right: 25px!important;
+}
+
+.THIS .slds-input-action-icon {
+    position: absolute;
+    left: 208px;
+    height: 36px;
+    width: 36px;
+    padding: 10px;
+    opacity: .5;
+    z-index: 2;
+    filter: grayscale(100%);
+}
+
+.THIS .slds-modal .slds-input-action-icon {
+    z-index: 100000!important;
+}
+
+.THIS .slds-input-action-icon.slds-has-items  {
+    cursor: pointer;
+}
+
+.THIS .slds-picklist__options {
+    position: relative;
+    z-index: 1;
+}

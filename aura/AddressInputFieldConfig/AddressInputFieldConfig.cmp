@@ -1,0 +1,50 @@
+<aura:component description="AddressInputFieldConfig" controller="Framework.AddressPickerFieldController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="name" type="String" default="" description="Page Id"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+
+    <!-- LOCAL ATTRIBUTES -->
+    <aura:attribute name="settingsObj" type="Map" default="{}" description="Settings Obj"/>
+
+    <div class="slds-medium-size--3-of-4 slds-size--1-of-1 slds-grid slds-wrap">
+        <div class="slds-col slds-size--1-of-1">
+            <div class="slds-page-header">
+                <div class="slds-media slds-media--center">
+                    <!-- /.slds-media__figure -->
+                    <div class="slds-media__body">
+                        <nav role="navigation">
+                            <p id="bread-crumb-label" class="slds-assistive-text">Dashboard:</p>
+                            <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                                <li class="slds-list__item slds-text-heading--label">
+                                    <a href="#" data-id="admin_dashboard" onclick="{!c.showComponent}" data-name="Framework:SparkAdminSidebar">
+                                        {!$Label.Framework.Dashboard}
+                                    </a>
+                                </li>
+                            </ol>
+                        </nav>
+                        <div class="slds-text-heading--medium">
+                            Lightning Address Input Configuration
+                        </div>
+                    </div>
+                    <!-- /.slds-media__body -->
+                </div>
+                <!-- /.slds-media -->
+            </div>
+            <!-- /.slds-page-header -->
+            <!-- <apex:insert name="main"/> -->
+            <div aura:id="mainBody" class="slds-object-height--full__nofooter slds-scrollable--y">
+                    <div class="slds-col slds-medium-size--1-of-2 slds-size--1-of-1 slds-p-vertical--medium slds-p-horizontal--large">
+                        <Framework:InputFields fieldType="string" value="{!v.settingsObj}" aura:id="pcaKey" label="PCA Key"/>
+                        <Framework:InputFields fieldType="string" value="{!v.settingsObj}" aura:id="pcaCountries" label="PCA Countries"/>
+                        <Framework:InputFields fieldType="boolean" value="{!v.settingsObj}" aura:id="pcaIp" label="PCA By Ip"/>
+
+                        <div class="commandButtons text-center m-b-30">
+                            <Framework:Button onClickAction="{!c.saveSettings}" label="{!$Label.Framework.Save}" aura:id="saveButton"/>
+                        </div>
+                    </div><!-- /.slds-col -->
+            </div>
+        </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+    <Framework:MessagePrompt severity="success" title="Success" message="Settings Saved Successfully" showSubmitButton="false" aura:id="successModal"/>
+</aura:component>

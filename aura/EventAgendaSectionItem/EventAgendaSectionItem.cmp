@@ -1,0 +1,99 @@
+<aura:component description="EventAgendaSectionItem" controller="LTE.EventAgendaComponentController" access="global" implements="LTE:EventInterface">
+    <aura:attribute name="item" type="Map" required="true" access="global"/>
+    <aura:attribute name="readOnly" type="Boolean" required="false" access="global"/>
+    <aura:attribute name="sessionDays" type="List" default="[]"/>
+    <aura:attribute name="individualSelected" type="Boolean" default="false"/>
+    <aura:attribute name="initialPurchase" type="Boolean" access="global" default="true"/>
+    <aura:attribute name="showPurchase" type="Boolean" access="global" default="false"/>
+    <aura:attribute name="tracksToFilter" type="String[]"/>
+    <aura:attribute name="nameToFilter" type="String"/>
+    <aura:attribute name="speakerNames" type="String" default=""/>
+    <aura:attribute name="speakerLabel" type="String" default=""/>
+    <aura:attribute name="showAddButton" type="Boolean" default="false"/>
+    <aura:attribute name="contactsSelected" type="List" default="[]"/>
+    <aura:attribute name="hasForm" type="Boolean" default="true" />
+    <aura:registerEvent type="LTE:SessionSelectEvent" name="SessionSelectEvent"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:registerEvent name="EventSummaryUpdateEvent" type="LTE:EventSummaryUpdateEvent"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldChangeEvent}"/>
+    <aura:handler event="LTE:SessionSelectEvent" action="{!c.handleSessionSelect}"/>
+    <aura:handler event="LTE:SectionItemEvent" action="{!c.handleSectionItemEvent}"/>
+    <aura:handler event="LTE:UpdateButtonEvent" action="{!c.handleUpdateButtonEvent}"/>
+    <aura:attribute name="currentContact" type="String"/>
+    <aura:attribute name="salesOrderScheduleItemIds" type="List"/>
+
+    <div data-name="itemDiv" class="slds-size--1-of-1 slds-grid slds-session--container slds-wrap slds-p-bottom--medium" aura:id="itemDiv">
+        <p data-name="start_end_time" class="slds-size--1-of-1 slds-medium-size--1-of-5">
+            {!v.item.startTime} – {!v.item.endDay}{!v.item.endTime}<br />
+        </p>
+        <div class="slds-size--1-of-1 slds-medium-size--4-of-5 slds-grid slds-wrap">
+            <div class="slds-size--1-of-1 slds-grid slds-wrap">
+                <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <div data-name="item-name" class="slds-text-heading--small slds-font-weight--semi-bold slds-m-bottom--xx-small fonteva-slds-text slds-max-medium_p-top_small">
+                        {!v.item.name}
+                    </div>
+                    <div data-name="speakerDiv" class="slds-text-body--regular slds-m-bottom--xx-small hidden slds-max-medium_p-top_small" aura:id="speakerDiv">
+                        <span class="slds-font-weight--bold">{!v.speakerLabel}:&nbsp;</span>
+                        <aura:iteration items="{!v.item.speakersList}" var="speaker">
+                            <a href="javascript:void(0);" onclick="{!c.openSpeakerModal}" data-id="{!speaker.id}">{!speaker.name}</a>&nbsp;
+                        </aura:iteration>
+                    </div>
+                    <aura:if isTrue="{!v.item.room != null}">
+                        <div data-name="Agenda_Room" class="slds-text-body--regular slds-m-bottom--xx-small">
+                            <span class="slds-font-weight--bold">{!$Label.LTE.Agenda_Room}:&nbsp;</span>{!v.item.room}
+                        </div>
+                    </aura:if>
+                    <div data-name="tracks" class="slds-grid slds-wrap">
+                        <aura:iteration items="{!v.item.tracks}" var="track">
+                            <span data-name="trackColor" class="slds-badge slds-m-bottom--xx-small slds-inline-block slds-theme--company-primary" style="{!'background-color: '+track.trackColor+'!important'}">
+                                {!track.name}
+                            </span>
+                        </aura:iteration>
+                    </div>
+                </div>
+                <div class="slds-text-align--right slds-medium-nowrap slds-text-align--left__small slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <aura:if isTrue="{!!v.readOnly}">
+                        <aura:if isTrue="{!and(!v.item.disableRegistration,!v.item.requiredForRegistration)}">
+                            <span data-name="item_price" class="slds-text-heading--medium slds-font-weight--bold fonteva-slds-text">
+                                <Framework:CurrencyField value="{!v.item.price}" currencyISOCode="{!v.item.currencyISOCode}" isMultiCurrencyOrg="{!v.item.isMultiCurrencyOrg}"/>
+                            </span><br/>
+                        </aura:if>
+                    </aura:if>
+                    <div data-name="waitlistDiv" class="slds-text-color_error slds-m-bottom--xx-small hidden slds-max-medium_p-top_small" aura:id="waitlistDiv">{!$Label.LTE.Event_Schedule_Item_Waitlist}</div>
+                    <div data-name="soldOutDiv" class="slds-text-color_error slds-m-bottom--xx-small hidden slds-max-medium_p-top_small" aura:id="soldOutDiv">{!$Label.LTE.Event_Schedule_Item_Soldout}</div>
+                    <div data-name="conflictDiv" class="slds-text-color_error slds-m-bottom--xx-small hidden slds-max-medium_p-top_small" aura:id="conflictDiv">{!$Label.LTE.Event_Schedule_Item_Conflicts_Detected}</div>
+                    <div data-name="agendaActionWrapper" aura:id="agendaActionWrapper" class="slds-max-medium_p-top_small">
+                        <aura:if isTrue="{!not(v.readOnly)}">
+                            <aura:if isTrue="{!v.showAddButton}">
+                                <aura:if isTrue="{!v.item.disableRegistration}">
+                                    <div class="slds-text-body--regular slds-font-weight--bold">
+                                      {!$Label.LTE.Event_Schedule_Item_NotAvailableforPurchase}
+                                    </div>
+                                    <aura:set attribute="else">
+                                        <aura:if isTrue="{!v.item.requiredForRegistration}">
+                                            <div class="slds-text-body--regular slds-font-weight--bold">
+                                                {!$Label.LTE.Event_Schedule_Item_RequiredWithPurchase}
+                                            </div>
+                                            <aura:set attribute="else">
+                                                <Framework:Button qaData='{"type" : "button", "name": "selectButton"}' type="brand" label="Select" aura:id="selectButton" onClickAction="{!c.selectSession}"/>
+                                            </aura:set>
+                                        </aura:if>
+                                    </aura:set>
+                                </aura:if>
+                            </aura:if>
+                        </aura:if>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-hide_small slds-p-top_small"/>
+            <div data-name="item-description" class="slds-size--1-of-1 slds-max-medium_p-top_small">
+                <ui:outputRichText value="{!v.item.description}" linkify="true" class="event-rich-text"/>
+            </div>
+        </div>
+    </div>
+    <div class="slds">
+        <div data-name="eventAgendaSectionItem" aura:id="eventAgendaSectionItem">
+        </div>
+    </div>
+</aura:component>

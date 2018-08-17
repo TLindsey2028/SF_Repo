@@ -1,0 +1,23 @@
+<aura:component description="BaseComponent" extensible="true" abstract="true" controller="PagesApi.BaseComponentsController" access="global">
+    <ltng:require styles="{!$Resource.Framework__SLDS_BaseV2+'/css/styles.css'}" scripts="{!join(',',$Resource.Framework__SLDS_BaseV2 + '/js/scripts.js', $Resource.PagesApi__FontevaHelper + '/FontevaHelper.js')}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:attribute name="themeObj" type="PagesApi.Theme" access="global"/>
+    <aura:attribute name="siteObj" type="PagesApi.SiteRecord" access="global"/>
+    <aura:attribute name="siteIdValue" type="String" access="global"/>
+    <aura:attribute name="disableThemeValue" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="isRecordPreview" type="Boolean" access="global" default="false"/>
+    <aura:attribute name="storeObj" type="PagesApi.Store" access="global"/>
+    <aura:attribute name="salesOrder" type="String" access="global"/>
+    <aura:attribute name="organizationId" type="String" access="global"/>
+    <aura:attribute name="usr" type="Map" default="{}" access="global"/>
+    <aura:attribute name="stylesCss" type="String" default=""/>
+    <aura:attribute name="isAuthenticated" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="cachePrefix" type="String" default="fonteva" access="private"/>
+    <aura:attribute name="objectLoad" type="List" access="private"/>
+    <aura:registerEvent name="BaseComponentLoadCompleteEvent" type="PagesApi:BaseComponentLoadCompleteEvent" />
+    <style type="text/css">
+        {!v.stylesCss}
+    </style>
+    <div id="baseComponent" class="{!v.isPreview ? 'fonteva-slds slds' : 'slds'}">
+        {!v.body}
+    </div>
+</aura:component>

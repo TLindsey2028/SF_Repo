@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="GroupRegistrationAttendeesUpdateEvent">
+    <aura:attribute name="salesOrderLine" type='String' required="false"/>
+    <aura:attribute name="inviteObj" type="Map" required="false"/>
+	<aura:attribute name="groupUniqueIdentifier" type="String" required="true"/>
+</aura:event>

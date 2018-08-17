@@ -1,0 +1,62 @@
+<aura:component description="PaymentMethodsPaypal" access="global" implements="OrderApi:PaymentMethodsInterface">
+    <div class="slds-grid slds-grid_vertical slds-p-bottom--medium">
+        <div class="slds-grid slds-p-horizontal--large slds-p-bottom_medium">
+            <div class="slds-grid slds-grid_vertical slds-col">
+                <div class="slds-text-heading_medium">
+                    <strong>{!$Label.OrderApi.PayPal_Methods}</strong>
+                </div>
+                <div>
+                    {!$Label.OrderApi.PayPal_Methods_Description}
+                </div>
+            </div>
+        </div>
+        <div class="fonteva-table--container">
+            <table class="slds-table slds-table_bordered slds-no-row-hover">
+                <thead class="slds-theme_shade">
+                <tr class="slds-text-title_caps">
+                    <th class="slds-hide_medium"></th>
+                    <th style="padding-left: 1.5rem;width: 150px;">
+                    </th>
+                    <th>
+                        {!$Label.OrderApi.PayPal_Name}
+                    </th>
+                    <th style="width: calc(64px + 3rem);" class="slds-show_medium">
+
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <aura:iteration items="{!v.paymentMethods}" var="paymentMethod">
+                    <tr>
+                        <td class="slds-hide_medium">
+                            <lightning:buttonIcon iconName="utility:threedots"  alternativeText="More Options" iconClass="slds-button__icon"/>
+                            <div class="slds-dropdown slds-dropdown--right">
+                                <ul class="dropdown__list" role="menu">
+                                    <li class="slds-dropdown__item">
+                                        <a href="javascript:void(0);" onclick="{!c.delPayMethod}" data-id="{!paymentMethod.paymentMethodId}" role="menuitem">
+                                            {!$Label.OrderApi.Manage_Payment_Methods_Delete}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td style="padding-left: 1.5rem;">
+                            <img height="19" width="75" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png"/>
+                        </td>
+                        <td>
+                            <strong>
+                                {!paymentMethod.type}
+                            </strong>
+                        </td>
+                        <td class="slds-show_medium">
+                            <lightning:buttonIcon iconName="utility:edit" alternativeText="{!$Label.OrderApi.Manage_Payment_Methods_Edit}" class="slds-theme--shade slds-hidden" onclick="{!c.editPayMethod}" value="{!paymentMethod.paymentMethodId}" />
+                            <lightning:buttonIcon iconName="utility:delete" alternativeText="{!$Label.OrderApi.Manage_Payment_Methods_Delete}" class="slds-theme--shade" onclick="{!c.delPayMethod}"  value="{!paymentMethod.paymentMethodId}"/>
+                        </td>
+                    </tr>
+                </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</aura:component>

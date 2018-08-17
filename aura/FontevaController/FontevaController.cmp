@@ -1,0 +1,25 @@
+<aura:component description="Fonteva Controller" extends="Framework:BaseComponent" controller="PagesApi.FontevaControllersController" implements="forceCommunity:availableForAllPageTypes" access="global">
+    <aura:attribute name="recordId" type="String" access="global"/>
+    <aura:attribute name="isPreview" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="urlVars" type="Object" access="global"/>
+    <aura:attribute name="siteId" type="String" access="global"/>
+    <aura:attribute name="hashValue" type="String"/>
+    <aura:attribute name="disableRouting" type="Boolean" default="false" access="global"/>
+    <aura:attribute name="disableTheme" type="Boolean" default="false" access="global"/>
+    <aura:handler event="PagesApi:BaseComponentLoadCompleteEvent" action="{!c.handleBaseComponentLoadCompleteEvent}"/>
+    <ltng:require scripts="{!$Resource.PagesApi__FontevaHelper + '/FontevaHelper.js'}" afterScriptsLoaded="{!c.doInit}"/>
+    <div class="slds" aura:id="mainLoader" id="mainLoader">
+        <div class="slds-grid slds-grid slds-object-height--full">
+            <div class="slds-col slds-text-align--center slds-align-middle" >
+                <img src="{!$Resource.Framework__SLDS_BaseV2+'/img/spinners/slds_spinner_brand.gif'}" alt="saving" width="50" height="50" />&nbsp;
+                <span class="slds-text-heading--medium">{!$Label.PagesApi.Fonteva_Controller_Loading}</span>
+            </div>
+        </div>
+    </div>
+    <div class="slds-hide" aura:id="mainContent" id="mainContent">
+        <div class="{!v.isPreview ? 'fonteva-slds slds' : 'slds'}">
+            <div id="fontevaBody" aura:id="fontevaBody">
+            </div>
+        </div>
+    </div>
+</aura:component>

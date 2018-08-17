@@ -1,0 +1,4 @@
+<aura:interface description="EventBuilderTabInterface" access="global">
+	<aura:attribute name="eventObj" type="Map" access="global"/>
+	<aura:attribute name="sites" type="List" access="global"/>
+</aura:interface>

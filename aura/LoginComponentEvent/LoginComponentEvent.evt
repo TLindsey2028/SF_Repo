@@ -1,0 +1,6 @@
+<aura:event type="APPLICATION" description="LoginComponentEvent" access="global">
+  <aura:attribute name="guestContact" type="Map" access="global"/>
+  <aura:attribute name="enabled" type="Boolean" access="global"/>
+  <aura:attribute name="showOverview" type="Boolean" default="false" access="global"/>
+  <aura:attribute name="cancelLoginProcess" type="Boolean" access="global"/>
+</aura:event>

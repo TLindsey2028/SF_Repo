@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="KnownAddressChangeEvent" access="global">
+		<aura:attribute name="uniqueId" type="String" access="global" required="true"/>
+		<aura:attribute name="value" type="Object" access="global"/>
+</aura:event>

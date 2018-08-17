@@ -1,0 +1,142 @@
+<aura:component description="EventBuilderTheme" controller="EventApi.EventsBuilderController" implements="EventApi:EventBuilderTabInterface">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:handler event="Framework:FileUploadCropEvent" action="{!c.handleFileUploadCropEvent}"/>
+    <aura:attribute name="eventImageObj" type="Map"/>
+    <aura:attribute name="currentTabOpen" default="colors" access="private" type="String"/>
+    <aura:attribute name="validated" type="Boolean" default="true" description="Is Validated"/>
+    <aura:method name="validateTheme" action="{!c.validateTheme}" description="Validate Theme"/>
+    <style>
+        .colorpicker {
+            z-index: 99999;
+        }
+    </style>
+    <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+        <div class="slds-size_1-of-1 slds-grid">
+            <div class="slds-size_8-of-12" aura:id="eventThemeLookupBody">
+
+            </div>
+            <div class="slds-size_4-of-12 slds-align-content-center slds-m-left--medium slds-p-top--x-small">
+                <Framework:Button aura:id="themeFieldsBtn" qaData='{"type" : "button", "name": "themeFieldsBtn"}' onClickAction="{!c.cloneThemeFields}" disable="true" type="brand" label="Update"/>
+            </div>
+        </div>
+    </aura:if>
+    <div class="tab-content tab--transparent" >
+        <div class="slds-tabs--default">
+            <ul class="slds-tabs--default__nav" role="tablist">
+                <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+                    <li aura:id="colorsLabel" class="slds-tabs__item slds-text-heading--label slds-active" title="{!$Label.EventApi.Event_Builder_Color_Scheme_Tab}" role="presentation">
+                        <a href="javascript:void(0);" data-tab="colors" onclick="{!c.changeTab}">{!$Label.EventApi.Event_Builder_Color_Scheme_Tab}</a>
+                    </li>
+                    <li aura:id="customcssLabel" class="slds-tabs__item slds-text-heading--label" title="{!$Label.EventApi.Event_Builder_Custom_CSS_Tab}" role="presentation">
+                        <a href="javascript:void(0);"  data-tab="customcss" onclick="{!c.changeTab}">{!$Label.EventApi.Event_Builder_Custom_CSS_Tab}</a>
+                    </li>
+                </aura:if>
+                <li aura:id="imagesLabel" class="slds-tabs__item slds-text-heading--label" title="{!$Label.EventApi.Event_Builder_Images_Tab}" role="presentation">
+                    <a href="javascript:void(0);"  data-tab="images" onclick="{!c.changeTab}">{!$Label.EventApi.Event_Builder_Images_Tab}</a>
+                </li>
+            </ul>
+        </div>
+        <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+            <div aura:id="colors" class="slds-tabs--default__content slds-show" role="tabpanel">
+                <div class="slds-col slds-size--1-of-1">
+                    <div class="slds-grid slds-grid--align-spread slds-p-bottom--medium">
+                        <div class="slds-col slds-align-middle">
+                            <div class="slds-text-heading--medium">
+                                {!$Label.EventApi.Event_Builder_Color_Scheme_Tab}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size--1-of-1">
+                    <div class="slds-grid slds-grid--wrap color-picker">
+                        <Framework:InputFields isRequired="true" fieldType="colorpickerfield" aura:id="primaryButtonBackgroundColor" label="Primary Button Background Color" helpText="Background color of all primary buttons in the related event. Valid hexadecimal notation required." group="eventThemeObj" value="{!v.eventObj}" styleClasses=" slds-m-right--small input-color-field-width"/>
+                        <Framework:InputFields isRequired="true" fieldType="colorpickerfield" aura:id="primaryButtonTextColor" label="Primary Button Text Color" helpText="Text color of all primary buttons in the related event. Valid hexadecimal notation required." group="eventThemeObj" value="{!v.eventObj}" styleClasses=" slds-m-right--small input-color-field-width"/>
+                        <Framework:InputFields isRequired="true" fieldType="colorpickerfield" aura:id="headingColor" label="Heading Color" helpText="Color of all heading text in the related event. Valid hexadecimal notation required." group="eventThemeObj" value="{!v.eventObj}" styleClasses=" slds-m-right--small input-color-field-width"/>
+                        <Framework:InputFields isRequired="true" fieldType="colorpickerfield" aura:id="textColor" label="Text Color" helpText="Color of all text in the related event. Valid hexadecimal notation required." group="eventThemeObj" value="{!v.eventObj}" styleClasses=" slds-m-right--small input-color-field-width"/>
+                    </div>
+                </div>
+                <div class="slds-col slds-size--1-of-1">
+                    <div class="slds-grid slds-grid--wrap color-picker">
+                        <Framework:InputFields isRequired="true" fieldType="colorpickerfield" aura:id="linkColor" label="Link Color" helpText="Color of all text links in the related event. Valid hexadecimal notation required." group="eventThemeObj" value="{!v.eventObj}" styleClasses=" slds-m-right--small input-color-field-width"/>
+                        <Framework:InputFields isRequired="true" fieldType="colorpickerfield" aura:id="navbarBackgroundColor" label="Navbar Background Color" helpText="Background color of the related event's navigation. Valid hexadecimal notation required." group="eventThemeObj" value="{!v.eventObj}" styleClasses=" slds-m-right--small input-color-field-width"/>
+                        <Framework:InputFields isRequired="true" fieldType="colorpickerfield" aura:id="navbarTextColor" label="Navbar Text Color" helpText="Color of the related event's navigation text. Valid hexadecimal notation required." group="eventThemeObj" value="{!v.eventObj}" styleClasses=" slds-m-right--small input-color-field-width"/>
+                        <Framework:InputFields isRequired="true" fieldType="colorpickerfield" aura:id="heroTextColor" label="Hero Text Color" helpText="Color used for the related event's banner text. Valid hexadecimal notation required." group="eventThemeObj" value="{!v.eventObj}" styleClasses=" slds-m-right--small input-color-field-width"/>
+                    </div>
+                </div>
+                <div class="slds-col slds-size--1-of-1">
+                    <div class="slds-grid slds-grid--wrap color-picker">
+                        <Framework:InputFields isRequired="true" fieldType="colorpickerfield" aura:id="heroButtonBackgroundColor" label="Hero Button Background Color" helpText="Background color of the related event's banner button. Valid hexadecimal notation required." group="eventThemeObj" value="{!v.eventObj}" styleClasses=" slds-m-right--small input-color-field-width"/>
+                        <Framework:InputFields isRequired="true" fieldType="colorpickerfield" aura:id="heroButtonTextColor" label="Hero Button Text Color" helpText="Text color of the related event's banner button. Valid hexadecimal notation required." group="eventThemeObj" value="{!v.eventObj}" styleClasses=" slds-m-right--small input-color-field-width"/>
+                        <Framework:InputFields isRequired="true" fieldType="colorpickerfield" aura:id="bodyBackgroundColor" label="Body Background Color" helpText="The overall background of the related event. Valid hexadecimal notation required." group="eventThemeObj" value="{!v.eventObj}" styleClasses=" slds-m-right--small input-color-field-width"/>
+                        <Framework:InputFields isRequired="true" fieldType="colorpickerfield" aura:id="processBarForegroundColor" label="Process Bar Foreground Color" helpText="Foreground color of the related event's registration process bar. Valid hexadecimal notation required." group="eventThemeObj" value="{!v.eventObj}" styleClasses=" slds-m-right--small input-color-field-width"/>
+                    </div>
+                </div>
+                <div class="slds-col slds-size--1-of-1">
+                    <div class="slds-grid slds-grid--wrap color-picker">
+                        <Framework:InputFields isRequired="true" fieldType="colorpickerfield" aura:id="processBarColor" label="Process Bar Color" helpText="Color of all text in the related event's registration process bar. Valid hexadecimal notation required." group="eventThemeObj" value="{!v.eventObj}" styleClasses=" slds-m-right--small input-color-field-width"/>
+                        <Framework:InputFields group="eventtickets" fieldType="colorpickerfield" label="{!$Label.EventApi.Tickets_eTicket_Label_Color}" aura:id="eTicketLabelColor" value="{!v.eventObj}" helpText="The color of the text for the mobile e-ticket. This color will be used for the headings in each section of the e-ticket. Required format is #000000." styleClasses=" slds-m-right--small input-color-field-width"/>
+                        <Framework:InputFields group="eventtickets" fieldType="colorpickerfield" label="{!$Label.EventApi.Tickets_eTicket_Value_Color}" aura:id="eTicketValueColor" value="{!v.eventObj}" helpText="The color of the value fields for the mobile e-ticket. This color will be used for the values in each section of the e-ticket. Required format is #000000." styleClasses=" slds-m-right--small input-color-field-width"/>
+                    </div>
+                </div>
+            </div>
+            <div aura:id="customcss" class="slds-tabs--default__content slds-hide" role="tabpanel">
+                <div class="slds-col slds-size--1-of-1">
+                    <div class="slds-grid slds-grid--align-spread slds-p-bottom--medium">
+                        <div class="slds-col slds-align-middle">
+                            <div class="slds-text-heading--medium">
+                                {!$Label.EventApi.Event_Builder_Custom_CSS_Tab}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size--1-of-1">
+                    <Framework:InputFields group="eventThemeObj" fieldType="codeeditorfield" label="Custom CSS" aura:id="customCSS" value="{!v.eventObj}" helpText="Custom CSS is inserted before the closing html head tag into pages using this Theme."/>
+                </div>
+            </div>
+        </aura:if>
+        <div aura:id="images" class="slds-tabs--default__content slds-hide" role="tabpanel">
+            <div class="slds-col slds-size--1-of-1">
+                <div class="slds-grid slds-grid--align-spread slds-p-bottom--medium">
+                    <div class="slds-col slds-align-middle">
+                        <div class="slds-text-heading--medium">
+                            {!$Label.EventApi.Event_Builder_Images_Tab}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-size--1-of-1">
+                <Framework:InputFields
+                        aura:id="bannerImageUrl"
+                        group="eventThemeObj"
+                        fieldType="fileupload"
+                        qaData='{"type": "fileupload", "name": "bannerImageUrl"}'
+                        label="{!$Label.EventApi.Banner_Image_Event_Builder}"
+                        value="{!v.eventObj}"
+                        helpText="{!$Label.EventApi.Event_Builder_Banner_Image}"/>
+            </div>
+            <div class="slds-col slds-size--1-of-1">
+                <Framework:InputFields
+                    aura:id="thumbnailImageUrl"
+                    group="eventThemeObj"
+                    fieldType="fileupload"
+                    qaData='{"type": "fileupload", "name": "thumbnailImageUrl"}'
+                    label="{!$Label.EventApi.Thumbnail_Image_Event_Builder}"
+                    value="{!v.eventObj}"
+                    helpText="{!$Label.EventApi.Event_Builder_Thumbnail_Image}"/>
+            </div>
+            <div class="slds-col slds-size--1-of-1">
+                <aura:if isTrue="{!v.eventObj.style == 'Lightning Event'}">
+                    <Framework:InputFields
+                        aura:id="logoImage"
+                        value="{!v.eventObj}"
+                        fieldType="fileupload"
+                        group="eventThemeObj"
+                        qaData='{"type": "fileupload", "name": "logoImage"}'
+                        label="{!$Label.EventApi.Logo_Image_Label}"
+                        helpText="{!$Label.EventApi.Logo_Image_Help}"/>
+                </aura:if>
+            </div>
+        </div>
+    </div>
+</aura:component>

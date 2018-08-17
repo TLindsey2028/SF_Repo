@@ -1,0 +1,15 @@
+<aura:interface description="EventInterface" access="global">
+	<aura:attribute name="usr" type="Map" access="global"/>
+	<aura:attribute name="isPreview" type="Boolean" access="global" default="false"/>
+	<aura:attribute name="attendeeObj" type="Map" access="global"/>
+	<aura:attribute name="eventObj" type="Map" access="global"/>
+	<aura:attribute name="siteObj" type="Map" access="global"/>
+	<aura:attribute name="initialPurchase" type="Boolean" access="global"/>
+	<aura:attribute name="storeObj" type="Map" access="global"/>
+	<aura:attribute name="componentObj" type="Map" access="global"/>
+	<aura:attribute name="salesOrder" type="String" access="global"/>
+	<aura:attribute name="salesOrderObj" type="Map" access="global"/>
+	<aura:attribute name="direction" type="String" access="global" default="next"/>
+	<aura:attribute name="readOnly" type="Boolean" access="global" default="false"/>
+	<aura:attribute name="identifier" type="Boolean" access="global"/>
+</aura:interface>

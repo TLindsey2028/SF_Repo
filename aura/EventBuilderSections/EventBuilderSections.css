@@ -1,0 +1,53 @@
+.THIS .section-dots {
+    margin-top: -13px;
+    height: 15px;
+}
+.THIS .slds-section-box {
+    padding : 0.5rem!important;
+}
+
+.THIS .slds-icon-section-large span svg {
+    width: 120px!important;
+    height: 60px!important;
+}
+.THIS .slds-icon-section-large{
+    width: 100%!important;
+    height: 100%!important;
+}
+
+.THIS .slds-media__figure.fonteva-media_figure > div {
+    width: 120px!important;
+    height: 60px!important;
+    position: relative;
+}
+
+
+
+.THIS .slds-box-tickets-custom {
+    padding-bottom: 6px!important;
+    padding-left: 6px!important;
+}
+
+.THIS .buttons-sections {
+    position: absolute!important;
+    bottom: 0% !important;
+    width: 100%!important;
+}
+
+.THIS .event-section:hover {
+    cursor: grab!important;
+    cursor: -webkit-grab!important;
+}
+
+.THIS .event-section.sortable-chosen {
+    cursor: grabbing!important;
+    cursor: -webkit-grabbing!important;
+}
+
+.THIS .slds-truncate-custom {
+    overflow: hidden;
+    white-space: pre-wrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}

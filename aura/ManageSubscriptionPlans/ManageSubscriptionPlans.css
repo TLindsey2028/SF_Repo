@@ -1,0 +1,12 @@
+.THIS .slds-table .slds-col--whitespace__normal pre {
+    font-family: inherit!important;
+    white-space: pre-line
+}
+
+.THIS .slds-m--none {
+    margin-bottom: 0!important;
+}
+
+.THIS .slds-border-top--none {
+    border-top: 0!important;
+}

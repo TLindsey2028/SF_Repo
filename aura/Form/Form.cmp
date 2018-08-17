@@ -1,0 +1,80 @@
+<aura:component description="Form" controller="ROEApi.FormController">
+    <aura:attribute name="form" type="String" required="true"/>
+    <aura:attribute name="formUniqueIdentifier" type="String"/>
+    <aura:attribute name="formObj" type="Map" default="{}"/>
+    <aura:attribute name="formRenderComplete" type="Boolean" default="false"/>
+    <aura:attribute name="formResponseId" type="String"/>
+  <aura:attribute name="formComplete" type="Boolean" default="true"/>
+    <aura:handler name="change" value="{!v.formComplete}" action="{!c.toggleStatus}"/>
+    <aura:attribute name="subjectId" type="String"/>
+    <aura:attribute name="subjectLookupField" type="String"/>
+    <aura:attribute name="instructionsText" type="String" default="{!$Label.ROEApi.Form_Show_Instructions}"/>
+  <aura:attribute name="showInstructions" type="Boolean" default="false"/>
+  <aura:attribute name="formSaveInProgress" type="Boolean" default="false"/>
+    <aura:registerEvent name="ShowHideFormInstructionsEvent" type="ROEApi:ShowHideFormInstructionsEvent"/>
+    <aura:registerEvent name="FormSubmittedEvent" type="ROEApi:FormSubmittedEvent"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="ROEApi:FormMultipleEntrySubmit" action="{!c.handleFormMultipleEntrySubmitEvent}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFormSubmittedEvent}"/>
+        <div class="slds-col slds-box slds-theme--shade slds-m-bottom--x-small slds-roe-form" aura:id="formBase">
+            <div class="slds-grid slds-grid--pull-padded card-link" onclick="{!c.expandCard}">
+                <div class="slds-col slds-col--padded">
+                    <Framework:FONSVG svgPath="{!$Resource.ROEApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#chevrondown'}"
+                                   aura:id="chevronDownForm"
+                                   containerClass="slds-icon__container slds-rotate"
+                                   svgClass="slds-icon slds-icon--x-small slds-icon-text-default" />
+                </div>
+                <div class="slds-col slds-size--1-of-1 slds-col--padded">
+                    <div class="slds-size--1-of-1 slds-m-bottom-x--small">
+                        <span class="slds-text-heading--small slds-m-right--small">{!v.formObj.name}</span>
+                        <aura:if isTrue="{!!v.formComplete}">
+                            <Framework:FONSVG svgPath="{!$Resource.ROEApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#warning'}"
+                                       containerClass="slds-icon__container slds-m-right--xx-small"
+                                       svgClass="slds-icon slds-icon-text-error slds-icon--small" />
+                            <span class="slds-text-body--small slds-text--danger">Required fields</span>
+                        </aura:if>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-box--collapse__frame slds-frame--expand" aura:id="formCard">
+                <hr class="slds-m-vertical--xxx-small slds-m-top--medium" />
+                <div class="slds-box--collapse slds-p-top--medium">
+                    <div class="slds-grid slds-grid--pull-padded">
+                        <div class="slds-col--padded">
+                            <Framework:FONSVG svgPath="{!$Resource.ROEApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#chevrondown'}"
+                                           aura:id="chevronDown"
+                                           containerClass="slds-icon__container slds-hidden"
+                                           svgClass="slds-icon slds-icon--x-small slds-icon-text-default" />
+                        </div>
+                        <div class="slds-col--padded slds-size--1-of-1">
+                            <div class="slds-col">
+                                <div class="slds-text-body--small">
+                                    <a onclick="{!c.toggleInstructions}">{!v.instructionsText}</a>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-grid hidden" aura:id="formInstructions">
+                                <div class="slds-size--1-of-1 slds-m-bottom-x--small slds-text-body--small">
+                                    {!v.formObj.instructions}
+                                </div>
+                            </div>
+                            <div class="slds-grid slds-grid--pull-padded slds-wrap">
+                        <div class="slds-col--padded slds-hidden">
+                            <Framework:FONSVG svgPath="{!$Resource.ROEApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#chevrondown'}"
+                                           containerClass="slds-icon__container"
+                                           svgClass="slds-icon slds-icon--x-small slds-icon-text-default" />
+                        </div>
+                        <div class="slds-col slds-size--1-of-1 slds-col--padded slds-grid slds-grid--pull-padded">
+                            <div aura:id="fields" class="slds-size--1-of-2">
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                        <div class="slds-col--padded"></div>
+                    </div>
+                </div>
+                <div>
+                </div>
+            </div>
+        </div>
+        <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

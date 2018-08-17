@@ -1,0 +1,100 @@
+<aura:component controller="Framework.AddressPickerFieldController">
+    <aura:attribute name="lookupObject" type="Object"/>
+    <aura:attribute name="value" default="{}" type="Map"/>
+    <aura:attribute name="valueObj" default="{}" type="Map"/>
+    <aura:attribute name="pcaKey" type="String" access="public" default=""/>
+    <aura:attribute name="pcaCountries" type="String" default="USA,CAN,UK" access="public"/>
+    <aura:attribute name="pcaByIp" type="Boolean" default="true" access="public"/>
+    <aura:attribute name="validated" type="Boolean" default="true"/>
+    <aura:attribute name="lookupClass" type="String"  description="Class to Add" access="private"/>
+    <aura:attribute name="required" type="Boolean" default="false"/>
+    <aura:attribute name="placeHolder" default="Enter your address" type="String"/>
+    <aura:attribute name="streetLabel" default="{!$Label.Framework.Address_Street}" type="String"/>
+    <aura:attribute name="cityLabel" default="{!$Label.Framework.Address_City}" type="String"/>
+    <aura:attribute name="provinceLabel" default="{!$Label.Framework.Address_Province}" type="String"/>
+    <aura:attribute name="countryLabel" default="{!$Label.Framework.Address_Country}" type="String"/>
+    <aura:attribute name="postalCodeLabel" default="{!$Label.Framework.Address_Postal_Code}" type="String"/>
+    <aura:attribute name="class" default="slds-input" type="String"/>
+    <aura:attribute name="useShortCode" default="true" type="Boolean"/>
+    <aura:attribute name="showDependentPicklists" default="false" type="Boolean"/>
+    <aura:attribute name="allowManualAddress" type="Boolean" default="true"/>
+    <aura:attribute name="dependPicklistOtherAttributes" type="Map" default="{}"/>
+    <aura:attribute name="uniqueId" type="String" access="private"/>
+    <aura:attribute name="pageLoaded" type="Boolean" default="false"/>
+    <aura:attribute name="isVFPortal" type="Boolean" default="false"/>
+    <aura:attribute name="sitePrefix" type="String" default="" description="Deprecated - Ignored"/>
+    <aura:attribute name="iFrameUrl" type="String" default=""/>
+    <aura:attribute name="resetOverride" type="Boolean" default="false"/>
+    <aura:attribute name="disabled" type="Boolean" description="Disable Input" default="false"/>
+    <aura:attribute name="otherMethods" type="Object" description="Other Methods" default='{}'/>
+    <aura:handler name="change" value="{!v.disabled}" action="{!c.activateDeactivateField}"/>
+    <aura:handler name="change" value="{!v.resetOverride}" action="{!c.handleResetOverride}"/>
+    <ltng:require scripts="{!join(',',$Resource.Framework__UrlUtil,$Resource.Framework__SLDS_BaseV2+'/js/scripts.min.js',$Resource.Framework__PCA+'/pca.js')}" styles="{!$Resource.Framework__PCA+'/pca.css'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:handler event="Framework:InputFieldClearErrorMessagesEvent" action="{!c.handleInputFieldClearErrorMessagesEvent}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleInputFieldValueChangedEvent}"/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <style>
+        .pac-container {
+            z-index: 100051 !important;
+        }
+    </style>
+    <aura:method name="setErrorMessages" action="{!c.setErrorMessages}"
+                 description="Error Message For Field">
+        <aura:attribute name="errorMessages" type="Array" default="[]" description="Error Message"/>
+    </aura:method>
+    <aura:method name="loadExistingValue" action="{!c.loadExistingValue}"
+                 description="Load Existing Value">
+    </aura:method>
+    <aura:method name="clearExistingValue" action="{!c.clearExistingValue}"
+                 description="Clear Existing Value">
+    </aura:method>
+    <aura:method name="validate" action="{!c.validate}"
+                 description="Validate Field">
+    </aura:method>
+    <div id="locationField" class="slds-grid slds-wrap">
+        <aura:if isTrue="{!v.uniqueId != null}">
+            <div class="{!v.allowManualAddress ? 'slds-size_1-of-1 slds-order_2 slds-medium-order_1 slds-medium-size_3-of-4' : ''}">
+                <aura:if isTrue="{!not(empty(v.pcaKey))}">
+                    <input class="slds-input input uiInput uiInputText uiInput--default uiInput--input"
+                            type="text" placeholder="{!v.placeHolder}" aura:id="pcaInput" id="{!v.uniqueId}"
+                            data-aura-class="uiInput uiInputText uiInput--default uiInput--input"
+                            data-interactive-lib-uid="3" autocomplete="off"/>
+                    <Framework:ValidationErrorMessages aura:id="errorInput"/>
+                    <aura:set attribute="else">
+                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+                        <span aura:id="lookupIcon" id="{!globalId+'_icon'}" onclick="{!c.removeValue}">
+                            <img id="{!globalId+'_search_icon'}" src="{!$Resource.Framework__SLDS_Icons+'/icons/utility/search_60.png'}" class="slds-input-action-icon" aura:id="searchIcon"/>
+                            <img id="{!globalId+'_clear_icon'}" src="{!$Resource.Framework__SLDS_Icons+'/icons/utility/clear_60.png'}" class="slds-input-action-icon slds-hide slds-has-items" aura:id="removeIcon"/>
+                            <img id="{!globalId+'_searching_icon'}" src="{!$Resource.Framework__SLDS_Icons+'/icons/fonteva/icons/spinner.gif'}" class="slds-input-action-icon slds-hide slds-has-items" aura:id="searchingIcon"/>
+                        </span>
+                            <select class="{!v.lookupClass}" aura:id="lookupSelect"/>
+                            <Framework:ValidationErrorMessages aura:id="errorInput"/>
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </div>
+            <iframe aura:id="addressFrame" id="{!v.uniqueId}" src="{!v.iFrameUrl}" frameborder="0" width="0" height="0" scrolling="no"/>
+            <aura:if isTrue="{!v.allowManualAddress}">
+                <div class="slds-size_1-of-1 slds-order_1 slds-medium-order_2 slds-medium-size_1-of-4">
+                    <Framework:InputFields styleClasses="slds-p-left_small slds-p-top_x-small" fieldType="boolean" value="{!v.valueObj}" label="{!$Label.Framework.Address_Enter_Manual_Address}" aura:id="manualAddress" fireChangeEvent="true" group="{!v.uniqueId+'_toggle'}"/>
+                </div>
+            </aura:if>
+        </aura:if>
+    </div>
+    <aura:if isTrue="{!v.valueObj.manualAddress}">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size_1-of-1 fonteva-input_spacing">
+                <Framework:InputFields fieldType="string" label="{!v.streetLabel}" aura:id="street_name" isRequired="{!v.required}" value="{!v.value}" group="{!v.uniqueId}"/>
+                <Framework:InputFields fieldType="string" label="{!v.cityLabel}" aura:id="city" isRequired="{!v.required}" value="{!v.value}" group="{!v.uniqueId}"/>
+                <aura:if isTrue="{!v.showDependentPicklists}">
+                    <Framework:InputFields group="{!v.uniqueId}" fieldType="dependentpicklist" aura:id="stateCountry" label="{!v.countryLabel}" isRequired="true" otherAttributes="{!v.dependPicklistOtherAttributes}" value="{!v.value}"/>
+                    <aura:set attribute="else">
+                        <Framework:InputFields fieldType="string" label="{!v.provinceLabel}" aura:id="province" isRequired="{!v.required}" value="{!v.value}" group="{!v.uniqueId}"/>
+                        <Framework:InputFields fieldType="string" label="{!v.countryLabel}" aura:id="country" isRequired="{!v.required}" value="{!v.value}" group="{!v.uniqueId}"/>
+                    </aura:set>
+                </aura:if>
+                <Framework:InputFields fieldType="string" label="{!v.postalCodeLabel}" aura:id="postal_code" isRequired="{!v.required}" value="{!v.value}" group="{!v.uniqueId}"/>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,203 @@
+<aura:component controller="Framework.AdminRegisteredObjectsController">
+    <ltng:require scripts="{!$Resource.Framework__SLDS_BaseV2+'/js/scripts.min.js'}" styles="{!$Resource.Framework__SLDS_BaseV2+'/css/styles.css'}" afterScriptsLoaded="{!c.doInit}"/>
+    <aura:registerEvent name="InputFieldValidationEvent" type="Framework:InputFieldValidationEvent"/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+
+    <!-- LOCAL ATTRIBUTES -->
+    <aura:attribute name="objects" type="List" default="[]" description="List of Registered Objects"/>
+    <aura:attribute name="availableObjects" type="List" default="[]" description="List of Objects"/>
+    <aura:attribute name="registeredObj" type="Object" default="{}" description="Registered Object"/>
+    <aura:attribute name="modalHeader" type="String" default="" description="Modal header"/>
+    <aura:attribute name="loading" type="Boolean" default="true" description="Modal header"/>
+    <aura:attribute name="loadingRows" type="List" default="[1,2,3,4,5]" description="Modal header"/>
+    <aura:attribute name="objToDelete" type="String" default=""/>
+
+    <div class="slds-medium-size--3-of-4 slds-size--1-of-1 slds-grid slds-wrap">
+      <div class="slds-col slds-size--1-of-1">
+        <div class="slds-page-header">
+          <div class="slds-media slds-media--center">
+            <div class="slds-media__figure slds-ie-fix--width__icon">
+              <img src="//fonteva-cdn.s3.amazonaws.com/framework-admin/Objects/Objects.svg" style="height:50px;" alt="Placeholder" />
+            </div>
+            <!-- /.slds-media__figure -->
+            <div class="slds-media__body">
+              <nav role="navigation">
+                <p id="bread-crumb-label" class="slds-assistive-text">Dashboard:</p>
+                <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                  <li class="slds-list__item slds-text-heading--label">
+                      <a href="javascript:void(0)" data-id="admin_dashboard" onclick="{!c.showComponent}" data-name="Framework:SparkAdminSidebar" >
+                          {!$Label.Framework.Dashboard}
+                      </a>
+                  </li>
+                </ol>
+              </nav>
+              <div class="slds-text-heading--medium">
+                {!$Label.Framework.Registered_Objects}
+              </div>
+            </div>
+             <!-- /.slds-media__body -->
+              <Framework:Button enableProgressIndicator="false"
+                        onClickAction="{!c.newModal}"
+                        type="brand"
+                        label="{!$Label.Framework.New_Object}"
+                        additionalClasses="fonteva-button_reverse new-reg-object slds-m-left--xx-small"
+                        svgContainerClass="slds-button__icon_left"
+                        lightningIcon="utility:add"
+                        lightningIconSize="x-small"
+                        lightningIconVariant="inverse"/>
+          </div>
+          <!-- /.slds-media -->
+        </div>
+        <!-- /.slds-page-header -->
+      <div aura:id="mainBody" class="slds-object-height--full__nofooter slds-scrollable--y">
+        <!-- TABLE -->
+        <div class="slds-grid slds-wrap">
+
+        <span class="slds-size--1-of-1 slds-scrollable-x">
+          <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal">
+            <thead class="slds-col-rule--bottom">
+              <tr class="slds-text-heading--label">
+                <th scope="col">
+                  <span class="slds-truncate">{!$Label.Framework.Is_Enabled}</span>
+                </th>
+                <th scope="col">
+                  <span class="slds-truncate">{!$Label.Framework.Triggers_Enabled}</span>
+                </th>
+                <th scope="col">
+                  <span class="slds-truncate">{!$Label.Framework.Validation_Disabled}</span>
+                </th>
+                <th scope="col">
+                  <span class="slds-truncate">{!$Label.Framework.SOQL_Limit}</span>
+                </th>
+                <th scope="col">
+                  <span class="slds-truncate">{!$Label.Framework.Name}</span>
+                </th>
+                <th scope="col">
+                  <span class="slds-truncate">{!$Label.Framework.Namespace}</span>
+                </th>
+                <th scope="col">
+                  <span class="slds-truncate">{!$Label.Framework.Actions}</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+                <aura:if isTrue="{!v.loading}">
+                <aura:iteration items="{!v.loadingRows}" var="object">
+                    <tr class="row-loading-span">
+                    <td>
+                        <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                    </td>
+                    <td>
+                        <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                    </td>
+                    <td>
+                        <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                    </td>
+                    <td>
+                        <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                    </td>
+                    <td>
+                        <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                    </td>
+                    <td>
+                        <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                    </td>
+                    <td>
+                        <div class="slds-size--1-of-1 loading-span">&nbsp;</div>
+                    </td>
+                </tr>
+            </aura:iteration>
+                <aura:set attribute="else">
+                <aura:iteration items="{!v.objects}" var="object">
+                  <tr>
+                    <td data-label="enabled" class="text-center">
+                     <aura:if isTrue="{!object.isEnabled}">
+                         <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                      <aura:set attribute="else">
+                          <lightning:icon iconName="utility:warning" size="x-small" alternativeText="Warning"/>
+                      </aura:set>
+                      </aura:if>
+                    </td>
+                    <td data-label="triggers enabled" class="text-center">
+                        <aura:if isTrue="{!object.triggersEnabled}">
+                            <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                         <aura:set attribute="else">
+                             <lightning:icon iconName="utility:warning" size="x-small" alternativeText="Enabled"/>
+                         </aura:set>
+                         </aura:if>
+                    </td>
+                    <td data-label="validation center" class="text-center">
+                        <aura:if isTrue="{!object.validationDisabled}">
+                            <lightning:icon iconName="utility:success" size="x-small" alternativeText="Enabled"/>
+                         </aura:if>
+                    </td>
+                    <td data-label="soql limit" class="slds-truncate">
+                     {!object.soqlLimit}
+                    </td>
+                    <td data-label="name" class="slds-truncate">
+                      {!object.sObjectName}
+                    </td>
+                    <td data-label="registered app" class="slds-truncate">
+                      {!object.namespace}
+                    </td>
+                    <td data-label="actions">
+                      <div class="slds-dropdown-trigger">
+                        <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" aria-haspopup="true">
+                            <lightning:icon iconName="utility:down" size="x-small" alternativeText="Enabled"/>
+                        </button>
+                        <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+                          <ul class="slds-dropdown__list" role="menu">
+                            <li class="slds-dropdown__item">
+                                <a href="javascript:void(0)" data-id="{!object.sObjectName}" onclick="{!c.editModal}">{!$Label.Framework.Edit}</a>
+                            </li>
+                            <li class="slds-dropdown__item" role="menu">
+                                <a href="javascript:void(0)" data-id="{!object.sObjectName}" onclick="{!c.deleteObjectModal}">{!$Label.Framework.Delete}</a>
+                            </li>
+                          </ul>
+                        </div><!-- /.slds-dropdown -->
+                      </div><!-- /.slds-dropdown-trigger -->
+                    </td>
+                  </tr>
+              </aura:iteration>
+          </aura:set>
+          </aura:if>
+            </tbody>
+          </table>
+        </span><!-- /.slds-scrollable-x -->
+        </div>
+    </div>
+  </div>
+  <!-- /.slds-col -->
+</div>
+<!-- MODAL -->
+       <div class="slds-modal" id="modalAdminObject" aura:id="modalAdminObject">
+         <div class="slds-modal__container">
+            <div class="slds-modal__header">
+              <h2 class="slds-text-heading--medium" id="modal-heading-label">{!v.modalHeader}</h2>
+              <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModal}">
+                  <lightning:icon iconName="utility:close" size="small" alternativeText="Close" class="slds-button--icon-inverse"/>
+              </button><!-- /.slds-button -->
+            </div><!-- /.slds-modal__header -->
+              <div class="slds-modal__content slds-object-height--half slds-scrollable--y">
+                <div class="slds-col slds-size--1-of-1">
+                  <Framework:InputFields aura:id="sObjectName" group="regObj" isRequired="true" label="Name" fieldType="picklist" value="{!v.registeredObj}" helpText="SObject Name To Register With Spark" />
+                  <Framework:InputFields group="regObj" isRequired="true" label="Namespace" fieldType="string" aura:id="namespace" value="{!v.registeredObj}" />
+                  <Framework:InputFields group="regObj" isRequired="true" label="Apex Class" fieldType="string" aura:id="apexClass" value="{!v.registeredObj}" />
+                  <Framework:InputFields group="regObj" label="SOQL Limit" fieldType="integer" aura:id="soqlLimit" value="{!v.registeredObj}" />
+                  <Framework:InputFields group="regObj" label="SOQL Order By" fieldType="string" aura:id="soqlOrderBy" value="{!v.registeredObj}" />
+                  <Framework:InputFields group="regObj" label="Is Enabled" fieldType="boolean" aura:id="isEnabled" value="{!v.registeredObj}" />
+                  <Framework:InputFields group="regObj" label="Triggers Enabled" fieldType="boolean" aura:id="triggersEnabled" value="{!v.registeredObj}" />
+                  <Framework:InputFields group="regObj" label="Validation Disabled" fieldType="boolean" aura:id="validationDisabled" value="{!v.registeredObj}" />
+                </div><!-- /.slds-col -->
+              </div><!-- /.slds-modal__content -->
+              <div class="slds-modal__footer slds-text-align--right">
+                <Framework:Button enableProgressIndicator="false" type="neutral" label="{!$Label.Framework.Cancel}" onClickAction="{!c.closeModal}"/>
+                <Framework:Button aura:id="saveObject" onClickAction="{!c.saveObject}" type="brand" additionalClasses="slds-m-left--xx-small" label="{!$Label.Framework.Save}" dataAttributes='{"group" : "regObj","form" : "objects_table"}'/>
+              </div><!-- /.slds-modal__footer -->
+         </div><!-- /.modal-dialog .slds-modal__container -->
+       </div><!-- /.modal .slds-modal -->
+        <Framework:MessagePrompt title="Delete?" severity="error slds-theme--alert-texture" message="Are you sure you want to delete?" submitButtonLabel="Delete" cancelButtonLabel="Cancel" submitOnClickAction="{!c.deleteObject}" aura:id="deleteObjectMessage"/>
+       <div class="slds-backdrop" aura:id="modalBackdrop" onclick="{!c.closeModal}"></div>
+       <!-- /MODAL -->
+</aura:component>

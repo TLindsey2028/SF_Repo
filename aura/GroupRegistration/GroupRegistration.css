@@ -1,0 +1,124 @@
+.THIS .slds-box--collapse__frame {
+  margin-left: -1rem;
+  margin-right: -1rem;
+}
+
+.THIS .slds-box--collapse {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.THIS .slds-frame--expand {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .25s ease-in-out;
+}
+
+.THIS .slds-frame--expanded {
+  max-height: 1000px;
+}
+
+.THIS .slds-rotate {
+    cursor: pointer;
+    transform: rotate(0deg);
+    transition: transform .25s ease-in-out;
+}
+
+.THIS .slds-rotate__180 {
+    cursor: pointer;
+    transform: rotate(-180deg);
+    transition: transform .25s ease-in-out;
+}
+
+.THIS .currencyInputSpan {
+    white-space: nowrap!important;
+}
+
+.THIS .slds-button--icon-border,
+.THIS .slds-button--icon-border-filled,
+.THIS .slds-button--icon-border-inverse,
+.THIS .slds-button--icon-container {
+    width: 2rem;
+    height: 2rem;
+}
+
+.THIS .slds-button--icon-border-inverse {
+    border: 1px solid white;
+    line-height: 0!important;
+}
+
+.THIS .slds-button--icon-border-inverse:hover {
+    background-color: #c9cfd5;
+}
+
+ .THIS .slds-theme--shade__dark {
+     background-color: #e0e5ed
+ }
+
+ .THIS .slds-group--slider {
+     margin-left: -0.75rem;
+     margin-right: -0.75rem;
+ }
+
+.THIS .slds-group--slider__card {
+    padding-left: 55px!important;
+    padding-right: 55px!important;
+}
+
+.THIS .slds-group--slider__card:focus {
+    outline: none;
+}
+
+.THIS .slds-carousel--hidden {
+    opacity: 0;
+    height: 0;
+    padding: 0!important;
+    overflow: hidden;
+}
+
+.THIS .slds-p-bottom--xx-small {
+    padding-bottom: 0.25rem!important;
+}
+
+.THIS .slds-attendee__number {
+    min-width: 2.25rem;
+    max-width: 2.25rem;
+}
+
+.THIS .slds-object-height--custom {
+    max-height: 15rem
+}
+
+.THIS .slds-attendee--active {
+    background-color: #fcffae;
+    padding-top: .25em;
+}
+
+.THIS .slds-box--group {
+    margin-left: -3.13em!important;
+    margin-right: -3.7em!important;
+}
+
+.THIS .slds-object--custom {
+    width: 3.5em!important;
+}
+
+.THIS .slds-ie-fixed--width{
+    max-width: calc(100vw - 110.08px);
+}
+
+.THIS .attendee-text, .THIS .ticket-type-text {
+    width: 38%!important;
+}
+
+.THIS .fonteva-button_reverse {
+    display: flex!important;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+
+.THIS .slds-icon_x-small {
+    line-height: 1;
+    width: 1rem;
+    height: 1rem;
+}

@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="utf-8"?><CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>AddCampaign</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>ConvertLead</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CreateOpportunity</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayouts>
+        <fullName>Campaign_Member_Layout_2</fullName>
+        <fields>CampaignId</fields>
+        <fields>FirstName</fields>
+        <fields>LastName</fields>
+        <fields>ContactId</fields>
+        <fields>AQB__Account__c</fields>
+        <fields>Status</fields>
+        <label>Campaign Member Layout 2</label>
+    </compactLayouts>
+    <fields>
+        <fullName>CampaignId</fullName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>City</fullName>
+    </fields>
+    <fields>
+        <fullName>CompanyOrAccount</fullName>
+    </fields>
+    <fields>
+        <fullName>ContactId</fullName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Country</fullName>
+    </fields>
+    <fields>
+        <fullName>Description</fullName>
+    </fields>
+    <fields>
+        <fullName>DoNotCall</fullName>
+    </fields>
+    <fields>
+        <fullName>Email</fullName>
+    </fields>
+    <fields>
+        <fullName>Fax</fullName>
+    </fields>
+    <fields>
+        <fullName>FirstName</fullName>
+    </fields>
+    <fields>
+        <fullName>FirstRespondedDate</fullName>
+    </fields>
+    <fields>
+        <fullName>HasOptedOutOfEmail</fullName>
+    </fields>
+    <fields>
+        <fullName>HasOptedOutOfFax</fullName>
+    </fields>
+    <fields>
+        <fullName>HasResponded</fullName>
+    </fields>
+    <fields>
+        <fullName>LastName</fullName>
+    </fields>
+    <fields>
+        <fullName>LeadId</fullName>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>LeadSource</fullName>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Millennium_Key__c</fullName>
+        <description>AQB Custom</description>
+        <externalId>false</externalId>
+        <label>Millennium Key</label>
+        <length>30</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>MobilePhone</fullName>
+    </fields>
+    <fields>
+        <fullName>Phone</fullName>
+    </fields>
+    <fields>
+        <fullName>PostalCode</fullName>
+    </fields>
+    <fields>
+        <fullName>Salutation</fullName>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>State</fullName>
+    </fields>
+    <fields>
+        <fullName>Status</fullName>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Street</fullName>
+    </fields>
+    <fields>
+        <fullName>Title</fullName>
+    </fields>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <enableFeeds>false</enableFeeds>
+    <sharingModel>ControlledByCampaign</sharingModel>
+    <recordTypes>
+        <fullName>Appeal_List</fullName>
+        <active>true</active>
+        <description>AQB Custom</description>
+        <label>Appeal List</label>
+        <picklistValues>
+            <picklist>AQB__CommunicationsChannel__c</picklist>
+            <values>
+                <fullName>Account Email</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Account Mailing Address</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Account Matching Gift Address</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Account Permanent Address</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Account Permanent Address Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Account Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alternate Channel Address</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alternate Channel Email</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alternate Channel Facebook</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alternate Channel Instagram</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alternate Channel Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alternate Channel SMS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alternate Channel Twitter</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Assistant Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Business Address</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Business Email</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Business Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Email</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Home Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Mobile Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Other Email</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Other Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Personal Email</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Phone</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>AQB__PreferredChannel__c</picklist>
+            <values>
+                <fullName>Email Address</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Facebook</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Instagram</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Mailing Address</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Phone Number</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>SMS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Twitter</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>AQB__TargetList_Type__c</picklist>
+            <values>
+                <fullName>Account</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>et4ae5__Activity__c</picklist>
+            <values>
+                <fullName>Sent</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Unsubscribed</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Event_Invitation</fullName>
+        <active>true</active>
+        <description>AQB Custom</description>
+        <label>Event Invitation</label>
+        <picklistValues>
+            <picklist>AQB__CommunicationsChannel__c</picklist>
+            <values>
+                <fullName>Account Email</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Account Mailing Address</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Account Matching Gift Address</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Account Permanent Address</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Account Permanent Address Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Account Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alternate Channel Address</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alternate Channel Email</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alternate Channel Facebook</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alternate Channel Instagram</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alternate Channel Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alternate Channel SMS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Alternate Channel Twitter</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Assistant Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Business Address</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Business Email</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Business Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Email</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Home Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Mobile Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Other Email</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Other Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Personal Email</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact Phone</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>AQB__PreferredChannel__c</picklist>
+            <values>
+                <fullName>Email Address</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Facebook</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Instagram</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Mailing Address</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Phone Number</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>SMS</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Twitter</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>AQB__TargetList_Type__c</picklist>
+            <values>
+                <fullName>Account</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Contact</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>et4ae5__Activity__c</picklist>
+            <values>
+                <fullName>Sent</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Unsubscribed</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+</CustomObject>

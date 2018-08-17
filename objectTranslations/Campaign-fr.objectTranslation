@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="utf-8"?><CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <label><!-- Deprecated Accounts Solicited --></label>
+        <name>AQB__AccountsSolicited__c</name>
+    </fields>
+    <fields>
+        <help><!-- An alert that should display whenever the Campaign is displayed. --></help>
+        <label><!-- Alert --></label>
+        <name>AQB__Alert__c</name>
+    </fields>
+    <fields>
+        <help><!-- The amount budgeted for the overall Campaign (not including amounts budgeted for individual Appeals within the Campaign.) --></help>
+        <label><!-- Campaign Appeal Budget --></label>
+        <name>AQB__CampaignAppealBudget__c</name>
+    </fields>
+    <fields>
+        <label><!-- Campaign External ID --></label>
+        <name>AQB__CampaignExternalID__c</name>
+    </fields>
+    <fields>
+        <help><!-- If this Campaign is an Appeal, this is the name of the Campaign Fund to which it belongs. --></help>
+        <label><!-- Fundraising Campaign --></label>
+        <name>AQB__CampaignFund__c</name>
+        <relationshipLabel><!-- Campaigns --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Conditional Pledge Balance --></label>
+        <name>AQB__ConditionalPledgeBalance__c</name>
+    </fields>
+    <fields>
+        <help><!-- Calculates the cost per dollar raised calculated by dividing the total revenue by the total expenses. --></help>
+        <label><!-- Cost per Dollar Raised --></label>
+        <name>AQB__CostperDollarRaised__c</name>
+    </fields>
+    <fields>
+        <label><!-- Deprecated Accounts Solicited Roll-Up --></label>
+        <name>AQB__CountOfAccountsSolicited__c</name>
+    </fields>
+    <fields>
+        <help><!-- Non-displaying field, used in internal calculations. --></help>
+        <label><!-- Days in Progress --></label>
+        <name>AQB__DaysinProgress__c</name>
+    </fields>
+    <fields>
+        <help><!-- This is the Default Designation for this Campaign in Gift entry. --></help>
+        <label><!-- Default Designation --></label>
+        <name>AQB__DefaultDesignation__c</name>
+        <relationshipLabel><!-- Campaigns --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Goal for the number of donors to this campaign appeal. --></help>
+        <label><!-- Donor Goal --></label>
+        <name>AQB__Donor_Goal__c</name>
+    </fields>
+    <fields>
+        <help><!-- An estimate of the number of Campaign Members to whom this appeal was directed. --></help>
+        <label><!-- DepEstimated Number of Campaign Members --></label>
+        <name>AQB__EstimatedAccountsSolicited__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Event for which this invitation is being issued. --></help>
+        <label><!-- Event --></label>
+        <name>AQB__Event__c</name>
+        <relationshipLabel><!-- Campaigns --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Indicates that the Fundraising Campaign to which this Campaign is associated should be included in the Annual Fund Dashboard. --></help>
+        <label><!-- Include in Annual Fund Dashboard --></label>
+        <name>AQB__IncludeinAnnualFundDashboard__c</name>
+    </fields>
+    <fields>
+        <help><!-- Name of report to display on Chart1 VisualForce page on page layout. --></help>
+        <label><!-- KPI Chart 1 --></label>
+        <name>AQB__KPIChart1__c</name>
+    </fields>
+    <fields>
+        <help><!-- Name of report to display on Chart2 VisualForce page on page layout. --></help>
+        <label><!-- KPI Chart 2 --></label>
+        <name>AQB__KPIChart2__c</name>
+    </fields>
+    <fields>
+        <help><!-- Name of report to display on Chart3 VisualForce page on page layout. --></help>
+        <label><!-- KPI Chart 3 --></label>
+        <name>AQB__KPIChart3__c</name>
+    </fields>
+    <fields>
+        <help><!-- Name of report to display on Chart4 VisualForce page on page layout. --></help>
+        <label><!-- KPI Chart 4 --></label>
+        <name>AQB__KPIChart4__c</name>
+    </fields>
+    <fields>
+        <help><!-- The size in which KPI charts should be rendered. --></help>
+        <label><!-- KPI Chart Size --></label>
+        <name>AQB__KPIChartSize__c</name>
+        <picklistValues>
+            <masterLabel>Medium</masterLabel>
+            <translation><!-- Medium --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Small</masterLabel>
+            <translation><!-- Small --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Non-displaying field, used in internal calculations. --></help>
+        <label><!-- Length in Days --></label>
+        <name>AQB__LengthInDays__c</name>
+    </fields>
+    <fields>
+        <label><!-- Matching Gift Payments Due --></label>
+        <name>AQB__MatchingGiftPaymentsDue__c</name>
+    </fields>
+    <fields>
+        <label><!-- Matching Gift Payments Made --></label>
+        <name>AQB__MatchingGiftPaymentsMade__c</name>
+    </fields>
+    <fields>
+        <help><!-- A calculation of the percentage of the Campaign Revenue Goal that has been received to date. --></help>
+        <label><!-- Percent of Revenue Goal Attained --></label>
+        <name>AQB__PRG__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payments --></label>
+        <name>AQB__Payments__c</name>
+    </fields>
+    <fields>
+        <help><!-- Based on the Start and Stop dates, this is a system calculated field indicating the percentage of completion of the Campaign.  This is used by the system in calculating the KPI&apos;s for this Campaign. --></help>
+        <label><!-- Percent Complete --></label>
+        <name>AQB__PercentComplete__c</name>
+    </fields>
+    <fields>
+        <label><!-- Percent of Days Past --></label>
+        <name>AQB__PercentofDaysPast__c</name>
+    </fields>
+    <fields>
+        <help><!-- Describes the type of Preference List. --></help>
+        <label><!-- Preference List Type --></label>
+        <name>AQB__PreferenceListType__c</name>
+        <picklistValues>
+            <masterLabel>Email Only</masterLabel>
+            <translation><!-- Email Only --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>General Preference</masterLabel>
+            <translation><!-- General Preference --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Include List</masterLabel>
+            <translation><!-- Include List --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mail Only</masterLabel>
+            <translation><!-- Mail Only --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Email</masterLabel>
+            <translation><!-- No Email --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Mail</masterLabel>
+            <translation><!-- No Mail --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Phone</masterLabel>
+            <translation><!-- No Phone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>None</masterLabel>
+            <translation><!-- None --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Omit List</masterLabel>
+            <translation><!-- Omit List --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The rate of response that you hope to achieve in this Campaign. --></help>
+        <label><!-- Response Rate Goal --></label>
+        <name>AQB__ResponseRateGoal__c</name>
+    </fields>
+    <fields>
+        <help><!-- The goal amount of revenue for this Campaign. --></help>
+        <label><!-- Revenue Goal --></label>
+        <name>AQB__RevG__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date the Preference becomes active. --></help>
+        <label><!-- Start Date --></label>
+        <name>AQB__StartDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date the Preference becomes inactive. --></help>
+        <label><!-- Stop Date --></label>
+        <name>AQB__StopDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Revenue --></label>
+        <name>AQB__TR__c</name>
+    </fields>
+    <fields>
+        <help><!-- Type of list --></help>
+        <label><!-- Target List Type --></label>
+        <name>AQB__TargetListType__c</name>
+        <picklistValues>
+            <masterLabel>Account</masterLabel>
+            <translation><!-- Account --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alumni 55+ Planned Gift</masterLabel>
+            <translation><!-- Alumni 55+ Planned Gift --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Alumni Members</masterLabel>
+            <translation><!-- Alumni Members --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact</masterLabel>
+            <translation><!-- Contact --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Donors</masterLabel>
+            <translation><!-- Donors --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Faculty/Staff</masterLabel>
+            <translation><!-- Faculty/Staff --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lybunts</masterLabel>
+            <translation><!-- Lybunts --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Major Gift Donors</masterLabel>
+            <translation><!-- Major Gift Donors --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sybunts</masterLabel>
+            <translation><!-- Sybunts --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Total Campaign Appeal Expenses --></label>
+        <name>AQB__TotalCampaignAppealExpenses__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Commitments --></label>
+        <name>AQB__TotalCommitments__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Open Opportunities --></label>
+        <name>AQB__TotalOpenOpportunities__c</name>
+    </fields>
+    <fields>
+        <help><!-- Total of Matching Gift Payments Due, Conditional Pledge Balance, and Unconditional Pledge Balance. --></help>
+        <label><!-- Total Pledge Balance --></label>
+        <name>AQB__TotalPledgeBalance__c</name>
+    </fields>
+    <fields>
+        <label><!-- Unconditional Pledge Balance --></label>
+        <name>AQB__UnconditionalPledgeBalance__c</name>
+    </fields>
+    <fields>
+        <label><!-- Channel Detail --></label>
+        <name>Channel_Detail__c</name>
+        <picklistValues>
+            <masterLabel>Magazine</masterLabel>
+            <translation><!-- Magazine --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Newsletter</masterLabel>
+            <translation><!-- Newsletter --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Postcard</masterLabel>
+            <translation><!-- Postcard --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Video</masterLabel>
+            <translation><!-- Video --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Channel --></label>
+        <name>Channel__c</name>
+        <picklistValues>
+            <masterLabel>Email</masterLabel>
+            <translation><!-- Email --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>In-Person</masterLabel>
+            <translation><!-- In-Person --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mail</masterLabel>
+            <translation><!-- Mail --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Phone</masterLabel>
+            <translation><!-- Phone --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Social Media</masterLabel>
+            <translation><!-- Social Media --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Departments --></label>
+        <name>Departments__c</name>
+    </fields>
+    <fields>
+        <label><!-- Division --></label>
+        <name>Division__c</name>
+    </fields>
+    <fields>
+        <help><!-- Identify the donor behavior you are including in this campaign. --></help>
+        <label><!-- Donor Behavior --></label>
+        <name>Donor_Behavior__c</name>
+        <picklistValues>
+            <masterLabel>Current</masterLabel>
+            <translation><!-- Current --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Futures</masterLabel>
+            <translation><!-- Futures --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lybunt</masterLabel>
+            <translation><!-- Lybunt --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Sybunt</masterLabel>
+            <translation><!-- Sybunt --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Purpose --></label>
+        <name>Purpose__c</name>
+        <picklistValues>
+            <masterLabel>Academic Division</masterLabel>
+            <translation><!-- Academic Division --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Athletics</masterLabel>
+            <translation><!-- Athletics --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Engagement</masterLabel>
+            <translation><!-- Engagement --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Faculty Compensation</masterLabel>
+            <translation><!-- Faculty Compensation --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Faculty and Staff</masterLabel>
+            <translation><!-- Faculty and Staff --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Info Sharing</masterLabel>
+            <translation><!-- Info Sharing --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Library</masterLabel>
+            <translation><!-- Library --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Marketing promotion</masterLabel>
+            <translation><!-- Marketing promotion --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other Restricted</masterLabel>
+            <translation><!-- Other Restricted --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Physical Plant</masterLabel>
+            <translation><!-- Physical Plant --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Property, Buildings</masterLabel>
+            <translation><!-- Property, Buildings --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Research</masterLabel>
+            <translation><!-- Research --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Student Aid</masterLabel>
+            <translation><!-- Student Aid --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unrestricted</masterLabel>
+            <translation><!-- Unrestricted --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Update</masterLabel>
+            <translation><!-- Update --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Person managing the list --></help>
+        <label><!-- Responsible Contact --></label>
+        <name>Responsible_Contact__c</name>
+    </fields>
+    <layouts>
+        <layout>AQ Lightning Account Campaign Appeal Layout</layout>
+        <sections>
+            <label><!-- Budget and Expenses --></label>
+            <section>Budget and Expenses</section>
+        </sections>
+        <sections>
+            <label><!-- Flashboard Results --></label>
+            <section>Flashboard Results</section>
+        </sections>
+        <sections>
+            <label><!-- Goals and Setup --></label>
+            <section>Goals and Setup</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>AQ Lightning Account Campaign Appeal Layout_WMU</layout>
+        <sections>
+            <label><!-- Budget and Expenses --></label>
+            <section>Budget and Expenses</section>
+        </sections>
+        <sections>
+            <label><!-- Flashboard Results --></label>
+            <section>Flashboard Results</section>
+        </sections>
+        <sections>
+            <label><!-- Goals and Setup --></label>
+            <section>Goals and Setup</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>AQ Lightning Contact Campaign Appeal Layout</layout>
+        <sections>
+            <label><!-- Budget and Expenses --></label>
+            <section>Budget and Expenses</section>
+        </sections>
+        <sections>
+            <label><!-- Flashboard Results --></label>
+            <section>Flashboard Results</section>
+        </sections>
+        <sections>
+            <label><!-- Goals and Setup --></label>
+            <section>Goals and Setup</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>AQ Lightning Contact Campaign Appeal Layout_WMU</layout>
+        <sections>
+            <label><!-- Budget and Expenses --></label>
+            <section>Budget and Expenses</section>
+        </sections>
+        <sections>
+            <label><!-- Flashboard Results --></label>
+            <section>Flashboard Results</section>
+        </sections>
+        <sections>
+            <label><!-- Goals and Setup --></label>
+            <section>Goals and Setup</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Account Campaign Appeal Layout 3.17</layout>
+        <sections>
+            <label><!-- Budget and Expenses --></label>
+            <section>Budget and Expenses</section>
+        </sections>
+        <sections>
+            <label><!-- Flashboard Results --></label>
+            <section>Flashboard Results</section>
+        </sections>
+        <sections>
+            <label><!-- Goals and Setup --></label>
+            <section>Goals and Setup</section>
+        </sections>
+        <sections>
+            <label><!-- KPI&apos;s --></label>
+            <section>KPI's</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Campaign Appeal Layout</layout>
+        <sections>
+            <label><!-- Budget and Expenses --></label>
+            <section>Budget and Expenses</section>
+        </sections>
+        <sections>
+            <label><!-- Flashboard Results --></label>
+            <section>Flashboard Results</section>
+        </sections>
+        <sections>
+            <label><!-- KPI&apos;s --></label>
+            <section>KPI's</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Contact Campaign Appeal Layout 3.17</layout>
+        <sections>
+            <label><!-- Budget and Expenses --></label>
+            <section>Budget and Expenses</section>
+        </sections>
+        <sections>
+            <label><!-- Flashboard Results --></label>
+            <section>Flashboard Results</section>
+        </sections>
+        <sections>
+            <label><!-- Goals and Setup --></label>
+            <section>Goals and Setup</section>
+        </sections>
+        <sections>
+            <label><!-- KPI&apos;s --></label>
+            <section>KPI's</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Event Campaign Layout</layout>
+        <sections>
+            <label><!-- Budget and Expenses --></label>
+            <section>Budget and Expenses</section>
+        </sections>
+        <sections>
+            <label><!-- Goals and Setup --></label>
+            <section>Goals and Setup</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label><!-- Child Campaign --></label>
+        <name>Child_Campaign</name>
+    </quickActions>
+    <recordTypes>
+        <label><!-- Account Communication List --></label>
+        <name>AccountCommunicationList</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Account Preference List --></label>
+        <name>AccountPreferenceList</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Solicitations related to the Account. --></description>
+        <label><!-- Account Campaign Appeal --></label>
+        <name>Account_Campaign_Appeal</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- A Campaign organized and executed by an Affiliated Organization. --></description>
+        <label><!-- Affiliated Organization Campaign --></label>
+        <name>AffiliatedOrganizationCampaign</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Solicitations relating to a specific fundraising Campaign --></description>
+        <label><!-- Appeal --></label>
+        <name>Appeal</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Contact Communication List --></label>
+        <name>ContactCommunicationList</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Contact Preference List --></label>
+        <name>ContactPreferenceList</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Solicitations related to the Contact. --></description>
+        <label><!-- Contact Campaign Appeal --></label>
+        <name>Contact_Campaign_Appeal</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Event Invitation --></label>
+        <name>Event_Invitation</name>
+    </recordTypes>
+    <validationRules>
+        <errorMessage><!-- A Fundraising Campaign is required for a Campaign with a recordtype of &quot;Appeal&quot;. --></errorMessage>
+        <name>AQB__Fundraising_Campaign_Required_for_Appeal</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Response Rate Goal is required. --></errorMessage>
+        <name>AQB__Response_Rate_Goal</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- The Response Rate Goal must be at least 1%. --></errorMessage>
+        <name>AQB__Response_Rate_Goal_Greater_than_0</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Revenue Goal is required. --></errorMessage>
+        <name>AQB__Revenue_Goal</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- The Revenue Goal must be at least $1. --></errorMessage>
+        <name>AQB__Revenue_Goal_Greater_than_zero</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- ViewAllCampaignMembers --></label>
+        <name>ViewAllCampaignMembers</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- ViewCampaignInfluenceReport --></label>
+        <name>ViewCampaignInfluenceReport</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_ExactTarget_Email --></label>
+        <name>et4ae5__Send_ExactTarget_Email</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- ViewCampaignInfluenceReport --></label>
+        <name>et4ae5__ViewCampaignInfluenceReport</name>
+    </webLinks>
+</CustomObjectTranslation>

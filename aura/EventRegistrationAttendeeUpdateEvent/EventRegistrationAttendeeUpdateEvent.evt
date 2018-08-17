@@ -1,0 +1,7 @@
+<aura:event type="APPLICATION" description="EventRegistrationAttendeeUpdateEvent" access="global">
+    <aura:attribute name="lines" type="LTE.SalesOrderLine[]" access="global"/>
+    <aura:attribute name="assignment" type="LTE.Assignment" access="global"/>
+    <aura:attribute name="waitlist" type="LTE.WaitlistEntry" access="global"/>
+    <aura:attribute name="salesOrderLine" type="LTE.SalesOrderLine" access="global"/>
+    <aura:attribute name="salesOrderObj" type="Map" access="global"/>
+</aura:event>

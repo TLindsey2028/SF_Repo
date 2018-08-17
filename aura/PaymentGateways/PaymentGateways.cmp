@@ -1,0 +1,227 @@
+<aura:component description="PaymentGateways" controller="OrderApi.PaymentGatewayController" extends="Framework:BaseComponent" implements="lightning:actionOverride">
+    <aura:attribute name="paymentGatewayObj" type="Object" default="{}"/>
+    <aura:attribute name="credentialsObj" type="Object" default="{}"/>
+    <aura:attribute name="labels" type="Map" default="{}"/>
+    <aura:attribute name="gatewayOptions" type="Map" default="{}" />
+    <aura:attribute name="selectedGatewayOption" type="Map" />
+    <aura:attribute name="businessGroupId" type="String"/>
+    <aura:attribute name="isEditMode" type="Boolean" default="false"/>
+    <aura:attribute name="headerText" type="String" default="{!$Label.OrderApi.Payment_Gateway}"/>
+    <aura:attribute name="fireReturnEvent" type="Boolean" default="false"/>
+    <aura:attribute name="hideTestGatewayButton" type="Boolean" default="false" />
+    <aura:attribute name="paymentGatewayId" type="String" default=""/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <ltng:require scripts="{!$Resource.Framework__UrlUtil}" styles="{!$Resource.Framework__SLDS_BaseV2+'/css/styles.css'}"/>
+    <aura:handler event="Framework:InputFieldValueChangedEvent" action="{!c.handleFieldUpdateEvent}"/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:registerEvent name="ComponentLoadedEvent" type="OrderApi:ComponentLoadedEvent"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <div class="slds hidden" aura:id="mainWrapperDiv">
+        <div class="slds-grid slds-grid--align-center slds-wrap">
+            <div class="slds-size--1-of-1 slds-grid slds-wrap">
+                <div class="slds-col slds-size--1-of-1">
+                    <div class="slds-page-header">
+                        <div class="slds-media slds-media--center">
+                            <div class="slds-media__body slds-grid slds-nowrap">
+                                <div class="slds-text-heading--medium slds-m-right--medium">
+                                    {!v.headerText}
+                                </div>
+                                <Framework:Button enableProgressIndicator="false"
+                                                  type="neutral"
+                                                  label="{!$Label.OrderApi.Cancel_Payment_Gateway}"
+                                                  aura:id="cancelConnect"
+                                                  onClickAction="{!c.cancelGatewayCreation}"/>
+                            </div>
+                            <span aura:id="connectButtonSpan" class="hidden">
+                                <Framework:Button type="brand"
+                                                  label="{!$Label.OrderApi.Save_Payment_Gateway}"
+                                                  aura:id="connectPaymentGateway"
+                                                  onClickAction="{!c.connectToSelectedGateway}"/>
+                            </span>
+                            <span aura:id="updateButtonSpan" class="hidden">
+                                <Framework:Button type="brand"
+                                                  label="{!$Label.OrderApi.Update_Payment_Gateway}"
+                                                  aura:id="updatePaymentGateway"
+                                                  onClickAction="{!c.updateGateway}"/>
+                            </span>
+                            <span class="{!v.hideTestGatewayButton ? 'hidden' : ''}" aura:id="testGatewayButton">
+                                <Framework:Button type="brand" aura:id="connectTestGateway" label="{!$Label.OrderApi.Connect_Test_Payment_Gateway}" onClickAction="{!c.connectionToTestGatewayObj}"/>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-wrap slds-size--1-of-1 slds-theme--shade">
+                    <div class="slds-col slds-medium-size--1-of-4 slds-size--1-of-1 slds-medium-object-height--full__footer slds-scrollable--y slds-p-horizontal--large slds-p-vertical--medium">
+                        <div class="slds-col slds-grid">
+                            <div class="slds-col slds-size--1-of-1">
+                                <Framework:InputFields fieldType="string" label="Payment Gateway Name" aura:id="name" isRequired="true" group="paymentGatewayPrimary" value="{!v.paymentGatewayObj}"/>
+                            </div><!-- /.slds-col -->
+                        </div><!-- /.slds-grid -->
+
+                        <div class="slds-col slds-grid">
+                            <div class="slds-col slds-size--1-of-1">
+                                <Framework:InputFields fieldType="lookup" label="Business Group" isRequired="true" aura:id="businessGroup" group="paymentGatewayPrimary" value="{!v.paymentGatewayObj}" otherAttributes='{"type": "OrderApi__Business_Group__c"}'/>
+                            </div><!-- /.slds-col -->
+                        </div><!-- /.slds-grid -->
+
+                        <div class="slds-col slds-grid">
+                            <div class="slds-col slds-size--1-of-1">
+                                <Framework:InputFields fieldType="lookup" label="Deposit Account" aura:id="depositAccount" group="paymentGatewayPrimary" value="{!v.paymentGatewayObj}" otherAttributes='{"type" : "OrderApi__GL_Account__c"}'/>
+                            </div><!-- /.slds-col -->
+                        </div><!-- /.slds-grid -->
+                        <div class="{!v.isEditMode ? 'hidden' : 'slds-col slds-grid'}">
+                            <div class="slds-col slds-size--1-of-1">
+                                <Framework:InputFields fieldType="advancedselectfield" label="Gateway Type" aura:id="gatewayType" group="paymentGatewayPrimary" value="{!v.paymentGatewayObj}" fireChangeEvent="true" otherAttributes='{"otherMethods" : {"create" : false}}'/>
+                            </div><!-- /.slds-col -->
+                        </div><!-- /.slds-grid -->
+                    </div>
+                    <div class="slds-col slds-medium-size--3-of-4 slds-size--1-of-1 slds-medium-object-height--full__footer slds-scrollable--y slds-border--left slds-p-horizontal--large slds-p-vertical--medium">
+                        <div class="hidden" aura:id="detailConfigPaymentGateway">
+                                <div class="slds-col slds-grid">
+                                    <div class="slds-col slds-size--1-of-1 slds-m-bottom--medium">
+                                        <div class="slds-text-heading--medium">{!v.selectedGatewayOption.company}</div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-grid slds-m-bottom--x-large">
+                                    <div class="slds-col slds-size--1-of-2">
+                                        <aura:iteration items="{!v.selectedGatewayOption.countries}" var="country">
+                                            <img title="{!country}" src="{!'https://s3.amazonaws.com/fonteva-icons/epayment_icons/flags-iso-64/'+country+'.png'}" class="country_flag"/>
+                                        </aura:iteration>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-grid">
+                                    <div class="slds-col slds-size--1-of-3">
+                                        <Framework:FONSVG svgPath="{!$Resource.OrderApi__SLDS_Icons + '/icons/action-sprite/svg/symbols.svg#check'}"
+                                                       containerClass="{!v.selectedGatewayOption.hasCreditCard ? 'slds-icon_container slds-icon__container--circle-gateway-supports' : 'slds-icon_container slds-icon__container--circle-gateway-supports hide-unsupported-payment-method-type'}"
+                                                       svgClass="slds-icon slds-icon--x-small-gateway"/>
+                                        <aura:if isTrue="{!v.selectedGatewayOption.hasCreditCard}">
+                                            <span class="slds-text-body--small slds-m-left--x-small">{!$Label.OrderApi.Supports_Credit_Card}</span>
+                                            <aura:set attribute="else">
+                                                <span class="slds-text-body--small slds-m-left--x-small slds-gateway-supports--disabled ">{!$Label.OrderApi.Supports_Credit_Card}</span>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                    <div class="slds-col slds-size--1-of-3">
+                                        <Framework:FONSVG svgPath="{!$Resource.OrderApi__SLDS_Icons + '/icons/action-sprite/svg/symbols.svg#check'}"
+                                                       containerClass="{!v.selectedGatewayOption.hasCheck ? 'slds-icon_container slds-icon__container--circle-gateway-supports' : 'slds-icon_container slds-icon__container--circle-gateway-supports hide-unsupported-payment-method-type'}"
+                                                       svgClass="slds-icon slds-icon--x-small-gateway"/>
+                                        <aura:if isTrue="{!v.selectedGatewayOption.hasCheck}">
+                                        <span class="slds-text-body--small slds-m-left--x-small">{!$Label.OrderApi.Supports_eCheck}</span>
+                                        <aura:set attribute="else">
+                                            <span class="slds-text-body--small slds-m-left--x-small slds-gateway-supports--disabled ">{!$Label.OrderApi.Supports_eCheck}</span>
+                                        </aura:set>
+                                    </aura:if>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-grid">
+                                    <div class="slds-col slds-size--1-of-3">
+                                        <Framework:FONSVG svgPath="{!$Resource.OrderApi__SLDS_Icons + '/icons/action-sprite/svg/symbols.svg#check'}"
+                                                       containerClass="{!v.selectedGatewayOption.hasAuthorize ? 'slds-icon_container slds-icon__container--circle-gateway-supports' : 'slds-icon_container slds-icon__container--circle-gateway-supports hide-unsupported-payment-method-type'}"
+                                                       svgClass="slds-icon slds-icon--x-small-gateway"/>
+                                        <aura:if isTrue="{!v.selectedGatewayOption.hasAuthorize}">
+                                            <span class="slds-text-body--small slds-m-left--x-small">{!$Label.OrderApi.Supports_Authorize}</span>
+                                            <aura:set attribute="else">
+                                                <span class="slds-text-body--small slds-m-left--x-small slds-gateway-supports--disabled ">{!$Label.OrderApi.Supports_Authorize}</span>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                    <div class="slds-col slds-size--1-of-3">
+                                        <Framework:FONSVG svgPath="{!$Resource.OrderApi__SLDS_Icons + '/icons/action-sprite/svg/symbols.svg#check'}"
+                                                       containerClass="{!v.selectedGatewayOption.hasVoid ? 'slds-icon_container slds-icon__container--circle-gateway-supports' : 'slds-icon_container slds-icon__container--circle-gateway-supports hide-unsupported-payment-method-type'}"
+                                                       svgClass="slds-icon slds-icon--x-small-gateway"/>
+                                        <aura:if isTrue="{!v.selectedGatewayOption.hasVoid}">
+                                            <span class="slds-text-body--small slds-m-left--x-small">{!$Label.OrderApi.Supports_Void}</span>
+                                            <aura:set attribute="else">
+                                                <span class="slds-text-body--small slds-m-left--x-small slds-gateway-supports--disabled ">{!$Label.OrderApi.Supports_Void}</span>
+                                            </aura:set>
+                                    </aura:if>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-grid">
+                                    <div class="slds-col slds-size--1-of-3">
+                                        <Framework:FONSVG svgPath="{!$Resource.OrderApi__SLDS_Icons + '/icons/action-sprite/svg/symbols.svg#check'}"
+                                                       containerClass="{!v.selectedGatewayOption.hasCredit ? 'slds-icon_container slds-icon__container--circle-gateway-supports' : 'slds-icon_container slds-icon__container--circle-gateway-supports hide-unsupported-payment-method-type'}"
+                                                       svgClass="slds-icon slds-icon--x-small-gateway"/>
+                                        <aura:if isTrue="{!v.selectedGatewayOption.hasCredit}">
+                                            <span class="slds-text-body--small slds-m-left--x-small">{!$Label.OrderApi.Supports_Credit}</span>
+                                            <aura:set attribute="else">
+                                                <span class="slds-text-body--small slds-m-left--x-small slds-gateway-supports--disabled ">{!$Label.OrderApi.Supports_Credit}</span>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                    <div class="slds-col slds-size--1-of-3">
+                                        <Framework:FONSVG svgPath="{!$Resource.OrderApi__SLDS_Icons + '/icons/action-sprite/svg/symbols.svg#check'}"
+                                                       containerClass="{!v.selectedGatewayOption.hasCapture ? 'slds-icon_container slds-icon__container--circle-gateway-supports' : 'slds-icon_container slds-icon__container--circle-gateway-supports hide-unsupported-payment-method-type'}"
+                                                       svgClass="slds-icon slds-icon--x-small-gateway"/>
+                                        <aura:if isTrue="{!v.selectedGatewayOption.hasCapture}">
+                                            <span class="slds-text-body--small slds-m-left--x-small">{!$Label.OrderApi.Supports_Capture}</span>
+                                            <aura:set attribute="else">
+                                                <span class="slds-text-body--small slds-m-left--x-small slds-gateway-supports--disabled ">{!$Label.OrderApi.Supports_Capture}</span>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </div>
+                                <aura:iteration items="{!v.selectedGatewayOption.authMethods}" var="authMethod">
+                                    <strong>{!authMethod.Name}</strong><br/>
+                                    <aura:iteration items="{!authMethod.creds}" var="credential">
+                                        <div class="slds-col slds-grid">
+                                            <div class="slds-col slds-size--1-of-2">
+                                                <Framework:InputFields secondaryId="{!credential.name}" useSecondaryId="true" fieldType="string" label="{!credential.label}" value="{!v.credentialsObj}"/>
+                                            </div>
+                                        </div>
+                                    </aura:iteration>
+                                </aura:iteration>
+                            </div>
+                        <aura:if isTrue="{!v.isEditMode}">
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-1 slds-m-bottom--small">
+                                    <div class="slds-text-heading--medium">{!v.paymentGatewayObj.companyName}</div>
+                                </div>
+                            </div>
+                        </aura:if>
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-1">
+                                    <Framework:InputFields aura:id="ccImageUrl" fieldType="fileupload" label="Supported Credit Cards Image" value="{!v.paymentGatewayObj}" group="paymentGatewayPrimary" styleClasses="file-upload-field"/>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-2">
+                                    <Framework:InputFields aura:id="requireCVV" fieldType="boolean" label="{!$Label.OrderApi.Require_CVV}" value="{!v.paymentGatewayObj}" group="paymentGatewayPrimary"/>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-2">
+                                    <Framework:InputFields aura:id="requireEmail" fieldType="boolean" label="{!$Label.OrderApi.Require_Email}" value="{!v.paymentGatewayObj}" group="paymentGatewayPrimary"/>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-2">
+                                    <Framework:InputFields aura:id="requirePhone" fieldType="boolean" label="{!$Label.OrderApi.Require_Phone}" value="{!v.paymentGatewayObj}" group="paymentGatewayPrimary"/>
+                                </div>
+                            </div>
+                            <aura:renderIf isTrue="{!or(v.selectedGatewayOption.gateway.supports_3dsecure_authorize, v.selectedGatewayOption == null)}">
+                                <div class="slds-col slds-grid">
+                                    <div class="slds-col slds-size--1-of-2">
+                                      <Framework:InputFields aura:id="attempt3ds" fieldType="boolean" label="{!$Label.OrderApi.Attempt_3ds}" fireChangeEvent="true" value="{!v.paymentGatewayObj}" group="paymentGatewayPrimary"/>
+                                    </div>
+                                </div>
+                            </aura:renderIf>
+                            <aura:renderIf isTrue="{!v.selectedGatewayOption == null}">
+                              <div class="slds-col slds-grid">
+                                  <div class="slds-col slds-size--1-of-2">
+                                    <Framework:InputFields aura:id="useOffsite" fieldType="boolean" label="{!$Label.OrderApi.Use_Offsite}" fireChangeEvent="true" value="{!v.paymentGatewayObj}" group="paymentGatewayPrimary"/>
+                                  </div>
+                              </div>
+                            </aura:renderIf>
+                            <div class="slds-col slds-grid">
+                                <div class="slds-col slds-size--1-of-2">
+                                    <Framework:InputFields aura:id="avsConfiguration" fieldType="picklist" label="{!$Label.OrderApi.AVS_Configuration}" value="{!v.paymentGatewayObj}" group="paymentGatewayPrimary"/>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <Framework:Toast aura:id="toastMessages"/>
+    </div>
+</aura:component>

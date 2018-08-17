@@ -1,0 +1,124 @@
+<aura:component description="PriceRuleDetail">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="priceRuleObj" type="Object" default="{}"/>
+    <aura:attribute name="groupName" type="String"/>
+    <aura:attribute name="dateFormat" type="String"/>
+    <aura:attribute name="subscriptionGlobalId" type="String"/>
+    <aura:attribute name="validated" type="Boolean" default="false"/>
+    <aura:method name="validate" action="{!c.validatePriceRule}"/>
+    <aura:handler event="Framework:ShowComponentEvent" action="{!c.handleShowComponentEvent}"/>
+    <aura:registerEvent name="RefreshInputField" type="Framework:RefreshInputField"/>
+    <aura:handler event="OrderApi:DeletePriceRuleVariable" action="{!c.removePriceRuleVariableRow}"/>
+    <div id="{!v.priceRuleObj.id}" aura:id="priceRuleTabPanel" class="slds-col slds-size--1-of-1 slds-p-top--medium tab-pane fade" role="tabpanel">
+        <div class="slds-grid slds-m-bottom--small slds-p-horizontal--small ">
+            <div class="slds-col slds-size--3-of-5 slds-p-horizontal--small">
+                <Framework:InputFields group="{!v.groupName}" fieldType="string" aura:id="name" label="{!$Label.OrderApi.Price_Rule_Name}" value="{!v.priceRuleObj}" isRequired="true"/>
+            </div><!-- /.slds-col -->
+            <div class="slds-col slds-size--1-of-3 slds-p-horizontal--small">
+                <Framework:InputFields group="{!v.groupName}" fieldType="currency" aura:id="price" label="{!$Label.OrderApi.Price_Rule_Price}" value="{!v.priceRuleObj}" format="0.00" otherAttributes='{"min" : 0}'/>
+            </div>
+            <div class="slds-col slds-size--1-of-3 slds-p-horizontal--small slds-align-middle slds-text-align--left slds-p-top--large">
+                <Framework:InputFields group="{!v.groupName}" fieldType="boolean" label="Is Active" aura:id="isActive" value="{!v.priceRuleObj}" labelStyleClasses="darkText"/>
+            </div>
+        </div>
+        <div class="slds-grid slds-m-bottom--small slds-p-horizontal--small ">
+            <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small">
+                <div class="slds-text-heading--small"><strong>Usage Limits</strong>&nbsp;<Framework:Tooltip helpText="Controls the number of times a price rule can be used for a single item. Limit per account sets the total usage by all contacts on the account. Limit per contact sets the total usage by each contact. Leave blank to allow unlimited usage."/></div>
+            </div>
+        </div>
+        <div class="slds-grid slds-m-bottom--small slds-p-horizontal--small slds-small-size--1-of-1 slds-medium-size--5-of-6 slds-large-size--8-of-12">
+            <div class="slds-col slds-size--1-of-3 slds-p-horizontal--small">
+                <Framework:InputFields group="{!v.groupName}" fieldType="integer" aura:id="maxNumAvailable" label="{!$Label.OrderApi.Price_Rule_Max_Available}" value="{!v.priceRuleObj}" otherAttributes='{"min" : 0}' format="0"/>
+            </div><!-- /.slds-col -->
+            <div class="slds-col slds-size--1-of-3 slds-p-horizontal--small">
+                <Framework:InputFields group="{!v.groupName}" fieldType="integer" aura:id="limitPerAccount" label="Limit Per Account" value="{!v.priceRuleObj}" otherAttributes='{"min" : 0}' format="0"/>
+            </div><!-- /.slds-col -->
+            <div class="slds-col slds-size--1-of-3 slds-p-horizontal--small">
+                <Framework:InputFields group="{!v.groupName}" fieldType="integer" aura:id="limitPerContact" label="Limit Per Contact" value="{!v.priceRuleObj}" otherAttributes='{"min" : 0}' format="0"/>
+            </div><!-- /.slds-col -->
+        </div>
+        <div class="slds-theme--shade__dark slds-p-around--small ">
+            <div class="slds-grid slds-m-bottom--small">
+                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small">
+                    <div class="slds-text-heading--small"><strong>Price Rule Criteria</strong></div>
+                    <div class="">ALL of the following must be true for this price to be applied:</div>
+                </div>
+            </div>
+            <div class="slds-grid slds-size--2-of-5">
+                <div class="slds-col slds-p-horizontal--small">
+                    <Framework:InputFields group="{!v.groupName}" fieldType="date" aura:id="startDate" label="{!$Label.OrderApi.Price_Rule_Start_Date}" value="{!v.priceRuleObj}" format="{!v.dateFormat}"/>
+                </div>
+                <div class="slds-col slds-p-horizontal--small">
+                    <Framework:InputFields group="{!v.groupName}" fieldType="date" aura:id="endDate" label="{!$Label.OrderApi.Price_Rule_End_Date_Value}" value="{!v.priceRuleObj}" format="{!v.dateFormat}"/>
+                </div>
+            </div>
+            <div class="slds-grid slds-size--2-of-5">
+                <div class="slds-col slds-p-horizontal--small">
+                    <Framework:InputFields group="{!v.groupName}" fieldType="integer" aura:id="minQuantity" label="{!$Label.OrderApi.Price_Rule_Min_Quantity}" value="{!v.priceRuleObj}" otherAttributes='{"min" : 0}' format="0"/>
+                </div><!-- /.slds-col -->
+                <div class="slds-col slds-p-horizontal--small">
+                    <Framework:InputFields group="{!v.groupName}" fieldType="integer" aura:id="maxQuantity" label="{!$Label.OrderApi.Price_Rule_Max_Quantity}" value="{!v.priceRuleObj}" otherAttributes='{"min" : 0}' format="0"/>
+                </div><!-- /.slds-col -->
+            </div>
+            <div class="slds-grid ">
+                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small" aura:id="requiredSourceCodesLookup">
+                    <Framework:InputFields fieldType="lookup"
+                                           aura:id="requiredSourceCodes"
+                                           group="{!v.groupName}"
+                                           label="{!$Label.OrderApi.Price_Rule_Source_Code}"
+                                           value="{!v.priceRuleObj}"
+                                           otherAttributes='{"type" : "OrderApi__Source_Code__c","otherMethods" : {"maxItems" : "null"}}'/>
+                </div>
+            </div>
+            <div class="slds-grid slds-p-horizontal--small slds-lookup slds-has-selection" data-select="multi" data-scope="single" data-typeahead="true">
+                <div class="slds-col slds-size--1-of-1" aura:id="requiredBadgeTypesLookup">
+                    <Framework:InputFields fieldType="lookup"
+                                           aura:id="requiredBadgeTypes"
+                                           group="{!v.groupName}"
+                                           label="{!$Label.OrderApi.Price_Rule_Badge_Types}"
+                                           value="{!v.priceRuleObj}"
+                                           otherAttributes='{"type" : "OrderApi__Badge_Type__c","filter" : "OrderApi__Is_Active__c = true","otherMethods" : {"maxItems" : "null"}}'/>
+                </div>
+            </div>
+            <aura:if isTrue="{!v.priceRuleObj.enableSubscriptionPlans}">
+                <div class="slds-grid">
+                    <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small" aura:id="requiredSubscriptionPlansLookup">
+                    </div>
+                </div>
+            </aura:if>
+            <div class="slds-grid slds-m-bottom--small">
+                <div class="slds-col slds-size--1-of-1 slds-p-horizontal--small">
+                    <div class="">Create additional rules based on the contact or account object:</div>
+                </div>
+            </div>
+            <div class="slds-grid">
+                <div class="slds-col slds-size--1-of-4 slds-p-horizontal--small">
+                    <label class="slds-form-element__label helper-margin-right">{!$Label.OrderApi.Price_Rule_Object}</label>
+                </div>
+                <div class="slds-col slds-size--1-of-4 slds-p-left--small">
+                    <label class="slds-form-element__label helper-margin-right">{!$Label.OrderApi.Price_Rule_Field}</label>
+                </div>
+                <div class="slds-col slds-size--1-of-4 slds-p-left--xx-small">
+                    <label class="slds-form-element__label helper-margin-right">{!$Label.OrderApi.Price_Rule_Operator}</label>
+                </div>
+                <div class="slds-col slds-size--1-of-4 slds-p-left--xxxx-small">
+                    <label class="slds-form-element__label helper-margin-right">{!$Label.OrderApi.Price_Rule_Value}</label>
+                </div>
+            </div>
+            <span aura:id="priceRuleVariables"></span>
+            <div class="slds-grid slds-m-bottom--small">
+                <div class="slds-col slds-size--1-of-2 slds-text-align--left slds-p-horizontal--small">
+                    <Framework:Button onClickAction="{!c.createNewVariable}"
+                                      type="brand"
+                                      enableProgressIndicator="false"
+                                      additionalClasses=""
+                                      label="{!$Label.OrderApi.Create_New_Variable}"
+                                      svgPath="{!$Resource.OrderApi__SLDS_Icons + '/icons/utility-sprite/svg/symbols.svg#add'}"
+                                      svgContainerClass="slds-float--left slds-m-right--small"
+                                      svgClass="slds-button__icon"
+                                      svgAssistiveText="Label.OrderApi.Add_Another_Attendee_Group_Reg" />
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

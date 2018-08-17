@@ -1,0 +1,40 @@
+<aura:component description="EventBuilderInvitationOnly" controller="EventApi.EventsBuilderInvitationOnly" implements="EventApi:EventBuilderTabInterface">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="attendeeStatusList" type="List[]" default="[]"/>
+    <aura:attribute name="addAttendeeGlobalId" type="String"/>
+    <aura:attribute name="massAddAttendeeGlobalId" type="String"/>
+    <aura:method name="updateTicketTypesAndSites" action="{!c.setTicketTypesAndSite}"/>
+		<aura:dependency resource="EventApi:EventBuilderMassAttendeeCreation"/>
+	<aura:dependency resource="EventApi:EventBuilderInvitationAttendeeCreation"/>
+    <div class="slds-tabs--default">
+        <ul class="slds-tabs--default__nav" role="tablist">
+            <li class="slds-tabs__item slds-text-heading--label slds-active" title="Item One" role="presentation" aura:id="attendeeCreationTab">
+                <a class="slds-tabs--default__link" href="javascript:void(0);" role="tab" tabindex="0" data-id="attendeeCreation" data-panel="attendeeCreationTab" onclick="{!c.switchTabs}">
+                    Attendee Creation
+                </a>
+            </li>
+            <li class="slds-tabs__item slds-text-heading--label" title="Item Two" role="presentation" aura:id="massAttendeeCreationTab">
+                <a class="slds-tabs--default__link" href="javascript:void(0);" role="tab" tabindex="0" data-id="massAttendeeCreation" data-panel="massAttendeeCreationTab" onclick="{!c.switchTabs}">
+                    Mass Attendee Creation
+                </a>
+            </li>
+        </ul>
+        <div aura:id="attendeeCreation" class="slds-tabs--default__content" role="tabpanel" aria-labelledby="tab-default-1__item">
+	        <div class="slds-grid">
+		        <div class="slds-col slds-text-align--center slds-align-middle">
+			        <img src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="loading" width="50" height="50" />&nbsp;
+			        <span class="slds-text-heading--medium">{!$Label.EventApi.Loading_Event_Builder}</span>
+		        </div>
+	        </div>
+        </div>
+        <div aura:id="massAttendeeCreation" class="slds-tabs--default__content slds-hide" role="tabpanel" >
+	        <div class="slds-grid">
+		        <div class="slds-col slds-text-align--center slds-align-middle">
+			        <img src="{!$Resource.EventApi__SLDS_Base+'/img/spinners/slds_spinner_brand.gif'}" alt="loading" width="50" height="50" />&nbsp;
+			        <span class="slds-text-heading--medium">{!$Label.EventApi.Loading_Event_Builder}</span>
+		        </div>
+	        </div>
+        </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+</aura:component>

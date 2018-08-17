@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="ShowHideFormInstructionsEvent">
+  <aura:attribute name="formGlobalId" type="String"/>
+  <aura:attribute name="showInstructions" type="Boolean"/>
+</aura:event>

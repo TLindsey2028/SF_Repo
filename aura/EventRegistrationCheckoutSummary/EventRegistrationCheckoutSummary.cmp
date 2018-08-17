@@ -1,0 +1,117 @@
+<aura:component description="EventRegistrationCheckoutSummary" implements="LTE:EventInterface" access="global"
+                controller="LTE.EventRegistrationController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <ltng:require styles="{!$Resource.OrderApi__paypal+'/paypal.css'}"/>
+    <aura:attribute name="so" type="LTE.SalesOrder"/>
+    <aura:attribute name="lines" type="LTE.SalesOrderLine[]"/>
+    <aura:attribute name="paymentGlobalId" type="String"/>
+    <aura:attribute name="addressGlobalId" type="String"/>
+    <aura:attribute name="isFreeOrder" type="Boolean"/>
+    <aura:attribute name="initialPurchase" type="Boolean" default="true"/>
+    <aura:attribute name="ownerName" type="String"/>
+    <aura:attribute name="paymentEnvKey" type="String"/>
+    <aura:attribute name="previousComponent" type="String" access="global"/>
+    <aura:attribute name="disableCustomSubmit" type="Boolean" default="false"/>
+    <aura:attribute name="loadingRows" type="List" default="[1]"/>
+    <aura:attribute name="subPlans" type="List"/>
+
+    <aura:registerEvent name="changeStep" type="LTE:ChangeStepEvent"/>
+    <aura:registerEvent name="HashChangingEvent" type="LTE:HashChangingEvent"/>
+    <aura:registerEvent name="ShowComponentEvent" type="Framework:ShowComponentEvent"/>
+    <aura:registerEvent name="RegistrationToolbarUpdateEvent" type="LTE:RegistrationToolbarUpdateEvent"/>
+    <aura:registerEvent name="ConfirmWaitlistEvent" type="LTE:ConfirmWaitlistEvent"/>
+    <aura:registerEvent name="ButtonToggleIndicatorEvent" type="Framework:ButtonToggleIndicatorEvent"/>
+    <aura:registerEvent name="ProcessingChangesEvent" type="OrderApi:ProcessingChangesEvent"/>
+    <aura:registerEvent name="RegistrationProcessSetGlobalObjectsEvent" type="LTE:RegistrationProcessSetGlobalObjectsEvent"/>
+    <aura:registerEvent name="SubmitOffsitePaymentEvent" type="OrderApi:SubmitOffsitePaymentEvent"/>
+
+    <aura:dependency resource="markup://LTE:EventPaymentReceipt"/>
+    <aura:dependency resource="markup://LTE:EventRegistrationSummaryDetail"/>
+
+    <aura:handler event="OrderApi:ProcessingChangesEvent" action="{!c.handleProcessingChangesEvent}"/>
+    <aura:handler event="Framework:ButtonToggleIndicatorEvent" action="{!c.handleButtonToggleIndicatorEvent}"/>
+    <aura:handler event="OrderApi:KnownAddressModalEvent" action="{!c.handleKAModal}"/>
+    <aura:handler event="OrderApi:SaveKnownAddressEvent" action="{!c.saveKAModal}"/>
+    <aura:registerEvent name="EventCancelRegistrationEvent" type="LTE:EventCancelRegistrationEvent"/>
+    <aura:registerEvent name="DisableProgressFlowBarEvent" type="LTE:DisableProgressFlowBarEvent"/>
+    <aura:registerEvent name="EventSummaryUpdateEvent" type="LTE:EventSummaryUpdateEvent"/>
+    <div class="slds-size--1-of-1 slds-event--panes fonteva-event-component">
+        <div id="summary" class="slds-event--pane slds-p-horizontal_large" data-type="pane">
+          <div class="slds-col slds-p-vertical_large slds-grid slds-grid_pull-padded-small">
+            <div class="slds-col slds-medium-size_2-of-3 slds-p-horizontal_small" aura:id="frameBody">
+                <div data-name="loading-span-stencil" class="slds-grid slds-col slds-wrap stencil-visible" aura:id="loading-span-stencil">
+                    <div class="slds-grid slds-vertical slds-m-bottom--large">
+                        <div class="slds-list--horizontal slds-grid slds-wrap">
+                            <div class="slds-grid slds-wrap slds-size--1-of-1">
+                                <div class="slds-text-heading--small loading-span slds-m-bottom--xx-small"
+                                     style="width: 10vw;">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="slds-grid slds-wrap slds-size--1-of-1">
+                                <div class="slds-text-heading--small loading-span slds-m-bottom--xx-small"
+                                     style="width: 10vw;">
+                                    &nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- @todo payment information -->
+                <aura:if isTrue="{!and(v.lines.length > 0,!v.isFreeOrder)}">
+                    <div class="slds-size--1-of-1 slds-medium-size--1-of-1">
+                        <div data-name="payNow" aura:id="payNow" class="slds-grid slds-grid--vertical"/>
+                    </div>
+                </aura:if>
+                <!-- /@todo payment information -->
+                <!-- @todo no payment required : remove slds-hide -->
+                <aura:if isTrue="{!and(v.lines.length > 0,v.isFreeOrder)}">
+                    <div class="slds-size--1-of-1 slds-medium-size--1-of-1 slds-p-horizontal_x-small slds-grid slds-grid--vertical-align-center slds-grid--align-center slds-m-bottom--medium">
+                        <div class="slds-grid slds-grid--vertical slds-text-align--center">
+                            <div data-name="No_Payment_text" class="slds-text-heading--small slds-font-weight--bold slds-m-bottom--medium">
+                                    {!$Label.LTE.No_Payment_text}
+                            </div>
+                            <div>
+                                <Framework:Button qaData='{"type" : "button", "name": "Confirm_Order"}' type="brand" aura:id="processPayment" label="{!$Label.LTE.Confirm_Order}" onClickAction="{!c.confirmFreeOrder}" group="paymentButtons" disable="true"/>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.so.waitlistOnly}">
+                    <div class="slds-size--1-of-1 slds-medium-size--1-of-1 slds-p-horizontal_x-small slds-grid slds-grid--vertical-align-center slds-grid--align-center slds-m-bottom--medium">
+                        <div class="slds-grid slds-grid--vertical slds-text-align--center">
+                            <div data-name="All_Tickets_On_Waitlist" class="slds-text-heading--small slds-font-weight--bold slds-m-bottom--medium">
+                                {!$Label.LTE.All_Tickets_On_Waitlist}
+                            </div>
+                            <div>
+                                <Framework:Button qaData='{"type" : "button", "name": "Confirm_Waitlist"}' type="brand" aura:id="processPayment" label="{!$Label.LTE.Confirm_Waitlist}" onClickAction="{!c.confirmWaitlist}" group="paymentButtons"/>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <!-- /@todo no payment required -->
+
+            </div>
+            <div class="slds-col slds-medium-size_1-of-3 fonteva-medium-p-horizontal_small fonteva-event_summary" aura:id="frameSummary">
+                <LTE:EventRegistrationSummary aura:id="eventRegistrationSummary" so="{!v.so}" readOnly="false"
+                                            attendeeObj="{!v.attendeeObj}" storeObj="{!v.storeObj}"
+                                            siteObj="{!v.siteObj}" eventObj="{!v.eventObj}"
+                                            usr="{!v.usr}" initialPurchase="{!v.initialPurchase}"/>
+                <div class="slds-grid slds-grid_align-center">
+                    <LTE:EventActionButtons cancelAction="{!c.openCancelModal}" aura:id="actionButtons" previousAction="{!c.previousStep}" showPrevious="true" showNext="false"/>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <Framework:Toast aura:id="toastMessages"/>
+    <div class="fonteva-prompt_severity">
+        <Framework:MessagePrompt title="{!$Label.LTE.Cancel_Registration_Header}"
+                             message="{!'&lt;div>'+$Label.LTE.Cancel_Reg_First+'&lt;/div>'+$Label.LTE.Cancel_Reg_Second}"
+                             severity="error"
+                             aura:id="cancelPrompt"
+                             cancelButtonLabel="{!$Label.LTE.Cancel_Reg_No}"
+                             submitButtonLabel="{!$Label.LTE.Cancel_Reg_Yes}"
+                             submitOnClickAction="{!c.fireCancelRegEvent}"/>
+    </div>
+</aura:component>
